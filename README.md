@@ -6,4 +6,22 @@ The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with
 
 [Documentation - https://designer.stoplight.io/docs/prism](https://designer.stoplight.io/docs/prism?utm_source=github&utm_medium=prism)
 
-Downloads available over in [releases](https://github.com/stoplightio/prism/releases).
+## Installation
+
+On OS X or Linux:
+
+```
+curl https://raw.githubusercontent.com/stoplightio/prism/master/install.sh | sh
+```
+
+On Windows download [binary](https://github.com/stoplightio/prism/releases).
+
+## Update
+
+```
+prism update
+```
+or
+```
+prism up
+```
