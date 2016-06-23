@@ -1,0 +1,3185 @@
+{
+    "swagger": "2.0",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v1",
+    "host": "api.stripe.com",
+    "info": {
+        "version": "",
+        "title": "Stripe",
+        "description": "## Welcome\n\nThis is a place to put general notes and extra information, for internal use.\n\nTo get started designing/documenting this API, se"
+    },
+    "paths": {
+        "/charges": {
+            "parameters": [],
+            "post": {
+                "tags": [
+                    "Charges"
+                ],
+                "summary": "Create Charge",
+                "description": "Create Charge",
+                "operationId": "POST_charges",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "amount": {
+                                    "type": "integer",
+                                    "description": "A positive integer in the smallest currency unit (e.g., 100 cents to charge $1.00 or 1 to charge ¥1, a 0-decimal currency) representing how much to charge the card. The minimum amount is $0.50 US or equivalent in charge currency.",
+                                    "minimum": 0.5
+                                },
+                                "currency": {
+                                    "type": "string",
+                                    "description": "3-letter ISO code for currency."
+                                },
+                                "application_fee": {
+                                    "type": "string"
+                                },
+                                "capture": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "destination": {
+                                    "type": "string"
+                                },
+                                "metadata": {
+                                    "type": "object"
+                                },
+                                "receipt_email": {
+                                    "type": "string"
+                                },
+                                "shipping": {
+                                    "type": "object"
+                                },
+                                "customer": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "amount",
+                                "currency"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "integer"
+                                },
+                                "amount_refunded": {
+                                    "type": "integer"
+                                },
+                                "application_fee": {
+                                    "type": "null"
+                                },
+                                "balance_transaction": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "captured": {
+                                    "type": "boolean"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "customer": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": [
+                                        "null",
+                                        "string"
+                                    ]
+                                },
+                                "destination": {
+                                    "type": "null"
+                                },
+                                "dispute": {
+                                    "type": "null"
+                                },
+                                "failure_code": {
+                                    "type": "null"
+                                },
+                                "failure_message": {
+                                    "type": "null"
+                                },
+                                "fraud_details": {
+                                    "type": "object"
+                                },
+                                "invoice": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object"
+                                },
+                                "order": {
+                                    "type": "null"
+                                },
+                                "paid": {
+                                    "type": "boolean"
+                                },
+                                "receipt_email": {
+                                    "type": "null"
+                                },
+                                "receipt_number": {
+                                    "type": "null"
+                                },
+                                "refunded": {
+                                    "type": "boolean"
+                                },
+                                "refunds": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "address_city": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_country": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_line1": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_line1_check": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_line2": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_state": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_zip": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "address_zip_check": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "customer": {
+                                            "type": "string"
+                                        },
+                                        "cvc_check": {
+                                            "type": "null"
+                                        },
+                                        "dynamic_last4": {
+                                            "type": "null"
+                                        },
+                                        "exp_month": {
+                                            "type": "integer"
+                                        },
+                                        "exp_year": {
+                                            "type": "integer"
+                                        },
+                                        "funding": {
+                                            "type": "string"
+                                        },
+                                        "last4": {
+                                            "type": "string"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "tokenization_method": {
+                                            "type": "null"
+                                        }
+                                    }
+                                },
+                                "source_transfer": {
+                                    "type": "null"
+                                },
+                                "statement_descriptor": {
+                                    "type": "null"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "ch_186cdgFejIrlZMsLugI8cCCi",
+                                "object": "charge",
+                                "amount": 1000,
+                                "amount_refunded": 0,
+                                "application_fee": null,
+                                "balance_transaction": "txn_186cdgFejIrlZMsLmZQ9V5Yb",
+                                "captured": true,
+                                "created": 1462178568,
+                                "currency": "usd",
+                                "customer": "cus_8NK3osrQZvQarJ",
+                                "description": null,
+                                "destination": null,
+                                "dispute": null,
+                                "failure_code": null,
+                                "failure_message": null,
+                                "fraud_details": {},
+                                "invoice": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "order": null,
+                                "paid": true,
+                                "receipt_email": null,
+                                "receipt_number": null,
+                                "refunded": false,
+                                "refunds": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/charges/ch_186cdgFejIrlZMsLugI8cCCi/refunds"
+                                },
+                                "shipping": null,
+                                "source": {
+                                    "id": "card_186ZPrFejIrlZMsLPqoR2okh",
+                                    "object": "card",
+                                    "address_city": "Port Huron",
+                                    "address_country": "United States",
+                                    "address_line1": "6986 Lakeport Drive",
+                                    "address_line1_check": "pass",
+                                    "address_line2": null,
+                                    "address_state": "MI",
+                                    "address_zip": "48059",
+                                    "address_zip_check": "pass",
+                                    "brand": "Visa",
+                                    "country": "US",
+                                    "customer": "cus_8NK3osrQZvQarJ",
+                                    "cvc_check": null,
+                                    "dynamic_last4": null,
+                                    "exp_month": 5,
+                                    "exp_year": 2017,
+                                    "fingerprint": "tH1XqMwu0jHg2IEe",
+                                    "funding": "unknown",
+                                    "last4": "1111",
+                                    "metadata": {},
+                                    "name": "Tom Pytleski",
+                                    "tokenization_method": null
+                                },
+                                "source_transfer": null,
+                                "statement_descriptor": null,
+                                "status": "succeeded"
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "POST_charges",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/customers": {
+            "parameters": [],
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List Customers",
+                "description": "List Customers",
+                "operationId": "GET_customers",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "object": {
+                                    "type": "string"
+                                },
+                                "url": {
+                                    "type": "string"
+                                },
+                                "has_more": {
+                                    "type": "boolean"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "object": {
+                                                "type": "string"
+                                            },
+                                            "account_balance": {
+                                                "type": "integer"
+                                            },
+                                            "business_vat_id": {
+                                                "type": "null"
+                                            },
+                                            "created": {
+                                                "type": "number"
+                                            },
+                                            "currency": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ]
+                                            },
+                                            "default_source": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ]
+                                            },
+                                            "delinquent": {
+                                                "type": "boolean"
+                                            },
+                                            "description": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ]
+                                            },
+                                            "discount": {
+                                                "type": [
+                                                    "null",
+                                                    "object"
+                                                ]
+                                            },
+                                            "email": {
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ]
+                                            },
+                                            "livemode": {
+                                                "type": "boolean"
+                                            },
+                                            "metadata": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "workspaceId": {
+                                                        "type": "string"
+                                                    },
+                                                    "userId": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "shipping": {
+                                                "type": [
+                                                    "null",
+                                                    "string"
+                                                ]
+                                            },
+                                            "sources": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "object": {
+                                                        "type": "string"
+                                                    },
+                                                    "data": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "object": {
+                                                                    "type": "string"
+                                                                },
+                                                                "address_city": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_country": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_line1": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_line1_check": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_line2": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_state": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_zip": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "address_zip_check": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "brand": {
+                                                                    "type": "string"
+                                                                },
+                                                                "country": {
+                                                                    "type": "string"
+                                                                },
+                                                                "customer": {
+                                                                    "type": "string"
+                                                                },
+                                                                "cvc_check": {
+                                                                    "type": [
+                                                                        "string",
+                                                                        "null"
+                                                                    ]
+                                                                },
+                                                                "dynamic_last4": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "exp_month": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "exp_year": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "funding": {
+                                                                    "type": "string"
+                                                                },
+                                                                "last4": {
+                                                                    "type": "string"
+                                                                },
+                                                                "metadata": {
+                                                                    "type": "object"
+                                                                },
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "tokenization_method": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "has_more": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "total_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "subscriptions": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "object": {
+                                                        "type": "string"
+                                                    },
+                                                    "data": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string"
+                                                                },
+                                                                "object": {
+                                                                    "type": "string"
+                                                                },
+                                                                "application_fee_percent": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "cancel_at_period_end": {
+                                                                    "type": "boolean"
+                                                                },
+                                                                "canceled_at": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "string"
+                                                                    ]
+                                                                },
+                                                                "current_period_end": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "current_period_start": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "customer": {
+                                                                    "type": "string"
+                                                                },
+                                                                "discount": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "integer"
+                                                                    ]
+                                                                },
+                                                                "ended_at": {
+                                                                    "type": "null"
+                                                                },
+                                                                "metadata": {
+                                                                    "type": "object"
+                                                                },
+                                                                "plan": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "object": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "amount": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "created": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "currency": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "interval": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "interval_count": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "livemode": {
+                                                                            "type": "boolean"
+                                                                        },
+                                                                        "metadata": {
+                                                                            "type": "object"
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "statement_descriptor": {
+                                                                            "type": [
+                                                                                "null",
+                                                                                "string"
+                                                                            ]
+                                                                        },
+                                                                        "trial_period_days": {
+                                                                            "type": "integer"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "quantity": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "start": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "status": {
+                                                                    "type": "string"
+                                                                },
+                                                                "tax_percent": {
+                                                                    "type": [
+                                                                        "null",
+                                                                        "integer"
+                                                                    ]
+                                                                },
+                                                                "trial_end": {
+                                                                    "type": "integer"
+                                                                },
+                                                                "trial_start": {
+                                                                    "type": "integer"
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "has_more": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "total_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "url": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "object": "list",
+                                "url": "/v1/customers",
+                                "has_more": false,
+                                "data": [
+                                    {
+                                        "id": "cus_8J52imybkL7hRa",
+                                        "object": "customer",
+                                        "account_balance": 0,
+                                        "business_vat_id": null,
+                                        "created": 1461187720,
+                                        "currency": "usd",
+                                        "default_source": "card_182SsDCSRzQC7DAp4RbR4B3P",
+                                        "delinquent": false,
+                                        "description": "1111 Workspace",
+                                        "discount": null,
+                                        "email": null,
+                                        "livemode": false,
+                                        "metadata": {
+                                            "workspaceId": "XyzKYT8bCdSRAWYFd",
+                                            "userId": "B4SyRAerETpQmZBQr"
+                                        },
+                                        "shipping": null,
+                                        "sources": {
+                                            "object": "list",
+                                            "data": [
+                                                {
+                                                    "id": "card_182SsDCSRzQC7DAp4RbR4B3P",
+                                                    "object": "card",
+                                                    "address_city": null,
+                                                    "address_country": null,
+                                                    "address_line1": null,
+                                                    "address_line1_check": null,
+                                                    "address_line2": null,
+                                                    "address_state": null,
+                                                    "address_zip": null,
+                                                    "address_zip_check": null,
+                                                    "brand": "Visa",
+                                                    "country": "US",
+                                                    "customer": "cus_8J52imybkL7hRa",
+                                                    "cvc_check": "pass",
+                                                    "dynamic_last4": null,
+                                                    "exp_month": 1,
+                                                    "exp_year": 2020,
+                                                    "funding": "credit",
+                                                    "last4": "4242",
+                                                    "metadata": {},
+                                                    "name": "1@1.com",
+                                                    "tokenization_method": null
+                                                }
+                                            ],
+                                            "has_more": false,
+                                            "total_count": 1,
+                                            "url": "/v1/customers/cus_8J52imybkL7hRa/sources"
+                                        },
+                                        "subscriptions": {
+                                            "object": "list",
+                                            "data": [
+                                                {
+                                                    "id": "sub_8J52BCGCSkHY1l",
+                                                    "object": "subscription",
+                                                    "application_fee_percent": null,
+                                                    "cancel_at_period_end": false,
+                                                    "canceled_at": null,
+                                                    "current_period_end": 1464384520,
+                                                    "current_period_start": 1461792520,
+                                                    "customer": "cus_8J52imybkL7hRa",
+                                                    "discount": null,
+                                                    "ended_at": null,
+                                                    "metadata": {},
+                                                    "plan": {
+                                                        "id": "base_1",
+                                                        "object": "plan",
+                                                        "amount": 100,
+                                                        "created": 1454391000,
+                                                        "currency": "usd",
+                                                        "interval": "month",
+                                                        "interval_count": 1,
+                                                        "livemode": false,
+                                                        "metadata": {},
+                                                        "name": "Base",
+                                                        "statement_descriptor": null,
+                                                        "trial_period_days": 7
+                                                    },
+                                                    "quantity": 24,
+                                                    "start": 1461190415,
+                                                    "status": "active",
+                                                    "tax_percent": null,
+                                                    "trial_end": 1461792520,
+                                                    "trial_start": 1461187720
+                                                }
+                                            ],
+                                            "has_more": false,
+                                            "total_count": 1,
+                                            "url": "/v1/customers/cus_8J52imybkL7hRa/subscriptions"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "GET_customers",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Create A Customer",
+                "description": "",
+                "operationId": "POST_customers",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": "description=Customer%20for%20test%40stoplight.io&source=tok_186YqLFejIrlZMsLO5HX4qkw"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "account_balance": {
+                                    "type": "integer"
+                                },
+                                "business_vat_id": {
+                                    "type": "null"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "null"
+                                },
+                                "default_source": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "delinquent": {
+                                    "type": "boolean"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "discount": {
+                                    "type": "null"
+                                },
+                                "email": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object"
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "sources": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "object": {
+                                                        "type": "string"
+                                                    },
+                                                    "address_city": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_country": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line2": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_state": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "brand": {
+                                                        "type": "string"
+                                                    },
+                                                    "country": {
+                                                        "type": "string"
+                                                    },
+                                                    "customer": {
+                                                        "type": "string"
+                                                    },
+                                                    "cvc_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "dynamic_last4": {
+                                                        "type": "null"
+                                                    },
+                                                    "exp_month": {
+                                                        "type": "integer"
+                                                    },
+                                                    "exp_year": {
+                                                        "type": "integer"
+                                                    },
+                                                    "fingerprint": {
+                                                        "type": "string"
+                                                    },
+                                                    "funding": {
+                                                        "type": "string"
+                                                    },
+                                                    "last4": {
+                                                        "type": "string"
+                                                    },
+                                                    "metadata": {
+                                                        "type": "object"
+                                                    },
+                                                    "name": {
+                                                        "type": "null"
+                                                    },
+                                                    "tokenization_method": {
+                                                        "type": "null"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "subscriptions": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "cus_8NLzejvfNcitTA",
+                                "object": "customer",
+                                "account_balance": 0,
+                                "business_vat_id": null,
+                                "created": 1462173367,
+                                "currency": null,
+                                "default_source": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                "delinquent": false,
+                                "description": "Customer for test@stoplight.io",
+                                "discount": null,
+                                "email": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "shipping": null,
+                                "sources": {
+                                    "object": "list",
+                                    "data": [
+                                        {
+                                            "id": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                            "object": "card",
+                                            "address_city": null,
+                                            "address_country": null,
+                                            "address_line1": null,
+                                            "address_line1_check": null,
+                                            "address_line2": null,
+                                            "address_state": null,
+                                            "address_zip": null,
+                                            "address_zip_check": null,
+                                            "brand": "Visa",
+                                            "country": "US",
+                                            "customer": "cus_8NLzejvfNcitTA",
+                                            "cvc_check": null,
+                                            "dynamic_last4": null,
+                                            "exp_month": 8,
+                                            "exp_year": 2017,
+                                            "fingerprint": "7EUTT65wlFEWOTJj",
+                                            "funding": "credit",
+                                            "last4": "4242",
+                                            "metadata": {},
+                                            "name": null,
+                                            "tokenization_method": null
+                                        }
+                                    ],
+                                    "has_more": false,
+                                    "total_count": 1,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/sources"
+                                },
+                                "subscriptions": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/subscriptions"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "POST_customers",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/customers/{customer_id}": {
+            "parameters": [
+                {
+                    "name": "customer_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Retrieve a customer",
+                "description": "",
+                "operationId": "GET_customers-customer_id",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "account_balance": {
+                                    "type": "integer"
+                                },
+                                "business_vat_id": {
+                                    "type": "null"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "null"
+                                },
+                                "default_source": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "delinquent": {
+                                    "type": "boolean"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "discount": {
+                                    "type": "null"
+                                },
+                                "email": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object"
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "sources": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "object": {
+                                                        "type": "string"
+                                                    },
+                                                    "address_city": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_country": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line2": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_state": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "brand": {
+                                                        "type": "string"
+                                                    },
+                                                    "country": {
+                                                        "type": "string"
+                                                    },
+                                                    "customer": {
+                                                        "type": "string"
+                                                    },
+                                                    "cvc_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "dynamic_last4": {
+                                                        "type": "null"
+                                                    },
+                                                    "exp_month": {
+                                                        "type": "integer"
+                                                    },
+                                                    "exp_year": {
+                                                        "type": "integer"
+                                                    },
+                                                    "fingerprint": {
+                                                        "type": "string"
+                                                    },
+                                                    "funding": {
+                                                        "type": "string"
+                                                    },
+                                                    "last4": {
+                                                        "type": "string"
+                                                    },
+                                                    "metadata": {
+                                                        "type": "object"
+                                                    },
+                                                    "name": {
+                                                        "type": "null"
+                                                    },
+                                                    "tokenization_method": {
+                                                        "type": "null"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "subscriptions": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "cus_8NLzejvfNcitTA",
+                                "object": "customer",
+                                "account_balance": 0,
+                                "business_vat_id": null,
+                                "created": 1462173367,
+                                "currency": null,
+                                "default_source": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                "delinquent": false,
+                                "description": "Customer for test@stoplight.io",
+                                "discount": null,
+                                "email": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "shipping": null,
+                                "sources": {
+                                    "object": "list",
+                                    "data": [
+                                        {
+                                            "id": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                            "object": "card",
+                                            "address_city": null,
+                                            "address_country": null,
+                                            "address_line1": null,
+                                            "address_line1_check": null,
+                                            "address_line2": null,
+                                            "address_state": null,
+                                            "address_zip": null,
+                                            "address_zip_check": null,
+                                            "brand": "Visa",
+                                            "country": "US",
+                                            "customer": "cus_8NLzejvfNcitTA",
+                                            "cvc_check": null,
+                                            "dynamic_last4": null,
+                                            "exp_month": 8,
+                                            "exp_year": 2017,
+                                            "fingerprint": "7EUTT65wlFEWOTJj",
+                                            "funding": "credit",
+                                            "last4": "4242",
+                                            "metadata": {},
+                                            "name": null,
+                                            "tokenization_method": null
+                                        }
+                                    ],
+                                    "has_more": false,
+                                    "total_count": 1,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/sources"
+                                },
+                                "subscriptions": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/subscriptions"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "GET_customers-customerid",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "post": {
+                "summary": "Update a customer",
+                "description": "",
+                "operationId": "POST_customers-customer_id",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "account_balance": {
+                                    "type": "integer"
+                                },
+                                "description": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": "account_balance=100000&description=updated%20test%20customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "account_balance": {
+                                    "type": "integer"
+                                },
+                                "business_vat_id": {
+                                    "type": "null"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "default_source": {
+                                    "type": "string"
+                                },
+                                "delinquent": {
+                                    "type": "boolean"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "discount": {
+                                    "type": "null"
+                                },
+                                "email": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object",
+                                    "properties": {}
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "sources": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "object": {
+                                                        "type": "string"
+                                                    },
+                                                    "address_city": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_country": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line1_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_line2": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_state": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip": {
+                                                        "type": "null"
+                                                    },
+                                                    "address_zip_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "brand": {
+                                                        "type": "string"
+                                                    },
+                                                    "country": {
+                                                        "type": "string"
+                                                    },
+                                                    "customer": {
+                                                        "type": "string"
+                                                    },
+                                                    "cvc_check": {
+                                                        "type": "null"
+                                                    },
+                                                    "dynamic_last4": {
+                                                        "type": "null"
+                                                    },
+                                                    "exp_month": {
+                                                        "type": "integer"
+                                                    },
+                                                    "exp_year": {
+                                                        "type": "integer"
+                                                    },
+                                                    "fingerprint": {
+                                                        "type": "string"
+                                                    },
+                                                    "funding": {
+                                                        "type": "string"
+                                                    },
+                                                    "last4": {
+                                                        "type": "string"
+                                                    },
+                                                    "metadata": {
+                                                        "type": "object",
+                                                        "properties": {}
+                                                    },
+                                                    "name": {
+                                                        "type": "null"
+                                                    },
+                                                    "tokenization_method": {
+                                                        "type": "null"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "subscriptions": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {}
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "cus_8NLzejvfNcitTA",
+                                "object": "customer",
+                                "account_balance": 100000,
+                                "business_vat_id": null,
+                                "created": 1462173367,
+                                "currency": "usd",
+                                "default_source": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                "delinquent": false,
+                                "description": "updated test customer",
+                                "discount": null,
+                                "email": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "shipping": null,
+                                "sources": {
+                                    "object": "list",
+                                    "data": [
+                                        {
+                                            "id": "card_186YqLFejIrlZMsL8kVdD6qx",
+                                            "object": "card",
+                                            "address_city": null,
+                                            "address_country": null,
+                                            "address_line1": null,
+                                            "address_line1_check": null,
+                                            "address_line2": null,
+                                            "address_state": null,
+                                            "address_zip": null,
+                                            "address_zip_check": null,
+                                            "brand": "Visa",
+                                            "country": "US",
+                                            "customer": "cus_8NLzejvfNcitTA",
+                                            "cvc_check": null,
+                                            "dynamic_last4": null,
+                                            "exp_month": 8,
+                                            "exp_year": 2017,
+                                            "fingerprint": "7EUTT65wlFEWOTJj",
+                                            "funding": "credit",
+                                            "last4": "4242",
+                                            "metadata": {},
+                                            "name": null,
+                                            "tokenization_method": null
+                                        }
+                                    ],
+                                    "has_more": false,
+                                    "total_count": 1,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/sources"
+                                },
+                                "subscriptions": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/customers/cus_8NLzejvfNcitTA/subscriptions"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "POST_customers-customerid",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a customer ",
+                "description": "",
+                "operationId": "DELETE_customers-customer_id",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "deleted": {
+                                    "type": "boolean"
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "deleted": true,
+                                "id": "cus_8NMFHwtPpnXcW2"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "DELETE_customers-customerid",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/charges/{charge_id}": {
+            "parameters": [
+                {
+                    "name": "charge_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "summary": "Retrieve a charge",
+                "description": "",
+                "operationId": "GET_charges-charge_id",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "integer"
+                                },
+                                "amount_refunded": {
+                                    "type": "integer"
+                                },
+                                "application_fee": {
+                                    "type": "null"
+                                },
+                                "balance_transaction": {
+                                    "type": "string"
+                                },
+                                "captured": {
+                                    "type": "boolean"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "customer": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": [
+                                        "null",
+                                        "string"
+                                    ]
+                                },
+                                "destination": {
+                                    "type": "null"
+                                },
+                                "dispute": {
+                                    "type": "null"
+                                },
+                                "failure_code": {
+                                    "type": "null"
+                                },
+                                "failure_message": {
+                                    "type": "null"
+                                },
+                                "fraud_details": {
+                                    "type": "object"
+                                },
+                                "invoice": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object"
+                                },
+                                "order": {
+                                    "type": "null"
+                                },
+                                "paid": {
+                                    "type": "boolean"
+                                },
+                                "receipt_email": {
+                                    "type": "null"
+                                },
+                                "receipt_number": {
+                                    "type": "null"
+                                },
+                                "refunded": {
+                                    "type": "boolean"
+                                },
+                                "refunds": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "address_city": {
+                                            "type": "string"
+                                        },
+                                        "address_country": {
+                                            "type": "string"
+                                        },
+                                        "address_line1": {
+                                            "type": "string"
+                                        },
+                                        "address_line1_check": {
+                                            "type": "string"
+                                        },
+                                        "address_line2": {
+                                            "type": "null"
+                                        },
+                                        "address_state": {
+                                            "type": "string"
+                                        },
+                                        "address_zip": {
+                                            "type": "string"
+                                        },
+                                        "address_zip_check": {
+                                            "type": "string"
+                                        },
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "customer": {
+                                            "type": "string"
+                                        },
+                                        "cvc_check": {
+                                            "type": "null"
+                                        },
+                                        "dynamic_last4": {
+                                            "type": "null"
+                                        },
+                                        "exp_month": {
+                                            "type": "integer"
+                                        },
+                                        "exp_year": {
+                                            "type": "integer"
+                                        },
+                                        "fingerprint": {
+                                            "type": "string"
+                                        },
+                                        "funding": {
+                                            "type": "string"
+                                        },
+                                        "last4": {
+                                            "type": "string"
+                                        },
+                                        "metadata": {
+                                            "type": "object"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "tokenization_method": {
+                                            "type": "null"
+                                        }
+                                    }
+                                },
+                                "source_transfer": {
+                                    "type": "null"
+                                },
+                                "statement_descriptor": {
+                                    "type": "null"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "ch_186cGGFejIrlZMsLZ60wt3Tv",
+                                "object": "charge",
+                                "amount": 100,
+                                "amount_refunded": 0,
+                                "application_fee": null,
+                                "balance_transaction": "txn_186cGGFejIrlZMsLvamaPgxc",
+                                "captured": true,
+                                "created": 1462177116,
+                                "currency": "usd",
+                                "customer": "cus_8NK3osrQZvQarJ",
+                                "description": null,
+                                "destination": null,
+                                "dispute": null,
+                                "failure_code": null,
+                                "failure_message": null,
+                                "fraud_details": {},
+                                "invoice": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "order": null,
+                                "paid": true,
+                                "receipt_email": null,
+                                "receipt_number": null,
+                                "refunded": false,
+                                "refunds": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/charges/ch_186cGGFejIrlZMsLZ60wt3Tv/refunds"
+                                },
+                                "shipping": null,
+                                "source": {
+                                    "id": "card_186ZPrFejIrlZMsLPqoR2okh",
+                                    "object": "card",
+                                    "address_city": "Port Huron",
+                                    "address_country": "United States",
+                                    "address_line1": "6986 Lakeport Drive",
+                                    "address_line1_check": "pass",
+                                    "address_line2": null,
+                                    "address_state": "MI",
+                                    "address_zip": "48059",
+                                    "address_zip_check": "pass",
+                                    "brand": "Visa",
+                                    "country": "US",
+                                    "customer": "cus_8NK3osrQZvQarJ",
+                                    "cvc_check": null,
+                                    "dynamic_last4": null,
+                                    "exp_month": 5,
+                                    "exp_year": 2017,
+                                    "fingerprint": "tH1XqMwu0jHg2IEe",
+                                    "funding": "unknown",
+                                    "last4": "1111",
+                                    "metadata": {},
+                                    "name": "Tom Pytleski",
+                                    "tokenization_method": null
+                                },
+                                "source_transfer": null,
+                                "statement_descriptor": null,
+                                "status": "succeeded"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "GET_charges-chargeid",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "post": {
+                "summary": "Update a Charge",
+                "description": "",
+                "operationId": "POST_charges-charge_id",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            },
+                            "example": "description=Charge%20Update%20for%20test%40example.com"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "integer"
+                                },
+                                "amount_refunded": {
+                                    "type": "integer"
+                                },
+                                "application_fee": {
+                                    "type": "null"
+                                },
+                                "balance_transaction": {
+                                    "type": "string"
+                                },
+                                "captured": {
+                                    "type": "boolean"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "customer": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "destination": {
+                                    "type": "null"
+                                },
+                                "dispute": {
+                                    "type": "null"
+                                },
+                                "failure_code": {
+                                    "type": "null"
+                                },
+                                "failure_message": {
+                                    "type": "null"
+                                },
+                                "fraud_details": {
+                                    "type": "object",
+                                    "properties": {}
+                                },
+                                "invoice": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object",
+                                    "properties": {}
+                                },
+                                "order": {
+                                    "type": "null"
+                                },
+                                "paid": {
+                                    "type": "boolean"
+                                },
+                                "receipt_email": {
+                                    "type": "null"
+                                },
+                                "receipt_number": {
+                                    "type": "null"
+                                },
+                                "refunded": {
+                                    "type": "boolean"
+                                },
+                                "refunds": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {}
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "address_city": {
+                                            "type": "string"
+                                        },
+                                        "address_country": {
+                                            "type": "string"
+                                        },
+                                        "address_line1": {
+                                            "type": "string"
+                                        },
+                                        "address_line1_check": {
+                                            "type": "string"
+                                        },
+                                        "address_line2": {
+                                            "type": "null"
+                                        },
+                                        "address_state": {
+                                            "type": "string"
+                                        },
+                                        "address_zip": {
+                                            "type": "string"
+                                        },
+                                        "address_zip_check": {
+                                            "type": "string"
+                                        },
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "customer": {
+                                            "type": "string"
+                                        },
+                                        "cvc_check": {
+                                            "type": "null"
+                                        },
+                                        "dynamic_last4": {
+                                            "type": "null"
+                                        },
+                                        "exp_month": {
+                                            "type": "integer"
+                                        },
+                                        "exp_year": {
+                                            "type": "integer"
+                                        },
+                                        "fingerprint": {
+                                            "type": "string"
+                                        },
+                                        "funding": {
+                                            "type": "string"
+                                        },
+                                        "last4": {
+                                            "type": "string"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "properties": {}
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "tokenization_method": {
+                                            "type": "null"
+                                        }
+                                    }
+                                },
+                                "source_transfer": {
+                                    "type": "null"
+                                },
+                                "statement_descriptor": {
+                                    "type": "null"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "ch_186cGGFejIrlZMsLZ60wt3Tv",
+                                "object": "charge",
+                                "amount": 100,
+                                "amount_refunded": 0,
+                                "application_fee": null,
+                                "balance_transaction": "txn_186cGGFejIrlZMsLvamaPgxc",
+                                "captured": true,
+                                "created": 1462177116,
+                                "currency": "usd",
+                                "customer": "cus_8NK3osrQZvQarJ",
+                                "description": "Charge Update for test@example.com",
+                                "destination": null,
+                                "dispute": null,
+                                "failure_code": null,
+                                "failure_message": null,
+                                "fraud_details": {},
+                                "invoice": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "order": null,
+                                "paid": true,
+                                "receipt_email": null,
+                                "receipt_number": null,
+                                "refunded": false,
+                                "refunds": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/charges/ch_186cGGFejIrlZMsLZ60wt3Tv/refunds"
+                                },
+                                "shipping": null,
+                                "source": {
+                                    "id": "card_186ZPrFejIrlZMsLPqoR2okh",
+                                    "object": "card",
+                                    "address_city": "Port Huron",
+                                    "address_country": "United States",
+                                    "address_line1": "6986 Lakeport Drive",
+                                    "address_line1_check": "pass",
+                                    "address_line2": null,
+                                    "address_state": "MI",
+                                    "address_zip": "48059",
+                                    "address_zip_check": "pass",
+                                    "brand": "Visa",
+                                    "country": "US",
+                                    "customer": "cus_8NK3osrQZvQarJ",
+                                    "cvc_check": null,
+                                    "dynamic_last4": null,
+                                    "exp_month": 5,
+                                    "exp_year": 2017,
+                                    "fingerprint": "tH1XqMwu0jHg2IEe",
+                                    "funding": "unknown",
+                                    "last4": "1111",
+                                    "metadata": {},
+                                    "name": "Tom Pytleski",
+                                    "tokenization_method": null
+                                },
+                                "source_transfer": null,
+                                "statement_descriptor": null,
+                                "status": "succeeded"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "POST_charges-chargeid",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        },
+        "/charges/{charge_id}/capture": {
+            "parameters": [
+                {
+                    "name": "charge_id",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "summary": "Capture a charge",
+                "description": "",
+                "operationId": "POST_charges-charge_id-capture",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "object": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "integer"
+                                },
+                                "amount_refunded": {
+                                    "type": "integer"
+                                },
+                                "application_fee": {
+                                    "type": "null"
+                                },
+                                "balance_transaction": {
+                                    "type": "string"
+                                },
+                                "captured": {
+                                    "type": "boolean"
+                                },
+                                "created": {
+                                    "type": "integer"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "customer": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "null"
+                                },
+                                "destination": {
+                                    "type": "null"
+                                },
+                                "dispute": {
+                                    "type": "null"
+                                },
+                                "failure_code": {
+                                    "type": "null"
+                                },
+                                "failure_message": {
+                                    "type": "null"
+                                },
+                                "fraud_details": {
+                                    "type": "object",
+                                    "properties": {}
+                                },
+                                "invoice": {
+                                    "type": "null"
+                                },
+                                "livemode": {
+                                    "type": "boolean"
+                                },
+                                "metadata": {
+                                    "type": "object",
+                                    "properties": {}
+                                },
+                                "order": {
+                                    "type": "null"
+                                },
+                                "paid": {
+                                    "type": "boolean"
+                                },
+                                "receipt_email": {
+                                    "type": "null"
+                                },
+                                "receipt_number": {
+                                    "type": "null"
+                                },
+                                "refunded": {
+                                    "type": "boolean"
+                                },
+                                "refunds": {
+                                    "type": "object",
+                                    "properties": {
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {}
+                                            }
+                                        },
+                                        "has_more": {
+                                            "type": "boolean"
+                                        },
+                                        "total_count": {
+                                            "type": "integer"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "shipping": {
+                                    "type": "null"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "type": "string"
+                                        },
+                                        "address_city": {
+                                            "type": "string"
+                                        },
+                                        "address_country": {
+                                            "type": "string"
+                                        },
+                                        "address_line1": {
+                                            "type": "string"
+                                        },
+                                        "address_line1_check": {
+                                            "type": "string"
+                                        },
+                                        "address_line2": {
+                                            "type": "null"
+                                        },
+                                        "address_state": {
+                                            "type": "string"
+                                        },
+                                        "address_zip": {
+                                            "type": "string"
+                                        },
+                                        "address_zip_check": {
+                                            "type": "string"
+                                        },
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "customer": {
+                                            "type": "string"
+                                        },
+                                        "cvc_check": {
+                                            "type": "null"
+                                        },
+                                        "dynamic_last4": {
+                                            "type": "null"
+                                        },
+                                        "exp_month": {
+                                            "type": "integer"
+                                        },
+                                        "exp_year": {
+                                            "type": "integer"
+                                        },
+                                        "fingerprint": {
+                                            "type": "string"
+                                        },
+                                        "funding": {
+                                            "type": "string"
+                                        },
+                                        "last4": {
+                                            "type": "string"
+                                        },
+                                        "metadata": {
+                                            "type": "object",
+                                            "properties": {}
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "tokenization_method": {
+                                            "type": "null"
+                                        }
+                                    }
+                                },
+                                "source_transfer": {
+                                    "type": "null"
+                                },
+                                "statement_descriptor": {
+                                    "type": "null"
+                                },
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "id": "ch_186cNKFejIrlZMsLZCqtjgdv",
+                                "object": "charge",
+                                "amount": 100,
+                                "amount_refunded": 0,
+                                "application_fee": null,
+                                "balance_transaction": "txn_186cOoFejIrlZMsLXiAZJtz3",
+                                "captured": true,
+                                "created": 1462177554,
+                                "currency": "usd",
+                                "customer": "cus_8NK3osrQZvQarJ",
+                                "description": null,
+                                "destination": null,
+                                "dispute": null,
+                                "failure_code": null,
+                                "failure_message": null,
+                                "fraud_details": {},
+                                "invoice": null,
+                                "livemode": false,
+                                "metadata": {},
+                                "order": null,
+                                "paid": true,
+                                "receipt_email": null,
+                                "receipt_number": null,
+                                "refunded": false,
+                                "refunds": {
+                                    "object": "list",
+                                    "data": [],
+                                    "has_more": false,
+                                    "total_count": 0,
+                                    "url": "/v1/charges/ch_186cNKFejIrlZMsLZCqtjgdv/refunds"
+                                },
+                                "shipping": null,
+                                "source": {
+                                    "id": "card_186ZPrFejIrlZMsLPqoR2okh",
+                                    "object": "card",
+                                    "address_city": "Port Huron",
+                                    "address_country": "United States",
+                                    "address_line1": "6986 Lakeport Drive",
+                                    "address_line1_check": "pass",
+                                    "address_line2": null,
+                                    "address_state": "MI",
+                                    "address_zip": "48059",
+                                    "address_zip_check": "pass",
+                                    "brand": "Visa",
+                                    "country": "US",
+                                    "customer": "cus_8NK3osrQZvQarJ",
+                                    "cvc_check": null,
+                                    "dynamic_last4": null,
+                                    "exp_month": 5,
+                                    "exp_year": 2017,
+                                    "fingerprint": "tH1XqMwu0jHg2IEe",
+                                    "funding": "unknown",
+                                    "last4": "1111",
+                                    "metadata": {},
+                                    "name": "Tom Pytleski",
+                                    "tokenization_method": null
+                                },
+                                "source_transfer": null,
+                                "statement_descriptor": null,
+                                "status": "succeeded"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Authorization": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "POST_charges-chargeid-capture",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "enabled": false,
+                        "dynamic": false,
+                        "statusCode": 200
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {},
+    "securityDefinitions": {
+        "Authorization": {
+            "name": "Authorization",
+            "type": "apiKey",
+            "in": "header"
+        }
+    },
+    "x-stoplight": {
+        "beforeScript": "function (ctx, request) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n  SL.utilities.theWire(ctx, request);\n}",
+        "afterScript": "",
+        "version": {
+            "groups": {
+                "docs": [
+                    {
+                        "name": "Charges",
+                        "items": [
+                            {
+                                "_id": "POST_charges",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "GET_charges-chargeid",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "POST_charges-chargeid",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "POST_charges-chargeid-capture",
+                                "type": "endpoints"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Customers",
+                        "items": [
+                            {
+                                "_id": "GET_customers",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "POST_customers",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "GET_customers-customerid",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "POST_customers-customerid",
+                                "type": "endpoints"
+                            },
+                            {
+                                "_id": "DELETE_customers-customerid",
+                                "type": "endpoints"
+                            }
+                        ]
+                    }
+                ],
+                "utilFuncs": []
+            }
+        },
+        "functions": {
+            "hijackWithValidationErrors": {
+                "name": "hijackWithValidationErrors",
+                "description": "",
+                "script": "function (ctx, request) {\n  var messages = request.validate();\n  \n  // did the request validation fail?\n  if (!request.valid.get()) {\n    // respond immediately with the validation error messages\n    // this request will never hit the end api server\n    request.hijack(400, \"application/json\", messages)\n  }\n}"
+            },
+            "addRandomLatency": {
+                "name": "addRandomLatency",
+                "description": "",
+                "script": "function (min, max) {\n  SL.sleep(SL.rand(min, max))\n}"
+            },
+            "queryStringMocking": {
+                "name": "queryStringMocking",
+                "description": "",
+                "script": "function (ctx, request) {\n  // For example, adding ?mock=200 to a request url will enable mocking,\n  // using the example endpoint response for the 200 status code.\n  var mock = request.url.query.get(\"mock\")\n  if (mock) {\n    ctx.mock.set(true, mock)\n  }\n}"
+            },
+            "mapPath": {
+                "name": "mapPath",
+                "description": "",
+                "script": "function (ctx, request, originSubpath, targetSubpath) {\n  // for example, mapPath(ctx, request, \"users\", \"members\") \n  // will rewrite an incoming request from /users/123 to /members/123.\n  var path = request.url.path.get();\n  if (path.indexOf(originSubpath) !== -1) {\n     path.replace(originSubpath, targetSubpath);\n     request.url.path.set(path);\n  }\n}"
+            }
+        },
+        "textSections": {},
+        "mock": {
+            "enabled": false,
+            "dynamic": false
+        }
+    },
+    "x-tests": {
+        "KAkHnAYKtX7HyrEjh": {
+            "id": "KAkHnAYKtX7HyrEjh",
+            "name": "Customer Workflow",
+            "initialVariables": {},
+            "steps": [
+                {
+                    "name": "Create Customer",
+                    "capture": {
+                        "body": [
+                            {
+                                "name": "id",
+                                "value": "id"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "post",
+                        "url": "/v1/customers",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {
+                            "params": [
+                                {
+                                    "name": "description",
+                                    "value": "<<desc>>"
+                                }
+                            ],
+                            "text": "",
+                            "mimeType": "application/x-www-form-urlencoded"
+                        },
+                        "authentication": {
+                            "authType": "basic",
+                            "params": []
+                        }
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Get New Customer",
+                    "capture": {},
+                    "request": {
+                        "method": "get",
+                        "url": "/customers/{id}",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {},
+                        "authentication": {
+                            "authType": "basic",
+                            "params": []
+                        }
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Customers",
+                    "capture": {},
+                    "request": {
+                        "method": "get",
+                        "url": "/customers",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [
+                            {
+                                "name": "limit",
+                                "value": ""
+                            }
+                        ],
+                        "postData": {},
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "value": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete New Customer",
+                    "capture": {},
+                    "request": {
+                        "method": "delete",
+                        "url": "/customers/{id}",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {},
+                        "authentication": {
+                            "authType": "basic",
+                            "params": []
+                        }
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                }
+            ]
+        },
+        "yj43EHTv8yhfs4i8A": {
+            "id": "yj43EHTv8yhfs4i8A",
+            "name": "Charges Workflow",
+            "initialVariables": {},
+            "steps": [
+                {
+                    "name": "Create Charge",
+                    "beforeScript": null,
+                    "afterScript": "function (ctx, request, response) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n  var body = response.body.get();\n  SL.variables.description = body.description;\n  //console.log(\"variables are:\", JSON.stringify(SL, null, 2))\n}",
+                    "capture": {
+                        "body": [
+                            {
+                                "name": "id",
+                                "value": "id"
+                            },
+                            {
+                                "name": "foo",
+                                "value": "description"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "post",
+                        "url": "/v1/charges",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer <<apiKey>>"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {
+                            "mimeType": "application/x-www-form-urlencoded",
+                            "params": [
+                                {
+                                    "name": "currency",
+                                    "value": "usd",
+                                    "fileName": null,
+                                    "contentType": null
+                                },
+                                {
+                                    "name": "amount",
+                                    "value": "1000",
+                                    "fileName": null,
+                                    "contentType": null
+                                },
+                                {
+                                    "name": "customer",
+                                    "value": "cus_8NK3osrQZvQarJ",
+                                    "fileName": null,
+                                    "contentType": null
+                                },
+                                {
+                                    "name": "description",
+                                    "value": "test",
+                                    "fileName": null,
+                                    "contentType": null
+                                }
+                            ],
+                            "text": "{\n    \"amount\": \"integer (required)\",\n    \"currency\": \"string (required)\",\n    \"application_fee\": \"string (optional)\",\n    \"capture\": \"string (optional)\",\n    \"description\": \"string (optional)\",\n    \"destination\": \"string (optional)\",\n    \"metadata\": {},\n    \"receipt_email\": \"string (optional)\",\n    \"shipping\": {},\n    \"customer\": \"string (optional)\",\n    \"source\": \"string (optional)\"\n}"
+                        },
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve New Charge",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "capture": {
+                        "body": []
+                    },
+                    "request": {
+                        "method": "get",
+                        "url": "/charges/{id}",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {},
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Charge Description",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "capture": {},
+                    "request": {
+                        "method": "post",
+                        "url": "/charges/{id}",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {
+                            "mimeType": "application/x-www-form-urlencoded",
+                            "params": [
+                                {
+                                    "name": "description",
+                                    "value": "smokey",
+                                    "fileName": null,
+                                    "contentType": null
+                                }
+                            ],
+                            "text": ""
+                        },
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify Charge Update",
+                    "beforeScript": null,
+                    "afterScript": "function (ctx, request, response) {\n  //var body = response.body.get();\n  var body = response.body.get()\n  console.log(JSON.stringify(SL, null, 2))\n  SL.assert.notEqual(SL.variables.description, body.description, \"[Assert From Runtime] Description should be updated!\")\n}",
+                    "capture": {},
+                    "request": {
+                        "method": "get",
+                        "url": "/charges/{id}",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer sk_test_EWBP4lLcfqRksqERLMAgtjVk"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {},
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "value": {
+                                "type": "null"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "SuDCFmBBcvmyA7dCh": {
+            "id": "SuDCFmBBcvmyA7dCh",
+            "name": "Capture a Charge",
+            "initialVariables": [
+                {
+                    "apiKey": "sk_test_EWBP4lLcfqRksqERLMAgtjVk",
+                    "customer": "cus_8NK3osrQZvQarJ",
+                    "amount": "1000",
+                    "currency": "usd",
+                    "capture": false
+                },
+                {
+                    "apiKey": "sk_test_EWBP4lLcfqRksqERLMAgtjVk",
+                    "customer": "cus_8NK3osrQZvQarJ",
+                    "amount": "1001",
+                    "currency": "eur",
+                    "capture": false
+                },
+                {
+                    "apiKey": "sk_test_EWBP4lLcfqRksqERLMAgtjVk",
+                    "customer": "cus_8NK3osrQZvQarJ",
+                    "amount": "10002",
+                    "currency": "jpy",
+                    "capture": false
+                },
+                {
+                    "apiKey": "sk_test_EWBP4lLcfqRksqERLMAgtjVk",
+                    "customer": "cus_8NK3osrQZvQarJ",
+                    "amount": "1000003",
+                    "currency": "rub",
+                    "capture": false
+                }
+            ],
+            "steps": [
+                {
+                    "name": "Create Uncaptured Charge",
+                    "beforeScript": "function (ctx, request) {\n  // Your javascript code here.\n  // Code completion enabled.\n  \n}",
+                    "afterScript": "function (ctx, request, response) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n  var body = response.body.get();\n  SL.assert.isFalse(body.captured, \"Charge should be uncaptured!\");\n}",
+                    "capture": {
+                        "body": [
+                            {
+                                "name": "id",
+                                "value": "id"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "post",
+                        "url": "/charges",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer <<apiKey>>"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {
+                            "mimeType": "application/x-www-form-urlencoded",
+                            "params": [
+                                {
+                                    "name": "customer",
+                                    "value": "<<customer>>"
+                                },
+                                {
+                                    "name": "currency",
+                                    "value": "<<currency>>"
+                                },
+                                {
+                                    "name": "amount",
+                                    "value": "<<amount>>"
+                                },
+                                {
+                                    "name": "capture",
+                                    "value": "<<capture>>"
+                                }
+                            ],
+                            "text": "{\n    \"amount\": \"integer (required)\",\n    \"currency\": \"string (required)\",\n    \"application_fee\": \"string (optional)\",\n    \"capture\": \"string (optional)\",\n    \"description\": \"string (optional)\",\n    \"destination\": \"string (optional)\",\n    \"metadata\": {},\n    \"receipt_email\": \"string (optional)\",\n    \"shipping\": {},\n    \"customer\": \"string (optional)\",\n    \"source\": \"string (optional)\"\n}"
+                        },
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                },
+                {
+                    "name": "Capture Charge",
+                    "afterScript": "function (ctx, request, response) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n  var body = response.body.get();\n  SL.assert.isTrue(body.captured, \"Charge is captured!\");\n}",
+                    "capture": {},
+                    "request": {
+                        "method": "post",
+                        "url": "/charges/{id}/capture",
+                        "headers": [
+                            {
+                                "name": "Authorization",
+                                "value": "Bearer <<apiKey>>"
+                            }
+                        ],
+                        "queryString": [],
+                        "postData": {},
+                        "authentication": {}
+                    },
+                    "assertions": [
+                        {
+                            "key": "response.status",
+                            "op": "eq",
+                            "value": 200
+                        },
+                        {
+                            "key": "response.body",
+                            "op": "validate.pass",
+                            "match": 200
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
