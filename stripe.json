@@ -2721,7 +2721,7 @@
             "initialVariables": {},
             "steps": [
                 {
-                    "name": "Create Customer",
+                    "name": "Create a New Customer",
                     "capture": {
                         "body": [
                             {
@@ -2825,9 +2825,7 @@
                         {
                             "key": "response.body",
                             "op": "validate.pass",
-                            "value": {
-                                "type": "string"
-                            }
+                            "match": 200
                         },
                         {
                             "key": "response.status",
@@ -3048,9 +3046,7 @@
                         {
                             "key": "response.body",
                             "op": "validate.pass",
-                            "value": {
-                                "type": "null"
-                            }
+                            "match": 200
                         }
                     ]
                 }
@@ -3178,6 +3174,16 @@
                             "match": 200
                         }
                     ]
+                }
+            ]
+        },
+        "6JQ389FtBw2AeM8KE": {
+            "id": "6JQ389FtBw2AeM8KE",
+            "name": "Circle",
+            "initialVariables": {},
+            "steps": [
+                {
+                    "$ref": "#/tests/yj43EHTv8yhfs4i8A"
                 }
             ]
         }
