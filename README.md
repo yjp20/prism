@@ -1,5 +1,7 @@
 # Prism API Server
 
+Current Prism Version 0.1.8
+
 The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with dynamic mocking, transformations, validations, and more.
 
 [Homepage - https://stoplight.io/prism](https://stoplight.io/prism?utm_source=github&utm_medium=prism)
