@@ -1,6 +1,6 @@
 # Prism API Server
 
-Current Prism Version 0.6.12
+Current Prism Version 0.6.13
 
 The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with dynamic mocking, transformations, validations, and more.
 
