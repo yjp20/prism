@@ -30,10 +30,10 @@ URL="https://github.com/stoplightio/prism/releases/download/v0.6.21/prism_$PLATF
 SRC=$(pwd)/prism_$PLATFORM
 DEST=/usr/local/bin/prism
 
-if [ -z $LATEST ] ; then
-  echo "Error requesting. Download binary from ${URL}"
-  exit 1
-else
+# if [ -z $LATEST ] ; then
+#   echo "Error requesting. Download binary from ${URL}"
+#   exit 1
+# else
   STATUS=$(curl -sL -w %{http_code} -o $SRC $URL)
   if [ $STATUS -ge 200 ] & [ $STATUS -le 308 ]; then
     mv $SRC $DEST
@@ -44,7 +44,7 @@ else
     echo "Error requesting. Download binary from ${URL}"
     exit 1
   fi
-fi
+# fi
 }
 
 install
