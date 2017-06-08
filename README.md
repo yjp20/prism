@@ -13,7 +13,7 @@ The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with
 On OS X or Linux:
 
 ```
-curl https://raw.githubusercontent.com/stoplightio/prism/master/install.sh | sh
+curl https://raw.githubusercontent.com/stoplightio/prism/2.x/install.sh | sh
 ```
 
 On Windows download [binary](https://github.com/stoplightio/prism/releases).
