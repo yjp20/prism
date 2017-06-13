@@ -1,6 +1,6 @@
 # Prism API Server
 
-Prism 2.0 is currently in Alpha. Current Version [Prism 2.0.0-alpha.4](https://github.com/stoplightio/prism/blob/2.x/README.md)
+Prism 2.0 is currently in Alpha. Current Version [Prism 2.0.0-alpha.6](https://github.com/stoplightio/prism/blob/2.x/README.md)
 
 Current Prism Version 0.6.20
 
