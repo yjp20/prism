@@ -1,6 +1,6 @@
 # Prism API Server
 
-Current Prism Versions 2.0.0-beta.8
+Current Prism Versions 2.0.0-beta.9
 
 The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with dynamic mocking, transformations, validations, and more.
 
@@ -23,7 +23,9 @@ On Windows download [binary](https://github.com/stoplightio/prism/releases).
 ```
 prism update
 ```
+
 or
+
 ```
 prism up
 ```
