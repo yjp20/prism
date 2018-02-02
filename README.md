@@ -16,6 +16,12 @@ On OS X or Linux:
 curl https://raw.githubusercontent.com/stoplightio/prism/2.x/install.sh | sh
 ```
 
+With Docker
+
+```
+docker pull stoplight/prism
+```
+
 On Windows download [binary](https://github.com/stoplightio/prism/releases).
 
 ## Update
