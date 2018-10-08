@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../",
+    "target": "es5",
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "types": [
+      "jest",
+      "node"
+    ],
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "./**/*.spec.ts",
+    "./**/*.d.ts"
+  ],
+  "exclude": []
+}
