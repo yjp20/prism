@@ -13,3 +13,9 @@ node_modules/
 
 # Optional npm cache directory
 .npm
+
+# Distribution directory
+dist
+
+# IDE
+.idea
