@@ -1,0 +1,74 @@
+{
+  "private": true,
+  "name": "prism",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "yarn",
+    "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
+    "lint": "tslint packages/*/src/**/*.{ts,js}",
+    "test": "yarn lint && jest",
+    "test.fast": "jest",
+    "test.coverage": "yarn test --coverage",
+    "test.watch": "yarn test.fast --watch",
+    "test.update": "yarn test.fast --updateSnapshot"
+  },
+  "devDependencies": {
+    "@types/jest": "23.3.x",
+    "@types/node": "10.11.x",
+    "jest": "23.6.x",
+    "ts-jest": "23.10.x",
+    "tslint": "5.11.x",
+    "tslint-config-stoplight": "1.0.x",
+    "tslint-eslint-rules": "5.4.x",
+    "typescript": "3.1.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "jest": {
+    "verbose": false,
+    "testMatch": [
+      "<rootDir>/packages/*/src/**/__tests__/*.(ts|js)?(x)"
+    ],
+    "transform": {
+      "^.+\\.[tj]sx?$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true,
+          "ignoreCodes": [
+            151001
+          ]
+        }
+      }
+    },
+    "collectCoverageFrom": [
+      "packages/*/src/**/*.{ts,tsx}",
+      "!**/*.d.ts",
+      "!**/__tests__/**"
+    ],
+    "coveragePathIgnorePatterns": [
+      "types.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules"
+    ],
+    "moduleNameMapper": {
+      "@stoplight/prism/(.*)": "<rootDir>/packages/prism/src/$1",
+      "@stoplight/prism-cli/(.*)": "<rootDir>/packages/cli/src/$1",
+      "@stoplight/prism-server/(.*)": "<rootDir>/packages/server/src/$1"
+    }
+  }
+}
