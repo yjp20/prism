@@ -17,6 +17,11 @@
   "bugs": {
     "url": "https://github.com/stoplightio/prism-ns/issues"
   },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
   "homepage": "https://github.com/stoplightio/prism-ns#readme",
   "devDependencies": {
     "@types/jest": "^23.3.3",
@@ -24,7 +29,7 @@
     "jest": "^23.6.0",
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",
-    "tslint-eslint-rules": "^5.4.0",
+    "tslint-config-stoplight": "^1.0.0",
     "typescript": "^3.1.1"
   }
 }
