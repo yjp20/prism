@@ -1,5 +1,5 @@
 {
-  "name": "prism-ns",
+  "name": "@prism/cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
