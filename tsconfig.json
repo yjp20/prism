@@ -1,5 +1,6 @@
 {
-  "includes": ["packages/*/src/**"],
+  "include": ["packages/*/src/*"],
+  "exclude": ["node_modules", "__tests__"],
   "compilerOptions": {
     "baseUrl": ".",
     "target": "esnext",
