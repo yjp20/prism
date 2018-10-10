@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/stoplightio/prism-ns#readme",
   "devDependencies": {
+    "@stoplight/types": "^1.0.1",
     "@types/jest": "^23.3.3",
     "@types/node": "^10.11.4",
     "jest": "^23.6.0",
