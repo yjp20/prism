@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HttpProvider mock() mocks 1`] = `
+Object {
+  "data": Object {
+    "body": "{\\"test\\":\\"value\\"}",
+    "headers": Object {
+      "Content-type": "application/json",
+    },
+    "status": 200,
+  },
+}
+`;

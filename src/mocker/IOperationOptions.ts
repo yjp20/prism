@@ -5,6 +5,5 @@ export enum Protocol {
 
 export interface IOperationOptions {
   protocol: Protocol.HTTP | Protocol.RPC;
-  mock: boolean;
   dynamic?: boolean;
 }
