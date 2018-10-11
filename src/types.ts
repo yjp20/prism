@@ -13,14 +13,27 @@ export interface IHttpRequest {
     headers: { [key: string]: string };
 }
 
+export interface IHttpOperationOptionsNegotiationResult {
+    readonly httpOperationOptions?: IHttpOperationOptions;
+    readonly error?: Error;
+}
+
 export interface IHttpOperationOptions {
-    readonly contentType?: string;
-    readonly statusCode?: string;
-    readonly example?: string;
+    // TODO: I decided to rename 'contentType' to 'mediaType' to make it compatible with IHttpOperationNode
+    readonly mediaType?: string;
+    // HTTP status code (200, 300, etc...)
+    readonly code?: string;
+    // A unique key (id) of an example to return
+    readonly exampleKey?: string;
     readonly headers?: boolean;
+    // whether to generate a response from a schema or not
     readonly dynamic?: boolean;
 }
 
+export interface IHttpRequestValidationResult {
+    readonly isValid: boolean;
+}
+
 export interface IHttpRequestValidator {
-    isValid(httpOperation: IHttpOperation, httpRequest: IHttpRequest): boolean;
+    validate(httpOperation: IHttpOperation, httpRequest: IHttpRequest): IHttpRequestValidationResult;
 }
