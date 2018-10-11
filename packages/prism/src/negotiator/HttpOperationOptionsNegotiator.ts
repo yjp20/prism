@@ -1,11 +1,15 @@
 import { IHttpOperation, IHttpResponse, IHttpContent, IExample } from '@stoplight/types';
-import { IHttpOperationOptions, IHttpRequestValidator, IHttpRequest, IHttpOperationOptionsNegotiationResult, IHttpRequestValidationResult } from '../types';
+import { IHttpOperationOptions, IHttpRequest, IHttpOperationOptionsNegotiationResult } from '../types';
 import * as _ from 'lodash';
 import { stat } from 'fs';
 
-export class HttpOperationOptionsNegotiator implements IOperationOptionsNegotiator<IHttpOperation, IHttpOperationOptions, IHttpRequest,IHttpOperationOptionsNegotiationResult> {
+import HttpRequestValidator from '../validator/HttpRequestValidator';
+import IHttpRequestValidationResult from '../validator/IHttpRequestValidationResult';
+import IOperationOptionsNegotiator from './IOperationOptionsNegotiator';
 
-    constructor(private readonly httpRequestValidator: IHttpRequestValidator) {
+export default class HttpOperationOptionsNegotiator implements IOperationOptionsNegotiator<IHttpOperation, IHttpOperationOptions, IHttpRequest,IHttpOperationOptionsNegotiationResult> {
+
+    constructor(private readonly httpRequestValidator: HttpRequestValidator) {
     }
 
     public negotiate(httpOperation: IHttpOperation, desiredOptions: IHttpOperationOptions, httpRequest: IHttpRequest): Promise<IHttpOperationOptionsNegotiationResult> {
@@ -35,10 +39,10 @@ export class HttpOperationOptionsNegotiator implements IOperationOptionsNegotiat
      * In particular, if the request is invalid, we do not take the forced parameters, such as: _dynamic or _code, into account.
      * This function will simply try to negotiate options for a 400 code. It will do its best to produce any result
      * based on available mediaTypes and examples/schemas.
-     * 
+     *
      * The logic is the following:
      * - find a 400 response
-     *      @if exists: 
+     *      @if exists:
      *          - find first static example (regardless of the mediaType)
      *              @if exists: return
      *              @if !exist:
@@ -47,7 +51,7 @@ export class HttpOperationOptionsNegotiator implements IOperationOptionsNegotiat
      *                          - return
      *                      @else
      *                          - throw error
-     *      @else: throw error        
+     *      @else: throw error
      */
     private negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[], httpRequest: IHttpRequest): IHttpOperationOptions {
         // currently only try to find a 400 response, but we may want to support other cases in the future
@@ -219,7 +223,7 @@ export class HttpOperationOptionsNegotiator implements IOperationOptionsNegotiat
         }
         // if no response found under a status code, try to mock a default code
         return this.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
-    }    
+    }
 
     private findResponseByStatusCode(responses: IHttpResponse[], statusCode: string): IHttpResponse | undefined {
         return responses.find(response => response.code === statusCode);

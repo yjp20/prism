@@ -18,6 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@stoplight/types@stoplightio/types":
+  version "1.0.1"
+  resolved "https://codeload.github.com/stoplightio/types/tar.gz/ae2c6899c6a7a7e5246e637203f94a0e0f7317f6"
+
 "@types/jest@23.3.x":
   version "23.3.5"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.5.tgz#870a1434208b60603745bfd214fc3fc675142364"

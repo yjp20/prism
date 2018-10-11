@@ -70,5 +70,8 @@
       "@stoplight/prism-cli/(.*)": "<rootDir>/packages/cli/src/$1",
       "@stoplight/prism-server/(.*)": "<rootDir>/packages/server/src/$1"
     }
+  },
+  "dependencies": {
+    "@stoplight/types": "stoplightio/types"
   }
 }
