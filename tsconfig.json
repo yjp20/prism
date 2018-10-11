@@ -1,19 +1,32 @@
 {
+  "include": ["packages/*/src/*"],
+  "exclude": ["node_modules", "__tests__"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "amd",
-    "lib": ["es2015"],
-    "declaration": true,
-    "outFile": "./dist/prism-ns-mocker.js",
-    "rootDir": "./src",
+    "baseUrl": ".",
+    "target": "esnext",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
     "strict": true,
-    "esModuleInterop": true
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+    "pretty": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@stoplight/prism": ["./packages/prism/src"],
+      "@stoplight/prism/*": ["./packages/prism/src/*"],
+      "@stoplight/prism-cli": ["./packages/cli/src"],
+      "@stoplight/prism-cli/*": ["./packages/cli/src/*"],
+      "@stoplight/prism-server": ["./packages/server/src"],
+      "@stoplight/prism-server/*": ["./packages/server/src/*"]
+    }
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "@stoplight/prism-cli",
+  "version": "0.0.0",
+  "main": "lib/bundle.js",
+  "module": "lib/bundle.es.js",
+  "author": "Stoplight <support@stoplight.io>",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stoplightio/prism.git"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "@stoplight/prism": "0.0.0",
+    "@stoplight/prism-server": "0.0.0"
+  }
+}

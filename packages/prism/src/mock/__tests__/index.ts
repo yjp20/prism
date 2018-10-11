@@ -1,4 +1,4 @@
-import { Mocker } from './Mocker';
+import { Mocker } from '../index';
 
 describe('Mocker', () => {
   let mocker: Mocker;
