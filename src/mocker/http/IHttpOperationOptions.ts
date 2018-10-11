@@ -3,9 +3,9 @@ import { IOperationOptions, Protocol } from '../IOperationOptions';
 export interface IHttpOperationOptions extends IOperationOptions {
   protocol: Protocol.HTTP;
   // Defaults to the lowest 2xx status code
-  status?: string;
+  status: string;
   // Defaults to application/json
-  contentType?: string;
+  mediaType: string;
   // Defaults to content type
   example?: string;
   // If true mock back response headers
