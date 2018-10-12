@@ -1,5 +1,5 @@
 {
-  "name": "@stoplight/prism",
+  "name": "@stoplight/prism-core",
   "version": "0.0.0",
   "main": "lib/bundle.js",
   "module": "lib/bundle.es.js",
