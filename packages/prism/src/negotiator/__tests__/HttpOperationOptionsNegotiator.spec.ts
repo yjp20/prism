@@ -3,6 +3,8 @@ import HttpRequestValidator from '../../validator/HttpRequestValidator';
 import { IHttpOperation, IHttpContent, IExample } from '@stoplight/types';
 import { IHttpOperationOptions, IHttpRequest } from '../../types';
 import IHttpRequestValidationResult from '../../validator/IHttpRequestValidationResult';
+import Chance from 'chance';
+const chance = new Chance();
 
 jest.mock('../../validator/HttpRequestValidator');
 const HttpRequestValidatorMock = <jest.Mock<HttpRequestValidator>>HttpRequestValidator;
@@ -18,95 +20,378 @@ describe('HttpOperationOptionsNegotiator', () => {
   });
 
   describe('negotiate()', () => {
-    const request: IHttpRequest = {
-    };
-    const operation: IHttpOperation = {
-      method: '',
-      path: '',
-      responses: [],
-      id: '',
-    };
-    const desiredOptions: IHttpOperationOptions = {
-    };
+    let desiredOptions: IHttpOperationOptions;
+    let httpRequest: IHttpRequest;
 
-    describe('when request is invalid', () => {
+    beforeEach(() => {
+      desiredOptions = {};
+      httpRequest = {};
+    });
+
+    describe('when httpRequest is invalid', () => {
       beforeEach(() => {
-        const validationResult: IHttpRequestValidationResult = {
-          isValid: false
-        };
-        (<jest.Mock>HttpRequestValidatorMock.mock.instances[0].validate).mockReturnValue(validationResult);
+        givenInvalidRequest()
       });
 
       describe('and 400 response exists', () => {
-        let response;
-        let httpContent: IHttpContent;
-        let expectedMediaType = 'some';
-        let expectedExampleKey = 'key'
+        const actualCode = '400';
+        const actualMediaType = chance.string();
+        const actualExampleKey = chance.string();
 
-        beforeEach(() => {
-          httpContent = {
-            mediaType: expectedMediaType,
-            examples: []
+        test('and has static examples defined should return the first static example', async () => {
+          const httpOperation = anHttpOperation().withResponses([{
+            code: actualCode,
+            content: [{
+              mediaType: actualMediaType,
+              examples: [
+                { key: actualExampleKey },
+                { key: chance.string() }
+              ]
+            }]
+          }]).instance();
+
+          const actualNegotiationsResult = await negotiator.negotiate(httpOperation, desiredOptions, httpRequest)
+          const expectedOptions = {
+            code: actualCode,
+            mediaType: actualMediaType,
+            exampleKey: actualExampleKey,
+            dynamic: false
           };
-          response = {
-            code: '400',
-            content: []
-          };
-          operation.responses[0] = response;
-        });
 
-        describe('and has static example defined', () => {
-          let example: IExample;
-
-          beforeEach(() => {
-            example = {
-              key: expectedMediaType
-            };
-            httpContent.examples[0] = example;
-            httpContent.examples[1] = { key: 'unexpected-key' };
-          });
-
-          it('should return the first static example', () => {
-            return expectNoErrorAndOptions({
-              code: '400',
-              mediaType: expectedMediaType,
-              exampleKey: expectedExampleKey,
-              dynamic: false
-            });
-          });
+          expect(actualNegotiationsResult.error).toBeUndefined();
+          expect(actualNegotiationsResult.httpOperationOptions).toEqual(expectedOptions);
         });
 
         describe('and has no static content', () => {
-          beforeEach(() => {
-            httpContent = {
-              mediaType: expectedMediaType,
-              examples: []
+          test('and has schemable content should return first such content', async () => {
+            const httpOperation = anHttpOperation().withResponses([{
+              code: actualCode,
+              content: [{
+                mediaType: actualMediaType + chance.character(),
+                examples: []
+              }, {
+                schema: {},
+                mediaType: actualMediaType,
+                examples: []
+              }, {
+                schema: {},
+                mediaType: actualMediaType + chance.character(),
+                examples: []
+              }]
+            }]).instance();
+
+            const actualNegotiationsResult = await negotiator.negotiate(httpOperation, desiredOptions, httpRequest)
+            const expectedOptions = {
+              code: actualCode,
+              mediaType: actualMediaType,
+              exampleKey: undefined,
+              dynamic: false
             };
-            response.content[0] = httpContent;
+
+            expect(actualNegotiationsResult.error).toBeUndefined();
+            expect(actualNegotiationsResult.httpOperationOptions).toEqual(expectedOptions);
           });
 
-          it('should return the first schemable content', () => {
-            httpContent.schema = {};
+          test('and no schemable content should return error', async () => {
+            const httpOperation = anHttpOperation().withResponses([{
+              code: actualCode,
+              content: [{
+                mediaType: actualMediaType,
+                examples: []
+              }, {
+                mediaType: actualMediaType
+              }]
+            }]).instance();
 
-            return expectNoErrorAndOptions({
-              code: '400',
-              mediaType: expectedMediaType,
-              dynamic: true,
-              exampleKey: undefined
-            });
+            const actualNegotiationsResult = await negotiator.negotiate(httpOperation, desiredOptions, httpRequest)
+
+            expect(actualNegotiationsResult.error).toEqual(new Error('Data corrupted'));
+            expect(actualNegotiationsResult.httpOperationOptions).toBeUndefined();
           });
         });
+      });
 
+      describe('and no 400 response exists', () => {
+        test('should return an error', async () => {
+          const httpOperation = anHttpOperation().instance();
+
+          const actualNegotiationsResult = await negotiator.negotiate(httpOperation, desiredOptions, httpRequest);
+
+          expect(actualNegotiationsResult.error).toEqual(new Error('No 400 response defined'));
+          expect(actualNegotiationsResult.httpOperationOptions).toBeUndefined();
+        });
       });
     });
 
-    function expectNoErrorAndOptions(options) {
-      return negotiator.negotiate(operation, desiredOptions, request)
-        .then(negotiationResult => {
-          expect(negotiationResult.error).toBeUndefined();
-          expect(negotiationResult.httpOperationOptions).toEqual(options);
-        })
-    }
+    describe('when httpRequest is valid', () => {
+      beforeEach(givenValidRequest);
+      // negotiateOptionsForValidRequest
+      describe('and code provided', () => {
+        // negotiateOptionsBySpecificCode
+        describe('and response exists', () => {
+          // negotiateOptionsBySpecificResponse
+        });
+        describe.done('and response not exist', () => {
+          // negotiateOptionsForDefaultCodenegotiateOptionsForDefaultCode
+          describe.done('and any 2XX exists', () => {
+            // negotiateOptionsBySpecificResponse
+            describe.done('and mediaType provided', () => {
+              describe.done('and httpContent exists', () => {
+                // negotiateByPartialOptionsAndHttpContent
+                describe.done('and example key provided', () => {
+                  describe.done('and example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe.done('and example not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe.done('and example key not provided but dynamic forced', () => {
+                  describe.done('and schema exists', () => {
+                    test('should return dynamic', () => { });
+                  });
+                  describe.done('and schema not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe.done('and neither example key nor dynamic forced', () => {
+                  describe.done('and any example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe.done('and not example exist but dynamic exists', () => {
+                    test('should return that dynamic', () => { });
+                  });
+                  describe.done('and neither example nor dynamic exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+              });
+              describe.done('and httpContent not exist', () => {
+                // negotiateDefaultMediaType
+                describe.done('and default httpContent exists', () => {
+                  // negotiateByPartialOptionsAndHttpContent
+                  describe.done('and example key provided', () => {
+                    describe.done('and example exists', () => {
+                      test('should return that example', () => { });
+                    });
+                    describe.done('and example not exist', () => {
+                      test('should return error', () => { });
+                    });
+                  });
+                  describe.done('and example key not provided but dynamic forced', () => {
+                    describe.done('and schema exists', () => {
+                      test('should return dynamic', () => { });
+                    });
+                    describe.done('and schema not exist', () => {
+                      test('should return error', () => { });
+                    });
+                  });
+                  describe.done('and neither example key nor dynamic forced', () => {
+                    describe.done('and any example exists', () => {
+                      test('should return that example', () => { });
+                    });
+                    describe.done('and not example exist but dynamic exists', () => {
+                      test('should return that dynamic', () => { });
+                    });
+                    describe.done('and neither example nor dynamic exist', () => {
+                      test('should return error', () => { });
+                    });
+                  });
+                });
+                describe.done('and default httpContent not exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+            });
+            describe.done('and mediaType not provided', () => {
+              // negotiateDefaultMediaType
+              describe('and default httpContent exists', () => {
+                // negotiateByPartialOptionsAndHttpContent
+                describe('and example key provided', () => {
+                  describe('and example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe('and example not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe('and example key not provided but dynamic forced', () => {
+                  describe('and schema exists', () => {
+                    test('should return dynamic', () => { });
+                  });
+                  describe('and schema not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe('and neither example key nor dynamic forced', () => {
+                  describe('and any example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe('and not example exist but dynamic exists', () => {
+                    test('should return that dynamic', () => { });
+                  });
+                  describe('and neither example nor dynamic exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+              });
+              describe('and default httpContent not exist', () => {
+                test('should return error', () => { });
+              });
+            });
+          });
+          describe.done('and none 2XX exists', () => {
+            test('should return error', () => { });
+          });
+        });
+      });
 
+      describe.done('and code not provided', () => {
+        // negotiateOptionsForDefaultCodenegotiateOptionsForDefaultCode
+        describe.done('and any 2XX exists', () => {
+          // negotiateOptionsBySpecificResponse
+          describe.done('and mediaType provided', () => {
+            describe.done('and httpContent exists', () => {
+              // negotiateByPartialOptionsAndHttpContent
+              describe.done('and example key provided', () => {
+                describe.done('and example exists', () => {
+                  test('should return that example', () => { });
+                });
+                describe.done('and example not exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+              describe.done('and example key not provided but dynamic forced', () => {
+                describe.done('and schema exists', () => {
+                  test('should return dynamic', () => { });
+                });
+                describe.done('and schema not exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+              describe.done('and neither example key nor dynamic forced', () => {
+                describe.done('and any example exists', () => {
+                  test('should return that example', () => { });
+                });
+                describe.done('and not example exist but dynamic exists', () => {
+                  test('should return that dynamic', () => { });
+                });
+                describe.done('and neither example nor dynamic exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+            });
+            describe.done('and httpContent not exist', () => {
+              // negotiateDefaultMediaType
+              describe.done('and default httpContent exists', () => {
+                // negotiateByPartialOptionsAndHttpContent
+                describe.done('and example key provided', () => {
+                  describe.done('and example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe.done('and example not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe.done('and example key not provided but dynamic forced', () => {
+                  describe.done('and schema exists', () => {
+                    test('should return dynamic', () => { });
+                  });
+                  describe.done('and schema not exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+                describe.done('and neither example key nor dynamic forced', () => {
+                  describe.done('and any example exists', () => {
+                    test('should return that example', () => { });
+                  });
+                  describe.done('and not example exist but dynamic exists', () => {
+                    test('should return that dynamic', () => { });
+                  });
+                  describe.done('and neither example nor dynamic exist', () => {
+                    test('should return error', () => { });
+                  });
+                });
+              });
+              describe.done('and default httpContent not exist', () => {
+                test('should return error', () => { });
+              });
+            });
+          });
+          describe.done('and mediaType not provided', () => {
+            // negotiateDefaultMediaType
+            describe('and default httpContent exists', () => {
+              // negotiateByPartialOptionsAndHttpContent
+              describe('and example key provided', () => {
+                describe('and example exists', () => {
+                  test('should return that example', () => { });
+                });
+                describe('and example not exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+              describe('and example key not provided but dynamic forced', () => {
+                describe('and schema exists', () => {
+                  test('should return dynamic', () => { });
+                });
+                describe('and schema not exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+              describe('and neither example key nor dynamic forced', () => {
+                describe('and any example exists', () => {
+                  test('should return that example', () => { });
+                });
+                describe('and not example exist but dynamic exists', () => {
+                  test('should return that dynamic', () => { });
+                });
+                describe('and neither example nor dynamic exist', () => {
+                  test('should return error', () => { });
+                });
+              });
+            });
+            describe('and default httpContent not exist', () => {
+              test('should return error', () => { });
+            });
+          });
+        });
+        describe.done('and none 2XX exists', () => {
+          test('should return error', () => { });
+        });
+      })
+    });
   });
+
+  function givenInvalidRequest() {
+    const validationResult: IHttpRequestValidationResult = {
+      isValid: false
+    };
+    (<jest.Mock>HttpRequestValidatorMock.mock.instances[0].validate).mockReturnValue(validationResult);
+  }
+
+  function givenValidRequest() {
+    const validationResult: IHttpRequestValidationResult = {
+      isValid: true
+    };
+    (<jest.Mock>HttpRequestValidatorMock.mock.instances[0].validate).mockReturnValue(validationResult);
+  }
+
+  function anHttpOperation() {
+    const httpOperation = {
+      method: chance.string(),
+      path: chance.url(),
+      responses: [],
+      id: chance.string(),
+    };
+    return {
+      instance() {
+        return httpOperation;
+      },
+      withResponses(responses) {
+        httpOperation.responses = responses;
+        return this;
+      }
+    }
+  }
+
 });

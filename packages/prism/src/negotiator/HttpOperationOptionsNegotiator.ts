@@ -55,7 +55,7 @@ export default class HttpOperationOptionsNegotiator implements IOperationOptions
      */
     private negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[], httpRequest: IHttpRequest): IHttpOperationOptions {
         // currently only try to find a 400 response, but we may want to support other cases in the future
-        let code = '400';
+        const code = '400';
         let mediaType;
         let exampleKey;
         let dynamic;
