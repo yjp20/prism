@@ -76,7 +76,7 @@ describe('graph', () => {
       // TODO
     });
 
-    test.skip('calls validator on output', () => {
+    test.skip('runs validator on output', () => {
       // TODO
     });
   });
