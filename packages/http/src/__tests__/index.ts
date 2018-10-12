@@ -1,3 +1,4 @@
+import { IHttpOperation } from '@stoplight/types';
 import { createInstance } from '../index';
 import { httpOperations } from './fixtures';
 
