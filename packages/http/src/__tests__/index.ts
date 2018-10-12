@@ -1,5 +1,5 @@
-import { IHttpOperation } from '@stoplight/types';
 import { createInstance } from '../index';
+import { httpOperations } from './fixtures';
 
 // TODO: Turn examples into test cases -> https://stoplightio.atlassian.net/wiki/spaces/PN/pages/5996560/Prism+Feature+List+draft
 describe('Prism Mock Http', () => {
@@ -12,87 +12,7 @@ describe('Prism Mock Http', () => {
     },
     loader: {
       load: async (): Promise<IHttpOperation[]> => {
-        return [
-          {
-            id: 'todos',
-            method: 'get',
-            path: '/todos',
-            responses: [
-              {
-                code: '200',
-                content: [
-                  {
-                    mediaType: 'application/json',
-                    schema: {
-                      type: 'array',
-                      items: {
-                        type: 'object',
-                        properties: {
-                          name: {
-                            type: 'string',
-                          },
-                          completed: {
-                            type: 'boolean',
-                          },
-                        },
-                        required: ['name', 'completed'],
-                      },
-                    },
-                    examples: [
-                      {
-                        key: 'application/json',
-                        value: [
-                          {
-                            id: 1,
-                            completed: true,
-                            name: 'make prism',
-                          },
-                        ],
-                      },
-                      {
-                        key: 'bear',
-                        value: [
-                          {
-                            id: 2,
-                            completed: false,
-                            name: 'make bears',
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: 'todo',
-            method: 'get',
-            path: '/todos/{todoId}',
-            responses: [
-              {
-                code: '200',
-                content: [
-                  {
-                    mediaType: 'application/json',
-                    schema: {
-                      type: 'object',
-                      properties: {
-                        name: {
-                          type: 'string',
-                        },
-                        completed: {
-                          type: 'boolean',
-                        },
-                      },
-                      required: ['name', 'completed'],
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ];
+        return httpOperations;
       },
     },
   });
