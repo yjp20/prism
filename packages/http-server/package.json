@@ -1,5 +1,5 @@
 {
-  "name": "@stoplight/prism-cli",
+  "name": "@stoplight/prism-http-server",
   "version": "0.0.0",
   "main": "lib/bundle.js",
   "module": "lib/bundle.es.js",
@@ -13,7 +13,6 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@stoplight/prism-core": "0.0.0",
-    "@stoplight/prism-http-server": "0.0.0"
+    "@stoplight/prism-core": "0.0.0"
   }
 }

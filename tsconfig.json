@@ -1,5 +1,5 @@
 {
-  "include": ["packages/*/src/*"],
+  "include": ["packages/**/*"],
   "exclude": ["node_modules", "__tests__"],
   "compilerOptions": {
     "baseUrl": ".",
@@ -21,12 +21,14 @@
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "paths": {
-      "@stoplight/prism": ["./packages/prism/src"],
-      "@stoplight/prism/*": ["./packages/prism/src/*"],
+      "@stoplight/prism-core": ["./packages/core/src"],
+      "@stoplight/prism-core/*": ["./packages/core/src/*"],
       "@stoplight/prism-cli": ["./packages/cli/src"],
       "@stoplight/prism-cli/*": ["./packages/cli/src/*"],
-      "@stoplight/prism-server": ["./packages/server/src"],
-      "@stoplight/prism-server/*": ["./packages/server/src/*"]
+      "@stoplight/prism-http": ["./packages/http/src"],
+      "@stoplight/prism-http/*": ["./packages/http/src/*"],
+      "@stoplight/prism-http-server": ["./packages/http-server/src"],
+      "@stoplight/prism-http-server/*": ["./packages/http-server/src/*"]
     }
   }
 }
