@@ -23,7 +23,8 @@ export interface IValidation {
 
 // END
 
-export interface IPrism<Input, Output, Config, LoadOpts> {
+export interface IPrism<Resource, Input, Output, Config, LoadOpts> {
+  readonly resources: Resource[];
   load: (opts?: LoadOpts) => Promise<void>;
   process: (input: Input, config?: Config) => Promise<IPrismOutput<Input, Output>>;
 }

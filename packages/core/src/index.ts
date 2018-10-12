@@ -7,7 +7,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
   defaultComponents: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ): (
   customComponents?: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
-) => types.IPrism<Input, Output, Config, LoadOpts> {
+) => types.IPrism<Resource, Input, Output, Config, LoadOpts> {
   return customComponents => {
     const components: Partial<
       types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>
@@ -17,6 +17,10 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
     let resources: Resource[] = [];
 
     return {
+      get resources() {
+        return resources;
+      },
+
       load: async opts => {
         const l = components.loader;
         if (l) {
