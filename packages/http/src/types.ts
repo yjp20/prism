@@ -50,8 +50,9 @@ export interface IHttpRequest {
 }
 
 export interface IHttpResponse {
-  headers: {
+  statusCode: number;
+  headers?: {
     [name: string]: string;
   };
-  body: unknown;
+  body?: unknown;
 }
