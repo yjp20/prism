@@ -1,4 +1,4 @@
-import jsf from 'json-schema-faker';
+import * as jsf from 'json-schema-faker';
 import { IExampleGenerator } from './IExampleGenerator';
 
 export class JSONSchemaExampleGenerator implements IExampleGenerator<any> {

@@ -1,8 +1,8 @@
 import { IHttpOperation } from '@stoplight/types';
-import { JSONSchemaExampleGenerator } from '../generator/JSONSchemaExampleGenerator';
-import { Protocol } from '../IOperationOptions';
-import { HttpProvider } from './HttpProvider';
-import { IHttpOperationOptions } from './IHttpOperationOptions';
+import { JSONSchemaExampleGenerator } from '../../../mock/generator/JSONSchemaExampleGenerator';
+import { Protocol } from '../../../mock/IOperationOptions';
+import { HttpProvider } from '../../../mock/http/HttpProvider';
+import { IHttpOperationOptions } from '../../../mock/http/IHttpOperationOptions';
 
 describe('HttpProvider', () => {
   const exampleGenerator = new JSONSchemaExampleGenerator();

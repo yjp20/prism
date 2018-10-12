@@ -1,4 +1,4 @@
-import { JSONSchemaExampleGenerator } from './JSONSchemaExampleGenerator';
+import { JSONSchemaExampleGenerator } from '../../../mock/generator/JSONSchemaExampleGenerator';
 
 describe('JSONSchemaExampleGenerator', () => {
   let jsonSchemaExampleGenerator: JSONSchemaExampleGenerator;

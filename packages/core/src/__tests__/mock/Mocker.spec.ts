@@ -1,8 +1,8 @@
 import { IHttpOperation, INode } from '@stoplight/types';
-import { IHttpOperationOptions } from './http/IHttpOperationOptions';
-import { IMockResult } from './IMockResult';
-import { IOperationOptions, Protocol } from './IOperationOptions';
-import { Mocker } from './Mocker';
+import { IHttpOperationOptions } from '../../mock/http/IHttpOperationOptions';
+import { IMockResult } from '../../mock/IMockResult';
+import { IOperationOptions, Protocol } from '../../mock/IOperationOptions';
+import { Mocker } from '../../mock/Mocker';
 
 describe('Mocker', () => {
   let mocker: Mocker;
