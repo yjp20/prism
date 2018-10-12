@@ -1,17 +1,15 @@
-import { createInstance } from './index';
+import { createInstance as createPrismClass } from './index';
 
 // Just a little example. Remove this eventually.
 
-const prism = createInstance({
+const prism = createPrismClass({
   config: async req => {
     // only mock post requests
     return {
       mock: req.method === 'post',
     };
   },
-});
-
-prism.load({
+})({
   path: './foo.json',
 });
 
