@@ -6,13 +6,12 @@ export { types, filesystemLoader };
 export function factory<Resource, Input, Output, Config, LoadOpts>(
   defaultComponents: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ): (
-  componentOverrides?: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+  customComponents?: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ) => types.IPrism<Input, Output, Config, LoadOpts> {
-  return componentOverrides => {
-    // allow consumer to override default components if they wish
+  return customComponents => {
     const components: Partial<
       types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>
-    > = Object.assign({}, defaultComponents, componentOverrides);
+    > = Object.assign({}, defaultComponents, customComponents);
 
     // our loaded resources (HttpOperation objects, etc)
     let resources: Resource[] = [];
@@ -21,7 +20,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
       load: async opts => {
         const l = components.loader;
         if (l) {
-          resources = await l.load(opts);
+          resources = await l.load(opts, defaultComponents.loader);
         } else {
           // TODO: use reporter to report a warning
         }
@@ -33,7 +32,11 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         // build the config for this request
         let configObj: Config | undefined;
         if (currentConfig instanceof Function) {
-          configObj = await (currentConfig as types.PrismConfigFactory<Config, Input>)(input);
+          // config factory function
+          configObj = await (currentConfig as types.PrismConfigFactory<Config, Input>)(
+            input,
+            defaultComponents.config
+          );
         } else if (currentConfig) {
           configObj = currentConfig as Config;
         }
@@ -41,45 +44,60 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         // find the correct resource
         let resource: Resource | undefined;
         if (components.router) {
-          resource = await components.router.route({ resources, input, config: configObj });
+          resource = await components.router.route(
+            { resources, input, config: configObj },
+            defaultComponents.router
+          );
         }
 
         // validate input
         let inputValidations: types.IValidation[] = [];
         if (resource && components.validator && components.validator.validateInput) {
-          inputValidations = await components.validator.validateInput({
-            resource,
-            input,
-            config: configObj,
-          });
+          inputValidations = await components.validator.validateInput(
+            {
+              resource,
+              input,
+              config: configObj,
+            },
+            defaultComponents.validator
+          );
         }
 
         // build output
         let output: Output | undefined;
         if (resource && components.mocker && (configObj as types.IPrismConfig).mock) {
           // generate the response
-          output = await components.mocker.mock({
-            resource,
-            input: { validations: { input: inputValidations }, data: input },
-            config: configObj,
-          });
+          output = await components.mocker.mock(
+            {
+              resource,
+              input: { validations: { input: inputValidations }, data: input },
+              config: configObj,
+            },
+            defaultComponents.mocker
+          );
         } else if (components.forwarder) {
           // forward request and set output from response
-          output = await components.forwarder.forward({
-            resource,
-            input: { validations: { input: inputValidations }, data: input },
-            config: configObj,
-          });
+          output = await components.forwarder.forward(
+            {
+              resource,
+              input: { validations: { input: inputValidations }, data: input },
+              config: configObj,
+            },
+            defaultComponents.forwarder
+          );
         }
 
         // validate output
         let outputValidations: types.IValidation[] = [];
         if (resource && components.validator && components.validator.validateOutput) {
-          outputValidations = await components.validator.validateOutput({
-            resource,
-            output,
-            config: configObj,
-          });
+          outputValidations = await components.validator.validateOutput(
+            {
+              resource,
+              output,
+              config: configObj,
+            },
+            defaultComponents.validator
+          );
         }
 
         return {

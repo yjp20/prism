@@ -34,11 +34,11 @@ export interface IPrismConfig {
   validate?: boolean | object;
 }
 
-export type PrismConfigFactory<C, I> = (input: I) => Promise<C>;
+export type PrismConfigFactory<C, I> = (input: I, defaultConfig?: PrismConfig<C, I>) => Promise<C>;
 export type PrismConfig<C, I> = C | PrismConfigFactory<C, I>;
 
 export interface ILoader<Options, Resource> {
-  load: (opts?: Options) => Promise<Resource[]>;
+  load: (opts?: Options, defaultLoader?: ILoader<Options, Resource>) => Promise<Resource[]>;
 }
 
 export interface IFilesystemLoaderOpts {
@@ -46,27 +46,34 @@ export interface IFilesystemLoaderOpts {
 }
 
 export interface IRouter<Resource, Input, Config> {
-  route: (opts: { resources: Resource[]; input: Input; config?: Config }) => Promise<Resource>;
+  route: (
+    opts: { resources: Resource[]; input: Input; config?: Config },
+    defaultRouter?: IRouter<Resource, Input, Config>
+  ) => Promise<Resource>;
 }
 
 export interface IForwarder<Resource, Input, Config, Output> {
   forward: (
-    opts: { resource?: Resource; input: IPrismInput<Input>; config?: Config }
+    opts: { resource?: Resource; input: IPrismInput<Input>; config?: Config },
+    defaultForwarder?: IForwarder<Resource, Input, Config, Output>
   ) => Promise<Output>;
 }
 
 export interface IMocker<Resource, Input, Config, Output> {
   mock: (
-    opts: { resource?: Resource; input: IPrismInput<Input>; config?: Config }
+    opts: { resource?: Resource; input: IPrismInput<Input>; config?: Config },
+    defaultMocker?: IMocker<Resource, Input, Config, Output>
   ) => Promise<Output>;
 }
 
 export interface IValidator<Resource, Input, Config, Output> {
   validateInput?: (
-    opts: { resource: Resource; input: Input; config?: Config }
+    opts: { resource: Resource; input: Input; config?: Config },
+    defaultValidator?: IValidator<Resource, Input, Config, Output>
   ) => Promise<IValidation[]>;
   validateOutput?: (
-    opts: { resource: Resource; output?: Output; config?: Config }
+    opts: { resource: Resource; output?: Output; config?: Config },
+    defaultValidator?: IValidator<Resource, Input, Config, Output>
   ) => Promise<IValidation[]>;
 }
 
