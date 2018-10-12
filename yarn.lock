@@ -18,7 +18,7 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@stoplight/types@^1.0.1":
+"@stoplight/types@1.0.x":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-1.0.1.tgz#4a1c49c494f66e46efce4da30edcb03fd94617c8"
   integrity sha512-5eobPkXsxJDP3q3IUT+iucRwiKwnJlaIRQY7bA42p6O3IyV9URBPuzfuMQNlyrDj2tt6StNEuYo6ReQxWFCHXg==

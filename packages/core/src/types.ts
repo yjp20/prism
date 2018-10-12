@@ -62,7 +62,7 @@ export interface IForwarder<Resource, Input, Config, Output> {
 
 export interface IMocker<Resource, Input, Config, Output> {
   mock: (
-    opts: { resource?: Resource; input: IPrismInput<Input>; config?: Config },
+    opts: { resource?: Resource; input?: IPrismInput<Input>; config?: Config },
     defaultMocker?: IMocker<Resource, Input, Config, Output>
   ) => Promise<Output>;
 }
@@ -88,15 +88,14 @@ export interface IPrismComponents<Resource, Input, Output, Config, LoadOpts> {
 }
 
 export interface IPrismInput<I> {
+  data: I;
   validations: {
     input: IValidation[];
   };
-  data: I;
 }
 
 export interface IPrismOutput<I, O> {
-  input: I;
-  output?: O;
+  data?: O;
   validations: {
     input: IValidation[];
     output: IValidation[];
