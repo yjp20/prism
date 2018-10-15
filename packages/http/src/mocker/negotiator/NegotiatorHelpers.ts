@@ -161,7 +161,7 @@ const helpers = {
             throw new Error('No 400 response defined');
         }
         // find first response with any static examples
-        const responseWithExamples = response.content.find(content => !content.examples || content.examples.length === 0);
+        const responseWithExamples = response.content.find(content => !!content.examples && content.examples.length !== 0);
         // find first response with a schema
         const responseWithSchema = response.content.find(content => !!content.schema);
 
