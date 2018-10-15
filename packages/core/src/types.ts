@@ -62,9 +62,15 @@ export interface IForwarder<Resource, Input, Config, Output> {
 
 export interface IMocker<Resource, Input, Config, Output> {
   mock: (
-    opts: { resource?: Resource; input?: IPrismInput<Input>; config?: Config },
+    opts: IMockerOpts<Resource, Input, Config>,
     defaultMocker?: IMocker<Resource, Input, Config, Output>
   ) => Promise<Output>;
+}
+
+export interface IMockerOpts<Resource, Input, Config> {
+  resource?: Resource;
+  input?: IPrismInput<Input>;
+  config?: Config
 }
 
 export interface IValidator<Resource, Input, Config, Output> {

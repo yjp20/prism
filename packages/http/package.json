@@ -14,5 +14,9 @@
   },
   "dependencies": {
     "@stoplight/prism-core": "0.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.117",
+    "lodash": "^4.17.11"
   }
 }

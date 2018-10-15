@@ -3,15 +3,17 @@ import { types } from '@stoplight/prism-core';
 // TODO: should be complete, and in the @stoplight/types repo
 export type IHttpMethod = 'get' | 'put' | 'post' | 'delete'; // ... etc
 
+export interface IHttpOperationConfig {
+  readonly mediaType?: string;
+  readonly code?: string;
+  readonly exampleKey?: string;
+  readonly dynamic?: boolean;
+}
+
 export interface IHttpConfig extends types.IPrismConfig {
   mock?:
     | boolean
-    | {
-        code?: string | number;
-        example?: string;
-        dynamic?: boolean;
-        mediaType?: string;
-      };
+    | IHttpOperationConfig;
 
   security?: {
     // TODO
@@ -54,5 +56,5 @@ export interface IHttpResponse {
   headers?: {
     [name: string]: string;
   };
-  body?: unknown;
+  body?: any;
 }
