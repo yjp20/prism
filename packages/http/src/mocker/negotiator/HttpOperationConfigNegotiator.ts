@@ -31,9 +31,9 @@ export default class HttpOperationConfigNegotiator implements IOperationConfigNe
             let httpOperationConfig: IHttpOperationConfig;
 
             if (input.validations.input.length > 0) {
-                httpOperationConfig = helpers.negotiateOptionsForInvalidRequest(resource.responses, httpRequest);
+                httpOperationConfig = helpers.negotiateOptionsForInvalidRequest(resource.responses);
             } else {
-                httpOperationConfig = helpers.negotiateOptionsForValidRequest(resource, desiredConfig, httpRequest);
+                httpOperationConfig = helpers.negotiateOptionsForValidRequest(resource, desiredConfig);
             }
 
             return Promise.resolve({

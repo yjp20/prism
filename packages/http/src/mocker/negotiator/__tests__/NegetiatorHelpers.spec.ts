@@ -1,17 +1,15 @@
 import { Chance } from 'chance';
 import helpers from '@stoplight/prism-http/mocker/negotiator/NegotiatorHelpers';
-import { IHttpRequest, IHttpOperationConfig } from '@stoplight/prism-http/types';
+import { IHttpOperationConfig } from '@stoplight/prism-http/types';
 import { IHttpOperation, IHttpResponse, IHttpContent, IExample } from '@stoplight/types';
 import { anHttpOperation } from '@stoplight/prism-http/mocker/negotiator/__tests__/utils';
 
 const chance = new Chance();
 
 describe('NegotiatorHelpers', () => {
-  let httpRequest: IHttpRequest;
   let httpOperation: IHttpOperation;
 
   beforeEach(() => {
-    httpRequest = { method: 'get', path: chance.string(), host: chance.string() };
     httpOperation = anHttpOperation().instance();
   });
 
@@ -37,7 +35,7 @@ describe('NegotiatorHelpers', () => {
           }]
         }]).instance();
 
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, httpRequest);
+        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses);
         const expectedConfig = {
           code: actualCode,
           mediaType: actualMediaType,
@@ -65,7 +63,7 @@ describe('NegotiatorHelpers', () => {
             }]
           }]).instance();
 
-          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, httpRequest);
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses);
           const expectedConfig = {
             code: actualCode,
             mediaType: actualMediaType,
@@ -87,7 +85,7 @@ describe('NegotiatorHelpers', () => {
           }]).instance();
 
           expect(() => {
-            helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, httpRequest);
+            helpers.negotiateOptionsForInvalidRequest(httpOperation.responses);
           }).toThrow('Data corrupted');
         });
       });
@@ -96,7 +94,7 @@ describe('NegotiatorHelpers', () => {
     describe('and no 400 response exists', () => {
       test('should return an error', async () => {
         expect(() => {
-          helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, httpRequest);
+          helpers.negotiateOptionsForInvalidRequest(httpOperation.responses);
         }).toThrow('No 400 response defined');
       });
     });
@@ -118,7 +116,7 @@ describe('NegotiatorHelpers', () => {
       jest.spyOn(helpers, 'negotiateOptionsForDefaultCode').mockImplementation(() => { });
       jest.spyOn(helpers, 'negotiateOptionsBySpecificCode').mockImplementation(() => { }).mockReturnValue(expectedResult);
 
-      const actualResult = helpers.negotiateOptionsForValidRequest(httpOperation, options, httpRequest);
+      const actualResult = helpers.negotiateOptionsForValidRequest(httpOperation, options);
 
       expect(helpers.negotiateOptionsForDefaultCode).not.toHaveBeenCalled();
       expect(helpers.negotiateOptionsBySpecificCode).toHaveBeenCalledTimes(1);
@@ -133,7 +131,7 @@ describe('NegotiatorHelpers', () => {
       jest.spyOn(helpers, 'negotiateOptionsForDefaultCode').mockImplementation(() => { }).mockReturnValue(expectedResult);
       jest.spyOn(helpers, 'negotiateOptionsBySpecificCode').mockImplementation(() => { });
 
-      const actualResult = helpers.negotiateOptionsForValidRequest(httpOperation, options, httpRequest);
+      const actualResult = helpers.negotiateOptionsForValidRequest(httpOperation, options);
 
       expect(helpers.negotiateOptionsBySpecificCode).not.toHaveBeenCalled();
       expect(helpers.negotiateOptionsForDefaultCode).toHaveBeenCalledTimes(1);
@@ -162,10 +160,10 @@ describe('NegotiatorHelpers', () => {
       negotiateOptionsBySpecificResponseMock.mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation).withResponses([fakeResponse]).instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, httpRequest, code);
+      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
 
       expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledWith(httpOperation, desiredOptions, httpRequest, fakeResponse);
+      expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledWith(httpOperation, desiredOptions, fakeResponse);
       expect(negotiateOptionsForDefaultCodeMock).not.toHaveBeenCalled();
       expect(actualOperationConfig).toBe(fakeOperationConfig);
     });
@@ -184,12 +182,12 @@ describe('NegotiatorHelpers', () => {
       negotiateOptionsForDefaultCodeMock.mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation).withResponses([fakeResponse]).instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, httpRequest, code);
+      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
 
       expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledWith(httpOperation, desiredOptions, httpRequest, fakeResponse);
+      expect(negotiateOptionsBySpecificResponseMock).toHaveBeenCalledWith(httpOperation, desiredOptions, fakeResponse);
       expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(httpOperation, desiredOptions, httpRequest);
+      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(httpOperation, desiredOptions);
       expect(actualOperationConfig).toBe(fakeOperationConfig);
     });
 
@@ -202,11 +200,11 @@ describe('NegotiatorHelpers', () => {
       negotiateOptionsForDefaultCodeMock.mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation).withResponses([]).instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, httpRequest, code);
+      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
 
       expect(negotiateOptionsBySpecificResponseMock).not.toHaveBeenCalled();
       expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(httpOperation, desiredOptions, httpRequest);
+      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(httpOperation, desiredOptions);
       expect(actualOperationConfig).toBe(fakeOperationConfig);
     });
   });
@@ -224,7 +222,7 @@ describe('NegotiatorHelpers', () => {
       jest.spyOn(helpers, 'negotiateOptionsBySpecificResponse').mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation).withResponses([response]).instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+      const actualOperationConfig = helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
 
       expect(helpers.negotiateOptionsBySpecificResponse).toHaveBeenCalledTimes(1);
       expect(actualOperationConfig).toBe(fakeOperationConfig);
@@ -250,7 +248,7 @@ describe('NegotiatorHelpers', () => {
         }
       ]).instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+      const actualOperationConfig = helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
 
       expect(helpers.negotiateOptionsBySpecificResponse).toHaveBeenCalledTimes(1);
       expect(actualOperationConfig).toBe(fakeOperationConfig);
@@ -261,7 +259,7 @@ describe('NegotiatorHelpers', () => {
       jest.spyOn(helpers, 'negotiateOptionsBySpecificResponse');
 
       expect(() => {
-        helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+        helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
       }).toThrow('No 2** response defined, cannot mock');
     });
   });
@@ -285,7 +283,7 @@ describe('NegotiatorHelpers', () => {
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent').mockReturnValue(fakeOperationConfig);
         jest.spyOn(helpers, 'negotiateDefaultMediaType');
 
-        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpRequest, httpResponseSchema);
+        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpResponseSchema);
 
         expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledTimes(1);
         expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledWith({
@@ -312,7 +310,7 @@ describe('NegotiatorHelpers', () => {
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
         jest.spyOn(helpers, 'negotiateDefaultMediaType').mockReturnValue(fakeOperationConfig);
 
-        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpRequest, httpResponseSchema);
+        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpResponseSchema);
 
         expect(helpers.negotiateByPartialOptionsAndHttpContent).not.toHaveBeenCalled();
         expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledTimes(1);
@@ -339,7 +337,7 @@ describe('NegotiatorHelpers', () => {
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
         jest.spyOn(helpers, 'negotiateDefaultMediaType').mockReturnValue(fakeOperationConfig);
 
-        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpRequest, httpResponseSchema);
+        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpResponseSchema);
 
         expect(helpers.negotiateByPartialOptionsAndHttpContent).not.toHaveBeenCalled();
         expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledTimes(1);

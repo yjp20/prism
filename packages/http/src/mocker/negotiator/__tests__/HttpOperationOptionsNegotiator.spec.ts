@@ -49,7 +49,7 @@ describe('HttpOperationOptionsNegotiator', () => {
         }, desiredConfig));
 
         expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledWith(httpOperation, desiredConfig, httpRequest);
+        expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledWith(httpOperation, desiredConfig);
         expect(result).toEqual({
           httpOperationConfig
         });
@@ -67,7 +67,7 @@ describe('HttpOperationOptionsNegotiator', () => {
         }, desiredConfig));
 
         expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledWith(httpOperation, desiredConfig, httpRequest);
+        expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledWith(httpOperation, desiredConfig);
         expect(result).toEqual({
           error
         });
@@ -94,7 +94,7 @@ describe('HttpOperationOptionsNegotiator', () => {
         }, desiredConfig));
 
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(httpOperation.responses, httpRequest);
+        expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(httpOperation.responses);
         expect(result).toEqual({
           httpOperationConfig
         });
@@ -112,7 +112,7 @@ describe('HttpOperationOptionsNegotiator', () => {
         }, desiredConfig));
 
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(httpOperation.responses, httpRequest);
+        expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(httpOperation.responses);
         expect(result).toEqual({
           error
         });

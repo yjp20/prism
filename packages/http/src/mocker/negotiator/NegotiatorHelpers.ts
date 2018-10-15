@@ -1,4 +1,4 @@
-import { IHttpOperationConfig, IHttpRequest } from "@stoplight/prism-http/types";
+import { IHttpOperationConfig } from "@stoplight/prism-http/types";
 import { IHttpContent, IHttpResponse, IHttpOperation } from "@stoplight/types/http";
 
 function findBestExample(httpContent: IHttpContent) {
@@ -93,7 +93,7 @@ const helpers = {
         throw new Error('Could not generate response for provided content type or no content type provided. Tried to fallback to application/json, but no definition found.');
     },
 
-    negotiateOptionsBySpecificResponse(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, httpRequest: IHttpRequest, response: IHttpResponse): IHttpOperationConfig {
+    negotiateOptionsBySpecificResponse(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, response: IHttpResponse): IHttpOperationConfig {
         const { code } = response;
         let { mediaType, dynamic, exampleKey } = desiredOptions;
 
@@ -120,39 +120,39 @@ const helpers = {
         }, response);
     },
 
-    negotiateOptionsForDefaultCode(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, httpRequest: IHttpRequest): IHttpOperationConfig {
+    negotiateOptionsForDefaultCode(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig): IHttpOperationConfig {
         const lowest2xxResponse = findLowest2xx(httpOperation.responses);
         if (lowest2xxResponse) {
-            return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpRequest, lowest2xxResponse);
+            return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, lowest2xxResponse);
         }
         throw new Error('No 2** response defined, cannot mock');
     },
 
-    negotiateOptionsBySpecificCode(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, httpRequest: IHttpRequest, code: string): IHttpOperationConfig {
+    negotiateOptionsBySpecificCode(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, code: string): IHttpOperationConfig {
         // find response by provided status code
         const responseByForcedStatusCode = findResponseByStatusCode(httpOperation.responses, code);
         if (responseByForcedStatusCode) {
             try {
                 // try to negotiate
-                return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpRequest, responseByForcedStatusCode);
+                return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, responseByForcedStatusCode);
             } catch (error) {
                 // if negotiations fail try a default code
-                return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+                return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
             }
         }
         // if no response found under a status code, try to mock a default code
-        return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+        return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
     },
 
-    negotiateOptionsForValidRequest(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig, httpRequest: IHttpRequest): IHttpOperationConfig {
+    negotiateOptionsForValidRequest(httpOperation: IHttpOperation, desiredOptions: IHttpOperationConfig): IHttpOperationConfig {
         let { code } = desiredOptions;
         if (code) {
-            return helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, httpRequest, code);
+            return helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
         }
-        return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions, httpRequest);
+        return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
     },
 
-    negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[], httpRequest: IHttpRequest): IHttpOperationConfig {
+    negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[]): IHttpOperationConfig {
         // currently only try to find a 400 response, but we may want to support other cases in the future
         const code = '400';
         const response = findResponseByStatusCode(httpResponses, code);
