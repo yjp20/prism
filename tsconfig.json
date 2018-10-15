@@ -19,7 +19,6 @@
     "pretty": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true,
     "paths": {
       "@stoplight/prism-core": ["./packages/core/src"],
       "@stoplight/prism-core/*": ["./packages/core/src/*"],
