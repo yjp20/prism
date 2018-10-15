@@ -20,8 +20,14 @@ export default class HttpOperationConfigNegotiator implements IOperationConfigNe
 
     public negotiate(opts: IMockerOpts<IHttpOperation, IHttpRequest, IHttpOperationConfig>): Promise<IHttpOperationConfigNegotiationResult> {
         try {
-            const { resource, input, config: desiredConfig } = opts;
+            const { resource, input, config } = opts;
             const httpRequest = opts.input.data;
+            const desiredConfig = Object.assign({
+                dynamic: this.getDynamic(httpRequest),
+                code: this.getStatusCode(httpRequest),
+                mediaType: this.getContentType(httpRequest),
+                exampleKey: this.getExampleKey(httpRequest)
+            }, config);
             let httpOperationConfig: IHttpOperationConfig;
 
             if (input.validations.input.length > 0) {
@@ -38,5 +44,22 @@ export default class HttpOperationConfigNegotiator implements IOperationConfigNe
                 error
             });
         }
+    }
+
+    private getContentType(httpRequest: IHttpRequest): string | undefined {
+        return (httpRequest.query && httpRequest.query['_contentType']) ||
+            (httpRequest.headers && httpRequest.headers['Content-Type']);
+    }
+
+    private getExampleKey(httpRequest: IHttpRequest): string | undefined {
+        return (httpRequest.query && httpRequest.query['_exampleKey']);
+    }
+
+    private getStatusCode(httpRequest: IHttpRequest): string | undefined {
+        return (httpRequest.query && httpRequest.query['_code']);
+    }
+
+    private getDynamic(httpRequest: IHttpRequest): boolean | undefined {
+        return (httpRequest.query && httpRequest.query['_dynamic'] === 'true');
     }
 }
