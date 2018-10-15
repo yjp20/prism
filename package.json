@@ -34,7 +34,7 @@
   "jest": {
     "verbose": false,
     "testMatch": [
-      "<rootDir>/packages/*/src/**/__tests__/*.(ts|js)?(x)"
+      "<rootDir>/packages/*/src/**/__tests__/**/*.(ts|js)?(x)"
     ],
     "transform": {
       "^.+\\.[tj]sx?$": "ts-jest"
@@ -50,7 +50,7 @@
         "diagnostics": {
           "warnOnly": true,
           "ignoreCodes": [
-            151001
+            151001, 7016
           ]
         }
       }
@@ -71,6 +71,10 @@
       "@stoplight/prism-cli/(.*)": "<rootDir>/packages/cli/src/$1",
       "@stoplight/prism-http/(.*)": "<rootDir>/packages/http/src/$1",
       "@stoplight/prism-http-server/(.*)": "<rootDir>/packages/http-server/src/$1"
-    }
+    },
+    "modulePaths": [
+      "node_modules",
+      "packages/core/node_modules"
+    ]
   }
 }

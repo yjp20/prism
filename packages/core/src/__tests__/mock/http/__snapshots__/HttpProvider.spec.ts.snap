@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HttpProvider mock() dynamic example generation fails when schema is missing 1`] = `"Cannot generate response, schema is missing"`;
+
+exports[`HttpProvider mock() fails when example is missing 1`] = `"Example for key 'example1' not found"`;
+
+exports[`HttpProvider mock() fails when media type is missing 1`] = `"Content for media type 'application/json' not found"`;
+
+exports[`HttpProvider mock() fails when status code is missing 1`] = `"Response for status code '200' not found"`;
+
+exports[`HttpProvider mock() mocks correctly for given status/mediaType/example 1`] = `
+Object {
+  "data": Object {
+    "body": "{\\"test\\":\\"value\\"}",
+    "headers": Object {
+      "Content-type": "application/json",
+    },
+    "status": 200,
+  },
+}
+`;

@@ -11,5 +11,8 @@
   },
   "engines": {
     "node": ">=8"
+  },
+  "dependencies": {
+    "json-schema-faker": "^0.5.0-rc16"
   }
 }
