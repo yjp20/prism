@@ -11,7 +11,7 @@ export interface IHttpOperationConfig {
 }
 
 export interface IHttpConfig extends types.IPrismConfig {
-  mock?:
+  mock:
     | boolean
     | IHttpOperationConfig;
 

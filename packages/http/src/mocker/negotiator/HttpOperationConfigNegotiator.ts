@@ -1,6 +1,6 @@
 import { IHttpRequest, IHttpOperationConfig } from "@stoplight/prism-http/types";
 import { IHttpOperation } from "@stoplight/types/http";
-import { IPrismInput } from "@stoplight/prism-core/types";
+import { IMockerOpts } from "@stoplight/prism-core/types";
 import helpers from '@stoplight/prism-http/mocker/negotiator/NegotiatorHelpers';
 
 export interface IHttpOperationConfigNegotiationResult {
@@ -9,18 +9,19 @@ export interface IHttpOperationConfigNegotiationResult {
 }
 
 interface IOperationConfigNegotiator<Resource, Input, OperationConfig, Output> {
-    negotiate(resource: Resource, input: Input, desiredConfig: OperationConfig): Promise<Output>;
+    negotiate(opts: IMockerOpts<Resource, Input, OperationConfig>): Promise<Output>;
 }
 
-export default class HttpOperationOptionsNegotiator implements IOperationConfigNegotiator<
+export default class HttpOperationConfigNegotiator implements IOperationConfigNegotiator<
     IHttpOperation,
-    IPrismInput<IHttpRequest>,
+    IHttpRequest,
     IHttpOperationConfig,
     IHttpOperationConfigNegotiationResult> {
 
-    public negotiate(resource: IHttpOperation, input: IPrismInput<IHttpRequest>, desiredConfig: IHttpOperationConfig): Promise<IHttpOperationConfigNegotiationResult> {
+    public negotiate(opts: IMockerOpts<IHttpOperation, IHttpRequest, IHttpOperationConfig>): Promise<IHttpOperationConfigNegotiationResult> {
         try {
-            const httpRequest = input.data;
+            const { resource, input, config: desiredConfig } = opts;
+            const httpRequest = opts.input.data;
             let httpOperationConfig: IHttpOperationConfig;
 
             if (input.validations.input.length > 0) {

@@ -3,8 +3,6 @@ import * as types from './types';
 
 export { types, filesystemLoader };
 
-
-
 export function factory<Resource, Input, Output, Config, LoadOpts>(
   defaultComponents: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ): (

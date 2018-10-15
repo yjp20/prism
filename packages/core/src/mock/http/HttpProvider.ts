@@ -2,39 +2,38 @@ import { IHttpOperation } from '@stoplight/types';
 import { IExampleGenerator } from '../generator/IExampleGenerator';
 import { IMockProvider } from '../IMockProvider';
 import { IMockResult } from '../IMockResult';
-import { IHttpOperationOptions } from './IHttpOperationOptions';
-import { IMockHttpResponse } from './IMockHttpResponse';
+import { IHttpOperationConfig, IHttpResponse } from '@stoplight/prism-http/types';
 
 export class HttpProvider
-  implements IMockProvider<IHttpOperation, IHttpOperationOptions, IMockResult<IMockHttpResponse>> {
+  implements IMockProvider<IHttpOperation, IHttpOperationConfig, IMockResult<IHttpResponse>> {
   constructor(private exampleGenerator: IExampleGenerator<any>) {}
 
   public async mock(
-    operation: IHttpOperation,
-    options: IHttpOperationOptions
-  ): Promise<IMockResult<IMockHttpResponse>> {
-    const response = operation.responses.find(r => r.code === options.status);
+    resource: IHttpOperation,
+    config: IHttpOperationConfig
+  ): Promise<IMockResult<IHttpResponse>> {
+    const response = resource.responses.find(r => r.code === config.code);
     if (!response) {
-      throw new Error(`Response for status code '${options.status}' not found`);
+      throw new Error(`Response for status code '${config.code}' not found`);
     }
 
-    const content = response.content.find(c => c.mediaType === options.mediaType);
+    const content = response.content.find(c => c.mediaType === config.mediaType);
     if (!content) {
-      throw new Error(`Content for media type '${options.mediaType}' not found`);
+      throw new Error(`Content for media type '${config.mediaType}' not found`);
     }
 
     let body;
-    if (options.dynamic) {
+    if (config.dynamic) {
       if (!content.schema) {
         throw new Error('Cannot generate response, schema is missing');
       }
 
       body = await this.exampleGenerator.generate(content.schema, content.mediaType);
     } else {
-      const example = content.examples && content.examples.find(e => e.key === options.example);
+      const example = content.examples && content.examples.find(e => e.key === config.exampleKey);
 
       if (!example) {
-        throw new Error(`Example for key '${options.example}' not found`);
+        throw new Error(`Example for key '${config.exampleKey}' not found`);
       }
 
       body = example.value;
@@ -42,7 +41,7 @@ export class HttpProvider
 
     return {
       data: {
-        status: parseInt(response.code),
+        statusCode: parseInt(response.code),
         // @todo: HttpHeaderParam[] ?
         headers: { 'Content-type': content.mediaType },
         body,

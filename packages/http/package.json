@@ -13,10 +13,10 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@stoplight/prism-core": "0.0.0"
+    "@stoplight/prism-core": "0.0.0",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.117",
-    "lodash": "^4.17.11"
+    "@types/lodash": "^4.14.117"
   }
 }
