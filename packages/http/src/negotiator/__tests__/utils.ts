@@ -1,5 +1,6 @@
-import { Chance } from 'chance';
 import { IHttpOperation, IHttpResponse } from '@stoplight/types/http';
+import { Chance } from 'chance';
+
 const chance = new Chance();
 
 export function anHttpOperation(givenHttpOperation?: IHttpOperation) {
@@ -16,6 +17,6 @@ export function anHttpOperation(givenHttpOperation?: IHttpOperation) {
     withResponses(responses: IHttpResponse[]) {
       httpOperation.responses = responses;
       return this;
-    }
-  }
+    },
+  };
 }

@@ -16,7 +16,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
     // our loaded resources (HttpOperation objects, etc)
     let resources: Resource[] = [];
 
-    return (opts) => {
+    return opts => {
       const lazyLoad = async () => {
         const l = components.loader;
         if (l) {
@@ -24,7 +24,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         } else {
           // TODO: use reporter to report a warning
         }
-      }
+      };
 
       return {
         getResources() {

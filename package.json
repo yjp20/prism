@@ -28,6 +28,9 @@
     "tslint-eslint-rules": "5.4.x",
     "typescript": "3.1.3"
   },
+  "dependencies": {
+    "json-schema-faker": "^0.5.0-rc16"
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
@@ -52,7 +55,8 @@
         "diagnostics": {
           "warnOnly": true,
           "ignoreCodes": [
-            151001, 7016
+            151001,
+            7016
           ]
         }
       }

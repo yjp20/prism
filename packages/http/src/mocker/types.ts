@@ -1,4 +1,4 @@
-import { IOperationOptions, Protocol } from '../IOperationOptions';
+import { IOperationOptions, Protocol } from '@stoplight/prism-core/mocker/types';
 
 export interface IHttpOperationOptions extends IOperationOptions {
   protocol: Protocol.HTTP;

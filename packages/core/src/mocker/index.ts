@@ -1,8 +1,12 @@
 import { INode } from '@stoplight/types';
-import { IMockProvider } from './IMockProvider';
-import { IMockProviderRegistry } from './IMockProviderRegistry';
-import { IMockResult } from './IMockResult';
-import { IOperationOptions, Protocol } from './IOperationOptions';
+
+import {
+  IMockProvider,
+  IMockProviderRegistry,
+  IMockResult,
+  IOperationOptions,
+  Protocol,
+} from './types';
 
 export class Mocker implements IMockProviderRegistry {
   private _mockProviders: Map<string, IMockProvider> = new Map();
