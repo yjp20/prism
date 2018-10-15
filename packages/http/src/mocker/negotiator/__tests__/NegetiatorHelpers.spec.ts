@@ -2,26 +2,9 @@ import { Chance } from 'chance';
 import helpers from '@stoplight/prism-http/mocker/negotiator/NegotiatorHelpers';
 import { IHttpRequest, IHttpOperationConfig } from '@stoplight/prism-http/types';
 import { IHttpOperation, IHttpResponse, IHttpContent, IExample } from '@stoplight/types';
+import { anHttpOperation } from '@stoplight/prism-http/mocker/negotiator/__tests__/utils';
 
 const chance = new Chance();
-
-function anHttpOperation(givenHttpOperation?: IHttpOperation) {
-  const httpOperation = givenHttpOperation || {
-    method: chance.string(),
-    path: chance.url(),
-    responses: [],
-    id: chance.string(),
-  };
-  return {
-    instance() {
-      return httpOperation;
-    },
-    withResponses(responses: IHttpResponse[]) {
-      httpOperation.responses = responses;
-      return this;
-    }
-  }
-}
 
 describe('NegotiatorHelpers', () => {
   let httpRequest: IHttpRequest;

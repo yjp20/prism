@@ -4,7 +4,7 @@ import { IPrismInput } from "@stoplight/prism-core/types";
 import helpers from '@stoplight/prism-http/mocker/negotiator/NegotiatorHelpers';
 
 export interface IHttpOperationConfigNegotiationResult {
-    readonly httpOperationOptions?: IHttpOperationConfig;
+    readonly httpOperationConfig?: IHttpOperationConfig;
     readonly error?: Error;
 }
 
@@ -21,16 +21,16 @@ export default class HttpOperationOptionsNegotiator implements IOperationConfigN
     public negotiate(resource: IHttpOperation, input: IPrismInput<IHttpRequest>, desiredConfig: IHttpOperationConfig): Promise<IHttpOperationConfigNegotiationResult> {
         try {
             const httpRequest = input.data;
-            let httpOperationOptions: IHttpOperationConfig;
+            let httpOperationConfig: IHttpOperationConfig;
 
             if (input.validations.input.length > 0) {
-                httpOperationOptions = helpers.negotiateOptionsForInvalidRequest(resource.responses, httpRequest);
+                httpOperationConfig = helpers.negotiateOptionsForInvalidRequest(resource.responses, httpRequest);
             } else {
-                httpOperationOptions = helpers.negotiateOptionsForValidRequest(resource, desiredConfig, httpRequest);
+                httpOperationConfig = helpers.negotiateOptionsForValidRequest(resource, desiredConfig, httpRequest);
             }
 
             return Promise.resolve({
-                httpOperationOptions
+                httpOperationConfig
             });
         } catch (error) {
             return Promise.resolve({
