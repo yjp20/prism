@@ -40,12 +40,15 @@ export class HttpMocker
     }
 
     // preparing response body
-    const body =
-      negotiationResult.example ||
-      (await this._exampleGenerator.generate(
+    let body;
+    if (negotiationResult.example) {
+      body = negotiationResult.example.value;
+    } else {
+      body = await this._exampleGenerator.generate(
         negotiationResult.schema,
         negotiationResult.mediaType
-      ));
+      );
+    }
 
     return {
       statusCode: parseInt(negotiationResult.code),
