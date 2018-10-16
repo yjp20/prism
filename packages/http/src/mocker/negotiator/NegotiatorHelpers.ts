@@ -1,7 +1,6 @@
 import { IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types/http';
-
-import { IHttpNegotiationResult } from '@stoplight/prism-http/negotiator/types';
-import { IHttpOperationConfig } from '../types';
+import { IHttpOperationConfig } from '../../types';
+import { IHttpNegotiationResult } from './types';
 
 function findBestExample(httpContent: IHttpContent) {
   return httpContent.examples && httpContent.examples[0];

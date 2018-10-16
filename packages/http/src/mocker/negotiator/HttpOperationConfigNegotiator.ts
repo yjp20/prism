@@ -1,8 +1,7 @@
 import { IMockerOpts } from '@stoplight/prism-core/types';
+import { IHttpNegotiationResult } from '@stoplight/prism-http/mocker/negotiator/types';
 import { IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types/http';
-
-import { IHttpNegotiationResult } from '@stoplight/prism-http/negotiator/types';
 import helpers from './NegotiatorHelpers';
 
 interface IOperationConfigNegotiator<Resource, Input, OperationConfig, Output> {

@@ -1,8 +1,8 @@
 import { IMocker, IMockerOpts } from '@stoplight/prism-core/types';
 import { IHttpOperation } from '@stoplight/types';
-import HttpOperationConfigNegotiator from '../negotiator/HttpOperationConfigNegotiator';
 import { IHttpConfig, IHttpOperationConfig, IHttpRequest, IHttpResponse } from '../types';
 import { IExampleGenerator } from './generator/IExampleGenerator';
+import HttpOperationConfigNegotiator from './negotiator/HttpOperationConfigNegotiator';
 
 export class HttpMocker
   implements IMocker<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {

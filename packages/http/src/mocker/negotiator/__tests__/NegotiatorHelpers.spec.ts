@@ -1,7 +1,7 @@
-import { anHttpOperation } from '@stoplight/prism-http/negotiator/__tests__/utils';
-import helpers from '@stoplight/prism-http/negotiator/NegotiatorHelpers';
 import { IExample, IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types';
 import { Chance } from 'chance';
+import helpers from '../NegotiatorHelpers';
+import { anHttpOperation } from './utils';
 
 const chance = new Chance();
 
