@@ -1,9 +1,26 @@
 import { IExample, IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types';
 import { Chance } from 'chance';
 import helpers from '../NegotiatorHelpers';
-import { anHttpOperation } from './utils';
 
 const chance = new Chance();
+
+function anHttpOperation(givenHttpOperation?: IHttpOperation) {
+  const httpOperation = givenHttpOperation || {
+    method: chance.string(),
+    path: chance.url(),
+    responses: [],
+    id: chance.string(),
+  };
+  return {
+    instance() {
+      return httpOperation;
+    },
+    withResponses(responses: IHttpResponse[]) {
+      httpOperation.responses = responses;
+      return this;
+    },
+  };
+}
 
 describe('NegotiatorHelpers', () => {
   let httpOperation: IHttpOperation;

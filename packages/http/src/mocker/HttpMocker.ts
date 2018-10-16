@@ -2,14 +2,11 @@ import { IMocker, IMockerOpts } from '@stoplight/prism-core/types';
 import { IHttpOperation } from '@stoplight/types';
 import { IHttpConfig, IHttpOperationConfig, IHttpRequest, IHttpResponse } from '../types';
 import { IExampleGenerator } from './generator/IExampleGenerator';
-import HttpOperationConfigNegotiator from './negotiator/HttpOperationConfigNegotiator';
+import helpers from './negotiator/NegotiatorHelpers';
 
 export class HttpMocker
   implements IMocker<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
-  constructor(
-    private _negotiator: HttpOperationConfigNegotiator,
-    private _exampleGenerator: IExampleGenerator<any>
-  ) {}
+  constructor(private _exampleGenerator: IExampleGenerator<any>) {}
 
   public async mock({
     resource,
@@ -31,11 +28,12 @@ export class HttpMocker
     const mockConfig: IHttpOperationConfig = typeof config.mock === 'boolean' ? {} : config.mock;
 
     // looking up proper example
-    const negotiationResult = await this._negotiator.negotiate({
-      resource,
-      input,
-      config: mockConfig,
-    });
+    let negotiationResult;
+    if (input.validations.input.length > 0) {
+      negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
+    } else {
+      negotiationResult = helpers.negotiateOptionsForValidRequest(resource, mockConfig);
+    }
 
     if (!negotiationResult.example && !negotiationResult.schema) {
       throw new Error('Neither example nor schema is defined');

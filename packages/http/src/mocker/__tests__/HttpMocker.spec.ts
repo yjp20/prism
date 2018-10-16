@@ -1,6 +1,5 @@
 import { HttpMocker } from '@stoplight/prism-http/mocker';
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
-import HttpOperationConfigNegotiator from '@stoplight/prism-http/mocker/negotiator/HttpOperationConfigNegotiator';
 import { IHttpMethod } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types/http';
 
@@ -9,7 +8,6 @@ describe.skip('HttpMocker', () => {
 
   beforeEach(() => {
     httpMocker = new HttpMocker(
-      new HttpOperationConfigNegotiator(),
       new JSONSchemaExampleGenerator()
     );
   });
