@@ -1,6 +1,5 @@
-import { anHttpOperation } from '@stoplight/prism-http/mocker/negotiator/__tests__/utils';
-import helpers from '@stoplight/prism-http/mocker/negotiator/NegotiatorHelpers';
-import { IHttpOperationConfig } from '@stoplight/prism-http/types';
+import { anHttpOperation } from '@stoplight/prism-http/negotiator/__tests__/utils';
+import helpers from '@stoplight/prism-http/negotiator/NegotiatorHelpers';
 import { IExample, IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types';
 import { Chance } from 'chance';
 
@@ -42,7 +41,7 @@ describe('NegotiatorHelpers', () => {
         const expectedConfig = {
           code: actualCode,
           mediaType: actualMediaType,
-          exampleKey: actualExampleKey,
+          example: { key: actualExampleKey },
         };
 
         expect(actualConfig).toEqual(expectedConfig);
@@ -60,12 +59,12 @@ describe('NegotiatorHelpers', () => {
                     examples: [],
                   },
                   {
-                    schema: {},
+                    schema: { type: 'type1' },
                     mediaType: actualMediaType,
                     examples: [],
                   },
                   {
-                    schema: {},
+                    schema: { type: 'type2' },
                     mediaType: actualMediaType + chance.character(),
                     examples: [],
                   },
@@ -78,7 +77,7 @@ describe('NegotiatorHelpers', () => {
           const expectedConfig = {
             code: actualCode,
             mediaType: actualMediaType,
-            dynamic: true,
+            schema: { type: 'type1' },
           };
 
           expect(actualConfig).toEqual(expectedConfig);
@@ -390,7 +389,6 @@ describe('NegotiatorHelpers', () => {
         expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledTimes(1);
         expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledWith(
           {
-            mediaType: desiredOptions.mediaType,
             code: httpResponseSchema.code,
             dynamic: desiredOptions.dynamic,
             exampleKey: desiredOptions.exampleKey,
@@ -473,7 +471,7 @@ describe('NegotiatorHelpers', () => {
   describe('negotiateDefaultMediaType()', () => {
     it('given default content exists should negotiate that', () => {
       const code = chance.string();
-      const partialOptions: Partial<IHttpOperationConfig> = {
+      const partialOptions = {
         code,
         dynamic: chance.bool(),
         exampleKey: chance.string(),
@@ -495,7 +493,6 @@ describe('NegotiatorHelpers', () => {
       expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledTimes(1);
       expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledWith(
         {
-          mediaType: content.mediaType,
           code,
           dynamic: partialOptions.dynamic,
           exampleKey: partialOptions.exampleKey,
@@ -507,7 +504,7 @@ describe('NegotiatorHelpers', () => {
 
     it('given no default content should throw', () => {
       const code = chance.string();
-      const partialOptions: Partial<IHttpOperationConfig> = {};
+      const partialOptions = { code: '200' };
       const response: IHttpResponse = {
         code,
         content: [],
@@ -525,7 +522,7 @@ describe('NegotiatorHelpers', () => {
     describe('given exampleKey forced', () => {
       it('and example exists should return that example', () => {
         const exampleKey = chance.string();
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
           exampleKey,
           dynamic: chance.bool(),
@@ -546,13 +543,13 @@ describe('NegotiatorHelpers', () => {
         expect(actualOperationConfig).toEqual({
           code: partialOptions.code,
           mediaType: httpContent.mediaType,
-          exampleKey,
+          example,
         });
       });
 
       it('and example not exist should throw an error', () => {
         const exampleKey = chance.string();
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
           exampleKey,
           dynamic: chance.bool(),
@@ -574,14 +571,14 @@ describe('NegotiatorHelpers', () => {
 
     describe('given exampleKey not forced but dynamic forced', () => {
       it('and httpContent has schema return that content', () => {
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
           dynamic: true,
         };
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [],
-          schema: {},
+          schema: { type: 'string' },
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -592,12 +589,12 @@ describe('NegotiatorHelpers', () => {
         expect(actualOperationConfig).toEqual({
           code: partialOptions.code,
           mediaType: httpContent.mediaType,
-          dynamic: true,
+          schema: httpContent.schema,
         });
       });
 
       it('and httpContent has no schema throw error', () => {
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
           dynamic: true,
         };
@@ -618,7 +615,7 @@ describe('NegotiatorHelpers', () => {
 
     describe('given neither exampleKey nor dynamic forced', () => {
       it('and can find other example return that example', () => {
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
         };
         const example: IExample = {
@@ -642,18 +639,18 @@ describe('NegotiatorHelpers', () => {
         expect(actualOperationConfig).toEqual({
           code: partialOptions.code,
           mediaType: httpContent.mediaType,
-          exampleKey: example.key,
+          example,
         });
       });
 
       it('and cannot find example but schema exists return dynamic', () => {
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
         };
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [],
-          schema: {},
+          schema: { type: 'string' },
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -664,12 +661,12 @@ describe('NegotiatorHelpers', () => {
         expect(actualOperationConfig).toEqual({
           code: partialOptions.code,
           mediaType: httpContent.mediaType,
-          dynamic: true,
+          schema: { type: 'string' },
         });
       });
 
       it('and cannot find example and dynamic does not exist throw error', () => {
-        const partialOptions: IHttpOperationConfig = {
+        const partialOptions = {
           code: chance.string(),
         };
         const httpContent: IHttpContent = {

@@ -1,5 +1,6 @@
 import { IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types/http';
 
+import { IHttpNegotiationResult } from '@stoplight/prism-http/negotiator/types';
 import { IHttpOperationConfig } from '../types';
 
 function findBestExample(httpContent: IHttpContent) {
@@ -35,10 +36,9 @@ function findResponseByStatusCode(
 
 const helpers = {
   negotiateByPartialOptionsAndHttpContent(
-    partialOptions: IHttpOperationConfig,
+    { code, exampleKey, dynamic }: { code: string; exampleKey?: string; dynamic?: boolean },
     httpContent: IHttpContent
-  ): IHttpOperationConfig {
-    const { code, exampleKey, dynamic } = partialOptions;
+  ): IHttpNegotiationResult {
     const { mediaType } = httpContent;
 
     if (exampleKey) {
@@ -49,7 +49,7 @@ const helpers = {
         return {
           code,
           mediaType,
-          exampleKey,
+          example,
         };
       } else {
         throw new Error(
@@ -61,7 +61,7 @@ const helpers = {
         return {
           code,
           mediaType,
-          dynamic,
+          schema: httpContent.schema,
         };
       } else {
         throw new Error(
@@ -76,13 +76,13 @@ const helpers = {
         return {
           code,
           mediaType,
-          exampleKey: example.key,
+          example,
         };
       } else if (httpContent.schema) {
         return {
           code,
           mediaType,
-          dynamic: true,
+          schema: httpContent.schema,
         };
       } else {
         throw new Error(`Not possible to generate a response for contentType: ${mediaType}`);
@@ -91,9 +91,9 @@ const helpers = {
   },
 
   negotiateDefaultMediaType(
-    partialOptions: Partial<IHttpOperationConfig>,
+    partialOptions: { code: string; dynamic?: boolean; exampleKey?: string },
     response: IHttpResponse
-  ): IHttpOperationConfig {
+  ): IHttpNegotiationResult {
     const { code, dynamic, exampleKey } = partialOptions;
     const mediaType = 'application/json';
     const httpContent = findHttpContentByMediaType(response, mediaType);
@@ -101,7 +101,6 @@ const helpers = {
       // a httpContent for default mediaType exists
       return helpers.negotiateByPartialOptionsAndHttpContent(
         {
-          mediaType,
           code,
           dynamic,
           exampleKey,
@@ -119,7 +118,7 @@ const helpers = {
     httpOperation: IHttpOperation,
     desiredOptions: IHttpOperationConfig,
     response: IHttpResponse
-  ): IHttpOperationConfig {
+  ): IHttpNegotiationResult {
     const { code } = response;
     const { mediaType, dynamic, exampleKey } = desiredOptions;
 
@@ -130,7 +129,6 @@ const helpers = {
         // a httpContent for a provided mediaType exists
         return helpers.negotiateByPartialOptionsAndHttpContent(
           {
-            mediaType,
             code,
             dynamic,
             exampleKey,
@@ -155,7 +153,7 @@ const helpers = {
   negotiateOptionsForDefaultCode(
     httpOperation: IHttpOperation,
     desiredOptions: IHttpOperationConfig
-  ): IHttpOperationConfig {
+  ): IHttpNegotiationResult {
     const lowest2xxResponse = findLowest2xx(httpOperation.responses);
     if (lowest2xxResponse) {
       return helpers.negotiateOptionsBySpecificResponse(
@@ -171,7 +169,7 @@ const helpers = {
     httpOperation: IHttpOperation,
     desiredOptions: IHttpOperationConfig,
     code: string
-  ): IHttpOperationConfig {
+  ): IHttpNegotiationResult {
     // find response by provided status code
     const responseByForcedStatusCode = findResponseByStatusCode(httpOperation.responses, code);
     if (responseByForcedStatusCode) {
@@ -194,7 +192,7 @@ const helpers = {
   negotiateOptionsForValidRequest(
     httpOperation: IHttpOperation,
     desiredOptions: IHttpOperationConfig
-  ): IHttpOperationConfig {
+  ): IHttpNegotiationResult {
     const { code } = desiredOptions;
     if (code) {
       return helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
@@ -202,7 +200,7 @@ const helpers = {
     return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
   },
 
-  negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[]): IHttpOperationConfig {
+  negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[]): IHttpNegotiationResult {
     // currently only try to find a 400 response, but we may want to support other cases in the future
     const code = '400';
     const response = findResponseByStatusCode(httpResponses, code);
@@ -221,13 +219,13 @@ const helpers = {
       return {
         code,
         mediaType: responseWithExamples.mediaType,
-        exampleKey: responseWithExamples.examples![0].key,
+        example: responseWithExamples.examples![0],
       };
     } else if (responseWithSchema) {
       return {
         code,
         mediaType: responseWithSchema.mediaType,
-        dynamic: true,
+        schema: responseWithSchema.schema,
       };
     } else {
       throw new Error('Data corrupted');

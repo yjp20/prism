@@ -1,7 +1,7 @@
 import { IValidation, ValidationSeverity } from '@stoplight/prism-core/types';
-import { anHttpOperation } from '@stoplight/prism-http/mocker/negotiator/__tests__/utils';
 import { IHttpRequest } from '@stoplight/prism-http/types';
 import { Chance } from 'chance';
+import { anHttpOperation } from './utils';
 
 import HttpOperationConfigNegotiator from '../HttpOperationConfigNegotiator';
 import helpers from '../NegotiatorHelpers';
@@ -60,9 +60,7 @@ describe('HttpOperationOptionsNegotiator', () => {
           httpOperation,
           desiredConfig
         );
-        expect(result).toEqual({
-          httpOperationConfig,
-        });
+        expect(result).toEqual(httpOperationConfig);
       });
 
       it('and negotiations fail should return error', async () => {
@@ -71,27 +69,26 @@ describe('HttpOperationOptionsNegotiator', () => {
           throw error;
         });
 
-        const result = await negotiator.negotiate(
-          getOpts(
-            httpOperation,
-            {
-              data: httpRequest,
-              validations: {
-                input: [],
+        expect(
+          negotiator.negotiate(
+            getOpts(
+              httpOperation,
+              {
+                data: httpRequest,
+                validations: {
+                  input: [],
+                },
               },
-            },
-            desiredConfig
+              desiredConfig
+            )
           )
-        );
+        ).rejects.toThrowError(error);
 
         expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledTimes(1);
         expect(helpers.negotiateOptionsForValidRequest).toHaveBeenCalledWith(
           httpOperation,
           desiredConfig
         );
-        expect(result).toEqual({
-          error,
-        });
       });
     });
 
@@ -126,9 +123,7 @@ describe('HttpOperationOptionsNegotiator', () => {
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(
           httpOperation.responses
         );
-        expect(result).toEqual({
-          httpOperationConfig,
-        });
+        expect(result).toEqual(httpOperationConfig);
       });
 
       it('and negotiations fail should return error', async () => {
@@ -137,26 +132,25 @@ describe('HttpOperationOptionsNegotiator', () => {
           throw error;
         });
 
-        const result = await negotiator.negotiate(
-          getOpts(
-            httpOperation,
-            {
-              data: httpRequest,
-              validations: {
-                input: [validation],
+        expect(
+          negotiator.negotiate(
+            getOpts(
+              httpOperation,
+              {
+                data: httpRequest,
+                validations: {
+                  input: [validation],
+                },
               },
-            },
-            desiredConfig
+              desiredConfig
+            )
           )
-        );
+        ).rejects.toThrowError(error);
 
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledTimes(1);
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalledWith(
           httpOperation.responses
         );
-        expect(result).toEqual({
-          error,
-        });
       });
     });
   });
