@@ -1,3 +1,5 @@
+import { IPathMatch } from "./types";
+
 function fragmentarize(path: string): string[] {
   return path.split('/').slice(1);
 }
@@ -10,7 +12,7 @@ function getTemplateParamName(pathFragment: string) {
 /**
  * @returns `true` if matched concrete, `false` if not matched, `path param values` if matched templated
  */
-export function matchPath(requestPath: string, operation: { path: string }): boolean | { name: string, value: string }[] {
+export function matchPath(requestPath: string, operation: { path: string }): IPathMatch {
   const operationPath = operation.path;
   if (!requestPath.startsWith('/')) {
     throw new Error('The request path must start with a slash.');
