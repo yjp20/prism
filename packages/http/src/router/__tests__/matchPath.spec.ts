@@ -30,25 +30,7 @@ describe('matchPath()', () => {
       includeTemplates: false,
     });
 
-    expect(matchPath(path, { path }).toBeTruthy();
-  });
-
-  test('any conrecte request path should match same length templated path', () => {
-    // e.g. /a/b/c should match /a/{x}/c
-    const pathFragments = chance.natural({ min: 1, max: 6 });
-    const trailingSlash = chance.bool();
-    const requestPath = randomPath({
-      pathFragments,
-      includeTemplates: false,
-      trailingSlash
-    });
-    const operationPath = randomPath({
-      pathFragments,
-      includeTemplates: true,
-      trailingSlash
-    });
-
-    expect(matchPath(requestPath, { path: operationPath })).toBeTruthy();
+    expect(matchPath(path, { path })).toBeTruthy();
   });
 
   test('none request path should not match path with less fragments', () => {
@@ -68,7 +50,7 @@ describe('matchPath()', () => {
     expect(matchPath(requestPath, { path: operationPath })).toBeFalsy();
   });
 
-  test('none request path should not match concrete path with more fragments', () => {
+  test('none request path should match concrete path with more fragments', () => {
     // e.g. /a/b should not match /a/b/c
     // e.g. /a/b/ should not match /a/b/c
     const requestPath = randomPath({
@@ -84,49 +66,48 @@ describe('matchPath()', () => {
   });
 
   test('reqest path should match a templated path and resolve variables', () => {
-    expect(matchPath('/a'), { '/{a}'}).toEqual([
+    expect(matchPath('/a', { path: '/{a}'})).toEqual([
       { name: 'a', value: 'a' }
     ]);
 
-    expect(matchPath('/a/b'), { '/{a}/{b}'}).toEqual([
+    expect(matchPath('/a/b', { path: '/{a}/{b}'})).toEqual([
       { name: 'a', value: 'a' },
       { name: 'b', value: 'b' },
     ]);
 
-    expect(matchPath('/a/b'), { '/a/{b}'}).toEqual([
+    expect(matchPath('/a/b', { path: '/a/{b}'})).toEqual([
       { name: 'b', value: 'b' },
     ]);
   });
 
   test('request path should match a template path and resolve undefined variables', () => {
-    expect(matchPath('/'), { '/{a}'}).toEqual([
-      { name: 'a', value: undefined },
+    expect(matchPath('/', { path: '/{a}'})).toEqual([
+      { name: 'a', value: '' },
     ]);
 
-    expect(matchPath('//'), { '/{a}/'}).toEqual([
-      { name: 'a', value: undefined },
+    expect(matchPath('//', { path: '/{a}/'})).toEqual([
+      { name: 'a', value: '' },
     ]);
 
-    expect(matchPath('//b'), { '/{a}/{b}'}).toEqual([
-      { name: 'a', value: undefined },
+    expect(matchPath('//b', { path: '/{a}/{b}'})).toEqual([
+      { name: 'a', value: '' },
       { name: 'b', value: 'b' },
     ]);
 
-    expect(matchPath('/a/'), { '/{a}/{b}'}).toEqual([
+    expect(matchPath('/a/', { path: '/{a}/{b}'})).toEqual([
       { name: 'a', value: 'a' },
-      { name: 'b', value: undefined },
+      { name: 'b', value: '' },
     ]);
 
-    expect(matchPath('//'), { '/{a}/{b}'}).toEqual([
-      { name: 'a', value: undefined },
-      { name: 'b', value: undefined },
+    expect(matchPath('//', { path: '/{a}/{b}'})).toEqual([
+      { name: 'a', value: '' },
+      { name: 'b', value: '' },
     ]);
   });
 
   test('none path should match templated operation with more path fragments', () => {
     // e.g. `/a/b` should not match /{x}/{y}/{z}
     // e.g. `/a` should not match /{x}/{y}/{z}
-    const trailingSlash = chance.bool();
     const requestPath = randomPath({
       pathFragments: chance.natural({ min: 1, max: 3 }),
       includeTemplates: false,

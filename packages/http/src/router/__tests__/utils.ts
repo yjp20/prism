@@ -23,7 +23,7 @@ export function randomArray<T>(itemGenerator: () => T, length: number = 1): T[] 
 const defaultRandomPathOptions = {
   pathFragments: 3,
   includeTemplates: true,
-  leadingSlash: true
+  leadingSlash: true,
 };
 
 interface RandomPathOptions {
@@ -34,7 +34,7 @@ interface RandomPathOptions {
 }
 
 export function randomPath(opts: RandomPathOptions = defaultRandomPathOptions): string {
-  opts = Object.assign(opts, defaultRandomPathOptions);
+  opts = Object.assign({}, defaultRandomPathOptions, opts);
   const randomPathFragments = randomArray(
     () => (opts.includeTemplates && chance.coin() === 'heads') ? `{${chance.word()}}` : chance.word(),
     opts.pathFragments

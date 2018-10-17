@@ -1,6 +1,6 @@
 import { Chance } from 'chance';
 import { router } from '../index';
-import { oneRandomHttpMethod, randomUrl, randomPath, pickSetOfHttpMethods, pickOneHttpMethod } from '@stoplight/prism-http/router/__tests__/utils';
+import { randomUrl, randomPath, pickSetOfHttpMethods, pickOneHttpMethod } from '@stoplight/prism-http/router/__tests__/utils';
 
 const chance = new Chance();
 
@@ -10,7 +10,7 @@ describe('http router', () => {
       const resource = await router.route({
         resources: [],
         input: {
-          method: oneRandomHttpMethod(),
+          method: pickOneHttpMethod(),
           url: randomUrl()
         }
       });
@@ -23,13 +23,13 @@ describe('http router', () => {
         const resource = await router.route({
           resources: [{
             id: chance.guid(),
-            method: oneRandomHttpMethod(),
+            method: pickOneHttpMethod(),
             path: randomPath(),
             responses: [],
             servers: []
           }],
           input: {
-            method: oneRandomHttpMethod(),
+            method: pickOneHttpMethod(),
             url: randomUrl()
           }
         });
