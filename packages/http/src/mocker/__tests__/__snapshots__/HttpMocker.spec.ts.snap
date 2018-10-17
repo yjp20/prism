@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HttpMocker mock() fails when called with no input 1`] = `"Http request is not defined"`;
+
+exports[`HttpMocker mock() fails when called with no resource 1`] = `"Resource is not defined"`;
+
+exports[`HttpMocker mock() with invalid negotiator response returns static example 1`] = `
+Object {
+  "body": "Ina Quinn",
+  "headers": Object {
+    "Content-type": "test",
+  },
+  "statusCode": 202,
+}
+`;
+
+exports[`HttpMocker mock() with valid negotiator response fails when negotiator did not resolved to either example nor schema 1`] = `"Neither example nor schema is defined"`;
+
+exports[`HttpMocker mock() with valid negotiator response returns dynamic example 1`] = `
+Object {
+  "body": "example value",
+  "headers": Object {
+    "Content-type": "test",
+  },
+  "statusCode": 202,
+}
+`;
+
+exports[`HttpMocker mock() with valid negotiator response returns static example 1`] = `
+Object {
+  "body": "Ina Quinn",
+  "headers": Object {
+    "Content-type": "test",
+  },
+  "statusCode": 202,
+}
+`;
