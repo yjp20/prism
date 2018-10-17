@@ -23,7 +23,7 @@ export class HttpMocker
     }
 
     // setting default values
-    config = config || { mock: true };
+    config = config || { mock: {} };
 
     const mockConfig: IHttpOperationConfig = typeof config.mock === 'boolean' ? {} : config.mock;
 
