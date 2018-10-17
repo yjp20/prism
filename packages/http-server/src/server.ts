@@ -1,4 +1,5 @@
 const express = require('express');
+import { Request, Response } from 'express';
 const app = express();
 const port = 3000;
 
@@ -20,7 +21,7 @@ const prism = createInstance({
   },
 });
 
-app.get('*', async (req: any, res: any) => {
+app.get('*', async (req: Request, res: Response) => {
   const response = await prism.process({ method: req.method, host: req.host, path: req.path });
 
   if (response.output) {

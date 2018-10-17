@@ -6,7 +6,7 @@ exports[`HttpMocker mock() fails when called with no resource 1`] = `"Resource i
 
 exports[`HttpMocker mock() with invalid negotiator response returns static example 1`] = `
 Object {
-  "body": "Ina Quinn",
+  "body": "test value",
   "headers": Object {
     "Content-type": "test",
   },
@@ -28,7 +28,7 @@ Object {
 
 exports[`HttpMocker mock() with valid negotiator response returns static example 1`] = `
 Object {
-  "body": "Ina Quinn",
+  "body": "test value",
   "headers": Object {
     "Content-type": "test",
   },

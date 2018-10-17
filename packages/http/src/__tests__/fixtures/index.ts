@@ -1,4 +1,6 @@
 import { IHttpOperation } from '@stoplight/types';
+import { IHttpMethod, IHttpRequest } from '@stoplight/prism-http/types';
+import { IPrismInput } from '@stoplight/prism-core/types';
 
 export const httpOperations: IHttpOperation[] = [
   {
@@ -79,5 +81,18 @@ export const httpOperations: IHttpOperation[] = [
         ],
       },
     ],
+  },
+];
+
+export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
+  {
+    validations: {
+      input: [],
+    },
+    data: {
+      method: 'get' as IHttpMethod,
+      path: '/todos',
+      host: '',
+    },
   },
 ];

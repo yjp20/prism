@@ -2,10 +2,7 @@ import { HttpMocker } from '@stoplight/prism-http/mocker';
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
 import { IHttpMethod } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types/http';
-import { Chance } from 'chance';
 import helpers from '../negotiator/NegotiatorHelpers';
-
-const chance = new Chance();
 
 describe('HttpMocker', () => {
   let httpMocker: HttpMocker;
@@ -41,8 +38,8 @@ describe('HttpMocker', () => {
               schema: mockSchema,
               examples: [
                 {
-                  key: chance.name(),
-                  value: chance.name(),
+                  key: 'test key',
+                  value: 'test value',
                 },
               ],
             },
@@ -58,7 +55,7 @@ describe('HttpMocker', () => {
       data: {
         method: 'get' as IHttpMethod,
         path: '/test',
-        host: chance.domain(),
+        host: 'example.com',
       },
     };
 
