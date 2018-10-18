@@ -9,7 +9,7 @@
     "setup": "yarn",
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
     "lint": "tslint packages/*/src/**/*.{ts,js}",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "test": "yarn lint && jest",
     "test.fast": "jest",
     "test.coverage": "yarn test --coverage",
