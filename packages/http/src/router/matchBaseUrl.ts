@@ -1,35 +1,25 @@
 import { IServer } from "@stoplight/types/server";
 import { INodeVariable } from "@stoplight/types/node";
-import { IServerMatch, Nullable } from "./types";
+import { MatchType } from "./types";
 
 const variableRegexp = /{(.*?)}/g;
 
-export function matchServer(server: IServer, requestUrl: URL): Nullable<IServerMatch> {
+export function matchBaseUrl(server: IServer, baseUrl: string): MatchType {
   const templateMatchResult = matchRequestUrlToTemplateUrl(
-    requestUrl.href,
+    baseUrl,
     server.url,
     server.variables
   );
 
   if (!templateMatchResult) {
-    return null;
+    return MatchType.NOMATCH;
   }
 
-  const [matchedRequestUrlPortion] = Array.from(templateMatchResult);
-
-  const path = (requestUrl.origin + requestUrl.pathname).substring(matchedRequestUrlPortion.length);
-  return {
-    baseUrl: matchedRequestUrlPortion,
-    path
-  }
+  return templateMatchResult.length > 1 ? MatchType.TEMPLATED : MatchType.CONCRETE;
 }
 
 export function convertTemplateToRegExp(urlTemplate: string, variables?: { [name: string]: INodeVariable; }) {
-  if (!variables) {
-    return new RegExp(urlTemplate);
-  }
-
-  return new RegExp(urlTemplate.replace(variableRegexp, (match, variableName) => {
+  const regexp = !variables ? urlTemplate : urlTemplate.replace(variableRegexp, (match, variableName) => {
     const variable = variables[variableName];
     if (!variable) {
       throw new Error(`Variable '${variableName}' is not defined, cannot parse input.`);
@@ -39,7 +29,9 @@ export function convertTemplateToRegExp(urlTemplate: string, variables?: { [name
       enums = enums.sort((a, b) => b.length - a.length);
     }
     return `(${(enums && enums.length) ? enums.join('|') : '.*?'})`;
-  }));
+  });
+
+  return new RegExp(`^${regexp}$`);
 }
 
 function matchRequestUrlToTemplateUrl(requestUrl: string, templateUrl: string, variables?: any) {

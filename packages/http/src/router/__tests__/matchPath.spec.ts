@@ -1,6 +1,7 @@
 import { Chance } from 'chance';
-import { matchPath } from "@stoplight/prism-http/router/matchPath";
-import { randomPath } from "@stoplight/prism-http/router/__tests__/utils";
+import { matchPath } from "../matchPath";
+import { randomPath } from "./utils";
+import { MatchType } from '../types';
 
 const chance = new Chance();
 
@@ -9,18 +10,20 @@ describe('matchPath()', () => {
   test('request path must start with a slash or throw error', () => {
     const requestPath = randomPath({ leadingSlash: false });
     const operationPath = randomPath({ leadingSlash: true });
-    expect(() => matchPath(requestPath, { path: operationPath })).toThrow('The request path must start with a slash.');
+    expect(() => matchPath(requestPath, operationPath))
+      .toThrow('The request path must start with a slash.');
   });
 
   test('option path must start with a slash or throw error', () => {
     const requestPath = randomPath({ leadingSlash: true });
     const operationPath = randomPath({ leadingSlash: false });
-    expect(() => matchPath(requestPath, { path: operationPath })).toThrow('The operation path must start with a slash.');
+    expect(() => matchPath(requestPath, operationPath))
+      .toThrow('The operation path must start with a slash.');
   });
 
   test('root path should match another root path', () => {
     const path = '/';
-    expect(matchPath(path, { path })).toBeTruthy();
+    expect(matchPath(path, path)).toEqual(MatchType.CONCRETE);
   });
 
   test('any concrete path should match an equal concrete path', () => {
@@ -30,7 +33,7 @@ describe('matchPath()', () => {
       includeTemplates: false,
     });
 
-    expect(matchPath(path, { path })).toBeTruthy();
+    expect(matchPath(path, path)).toEqual(MatchType.CONCRETE);
   });
 
   test('none request path should not match path with less fragments', () => {
@@ -47,7 +50,7 @@ describe('matchPath()', () => {
       trailingSlash,
     });
 
-    expect(matchPath(requestPath, { path: operationPath })).toBeFalsy();
+    expect(matchPath(requestPath, operationPath)).toEqual(MatchType.NOMATCH);
   });
 
   test('none request path should match concrete path with more fragments', () => {
@@ -62,47 +65,27 @@ describe('matchPath()', () => {
       includeTemplates: false,
     });
 
-    expect(matchPath(requestPath, { path: operationPath })).toBeFalsy();
+    expect(matchPath(requestPath, operationPath)).toEqual(MatchType.NOMATCH);
   });
 
   test('reqest path should match a templated path and resolve variables', () => {
-    expect(matchPath('/a', { path: '/{a}'})).toEqual([
-      { name: 'a', value: 'a' }
-    ]);
+    expect(matchPath('/a', '/{a}')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('/a/b', { path: '/{a}/{b}'})).toEqual([
-      { name: 'a', value: 'a' },
-      { name: 'b', value: 'b' },
-    ]);
+    expect(matchPath('/a/b', '/{a}/{b}')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('/a/b', { path: '/a/{b}'})).toEqual([
-      { name: 'b', value: 'b' },
-    ]);
+    expect(matchPath('/a/b', '/a/{b}')).toEqual(MatchType.TEMPLATED);
   });
 
   test('request path should match a template path and resolve undefined variables', () => {
-    expect(matchPath('/', { path: '/{a}'})).toEqual([
-      { name: 'a', value: '' },
-    ]);
+    expect(matchPath('/', '/{a}')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('//', { path: '/{a}/'})).toEqual([
-      { name: 'a', value: '' },
-    ]);
+    expect(matchPath('//', '/{a}/')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('//b', { path: '/{a}/{b}'})).toEqual([
-      { name: 'a', value: '' },
-      { name: 'b', value: 'b' },
-    ]);
+    expect(matchPath('//b', '/{a}/{b}')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('/a/', { path: '/{a}/{b}'})).toEqual([
-      { name: 'a', value: 'a' },
-      { name: 'b', value: '' },
-    ]);
+    expect(matchPath('/a/', '/{a}/{b}')).toEqual(MatchType.TEMPLATED);
 
-    expect(matchPath('//', { path: '/{a}/{b}'})).toEqual([
-      { name: 'a', value: '' },
-      { name: 'b', value: '' },
-    ]);
+    expect(matchPath('//', '/{a}/{b}')).toEqual(MatchType.TEMPLATED);
   });
 
   test('none path should match templated operation with more path fragments', () => {
@@ -119,6 +102,6 @@ describe('matchPath()', () => {
       trailingSlash: false,
     });
 
-    expect(matchPath(requestPath, { path: operationPath })).toBeFalsy();
+    expect(matchPath(requestPath, operationPath)).toEqual(MatchType.NOMATCH);
   });
 });

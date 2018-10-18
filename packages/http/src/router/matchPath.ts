@@ -1,4 +1,4 @@
-import { IPathMatch } from "./types";
+import { MatchType } from "./types";
 
 function fragmentarize(path: string): string[] {
   return path.split('/').slice(1);
@@ -12,8 +12,7 @@ function getTemplateParamName(pathFragment: string) {
 /**
  * @returns `true` if matched concrete, `false` if not matched, `path param values` if matched templated
  */
-export function matchPath(requestPath: string, operation: { path: string }): IPathMatch {
-  const operationPath = operation.path;
+export function matchPath(requestPath: string, operationPath: string): MatchType {
   if (!requestPath.startsWith('/')) {
     throw new Error('The request path must start with a slash.');
   }
@@ -25,7 +24,7 @@ export function matchPath(requestPath: string, operation: { path: string }): IPa
 
   if (operationPathFragments.length < requestPathFragments.length
     || operationPathFragments.length > requestPathFragments.length) {
-    return false;
+    return MatchType.NOMATCH;
   }
 
   const params = [];
@@ -37,7 +36,7 @@ export function matchPath(requestPath: string, operation: { path: string }): IPa
 
     if (paramName === null && operationPathFragment !== requestPathFragment) {
       // if concrete fragment and fragments are different return false
-      return false;
+      return MatchType.NOMATCH;
     } else if (paramName !== null) {
       params.push({
         name: paramName as string,
@@ -46,5 +45,5 @@ export function matchPath(requestPath: string, operation: { path: string }): IPa
     }
   }
 
-  return params;
+  return params.length ? MatchType.TEMPLATED : MatchType.CONCRETE;
 }

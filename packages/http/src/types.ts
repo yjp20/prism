@@ -38,7 +38,13 @@ export interface IHttpConfig extends types.IPrismConfig {
 
 export interface IHttpRequest {
   method: IHttpMethod;
-  url: URL;
+  url: {
+    baseUrl: string;
+    path: string;
+    query?: {
+      [name: string]: string;
+    };
+  }
   headers?: {
     [name: string]: string;
   };

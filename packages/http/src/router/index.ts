@@ -1,10 +1,10 @@
 import { types } from '@stoplight/prism-core';
-import { IHttpOperation, IServer } from '@stoplight/types';
+import { IHttpOperation } from '@stoplight/types';
 
 import * as t from '../types';
 import { matchPath } from './matchPath';
-import { Nullable, IServerMatch, IMatch, PathWithServers, IPathMatch, MatchType } from './types';
-import { matchServer } from './matchServer';
+import { IMatch, MatchType } from './types';
+import { matchBaseUrl } from './matchBaseUrl';
 
 export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig> = {
   route: async ({ resources, input, config }) => {
@@ -12,93 +12,64 @@ export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig
   },
 };
 
-function route(operations: IHttpOperation[], request: t.IHttpRequest) {
-  return disambiguateMatches(<IMatch[]>operations
-    .map(operation => match(request, operation))
-    .filter(match => match !== null)
-  );
-}
+function route(resources: IHttpOperation[], request: t.IHttpRequest) {
+  const matches = [];
+  const { path: requestPath, baseUrl: requestBaseUrl } = request.url;
 
-function match(request: t.IHttpRequest, operation: IHttpOperation): Nullable<IMatch> {
-  if (!matchByMethod(request, operation)) {
-    return null;
-  }
-  return matchByUrl(request, operation);
-}
+  for (let resource of resources) {
+    if (!matchByMethod(request, resource)) continue;
 
-function matchByUrl(request: t.IHttpRequest, operation: IHttpOperation): Nullable<IMatch> {
-  const pathWithServers = matchPathWithServers(operation.servers, request.url, operation);
-  if (pathWithServers === null) {
-    return null
-  };
+    const pathMatch = matchPath(requestPath, resource.path);
+    const serverMatches = [];
 
-  const matchingServer = disambiguateServers(pathWithServers.matchingServers);
+    for (let server of resource.servers) {
+      const serverMatch = matchBaseUrl(server, requestBaseUrl)
+      if (serverMatch !== MatchType.NOMATCH) {
+        serverMatches.push(serverMatch);
+      }
+    }
 
-  return {
-    operation,
-    matchingPair: [matchingServer, pathWithServers.pathMatch]
-  }
-}
+    const serverMatch = disambiguateServers(serverMatches);
 
-function matchPathWithServers(servers: IServer[], requestUrl: URL, operation: IHttpOperation): Nullable<PathWithServers> {
-  let pathMatchResult = null;
-  const matchingServers: IServerMatch[] = [];
-  for (let server of servers) {
-    const serverMatch = matchServer(server, requestUrl);
-    if (!serverMatch) continue;
-    const pathMatch = matchPath(serverMatch.path, operation);
-    if (!pathMatch) continue;
-    pathMatchResult = pathMatch;
+    if (serverMatch && pathMatch !== MatchType.NOMATCH) {
+      matches.push({
+        pathMatch,
+        serverMatch,
+        resource,
+      });
+    }
   }
 
-  if (pathMatchResult === null) {
-    return null;
-  }
-
-  return {
-    pathMatch: pathMatchResult,
-    matchingServers,
-  };
+  return disambiguateMatches(matches);
 }
 
 function matchByMethod(request: t.IHttpRequest, operation: IHttpOperation): boolean {
   return operation.method.toLowerCase() === request.method.toLowerCase();
 }
 
-export function disambiguateMatches(matches: IMatch[]): IHttpOperation {
+export function disambiguateMatches(matches: IMatch[]): null | IHttpOperation {
   const match = (
     // prefer concrete server and concrete path
-    matches.find(match => areServerAndPath(match, 'concrete', 'concrete')) ||
+    matches.find(match => areServerAndPath(match, MatchType.CONCRETE, MatchType.CONCRETE)) ||
     // then prefer templated server and concrete path
-    matches.find(match => areServerAndPath(match, 'templated', 'concrete')) ||
+    matches.find(match => areServerAndPath(match, MatchType.TEMPLATED, MatchType.CONCRETE)) ||
     // then prefer concrete server and templated path
-    matches.find(match => areServerAndPath(match, 'concrete', 'templated')) ||
-    // then prefer templated server and templated path
-    matches.find(match => areServerAndPath(match, 'templated', 'templated')) ||
+    matches.find(match => areServerAndPath(match, MatchType.CONCRETE, MatchType.TEMPLATED)) ||
     // then fallback to first
     matches[0]
   );
-  return match.operation;
+  return match ? match.resource : null;
 }
 
 function areServerAndPath(match: IMatch, serverType: MatchType, pathType: MatchType) {
-  return isServerMatchOfType(match.matchingPair[0], serverType) &&
-    isPathMatchOfType(match.matchingPair[1], pathType);
+  return match.serverMatch === serverType && match.pathMatch === pathType;
 }
 
 /**
  * If a concrete server match exists then return first such match.
  * If no concrete server match exists return first (templated) match.
  */
-function disambiguateServers(serverMatches: IServerMatch[]): IServerMatch {
-  const concreteMatch = serverMatches.find(serverMatch => isServerMatchOfType(serverMatch, 'concrete'));
+function disambiguateServers(serverMatches: MatchType[]): MatchType {
+  const concreteMatch = serverMatches.find(serverMatch => serverMatch === MatchType.CONCRETE);
   return concreteMatch || serverMatches[0];
-}
-
-function isServerMatchOfType(serverMatch: IServerMatch, type: MatchType): boolean {
-  return type === 'concrete' ? !serverMatch.variables : !!serverMatch.variables
-}
-
-function isPathMatchOfType(pathMatch: IPathMatch, type: MatchType): boolean {
-  return type === 'concrete' ? typeof pathMatch === 'boolean' : typeof pathMatch !== 'boolean';
 }

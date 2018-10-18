@@ -12,10 +12,6 @@ export function pickSetOfHttpMethods(count: number = 2): IHttpMethod[] {
   return chance.unique(pickOneHttpMethod, count) as IHttpMethod[];
 }
 
-export function randomUrl(): URL {
-  return new URL(chance.url());
-}
-
 export function randomArray<T>(itemGenerator: () => T, length: number = 1): T[] {
   return new Array(length).fill(null).map(itemGenerator);
 }

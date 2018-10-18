@@ -50,7 +50,7 @@ export interface IRouter<Resource, Input, Config> {
   route: (
     opts: { resources: Resource[]; input: Input; config?: Config },
     defaultRouter?: IRouter<Resource, Input, Config>
-  ) => Promise<Resource>;
+  ) => Promise<Resource | null>;
 }
 
 export interface IForwarder<Resource, Input, Config, Output> {
