@@ -1,36 +1,35 @@
-import { MatchType } from "../types";
-import { matchBaseUrl, convertTemplateToRegExp } from "../matchBaseUrl";
+import { convertTemplateToRegExp, matchBaseUrl } from '../matchBaseUrl';
+import { MatchType } from '../types';
 
 describe('matchServer.ts', () => {
   describe('matchServer()', () => {
     test('concrete server url fully matches request url', () => {
-      const serverMatch = matchBaseUrl({
-        url: 'http://www.example.com/'
-      }, 'http://www.example.com/');
+      const serverMatch = matchBaseUrl(
+        {
+          url: 'http://www.example.com/',
+        },
+        'http://www.example.com/'
+      );
 
       expect(serverMatch).toEqual(MatchType.CONCRETE);
     });
 
     test('concrete server url does not match request url', () => {
-      expect(matchBaseUrl(
-        { url: 'http://www.example.com' },
-        'http://www.example.com/',
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example.com/')).toEqual(
+        MatchType.NOMATCH
+      );
 
-      expect(matchBaseUrl(
-        { url: 'http://www.example.com' },
-        'http://www.example',
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example')).toEqual(
+        MatchType.NOMATCH
+      );
 
-      expect(matchBaseUrl(
-        { url: 'http://www.example.com' },
-        'http://www.google.com/'
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.google.com/')).toEqual(
+        MatchType.NOMATCH
+      );
 
-      expect(matchBaseUrl(
-        { url: 'http://www.example.com:8081/v1' },
-        'http://www.example.com/v1'
-      )).toEqual(MatchType.NOMATCH);
+      expect(
+        matchBaseUrl({ url: 'http://www.example.com:8081/v1' }, 'http://www.example.com/v1')
+      ).toEqual(MatchType.NOMATCH);
     });
 
     test('entirely templated server url to match request from enum', () => {
@@ -39,45 +38,34 @@ describe('matchServer.ts', () => {
         variables: {
           url: {
             default: 'http://www.example.com',
-            enum: [
-              'http://www.example.com',
-              'http://www.example.com:8080',
-            ]
-          }
-        }
+            enum: ['http://www.example.com', 'http://www.example.com:8080'],
+          },
+        },
       };
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://www.example.com'
-      )).toEqual(MatchType.TEMPLATED);
+      expect(matchBaseUrl(serverConfig, 'http://www.example.com')).toEqual(MatchType.TEMPLATED);
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://www.example.com:8080'
-      )).toEqual(MatchType.TEMPLATED);
+      expect(matchBaseUrl(serverConfig, 'http://www.example.com:8080')).toEqual(
+        MatchType.TEMPLATED
+      );
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://www.example.com:808'
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl(serverConfig, 'http://www.example.com:808')).toEqual(MatchType.NOMATCH);
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://www.example.com:80801'
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl(serverConfig, 'http://www.example.com:80801')).toEqual(MatchType.NOMATCH);
     });
 
     test('server url with templated wildcard host to match request url', () => {
-      expect(matchBaseUrl(
-        {
-          url: 'http://{host}/v1',
-          variables: {
-            host: { default: 'www.example.com' }
-          }
-        },
-        'http://stoplight.io/v1'
-      )).toEqual(MatchType.TEMPLATED);
+      expect(
+        matchBaseUrl(
+          {
+            url: 'http://{host}/v1',
+            variables: {
+              host: { default: 'www.example.com' },
+            },
+          },
+          'http://stoplight.io/v1'
+        )
+      ).toEqual(MatchType.TEMPLATED);
     });
 
     test('server url with templated enum host to match request url', () => {
@@ -86,28 +74,16 @@ describe('matchServer.ts', () => {
         variables: {
           host: {
             default: 'www.example.com',
-            enum: [
-              'stoplight.io',
-              'google.io',
-            ]
-          }
-        }
+            enum: ['stoplight.io', 'google.io'],
+          },
+        },
       };
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://stoplight.io/v1'
-      )).toEqual(MatchType.TEMPLATED);
+      expect(matchBaseUrl(serverConfig, 'http://stoplight.io/v1')).toEqual(MatchType.TEMPLATED);
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://google.io/v1'
-      )).toEqual(MatchType.TEMPLATED);
+      expect(matchBaseUrl(serverConfig, 'http://google.io/v1')).toEqual(MatchType.TEMPLATED);
 
-      expect(matchBaseUrl(
-        serverConfig,
-        'http://bummers.io/v1'
-      )).toEqual(MatchType.NOMATCH);
+      expect(matchBaseUrl(serverConfig, 'http://bummers.io/v1')).toEqual(MatchType.NOMATCH);
     });
 
     describe('a complex server template should match request url', () => {
@@ -120,20 +96,17 @@ describe('matchServer.ts', () => {
           },
           username: {
             default: 'marc',
-            enum: ['marc', 'chris']
+            enum: ['marc', 'chris'],
           },
           host: {
             default: 'stoplight.io',
-            enum: [
-              'stoplight.io',
-              'stoplight.io:80',
-            ]
+            enum: ['stoplight.io', 'stoplight.io:80'],
           },
           path: {
             default: 'v1',
-            enum: ['v1', 'v2']
-          }
-        }
+            enum: ['v1', 'v2'],
+          },
+        },
       };
 
       function toMatchTemplate(requestBaseUrl: string) {
@@ -178,39 +151,41 @@ describe('matchServer.ts', () => {
       const regexp = convertTemplateToRegExp('{a}', {
         a: {
           default: 'z',
-          enum: ['y', 'z']
-        }
+          enum: ['y', 'z'],
+        },
       });
       expect(regexp).toEqual(/^(y|z)$/);
     });
 
     test('single variable should resolve a single group regexp', () => {
       const regexp = convertTemplateToRegExp('{a}', {
-        'a': {
-          default: 'va'
-        }
+        a: {
+          default: 'va',
+        },
       });
 
       expect(regexp).toEqual(/^(.*?)$/);
     });
 
     test('given single variable and no matching variable should throw', () => {
-      expect(() => convertTemplateToRegExp('{a}', {
-        'b': {
-          default: 'vb'
-        }
-      })).toThrow(`Variable 'a' is not defined, cannot parse input.`);
+      expect(() =>
+        convertTemplateToRegExp('{a}', {
+          b: {
+            default: 'vb',
+          },
+        })
+      ).toThrow(`Variable 'a' is not defined, cannot parse input.`);
     });
 
     test('given two variables should return multi group', () => {
       const regexp = convertTemplateToRegExp('{a}{b}', {
-        'a': {
-          default: 'va'
+        a: {
+          default: 'va',
         },
-        'b': {
+        b: {
           default: 'vb2',
-          enum: ['vb2']
-        }
+          enum: ['vb2'],
+        },
       });
 
       expect(regexp).toEqual(/^(.*?)(vb2)$/);
@@ -218,17 +193,17 @@ describe('matchServer.ts', () => {
 
     test('given a URL should return a pattern', () => {
       const regexp = convertTemplateToRegExp('{protocol}://www.example.com:{port}/{path}', {
-        'protocol': {
+        protocol: {
           default: 'http',
-          enum: ['http', 'https']
+          enum: ['http', 'https'],
         },
-        'port': {
-          default: '8080'
+        port: {
+          default: '8080',
         },
-        'path': {
+        path: {
           default: 'v1',
-          enum: ['v1', 'v2']
-        }
+          enum: ['v1', 'v2'],
+        },
       });
 
       expect(regexp).toEqual(/^(https|http):\/\/www.example.com:(.*?)\/(v1|v2)$/);
@@ -236,10 +211,10 @@ describe('matchServer.ts', () => {
 
     test('given a similar enums should put longer ones first', () => {
       const regexp = convertTemplateToRegExp('{url}', {
-        'url': {
+        url: {
           default: 'http://example.com',
-          enum: ['http://example.com', 'http://example.com:8080']
-        }
+          enum: ['http://example.com', 'http://example.com:8080'],
+        },
       });
 
       expect(regexp).toEqual(/^(http:\/\/example.com:8080|http:\/\/example.com)$/);

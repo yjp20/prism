@@ -1,24 +1,25 @@
 import { Chance } from 'chance';
-import { matchPath } from "../matchPath";
-import { randomPath } from "./utils";
+import { matchPath } from '../matchPath';
 import { MatchType } from '../types';
+import { randomPath } from './utils';
 
 const chance = new Chance();
 
 describe('matchPath()', () => {
-
   test('request path must start with a slash or throw error', () => {
     const requestPath = randomPath({ leadingSlash: false });
     const operationPath = randomPath({ leadingSlash: true });
-    expect(() => matchPath(requestPath, operationPath))
-      .toThrow('The request path must start with a slash.');
+    expect(() => matchPath(requestPath, operationPath)).toThrow(
+      'The request path must start with a slash.'
+    );
   });
 
   test('option path must start with a slash or throw error', () => {
     const requestPath = randomPath({ leadingSlash: true });
     const operationPath = randomPath({ leadingSlash: false });
-    expect(() => matchPath(requestPath, operationPath))
-      .toThrow('The operation path must start with a slash.');
+    expect(() => matchPath(requestPath, operationPath)).toThrow(
+      'The operation path must start with a slash.'
+    );
   });
 
   test('root path should match another root path', () => {

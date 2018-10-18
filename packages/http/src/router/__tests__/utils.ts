@@ -1,5 +1,5 @@
+import { IHttpMethod } from '@stoplight/prism-http/types';
 import { Chance } from 'chance';
-import { IHttpMethod } from "@stoplight/prism-http/types";
 
 const chance = new Chance();
 const httpMethods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
@@ -22,17 +22,18 @@ const defaultRandomPathOptions = {
   leadingSlash: true,
 };
 
-interface RandomPathOptions {
+interface IRandomPathOptions {
   pathFragments?: number;
   includeTemplates?: boolean;
   trailingSlash?: boolean;
   leadingSlash?: boolean;
 }
 
-export function randomPath(opts: RandomPathOptions = defaultRandomPathOptions): string {
+export function randomPath(opts: IRandomPathOptions = defaultRandomPathOptions): string {
   opts = Object.assign({}, defaultRandomPathOptions, opts);
   const randomPathFragments = randomArray(
-    () => (opts.includeTemplates && chance.coin() === 'heads') ? `{${chance.word()}}` : chance.word(),
+    () =>
+      opts.includeTemplates && chance.coin() === 'heads' ? `{${chance.word()}}` : chance.word(),
     opts.pathFragments
   );
   let leadingSlash = chance.pickone(['/', '']);
@@ -43,5 +44,5 @@ export function randomPath(opts: RandomPathOptions = defaultRandomPathOptions): 
   if (opts.trailingSlash !== undefined) {
     trailingSlash = opts.trailingSlash ? '/' : '';
   }
-  return `${leadingSlash}${randomPathFragments.join('/')}${trailingSlash}`
+  return `${leadingSlash}${randomPathFragments.join('/')}${trailingSlash}`;
 }

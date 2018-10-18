@@ -1,4 +1,4 @@
-import { MatchType } from "./types";
+import { MatchType } from './types';
 
 function fragmentarize(path: string): string[] {
   return path.split('/').slice(1);
@@ -22,8 +22,10 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
   const operationPathFragments = fragmentarize(operationPath);
   const requestPathFragments = fragmentarize(requestPath);
 
-  if (operationPathFragments.length < requestPathFragments.length
-    || operationPathFragments.length > requestPathFragments.length) {
+  if (
+    operationPathFragments.length < requestPathFragments.length ||
+    operationPathFragments.length > requestPathFragments.length
+  ) {
     return MatchType.NOMATCH;
   }
 

@@ -1,7 +1,7 @@
+import { IHttpOperation, IServer } from '@stoplight/types';
 import { Chance } from 'chance';
 import { router } from '../index';
-import { randomPath, pickSetOfHttpMethods, pickOneHttpMethod } from './utils';
-import { IServer, IHttpOperation } from '@stoplight/types';
+import { pickOneHttpMethod, pickSetOfHttpMethods, randomPath } from './utils';
 
 const chance = new Chance();
 
@@ -11,7 +11,7 @@ function createResource(method: string, path: string, servers: IServer[] = []): 
     method,
     path,
     responses: [],
-    servers
+    servers,
   };
 }
 
@@ -25,8 +25,8 @@ describe('http router', () => {
           url: {
             baseUrl: '',
             path: '',
-          }
-        }
+          },
+        },
       });
 
       expect(resource).toBeNull();
@@ -35,16 +35,14 @@ describe('http router', () => {
     describe('given a resource', () => {
       test('should not match if no server defined', async () => {
         const resource = await router.route({
-          resources: [
-            createResource(pickOneHttpMethod(), randomPath())
-          ],
+          resources: [createResource(pickOneHttpMethod(), randomPath())],
           input: {
             method: pickOneHttpMethod(),
             url: {
               baseUrl: '',
               path: '',
-            }
-          }
+            },
+          },
         });
 
         expect(resource).toBeNull();
@@ -55,17 +53,19 @@ describe('http router', () => {
         const [resourceMethod, requestMethod] = pickSetOfHttpMethods(2);
         const resource = await router.route({
           resources: [
-            createResource(resourceMethod, randomPath(), [{
-              url,
-            }]),
+            createResource(resourceMethod, randomPath(), [
+              {
+                url,
+              },
+            ]),
           ],
           input: {
             method: requestMethod,
             url: {
               baseUrl: url,
-              path: '/'
-            }
-          }
+              path: '/',
+            },
+          },
         });
 
         expect(resource).toBeNull();
@@ -79,17 +79,19 @@ describe('http router', () => {
           const path = randomPath({ trailingSlash: false });
           const resource = await router.route({
             resources: [
-              createResource(method, path, [{
-                url,
-              }])
+              createResource(method, path, [
+                {
+                  url,
+                },
+              ]),
             ],
             input: {
               method,
               url: {
                 baseUrl: url,
-                path: `${path}${randomPath()}`
-              }
-            }
+                path: `${path}${randomPath()}`,
+              },
+            },
           });
 
           expect(resource).toBeNull();
@@ -98,20 +100,20 @@ describe('http router', () => {
         test('given a concrete matching server and matched concrete path should match', async () => {
           const url = chance.url();
           const path = randomPath({ includeTemplates: false });
-          const expectedResource = createResource(method, path, [{
-            url,
-          }]);
+          const expectedResource = createResource(method, path, [
+            {
+              url,
+            },
+          ]);
           const resource = await router.route({
-            resources: [
-              expectedResource
-            ],
+            resources: [expectedResource],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(expectedResource);
@@ -121,20 +123,20 @@ describe('http router', () => {
           const url = chance.url();
           const templatedPath = '/a/{b}/c';
           const requestPath = '/a/x/c';
-          const expectedResource = createResource(method, templatedPath, [{
-            url,
-          }]);
+          const expectedResource = createResource(method, templatedPath, [
+            {
+              url,
+            },
+          ]);
           const resource = await router.route({
-            resources: [
-              expectedResource
-            ],
+            resources: [expectedResource],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path: requestPath,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(expectedResource);
@@ -144,20 +146,20 @@ describe('http router', () => {
           const url = chance.url();
           const templatedPath = '/a/{x}/c';
           const requestPath = '/a/y/b';
-          const expectedResource = createResource(method, templatedPath, [{
-            url,
-          }]);
+          const expectedResource = createResource(method, templatedPath, [
+            {
+              url,
+            },
+          ]);
           const resource = await router.route({
-            resources: [
-              expectedResource
-            ],
+            resources: [expectedResource],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path: requestPath,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBeNull();
@@ -167,24 +169,17 @@ describe('http router', () => {
           const templatedPath = '/{x}/y';
           const concretePath = '/a/y';
           const url = 'concrete.com';
-          const resourceWithConcretePath = createResource(method, concretePath, [
-            { url },
-          ]);
-          const resourceWithTemplatedPath = createResource(method, templatedPath, [
-            { url },
-          ]);
+          const resourceWithConcretePath = createResource(method, concretePath, [{ url }]);
+          const resourceWithTemplatedPath = createResource(method, templatedPath, [{ url }]);
           const resource = await router.route({
-            resources: [
-              resourceWithTemplatedPath,
-              resourceWithConcretePath,
-            ],
+            resources: [resourceWithTemplatedPath, resourceWithConcretePath],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path: concretePath,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(resourceWithConcretePath);
@@ -194,24 +189,17 @@ describe('http router', () => {
           const templatedPathA = '/{x}/y';
           const templatedPathB = '/a/{z}';
           const url = 'concrete.com';
-          const firstResource = createResource(method, templatedPathA, [
-            { url },
-          ]);
-          const secondResource = createResource(method, templatedPathB, [
-            { url },
-          ]);
+          const firstResource = createResource(method, templatedPathA, [{ url }]);
+          const secondResource = createResource(method, templatedPathB, [{ url }]);
           const resource = await router.route({
-            resources: [
-              firstResource,
-              secondResource,
-            ],
+            resources: [firstResource, secondResource],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path: '/a/y',
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(firstResource);
@@ -228,17 +216,14 @@ describe('http router', () => {
             { url: '{template}', variables: { template: { default: url, enum: [url] } } },
           ]);
           const resource = await router.route({
-            resources: [
-              resourceWithConcreteMatch,
-              resourceWithTemplatedMatch,
-            ],
+            resources: [resourceWithConcreteMatch, resourceWithTemplatedMatch],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(resourceWithConcreteMatch);
@@ -248,24 +233,17 @@ describe('http router', () => {
           const matchingPath = '/a/b/c';
           const nonMatchingPath = '/a/b/c/d';
           const url = 'concrete.com';
-          const resourceWithMatchingPath = createResource(method, matchingPath, [
-            { url },
-          ]);
-          const resourceWithNonMatchingPath = createResource(method, nonMatchingPath, [
-            { url },
-          ]);
+          const resourceWithMatchingPath = createResource(method, matchingPath, [{ url }]);
+          const resourceWithNonMatchingPath = createResource(method, nonMatchingPath, [{ url }]);
           const resource = await router.route({
-            resources: [
-              resourceWithNonMatchingPath,
-              resourceWithMatchingPath,
-            ],
+            resources: [resourceWithNonMatchingPath, resourceWithMatchingPath],
             input: {
               method,
               url: {
                 baseUrl: url,
                 path: matchingPath,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(resourceWithMatchingPath);
@@ -275,18 +253,14 @@ describe('http router', () => {
           const path = randomPath({ includeTemplates: false });
           const url = 'concrete.com';
           const resource = await router.route({
-            resources: [
-              createResource(method, path, [
-                { url },
-              ])
-            ],
+            resources: [createResource(method, path, [{ url }])],
             input: {
               method,
               url: {
                 baseUrl: '',
                 path,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBeNull();
@@ -295,20 +269,16 @@ describe('http router', () => {
         test('given empty baseUrl and empty server url it should match', async () => {
           const path = randomPath({ includeTemplates: false });
           const url = '';
-          const expectedResource = createResource(method, path, [
-            { url },
-          ]);
+          const expectedResource = createResource(method, path, [{ url }]);
           const resource = await router.route({
-            resources: [
-              expectedResource
-            ],
+            resources: [expectedResource],
             input: {
               method,
               url: {
                 baseUrl: '',
                 path,
-              }
-            }
+              },
+            },
           });
 
           expect(resource).toBe(expectedResource);

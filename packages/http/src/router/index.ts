@@ -2,9 +2,9 @@ import { types } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import * as t from '../types';
+import { matchBaseUrl } from './matchBaseUrl';
 import { matchPath } from './matchPath';
 import { IMatch, MatchType } from './types';
-import { matchBaseUrl } from './matchBaseUrl';
 
 export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig> = {
   route: async ({ resources, input, config }) => {
@@ -16,16 +16,16 @@ function route(resources: IHttpOperation[], request: t.IHttpRequest) {
   const matches = [];
   const { path: requestPath, baseUrl: requestBaseUrl } = request.url;
 
-  for (let resource of resources) {
+  for (const resource of resources) {
     if (!matchByMethod(request, resource)) continue;
 
     const pathMatch = matchPath(requestPath, resource.path);
     const serverMatches = [];
 
-    for (let server of resource.servers) {
-      const serverMatch = matchBaseUrl(server, requestBaseUrl)
-      if (serverMatch !== MatchType.NOMATCH) {
-        serverMatches.push(serverMatch);
+    for (const server of resource.servers) {
+      const tempServerMatch = matchBaseUrl(server, requestBaseUrl);
+      if (tempServerMatch !== MatchType.NOMATCH) {
+        serverMatches.push(tempServerMatch);
       }
     }
 
@@ -48,7 +48,7 @@ function matchByMethod(request: t.IHttpRequest, operation: IHttpOperation): bool
 }
 
 function disambiguateMatches(matches: IMatch[]): null | IHttpOperation {
-  const match = (
+  const matchResult =
     // prefer concrete server and concrete path
     matches.find(match => areServerAndPath(match, MatchType.CONCRETE, MatchType.CONCRETE)) ||
     // then prefer templated server and concrete path
@@ -56,9 +56,8 @@ function disambiguateMatches(matches: IMatch[]): null | IHttpOperation {
     // then prefer concrete server and templated path
     matches.find(match => areServerAndPath(match, MatchType.CONCRETE, MatchType.TEMPLATED)) ||
     // then fallback to first
-    matches[0]
-  );
-  return match ? match.resource : null;
+    matches[0];
+  return matchResult ? matchResult.resource : null;
 }
 
 function areServerAndPath(match: IMatch, serverType: MatchType, pathType: MatchType) {
