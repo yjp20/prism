@@ -34,7 +34,11 @@ function findResponseByStatusCode(
 
 const helpers = {
   negotiateByPartialOptionsAndHttpContent(
-    { code, exampleKey, dynamic }: {
+    {
+      code,
+      exampleKey,
+      dynamic,
+    }: {
       readonly code: string;
       readonly dynamic?: boolean;
       readonly exampleKey?: string;
