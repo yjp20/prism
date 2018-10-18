@@ -3,19 +3,17 @@ jobs:
   build:
     docker:
       - image: circleci/node:8
-    # environment:
-    #   - CC_TEST_REPORTER_ID: d1cd8c5d4f140fb84e2eb5d0bab9ea0582e81f347106dd37fc4534f8c987882e
     steps:
       - checkout
-      # - run:
-      #     name: cc-install
-      #     command: |
-      #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-      #       chmod +x ./cc-test-reporter
-      # - run:
-      #     name: cc-before
-      #     command: |
-      #       ./cc-test-reporter before-build
+      - run:
+          name: cc-install
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: cc-before
+          command: |
+            ./cc-test-reporter before-build
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
@@ -31,113 +29,16 @@ jobs:
       - run:
           name: Run tests
           command: yarn test.coverage
-      # - run:
-      #     name: cc-after
-      #     command: |
-      #       ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
-  # publish-npm:
-  #   docker:
-  #     - image: circleci/node:8
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           sudo apt-get update && sudo apt-get install rsync -y
-  #           yarn global add semver
-  #     - restore_cache:
-  #         name: Restore Yarn Package Cache
-  #         keys:
-  #           - yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-  #     - run:
-  #         name: Install Dependencies
-  #         command: yarn
-  #     - save_cache:
-  #         name: Save Yarn Package Cache
-  #         key: yarn-packages-{{ .Branch }}-{{ checksum "yarn.lock" }}
-  #         paths:
-  #           - node_modules/
-  #     - run:
-  #         name: Set NPM token
-  #         command: |
-  #           cat <<EOF>.npmrc
-  #           @stoplight:registry=https://registry.npmjs.org/
-  #           //registry.npmjs.org/:_authToken=$NPM_TOKEN
-  #           EOF
-  #     - run:
-  #         name: Publish
-  #         command: |
-  #           export PATH=$PATH:/home/circleci/.yarn/bin
-  #           scripts/publish.api.sh
-  #           git remote remove origin
-  #           git remote add origin https://stoplight-bot:$BOT_ACCESS_TOKEN@github.com/stoplightio/api.git
-  #           git config user.email "support@stoplight.io"
-  #           git config user.name "Stoplight Bot"
-  #           git push origin --tags
-  # publish-docker:
-  #   docker:
-  #     - image: docker:18
-  #   steps:
-  #     - run:
-  #         name: Install git and ssh
-  #         command: apk add --no-cache openssh git yarn bash
-  #     - checkout
-  #     - setup_remote_docker:
-  #         docker_layer_caching: true
-  #     - run:
-  #         name: Set NPM token
-  #         command: |
-  #           cat <<EOF>.npmrc
-  #           @stoplight:registry=https://registry.npmjs.org/
-  #           //registry.npmjs.org/:_authToken=$NPM_TOKEN
-  #           EOF
-  #     - run:
-  #         name: Login to registry
-  #         command: docker login -u="stoplight+circleci" -p="$DOCKER_PASSWORD" quay.io
-  #     - run:
-  #         name: Build and push docker images
-  #         command: scripts/publish.docker.sh
-  # deploy:
-  #   docker:
-  #     - image: alpine:latest
-  #   steps:
-  #     - run:
-  #         name: Install SSH
-  #         command: apk add --update openssh bash git
-  #     - add_ssh_keys:
-  #         fingerprints:
-  #           - c7:cc:3f:1e:4b:87:52:9c:73:0c:17:a6:28:a1:ea:dc
-  #     - checkout
-  #     - run:
-  #         name: Deploy
-  #         command: scripts/deploy.api.sh
+      - run:
+          name: cc-after
+          command: |
+            ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
+      - run:
+          name: Run build
+          command: yarn build
 
 workflows:
   version: 2
   build_and_publish:
     jobs:
       - build
-      # - publish-npm:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - master
-      # - publish-docker:
-      #     requires:
-      #       - publish-npm
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - master
-      # - deploy:
-      #     requires:
-      #       - publish-docker
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - master
