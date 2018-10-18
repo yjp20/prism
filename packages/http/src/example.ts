@@ -22,6 +22,10 @@ let response = prism.process({
   path: '/todos',
 });
 
+console.log({
+  response,
+});
+
 // will be mocked, since it is a post request. also, we are specifically asking for 400 response
 response = prism.process(
   {
