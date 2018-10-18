@@ -1,12 +1,12 @@
-import { types } from '@stoplight/prism-core';
+import { IRouter } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
-import * as t from '../types';
+import { IHttpConfig, IHttpRequest } from '../types';
 import { matchBaseUrl } from './matchBaseUrl';
 import { matchPath } from './matchPath';
 import { IMatch, MatchType } from './types';
 
-export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig> = {
+export const router: IRouter<IHttpOperation, IHttpRequest, IHttpConfig> = {
   route: async ({ resources, input, config }) => {
     const matches = [];
     const { path: requestPath, baseUrl: requestBaseUrl } = input.url;
@@ -39,7 +39,7 @@ export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig
   },
 };
 
-function matchByMethod(request: t.IHttpRequest, operation: IHttpOperation): boolean {
+function matchByMethod(request: IHttpRequest, operation: IHttpOperation): boolean {
   return operation.method.toLowerCase() === request.method.toLowerCase();
 }
 

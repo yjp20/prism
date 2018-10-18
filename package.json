@@ -13,7 +13,7 @@
     "test": "yarn lint && jest",
     "test.fast": "jest",
     "test.coverage": "yarn test --coverage",
-    "test.watch": "yarn test.fast --watch",
+    "test.watch": "yarn test --watchAll",
     "test.update": "yarn test.fast --updateSnapshot"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "./tsconfig.json"
+        "tsConfig": "tsconfig.json"
       }
     },
     "transform": {

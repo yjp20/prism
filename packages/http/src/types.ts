@@ -1,4 +1,4 @@
-import { types } from '@stoplight/prism-core';
+import { IPrismConfig } from '@stoplight/prism-core';
 
 // TODO: should be complete | and in the @stoplight/types repo
 export type IHttpMethod =
@@ -11,7 +11,7 @@ export type IHttpMethod =
   | 'patch'
   | 'trace'; // ... etc
 
-export interface IHttpConfig extends types.IPrismConfig {
+export interface IHttpConfig extends IPrismConfig {
   mock?:
     | boolean
     | {

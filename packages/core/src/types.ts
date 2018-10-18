@@ -95,6 +95,7 @@ export interface IPrismInput<I> {
 }
 
 export interface IPrismOutput<I, O> {
+  input?: I;
   data?: O;
   validations: {
     input: IValidation[];
