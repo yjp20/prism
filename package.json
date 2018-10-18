@@ -39,7 +39,7 @@
   "jest": {
     "verbose": true,
     "testMatch": [
-      "<rootDir>/packages/*/src/**/__tests__/*spec.(ts|js)?(x)"
+      "<rootDir>/packages/*/src/**/__tests__/*.spec.(ts|js)?(x)"
     ],
     "globals": {
       "ts-jest": {
