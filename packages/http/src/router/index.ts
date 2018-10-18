@@ -47,7 +47,7 @@ function matchByMethod(request: t.IHttpRequest, operation: IHttpOperation): bool
   return operation.method.toLowerCase() === request.method.toLowerCase();
 }
 
-export function disambiguateMatches(matches: IMatch[]): null | IHttpOperation {
+function disambiguateMatches(matches: IMatch[]): null | IHttpOperation {
   const match = (
     // prefer concrete server and concrete path
     matches.find(match => areServerAndPath(match, MatchType.CONCRETE, MatchType.CONCRETE)) ||
