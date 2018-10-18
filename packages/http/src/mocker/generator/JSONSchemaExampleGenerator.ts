@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as jsf from 'json-schema-faker';
 
 import { IExampleGenerator } from './IExampleGenerator';
