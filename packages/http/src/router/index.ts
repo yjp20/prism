@@ -8,40 +8,36 @@ import { IMatch, MatchType } from './types';
 
 export const router: types.IRouter<IHttpOperation, t.IHttpRequest, t.IHttpConfig> = {
   route: async ({ resources, input, config }) => {
-    return Promise.resolve(route(resources, input));
-  },
-};
+    const matches = [];
+    const { path: requestPath, baseUrl: requestBaseUrl } = input.url;
 
-function route(resources: IHttpOperation[], request: t.IHttpRequest) {
-  const matches = [];
-  const { path: requestPath, baseUrl: requestBaseUrl } = request.url;
+    for (const resource of resources) {
+      if (!matchByMethod(input, resource)) continue;
 
-  for (const resource of resources) {
-    if (!matchByMethod(request, resource)) continue;
+      const pathMatch = matchPath(requestPath, resource.path);
+      const serverMatches = [];
 
-    const pathMatch = matchPath(requestPath, resource.path);
-    const serverMatches = [];
+      for (const server of resource.servers) {
+        const tempServerMatch = matchBaseUrl(server, requestBaseUrl);
+        if (tempServerMatch !== MatchType.NOMATCH) {
+          serverMatches.push(tempServerMatch);
+        }
+      }
 
-    for (const server of resource.servers) {
-      const tempServerMatch = matchBaseUrl(server, requestBaseUrl);
-      if (tempServerMatch !== MatchType.NOMATCH) {
-        serverMatches.push(tempServerMatch);
+      const serverMatch = disambiguateServers(serverMatches);
+
+      if (serverMatch && pathMatch !== MatchType.NOMATCH) {
+        matches.push({
+          pathMatch,
+          serverMatch,
+          resource,
+        });
       }
     }
 
-    const serverMatch = disambiguateServers(serverMatches);
-
-    if (serverMatch && pathMatch !== MatchType.NOMATCH) {
-      matches.push({
-        pathMatch,
-        serverMatch,
-        resource,
-      });
-    }
-  }
-
-  return disambiguateMatches(matches);
-}
+    return disambiguateMatches(matches);
+  },
+};
 
 function matchByMethod(request: t.IHttpRequest, operation: IHttpOperation): boolean {
   return operation.method.toLowerCase() === request.method.toLowerCase();
