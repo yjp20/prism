@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`http mocker request is invalid returns 400 and static error response 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "message": "error",
+    },
+  ],
+  "headers": Object {
+    "Content-type": "application/json",
+  },
+  "statusCode": 400,
+}
+`;
+
+exports[`http mocker request is valid HttpOperation contains example return lowest 2xx code and match response example to media type accepted by request 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "completed": true,
+      "id": 1,
+      "name": "make prism",
+    },
+  ],
+  "headers": Object {
+    "Content-type": "application/json",
+  },
+  "statusCode": 200,
+}
+`;
+
+exports[`http mocker request is valid HttpOperation contains example return lowest 2xx response and the first example matching the media type 1`] = `
+Object {
+  "body": "<todo><name>Shopping</name><completed>false</completed></todo>",
+  "headers": Object {
+    "Content-type": "application/xml",
+  },
+  "statusCode": 200,
+}
+`;
+
+exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example return lowest 2xx, first example and matching media type 1`] = `
+Object {
+  "body": Array [
+    Object {
+      "completed": true,
+      "id": 1,
+      "name": "make prism",
+    },
+  ],
+  "headers": Object {
+    "Content-type": "application/json",
+  },
+  "statusCode": 200,
+}
+`;

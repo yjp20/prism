@@ -1,6 +1,6 @@
-import { IHttpOperation } from '@stoplight/types';
+import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core/types';
 import { IHttpMethod, IHttpRequest } from '@stoplight/prism-http/types';
-import { IPrismInput } from '@stoplight/prism-core/types';
+import { IHttpOperation } from '@stoplight/types';
 
 export const httpOperations: IHttpOperation[] = [
   {
@@ -53,6 +53,33 @@ export const httpOperations: IHttpOperation[] = [
           },
         ],
       },
+      {
+        code: '400',
+        content: [
+          {
+            mediaType: 'application/json',
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                },
+              },
+              required: ['message'],
+            },
+            examples: [
+              {
+                key: 'application/json',
+                value: [
+                  {
+                    message: 'error',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -78,6 +105,32 @@ export const httpOperations: IHttpOperation[] = [
               required: ['name', 'completed'],
             },
           },
+          {
+            mediaType: 'application/xml',
+            examples: [
+              {
+                key: 'xml',
+                value: '<todo><name>Shopping</name><completed>false</completed></todo>',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        code: '400',
+        content: [
+          {
+            mediaType: 'application/json',
+            schema: {
+              type: 'object',
+              properties: {
+                message: {
+                  type: 'string',
+                },
+              },
+              required: ['message'],
+            },
+          },
         ],
       },
     ],
@@ -92,6 +145,24 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
     data: {
       method: 'get' as IHttpMethod,
       path: '/todos',
+      host: '',
+    },
+  },
+  {
+    validations: {
+      input: [
+        {
+          path: ['/'],
+          name: 'x',
+          summary: 'x',
+          severity: ValidationSeverity.ERROR,
+          message: 'message',
+        },
+      ],
+    },
+    data: {
+      method: 'get' as IHttpMethod,
+      path: '/todos/5',
       host: '',
     },
   },

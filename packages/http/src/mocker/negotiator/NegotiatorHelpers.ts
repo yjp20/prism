@@ -1,5 +1,4 @@
 import { IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types/http';
-import { IHttpOperationConfig } from '../../types';
 import { IHttpNegotiationResult } from './types';
 
 function findBestExample(httpContent: IHttpContent) {
@@ -35,7 +34,11 @@ function findResponseByStatusCode(
 
 const helpers = {
   negotiateByPartialOptionsAndHttpContent(
-    { code, exampleKey, dynamic }: { code: string; exampleKey?: string; dynamic?: boolean },
+    { code, exampleKey, dynamic }: {
+      readonly code: string;
+      readonly dynamic?: boolean;
+      readonly exampleKey?: string;
+    },
     httpContent: IHttpContent
   ): IHttpNegotiationResult {
     const { mediaType } = httpContent;
@@ -90,7 +93,11 @@ const helpers = {
   },
 
   negotiateDefaultMediaType(
-    partialOptions: { code: string; dynamic?: boolean; exampleKey?: string },
+    partialOptions: {
+      readonly code: string;
+      readonly dynamic?: boolean;
+      readonly exampleKey?: string;
+    },
     response: IHttpResponse
   ): IHttpNegotiationResult {
     const { code, dynamic, exampleKey } = partialOptions;
@@ -115,7 +122,12 @@ const helpers = {
 
   negotiateOptionsBySpecificResponse(
     httpOperation: IHttpOperation,
-    desiredOptions: IHttpOperationConfig,
+    desiredOptions: {
+      readonly mediaType?: string;
+      readonly code?: string;
+      readonly exampleKey?: string;
+      readonly dynamic?: boolean;
+    },
     response: IHttpResponse
   ): IHttpNegotiationResult {
     const { code } = response;
@@ -151,7 +163,12 @@ const helpers = {
 
   negotiateOptionsForDefaultCode(
     httpOperation: IHttpOperation,
-    desiredOptions: IHttpOperationConfig
+    desiredOptions: {
+      readonly mediaType?: string;
+      readonly code?: string;
+      readonly exampleKey?: string;
+      readonly dynamic?: boolean;
+    }
   ): IHttpNegotiationResult {
     const lowest2xxResponse = findLowest2xx(httpOperation.responses);
     if (lowest2xxResponse) {
@@ -166,7 +183,12 @@ const helpers = {
 
   negotiateOptionsBySpecificCode(
     httpOperation: IHttpOperation,
-    desiredOptions: IHttpOperationConfig,
+    desiredOptions: {
+      readonly mediaType?: string;
+      readonly code?: string;
+      readonly exampleKey?: string;
+      readonly dynamic?: boolean;
+    },
     code: string
   ): IHttpNegotiationResult {
     // find response by provided status code
@@ -190,7 +212,12 @@ const helpers = {
 
   negotiateOptionsForValidRequest(
     httpOperation: IHttpOperation,
-    desiredOptions: IHttpOperationConfig
+    desiredOptions: {
+      readonly mediaType?: string;
+      readonly code?: string;
+      readonly exampleKey?: string;
+      readonly dynamic?: boolean;
+    }
   ): IHttpNegotiationResult {
     const { code } = desiredOptions;
     if (code) {

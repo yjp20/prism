@@ -1,6 +1,6 @@
 import { IMocker, IMockerOpts } from '@stoplight/prism-core/types';
 import { IHttpOperation } from '@stoplight/types';
-import { IHttpConfig, IHttpOperationConfig, IHttpRequest, IHttpResponse } from '../types';
+import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { IExampleGenerator } from './generator/IExampleGenerator';
 import helpers from './negotiator/NegotiatorHelpers';
 
@@ -23,9 +23,12 @@ export class HttpMocker
     }
 
     // setting default values
+    const inputMediaType = input.data.headers && input.data.headers['Content-type'];
     config = config || { mock: {} };
-
-    const mockConfig: IHttpOperationConfig = typeof config.mock === 'boolean' ? {} : config.mock;
+    const mockConfig: any = typeof config.mock === 'boolean' ? {} : Object.assign({}, config.mock);
+    if (!mockConfig.mediaType && inputMediaType) {
+      mockConfig.mediaType = inputMediaType;
+    }
 
     // looking up proper example
     let negotiationResult;
