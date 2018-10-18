@@ -30,7 +30,7 @@ jobs:
             - node_modules/
       - run:
           name: Compile
-          command: tsc
+          command: yarn build
       - run:
           name: Run tests
           command: yarn test.coverage
