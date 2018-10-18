@@ -40,6 +40,11 @@
     "testMatch": [
       "<rootDir>/packages/*/src/**/__tests__/**/*.spec.(ts|js)?(x)"
     ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "./tsconfig.json"
+      }
+    },
     "transform": {
       "^.+\\.[tj]sx?$": "ts-jest"
     },
