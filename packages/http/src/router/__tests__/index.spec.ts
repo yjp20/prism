@@ -222,10 +222,10 @@ describe('http router', () => {
           const url = 'concrete.com';
           const resourceWithConcreteMatch = createResource(method, path, [
             { url },
-            { url: '{template}', variables: { template: { default: url, enum: [ url ] } } },
+            { url: '{template}', variables: { template: { default: url, enum: [url] } } },
           ]);
           const resourceWithTemplatedMatch = createResource(method, path, [
-            { url: '{template}', variables: { template: { default: url, enum: [ url ] } } },
+            { url: '{template}', variables: { template: { default: url, enum: [url] } } },
           ]);
           const resource = await router.route({
             resources: [
@@ -269,6 +269,49 @@ describe('http router', () => {
           });
 
           expect(resource).toBe(resourceWithMatchingPath);
+        });
+
+        test('given empty baseUrl and concrete server it should not match', async () => {
+          const path = randomPath({ includeTemplates: false });
+          const url = 'concrete.com';
+          const resource = await router.route({
+            resources: [
+              createResource(method, path, [
+                { url },
+              ])
+            ],
+            input: {
+              method,
+              url: {
+                baseUrl: '',
+                path,
+              }
+            }
+          });
+
+          expect(resource).toBeNull();
+        });
+
+        test('given empty baseUrl and empty server url it should match', async () => {
+          const path = randomPath({ includeTemplates: false });
+          const url = '';
+          const expectedResource = createResource(method, path, [
+            { url },
+          ]);
+          const resource = await router.route({
+            resources: [
+              expectedResource
+            ],
+            input: {
+              method,
+              url: {
+                baseUrl: '',
+                path,
+              }
+            }
+          });
+
+          expect(resource).toBe(expectedResource);
         });
       });
     });
