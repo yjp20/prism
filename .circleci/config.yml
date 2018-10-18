@@ -29,6 +29,9 @@ jobs:
           paths:
             - node_modules/
       - run:
+          name: Compile
+          command: yarn build
+      - run:
           name: Run tests
           command: yarn test.coverage
       # - run:
