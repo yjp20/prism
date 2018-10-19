@@ -1,23 +1,15 @@
 const express = require('express');
+import { createInstance } from '@stoplight/prism-http';
+import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
+
 const app = express();
 const port = 3000;
 
-import { createInstance, IHttpConfig } from '@stoplight/prism-http';
-
 // TODO: this is a trivial example, scratch code
-
 const prism = createInstance({
-  config: async ({ url }) => {
-    const config: IHttpConfig = {};
-
-    if (url.query && url.query.__code) {
-      config.mock = {
-        code: url.query.__code,
-      };
-    }
-
-    return config;
-  },
+  config: getHttpConfigFromRequest,
+})({
+  path: 'foo.json',
 });
 
 app.get('*', async (req: any, res: any) => {

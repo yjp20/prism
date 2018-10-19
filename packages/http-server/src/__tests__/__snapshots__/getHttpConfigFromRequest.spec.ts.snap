@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getHttpConfigFromRequest() extracts code 1`] = `
+Object {
+  "code": "202",
+}
+`;
+
+exports[`getHttpConfigFromRequest() extracts dynamic 1`] = `
+Object {
+  "dynamic": true,
+}
+`;
+
+exports[`getHttpConfigFromRequest() extracts example 1`] = `
+Object {
+  "exampleKey": "bear",
+}
+`;
+
+exports[`getHttpConfigFromRequest() extracts mediaType 1`] = `
+Object {
+  "mediaType": "application/json",
+}
+`;

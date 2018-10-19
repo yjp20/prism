@@ -23,10 +23,9 @@ export interface IValidation {
 
 // END
 
-export interface IPrism<Resource, Input, Output, Config, LoadOpts> {
-  readonly resources: Resource[];
-  load: (opts?: LoadOpts) => Promise<void>;
+export interface IPrism<Resource, Input, Output, Config, _LoadOpts> {
   process: (input: Input, config?: Config) => Promise<IPrismOutput<Input, Output>>;
+  readonly resources: Promise<Resource[]>;
 }
 
 export interface IPrismConfig {
@@ -62,9 +61,15 @@ export interface IForwarder<Resource, Input, Config, Output> {
 
 export interface IMocker<Resource, Input, Config, Output> {
   mock: (
-    opts: { resource?: Resource; input?: IPrismInput<Input>; config?: Config },
+    opts: Partial<IMockerOpts<Resource, Input, Config>>,
     defaultMocker?: IMocker<Resource, Input, Config, Output>
   ) => Promise<Output>;
+}
+
+export interface IMockerOpts<Resource, Input, Config> {
+  resource: Resource;
+  input: IPrismInput<Input>;
+  config: Config;
 }
 
 export interface IValidator<Resource, Input, Config, Output> {

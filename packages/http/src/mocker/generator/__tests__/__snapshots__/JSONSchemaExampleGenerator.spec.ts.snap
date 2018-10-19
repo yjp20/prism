@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JSONSchemaExampleGenerator generate() fails when media type is unknown 1`] = `"Unknown media type 'non-existing/media-type'"`;

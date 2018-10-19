@@ -6,7 +6,7 @@ import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 export const validator: IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> = {
   validateInput: async (
     {
-      /* resource, output, config */
+      /*resource, input, config*/
     }
   ) => {
     throw new Error('Method not implemented.');

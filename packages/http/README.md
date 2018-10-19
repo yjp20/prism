@@ -1,3 +1,3 @@
-# Prism Core
+# Prism HTTP
 
 TBD
