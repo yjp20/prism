@@ -1,25 +1,79 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getHttpConfigFromRequest() extracts code 1`] = `
+exports[`getHttpConfigFromRequest() given default config function and that function returns a mock should combine with query params 1`] = `
 Object {
-  "code": "202",
+  "mock": Object {
+    "code": "400",
+    "exampleKey": "key",
+  },
 }
 `;
 
-exports[`getHttpConfigFromRequest() extracts dynamic 1`] = `
+exports[`getHttpConfigFromRequest() given default config object that is a map and matching query should return combined 1`] = `
 Object {
-  "dynamic": true,
+  "mock": Object {
+    "code": "200",
+    "exampleKey": "bear",
+    "mediaType": "plain/text",
+  },
 }
 `;
 
-exports[`getHttpConfigFromRequest() extracts example 1`] = `
+exports[`getHttpConfigFromRequest() given default config object that is boolean and matching query should return that query 1`] = `
 Object {
-  "exampleKey": "bear",
+  "mock": Object {
+    "code": "200",
+    "exampleKey": "bear",
+  },
 }
 `;
 
-exports[`getHttpConfigFromRequest() extracts mediaType 1`] = `
+exports[`getHttpConfigFromRequest() given default config object that is boolean and no matching query params should return that config object 1`] = `
 Object {
-  "mediaType": "application/json",
+  "mock": false,
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config and no matching query should return my own default 1`] = `
+Object {
+  "mock": true,
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config and no query should return my own default 1`] = `
+Object {
+  "mock": true,
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config extracts code 1`] = `
+Object {
+  "mock": Object {
+    "code": "202",
+  },
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config extracts dynamic 1`] = `
+Object {
+  "mock": Object {
+    "dynamic": true,
+  },
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config extracts example 1`] = `
+Object {
+  "mock": Object {
+    "exampleKey": "bear",
+  },
+}
+`;
+
+exports[`getHttpConfigFromRequest() given no default config extracts mediaType 1`] = `
+Object {
+  "mock": Object {
+    "mediaType": "application/json",
+  },
 }
 `;

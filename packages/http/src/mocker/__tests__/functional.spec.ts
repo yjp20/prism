@@ -1,4 +1,5 @@
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
+import { ISchema } from '@stoplight/types/schema';
 import * as Ajv from 'ajv';
 
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';
@@ -55,7 +56,7 @@ describe('http mocker', () => {
         }
 
         const ajv = new Ajv();
-        const validate = ajv.compile(httpOperations[1].responses[0].content[0].schema);
+        const validate = ajv.compile(httpOperations[1].responses[0].content[0].schema as ISchema);
 
         const response = await mocker.mock({
           resource: httpOperations[1],
@@ -95,7 +96,7 @@ describe('http mocker', () => {
       });
 
       const ajv = new Ajv();
-      const validate = ajv.compile(httpOperations[1].responses[1].content[0].schema);
+      const validate = ajv.compile(httpOperations[1].responses[1].content[0].schema as ISchema);
 
       expect(validate(JSON.parse(response.body))).toBe(true);
     });

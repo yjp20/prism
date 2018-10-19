@@ -1,23 +1,58 @@
-import { IHttpConfig, IHttpRequest } from '@stoplight/prism-http/types';
+import { PrismConfig, PrismConfigFactory } from '@stoplight/prism-core/types';
+import { IHttpConfig, IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http/types';
 
-export async function getHttpConfigFromRequest(req: IHttpRequest): Promise<IHttpConfig> {
-  const config: any = {};
+async function getConfig<Config, Input>(
+  input: Input,
+  config: PrismConfig<Config, Input>,
+  defaultConfig?: PrismConfig<Config, Input>
+): Promise<Config> {
+  if (typeof config === 'function') {
+    // config factory function
+    return await (config as PrismConfigFactory<Config, Input>)(input, defaultConfig);
+  }
+  return config as Config;
+}
 
-  if (req.url.query!.__code) {
-    config.code = req.url.query!.__code;
+export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequest> = async (
+  req: IHttpRequest,
+  defaultConfig?: PrismConfig<IHttpConfig, IHttpRequest>
+) => {
+  const config: IHttpConfig = defaultConfig
+    ? await getConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
+    : { mock: true };
+  const httpOperationConfig: IHttpOperationConfig = {};
+  const query = req.url.query;
+
+  if (!query) {
+    return config;
   }
 
-  if (req.url.query!.__dynamic) {
-    config.dynamic = req.url.query!.__dynamic.toLowerCase() === 'true';
+  const { __code, __dynamic, __contentType, __example } = query;
+
+  if (__code) {
+    httpOperationConfig.code = __code;
   }
 
-  if (req.url.query!.__contentType) {
-    config.mediaType = req.url.query!.__contentType;
+  if (__dynamic) {
+    httpOperationConfig.dynamic = __dynamic.toLowerCase() === 'true';
   }
 
-  if (req.url.query!.__example) {
-    config.exampleKey = req.url.query!.__example;
+  if (__contentType) {
+    httpOperationConfig.mediaType = __contentType;
+  }
+
+  if (__example) {
+    httpOperationConfig.exampleKey = __example;
+  }
+
+  if (Object.keys(httpOperationConfig).length) {
+    if (typeof config.mock === 'boolean') {
+      config.mock = httpOperationConfig;
+    } else {
+      config.mock = Object.assign({}, config.mock, httpOperationConfig);
+    }
+    return config;
   }
 
   return config;
-}
+};
