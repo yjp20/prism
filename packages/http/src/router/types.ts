@@ -4,7 +4,7 @@ export type Nullable<T> = T | null;
 
 export interface IMatch {
   resource: IHttpOperation;
-  serverMatch: MatchType;
+  serverMatch: MatchType | null;
   pathMatch: MatchType;
 }
 

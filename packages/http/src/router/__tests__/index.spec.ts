@@ -12,7 +12,7 @@ import { pickOneHttpMethod, pickSetOfHttpMethods, randomPath } from './utils';
 
 const chance = new Chance();
 
-function createResource(method: string, path: string, servers: IServer[] = []): IHttpOperation {
+function createResource(method: string, path: string, servers?: IServer[]): IHttpOperation {
   return {
     id: chance.guid(),
     method,
@@ -41,6 +41,23 @@ describe('http router', () => {
 
     describe('given a resource', () => {
       test('should not match if no server defined', () => {
+        const method = pickOneHttpMethod();
+        const path = randomPath();
+        const resourcePromise = router.route({
+          resources: [createResource(method, path, [])],
+          input: {
+            method,
+            url: {
+              baseUrl: '',
+              path,
+            },
+          },
+        });
+
+        return expect(resourcePromise).rejects.toBe(NO_SERVER_CONFIGURATION_PROVIDED_ERROR);
+      });
+
+      test('should not match if no servers arrays provided', () => {
         const method = pickOneHttpMethod();
         const path = randomPath();
         const resourcePromise = router.route({
@@ -121,6 +138,60 @@ describe('http router', () => {
               url: {
                 baseUrl: url,
                 path,
+              },
+            },
+          });
+
+          expect(resource).toBe(expectedResource);
+        });
+
+        test('given a templated matching server and matched concrete path should match', async () => {
+          const url = 'http://{host}/v1';
+          const path = randomPath({ includeTemplates: false });
+          const expectedResource = createResource(method, path, [
+            {
+              url,
+              variables: {
+                host: {
+                  default: 'stoplight.io',
+                },
+              },
+            },
+          ]);
+          const resource = await router.route({
+            resources: [expectedResource],
+            input: {
+              method,
+              url: {
+                baseUrl: 'http://stoplight.io/v1',
+                path,
+              },
+            },
+          });
+
+          expect(resource).toBe(expectedResource);
+        });
+
+        test('given a templated matching server and matched templated path should match', async () => {
+          const url = 'http://{host}/v1';
+          const path = '/{x}/b';
+          const expectedResource = createResource(method, path, [
+            {
+              url,
+              variables: {
+                host: {
+                  default: 'stoplight.io',
+                },
+              },
+            },
+          ]);
+          const resource = await router.route({
+            resources: [expectedResource],
+            input: {
+              method,
+              url: {
+                baseUrl: 'http://stoplight.io/v1',
+                path: '/a/b',
               },
             },
           });
@@ -285,6 +356,22 @@ describe('http router', () => {
               method,
               url: {
                 baseUrl: '',
+                path,
+              },
+            },
+          });
+
+          expect(resource).toBe(expectedResource);
+        });
+
+        test('given no baseUrl and a server url it should ignore servers and match by path', async () => {
+          const path = randomPath({ includeTemplates: false });
+          const expectedResource = createResource(method, path, [{ url: 'www.stoplight.io/v1' }]);
+          const resource = await router.route({
+            resources: [expectedResource],
+            input: {
+              method,
+              url: {
                 path,
               },
             },

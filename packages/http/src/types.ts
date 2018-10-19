@@ -47,7 +47,7 @@ export interface IHttpConfig extends IPrismConfig {
 export interface IHttpRequest {
   method: IHttpMethod;
   url: {
-    baseUrl: string;
+    baseUrl?: string;
     path: string;
     query?: {
       [name: string]: string;

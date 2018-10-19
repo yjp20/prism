@@ -1,4 +1,3 @@
-export const ROUTE_DISAMBIGUATION_ERROR = new Error('Could not disambiguate the given route.');
 export const NO_RESOURCE_PROVIDED_ERROR = new Error('Route not resolved, no resource provided.');
 export const NONE_METHOD_MATCHED_ERROR = new Error('Route not resolved, none method matched.');
 export const NONE_PATH_MATCHED_ERROR = new Error('Route not resolved, none path matched.');
