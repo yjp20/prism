@@ -1,5 +1,12 @@
 import { IHttpOperation, IServer } from '@stoplight/types';
 import { Chance } from 'chance';
+import {
+  NO_RESOURCE_PROVIDED_ERROR,
+  NO_SERVER_CONFIGURATION_PROVIDED_ERROR,
+  NONE_METHOD_MATCHED_ERROR,
+  NONE_PATH_MATCHED_ERROR,
+  NONE_SERVER_MATCHED_ERROR,
+} from '../errors';
 import { router } from '../index';
 import { pickOneHttpMethod, pickSetOfHttpMethods, randomPath } from './utils';
 
@@ -17,8 +24,8 @@ function createResource(method: string, path: string, servers: IServer[] = []): 
 
 describe('http router', () => {
   describe('route()', () => {
-    test('should return null if no resources given', async () => {
-      const resource = await router.route({
+    test('should return null if no resources given', () => {
+      const resourcePromise = router.route({
         resources: [],
         input: {
           method: pickOneHttpMethod(),
@@ -29,29 +36,31 @@ describe('http router', () => {
         },
       });
 
-      expect(resource).toBeNull();
+      return expect(resourcePromise).rejects.toBe(NO_RESOURCE_PROVIDED_ERROR);
     });
 
     describe('given a resource', () => {
-      test('should not match if no server defined', async () => {
-        const resource = await router.route({
-          resources: [createResource(pickOneHttpMethod(), randomPath())],
+      test('should not match if no server defined', () => {
+        const method = pickOneHttpMethod();
+        const path = randomPath();
+        const resourcePromise = router.route({
+          resources: [createResource(method, path)],
           input: {
-            method: pickOneHttpMethod(),
+            method,
             url: {
               baseUrl: '',
-              path: '',
+              path,
             },
           },
         });
 
-        expect(resource).toBeNull();
+        return expect(resourcePromise).rejects.toBe(NO_SERVER_CONFIGURATION_PROVIDED_ERROR);
       });
 
-      test('given a concrete matching server and unmatched methods should not match', async () => {
+      test('given a concrete matching server and unmatched methods should not match', () => {
         const url = chance.url();
         const [resourceMethod, requestMethod] = pickSetOfHttpMethods(2);
-        const resource = await router.route({
+        const resourcePromise = router.route({
           resources: [
             createResource(resourceMethod, randomPath(), [
               {
@@ -68,16 +77,16 @@ describe('http router', () => {
           },
         });
 
-        expect(resource).toBeNull();
+        return expect(resourcePromise).rejects.toBe(NONE_METHOD_MATCHED_ERROR);
       });
 
       describe('given matched methods', () => {
         const method = pickOneHttpMethod();
 
-        test('given a concrete matching server unmatched path should not match', async () => {
+        test('given a concrete matching server unmatched path should not match', () => {
           const url = chance.url();
           const path = randomPath({ trailingSlash: false });
-          const resource = await router.route({
+          const resourcePromise = router.route({
             resources: [
               createResource(method, path, [
                 {
@@ -94,7 +103,7 @@ describe('http router', () => {
             },
           });
 
-          expect(resource).toBeNull();
+          return expect(resourcePromise).rejects.toBe(NONE_PATH_MATCHED_ERROR);
         });
 
         test('given a concrete matching server and matched concrete path should match', async () => {
@@ -142,7 +151,7 @@ describe('http router', () => {
           expect(resource).toBe(expectedResource);
         });
 
-        test('given a concrete matching server and unmatched templated path should not match', async () => {
+        test('given a concrete matching server and unmatched templated path should not match', () => {
           const url = chance.url();
           const templatedPath = '/a/{x}/c';
           const requestPath = '/a/y/b';
@@ -151,7 +160,7 @@ describe('http router', () => {
               url,
             },
           ]);
-          const resource = await router.route({
+          const resourcePromise = router.route({
             resources: [expectedResource],
             input: {
               method,
@@ -162,7 +171,7 @@ describe('http router', () => {
             },
           });
 
-          expect(resource).toBeNull();
+          return expect(resourcePromise).rejects.toBe(NONE_PATH_MATCHED_ERROR);
         });
 
         test('given a concrete servers and mixed paths should match concrete path', async () => {
@@ -249,10 +258,10 @@ describe('http router', () => {
           expect(resource).toBe(resourceWithMatchingPath);
         });
 
-        test('given empty baseUrl and concrete server it should not match', async () => {
+        test('given empty baseUrl and concrete server it should not match', () => {
           const path = randomPath({ includeTemplates: false });
           const url = 'concrete.com';
-          const resource = await router.route({
+          const resourcePromise = router.route({
             resources: [createResource(method, path, [{ url }])],
             input: {
               method,
@@ -263,7 +272,7 @@ describe('http router', () => {
             },
           });
 
-          expect(resource).toBeNull();
+          return expect(resourcePromise).rejects.toBe(NONE_SERVER_MATCHED_ERROR);
         });
 
         test('given empty baseUrl and empty server url it should match', async () => {

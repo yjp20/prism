@@ -20,7 +20,7 @@ export function convertTemplateToRegExp(
 ) {
   const regexp = !variables
     ? urlTemplate
-    : urlTemplate.replace(variableRegexp, (match, variableName) => {
+    : urlTemplate.replace(variableRegexp, (_match, variableName) => {
         const variable = variables[variableName];
         if (!variable) {
           throw new Error(`Variable '${variableName}' is not defined, cannot parse input.`);
