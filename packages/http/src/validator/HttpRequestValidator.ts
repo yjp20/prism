@@ -4,8 +4,8 @@ import IHttpRequestValidationResult from './IHttpRequestValidationResult';
 
 export default class HttpRequestValidator {
   public validate(
-    httpOperation: IHttpOperation,
-    httpRequest: IHttpRequest
+    _httpOperation: IHttpOperation,
+    _httpRequest: IHttpRequest
   ): IHttpRequestValidationResult {
     throw new Error('Not implemented yet');
   }

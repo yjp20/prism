@@ -1,16 +1,47 @@
 import { filesystemLoader } from './loaders/filesystem';
-import * as types from './types';
+import {
+  IDisposable,
+  IFilesystemLoaderOpts,
+  IForwarder,
+  ILoader,
+  IMocker,
+  IPrism,
+  IPrismComponents,
+  IPrismConfig,
+  IPrismInput,
+  IPrismOutput,
+  IRouter,
+  IValidation,
+  IValidator,
+  PrismConfigFactory,
+} from './types';
 
-export { types, filesystemLoader };
+export {
+  filesystemLoader,
+  IDisposable,
+  IFilesystemLoaderOpts,
+  IForwarder,
+  ILoader,
+  IMocker,
+  IPrism,
+  IPrismComponents,
+  IPrismConfig,
+  IPrismInput,
+  IPrismOutput,
+  IRouter,
+  IValidation,
+  IValidator,
+  PrismConfigFactory,
+};
 
 export function factory<Resource, Input, Output, Config, LoadOpts>(
-  defaultComponents: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+  defaultComponents: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ): (
-  customComponents?: Partial<types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
-) => ((opts: LoadOpts) => types.IPrism<Resource, Input, Output, Config, LoadOpts>) {
+  customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+) => ((opts: LoadOpts) => IPrism<Resource, Input, Output, Config, LoadOpts>) {
   return customComponents => {
     const components: Partial<
-      types.IPrismComponents<Resource, Input, Output, Config, LoadOpts>
+      IPrismComponents<Resource, Input, Output, Config, LoadOpts>
     > = Object.assign({}, defaultComponents, customComponents);
 
     // our loaded resources (HttpOperation objects, etc)
@@ -40,7 +71,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
           let configObj: Config | undefined;
           if (currentConfig instanceof Function) {
             // config factory function
-            configObj = await (currentConfig as types.PrismConfigFactory<Config, Input>)(
+            configObj = await (currentConfig as PrismConfigFactory<Config, Input>)(
               input,
               defaultComponents.config
             );
@@ -58,7 +89,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
           }
 
           // validate input
-          let inputValidations: types.IValidation[] = [];
+          let inputValidations: IValidation[] = [];
           if (resource && components.validator && components.validator.validateInput) {
             inputValidations = await components.validator.validateInput(
               {
@@ -72,7 +103,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
 
           // build output
           let output: Output | undefined;
-          if (resource && components.mocker && (configObj as types.IPrismConfig).mock) {
+          if (resource && components.mocker && (configObj as IPrismConfig).mock) {
             // generate the response
             output = await components.mocker.mock(
               {
@@ -95,7 +126,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
           }
 
           // validate output
-          let outputValidations: types.IValidation[] = [];
+          let outputValidations: IValidation[] = [];
           if (resource && components.validator && components.validator.validateOutput) {
             outputValidations = await components.validator.validateOutput(
               {

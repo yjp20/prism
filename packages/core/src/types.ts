@@ -23,9 +23,9 @@ export interface IValidation {
 
 // END
 
-export interface IPrism<Resource, Input, Output, Config, LoadOpts> {
-  getResources(): Promise<Resource[]>;
+export interface IPrism<Resource, Input, Output, Config, _LoadOpts> {
   process: (input: Input, config?: Config) => Promise<IPrismOutput<Input, Output>>;
+  getResources(): Promise<Resource[]>;
 }
 
 export interface IPrismConfig {
@@ -100,6 +100,7 @@ export interface IPrismInput<I> {
 }
 
 export interface IPrismOutput<I, O> {
+  input?: I;
   data?: O;
   validations: {
     input: IValidation[];

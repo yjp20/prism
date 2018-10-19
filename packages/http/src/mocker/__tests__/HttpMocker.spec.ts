@@ -2,6 +2,7 @@ import { HttpMocker } from '@stoplight/prism-http/mocker';
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
 import { IHttpMethod } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types/http';
+
 import helpers from '../negotiator/NegotiatorHelpers';
 
 describe('HttpMocker', () => {

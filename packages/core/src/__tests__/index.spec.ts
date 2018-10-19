@@ -20,7 +20,7 @@ describe('graph', () => {
      * when creating an instance, the user can override any of the components, and receive the default component
      * as an argument
      */
-    const prism = createInstance({
+    const prism = await createInstance({
       loader: {
         load: async (opts, defaultLoader) => {
           /**
@@ -34,13 +34,15 @@ describe('graph', () => {
           }
 
           customLoaderId = opts && opts.id ? opts.id : 0;
+
           return [];
         },
       },
+    })({
+      id: 123,
     });
 
-    await prism.load({ id: 123 });
-
+    await prism.getResources();
     expect(defaultLoaderId).toEqual(123);
     expect(customLoaderId).toEqual(123);
   });
@@ -54,9 +56,12 @@ describe('graph', () => {
       },
     });
 
-    const prism = createInstance();
-    await prism.load({ id: 123 });
-    expect(prism.resources).toEqual([123]);
+    const prism = await createInstance()({
+      id: 123,
+    });
+
+    const resources = await prism.getResources();
+    expect(resources).toEqual([123]);
   });
 
   describe('process', () => {

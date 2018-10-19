@@ -1,17 +1,14 @@
-import { IMockProvider } from '../IMockProvider';
-import { IMockResult } from '../IMockResult';
+import { IMocker } from '@stoplight/prism-core';
+
 import { IMockRpcResponse } from './IMockRpcResponse';
 import { IRpcOperationOptions } from './IRpcOperationOptions';
 
-export class RpcProvider
-  implements IMockProvider<any, IRpcOperationOptions, IMockResult<IMockRpcResponse>> {
-  public async mock(operation: any, options: IRpcOperationOptions) {
+export class RpcProvider implements IMocker<any, any, IRpcOperationOptions, IMockRpcResponse> {
+  public async mock({}) {
     // call lookup(opts) or whatever
     // any extra logic...
     return {
-      data: {
-        result: {},
-      },
+      result: {},
     };
   }
 }

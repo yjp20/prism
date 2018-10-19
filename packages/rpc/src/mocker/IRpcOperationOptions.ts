@@ -1,7 +1,6 @@
-import { IOperationOptions, Protocol } from '../IOperationOptions';
+import { IPrismConfig } from '@stoplight/prism-core';
 
-export interface IRpcOperationOptions extends IOperationOptions {
-  protocol: Protocol.RPC;
+export interface IRpcOperationOptions extends IPrismConfig {
   service: string;
   method: string;
   data: object;

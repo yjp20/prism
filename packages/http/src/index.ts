@@ -1,17 +1,14 @@
-import { factory, filesystemLoader } from '@stoplight/prism-core';
-import { IFilesystemLoaderOpts } from '@stoplight/prism-core/types';
+import { factory, filesystemLoader, IFilesystemLoaderOpts } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { forwarder } from './forwarder';
-import { mocker } from './mocker';
+import { HttpMocker } from './mocker';
+import { JSONSchemaExampleGenerator } from './mocker/generator/JSONSchemaExampleGenerator';
 import { router } from './router';
-import { IHttpConfig, IHttpRequest, IHttpResponse } from './types';
-import * as types from './types';
+import { IHttpConfig, IHttpMethod, IHttpRequest, IHttpResponse } from './types';
 import { validator } from './validator';
 
-export { types };
-
-export const createInstance = factory<
+const createInstance = factory<
   IHttpOperation,
   IHttpRequest,
   IHttpResponse,
@@ -25,5 +22,7 @@ export const createInstance = factory<
   router,
   forwarder,
   validator,
-  mocker,
+  mocker: new HttpMocker(new JSONSchemaExampleGenerator()),
 });
+
+export { IHttpConfig, IHttpMethod, IHttpRequest, IHttpResponse, createInstance };

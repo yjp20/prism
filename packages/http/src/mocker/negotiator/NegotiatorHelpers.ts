@@ -125,7 +125,7 @@ const helpers = {
   },
 
   negotiateOptionsBySpecificResponse(
-    httpOperation: IHttpOperation,
+    _httpOperation: IHttpOperation,
     desiredOptions: {
       readonly mediaType?: string;
       readonly code?: string;

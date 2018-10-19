@@ -1,15 +1,16 @@
 const express = require('express');
+import { createInstance, IHttpConfig, IHttpMethod } from '@stoplight/prism-http';
 import { Request, Response } from 'express';
+
 const app = express();
 const port = 3000;
 
-import { createInstance, types } from '@stoplight/prism-http';
-
 // TODO: this is a trivial example, scratch code
-
 const prism = createInstance({
   config: async ({ query }) => {
-    const config: types.IHttpConfig = {};
+    const config: IHttpConfig = {
+      mock: false,
+    };
 
     if (query && query.__code) {
       config.mock = {
@@ -19,13 +20,19 @@ const prism = createInstance({
 
     return config;
   },
+})({
+  path: 'foo.json',
 });
 
 app.get('*', async (req: Request, res: Response) => {
-  const response = await prism.process({ method: req.method, host: req.host, path: req.path });
+  const response = await prism.process({
+    method: req.method as IHttpMethod,
+    host: req.host,
+    path: req.path,
+  });
 
-  if (response.output) {
-    res.send(response.output);
+  if (response.data) {
+    res.send(response.data);
   } else {
     // not found or something?
   }
