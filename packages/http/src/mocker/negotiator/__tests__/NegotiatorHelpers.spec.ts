@@ -1,5 +1,6 @@
 import { IExample, IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types';
 import { Chance } from 'chance';
+
 import helpers from '../NegotiatorHelpers';
 
 const chance = new Chance();

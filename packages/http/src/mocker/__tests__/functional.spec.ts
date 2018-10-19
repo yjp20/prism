@@ -1,5 +1,6 @@
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
 import * as Ajv from 'ajv';
+
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';
 import { HttpMocker } from '../index';
 

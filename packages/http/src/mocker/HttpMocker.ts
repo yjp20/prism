@@ -1,5 +1,6 @@
 import { IMocker, IMockerOpts } from '@stoplight/prism-core/types';
 import { IHttpOperation } from '@stoplight/types';
+
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { IExampleGenerator } from './generator/IExampleGenerator';
 import helpers from './negotiator/NegotiatorHelpers';

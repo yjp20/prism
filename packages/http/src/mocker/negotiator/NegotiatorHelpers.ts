@@ -1,4 +1,5 @@
 import { IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types/http';
+
 import { IHttpNegotiationResult } from './types';
 
 function findBestExample(httpContent: IHttpContent) {

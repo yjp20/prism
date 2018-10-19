@@ -1,4 +1,5 @@
 import { IHttpOperation } from '@stoplight/types/http';
+
 import { IHttpRequest } from '../types';
 import IHttpRequestValidationResult from './IHttpRequestValidationResult';
 
