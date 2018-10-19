@@ -58,7 +58,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
       };
 
       return {
-        getResources() {
+        get resources() {
           return lazyLoad().then(() => Promise.resolve(resources));
         },
 

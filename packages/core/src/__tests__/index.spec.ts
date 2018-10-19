@@ -42,7 +42,7 @@ describe('graph', () => {
       id: 123,
     });
 
-    await prism.getResources();
+    await prism.resources;
     expect(defaultLoaderId).toEqual(123);
     expect(customLoaderId).toEqual(123);
   });
@@ -60,7 +60,7 @@ describe('graph', () => {
       id: 123,
     });
 
-    const resources = await prism.getResources();
+    const resources = await prism.resources;
     expect(resources).toEqual([123]);
   });
 
