@@ -17,13 +17,15 @@ export class HttpForwarder
       throw new Error('Server list is missing in spec');
     }
 
+    const inputData = opts.input.data;
+
     const response = await axios({
-      method: opts.input.data.method,
-      url: this.resolveServerUrl(opts.resource.servers[0]) + opts.input.data.url.path,
-      params: opts.input.data.url.query,
+      method: inputData.method,
+      url: this.resolveServerUrl(opts.resource.servers[0]) + inputData.url.path,
+      params: inputData.url.query,
       responseType: 'text',
-      data: opts.input.data.body,
-      headers: opts.input.data.headers,
+      data: inputData.body,
+      headers: inputData.headers,
     });
 
     return {
