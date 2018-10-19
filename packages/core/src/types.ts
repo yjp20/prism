@@ -42,7 +42,7 @@ export interface ILoader<Options, Resource> {
 }
 
 export interface IFilesystemLoaderOpts {
-  path: string;
+  path?: string;
 }
 
 export interface IRouter<Resource, Input, Config> {
@@ -101,7 +101,7 @@ export interface IPrismInput<I> {
 
 export interface IPrismOutput<I, O> {
   input?: I;
-  data?: O;
+  output?: O;
   validations: {
     input: IValidation[];
     output: IValidation[];
