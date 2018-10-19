@@ -7,12 +7,12 @@ import { createInstance, IHttpConfig } from '@stoplight/prism-http';
 // TODO: this is a trivial example, scratch code
 
 const prism = createInstance({
-  config: async ({ query }) => {
+  config: async ({ url }) => {
     const config: IHttpConfig = {};
 
-    if (query && query.__code) {
+    if (url.query && url.query.__code) {
       config.mock = {
-        code: query.__code,
+        code: url.query.__code,
       };
     }
 
@@ -21,7 +21,10 @@ const prism = createInstance({
 });
 
 app.get('*', async (req: any, res: any) => {
-  const response = await prism.process({ method: req.method, host: req.host, path: req.path });
+  const response = await prism.process({
+    method: req.method,
+    url: { baseUrl: req.host, path: req.path },
+  });
 
   if (response.data) {
     res.send(response.data);

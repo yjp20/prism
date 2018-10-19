@@ -1,7 +1,15 @@
 import { IPrismConfig } from '@stoplight/prism-core';
 
-// TODO: should be complete, and in the @stoplight/types repo
-export type IHttpMethod = 'get' | 'put' | 'post' | 'delete'; // ... etc
+// TODO: should be complete | and in the @stoplight/types repo
+export type IHttpMethod =
+  | 'get'
+  | 'put'
+  | 'post'
+  | 'delete'
+  | 'options'
+  | 'head'
+  | 'patch'
+  | 'trace'; // ... etc
 
 export interface IHttpConfig extends IPrismConfig {
   mock?:
@@ -38,10 +46,12 @@ export interface IHttpConfig extends IPrismConfig {
 
 export interface IHttpRequest {
   method: IHttpMethod;
-  path: string;
-  host: string;
-  query?: {
-    [name: string]: string;
+  url: {
+    baseUrl?: string;
+    path: string;
+    query?: {
+      [name: string]: string;
+    };
   };
   headers?: {
     [name: string]: string;
@@ -54,5 +64,5 @@ export interface IHttpResponse {
   headers?: {
     [name: string]: string;
   };
-  body?: unknown;
+  body?: any;
 }
