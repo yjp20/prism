@@ -7,7 +7,7 @@ import { matchPath } from './matchPath';
 import { IMatch, MatchType } from './types';
 
 export const router: IRouter<IHttpOperation, IHttpRequest, IHttpConfig> = {
-  route: async ({ resources, input, config }) => {
+  route: async ({ resources, input }) => {
     const matches = [];
     const { path: requestPath, baseUrl: requestBaseUrl } = input.url;
 
@@ -17,7 +17,8 @@ export const router: IRouter<IHttpOperation, IHttpRequest, IHttpConfig> = {
       const pathMatch = matchPath(requestPath, resource.path);
       const serverMatches = [];
 
-      for (const server of resource.servers) {
+      const { servers = [] } = resource;
+      for (const server of servers) {
         const tempServerMatch = matchBaseUrl(server, requestBaseUrl);
         if (tempServerMatch !== MatchType.NOMATCH) {
           serverMatches.push(tempServerMatch);
