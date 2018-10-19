@@ -144,8 +144,7 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
     },
     data: {
       method: 'get' as IHttpMethod,
-      path: '/todos',
-      host: '',
+      url: { path: '/todos', baseUrl: '' },
     },
   },
   {
@@ -162,8 +161,7 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
     },
     data: {
       method: 'get' as IHttpMethod,
-      path: '/todos/5',
-      host: '',
+      url: { path: '/todos/5', baseUrl: '' },
     },
   },
 ];

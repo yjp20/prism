@@ -55,8 +55,10 @@ describe('HttpMocker', () => {
       },
       data: {
         method: 'get' as IHttpMethod,
-        path: '/test',
-        host: 'example.com',
+        url: {
+          path: '/test',
+          baseUrl: 'example.com',
+        },
       },
     };
 
