@@ -1,5 +1,5 @@
 import { PrismConfig, PrismConfigFactory } from '@stoplight/prism-core/types';
-import { IHttpConfig, IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http/types';
+import { IHttpConfig, IHttpRequest } from '@stoplight/prism-http/types';
 
 async function getConfig<Config, Input>(
   input: Input,
@@ -20,7 +20,7 @@ export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequ
   const config: IHttpConfig = defaultConfig
     ? await getConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
     : { mock: true };
-  const httpOperationConfig: IHttpOperationConfig = {};
+  const httpOperationConfig: any = {};
   const query = req.url.query;
 
   if (!query) {
