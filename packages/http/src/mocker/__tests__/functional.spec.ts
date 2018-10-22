@@ -184,7 +184,7 @@ describe('http mocker', () => {
             resource: httpOperations[0],
             input: Object.assign({}, httpRequests[0], {
               data: Object.assign({}, httpRequests[0].data, {
-                headers: { 'Content-type': 'application/xml' },
+                headers: { 'Content-type': 'application/yaml' },
               }),
             }),
           });
