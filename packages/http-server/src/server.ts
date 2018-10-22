@@ -1,28 +1,74 @@
-const express = require('express');
-import { createInstance } from '@stoplight/prism-http';
+import { createInstance, IHttpMethod } from '@stoplight/prism-http';
+import { TPrismHttpInstance } from '@stoplight/prism-http/types';
+import * as fastify from 'fastify';
+import { IncomingMessage, Server, ServerResponse } from 'http';
+
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
+import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
 
-const app = express();
-const port = 3000;
+export const createServer = async <LoaderInput>(
+  loaderInput: LoaderInput,
+  opts: IPrismHttpServerOpts<LoaderInput>
+): Promise<IPrismHttpServer<LoaderInput>> => {
+  const server = fastify<Server, IncomingMessage, ServerResponse>();
 
-// TODO: this is a trivial example, scratch code
-const prism = createInstance({
-  config: getHttpConfigFromRequest,
-})({
-  path: 'foo.json',
-});
-
-app.get('*', async (req: any, res: any) => {
-  const response = await prism.process({
-    method: req.method,
-    url: { baseUrl: req.host, path: req.path },
+  const { components } = opts;
+  const prism = createInstance<LoaderInput>({
+    config: getHttpConfigFromRequest,
+    ...components,
   });
 
-  if (response.data) {
-    res.send(response.data);
-  } else {
-    // not found or something?
-  }
-});
+  await prism.load(loaderInput);
+  server.all('*', {}, replyHandler<LoaderInput>(prism));
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+  const prismServer: IPrismHttpServer<LoaderInput> = {
+    get prism() {
+      return prism;
+    },
+
+    get fastify() {
+      return server;
+    },
+
+    listen: async (...args) => {
+      return server.listen(...args);
+    },
+  };
+
+  return prismServer;
+};
+
+const replyHandler = <LoaderInput>(
+  prism: TPrismHttpInstance<LoaderInput>
+): fastify.RequestHandler<IncomingMessage, ServerResponse> => {
+  return async (request, reply) => {
+    const { req } = request;
+
+    try {
+      const response = await prism.process({
+        method: (req.method || 'get') as IHttpMethod,
+        url: {
+          path: req.url || '/',
+          query: request.query,
+        },
+        headers: request.headers,
+        body: request.body,
+      });
+
+      const { output } = response;
+      if (output) {
+        reply.code(output.statusCode);
+
+        if (output.headers) {
+          reply.headers(output.headers);
+        }
+
+        if (output.body) {
+          reply.send(output.body);
+        }
+      }
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  };
+};
