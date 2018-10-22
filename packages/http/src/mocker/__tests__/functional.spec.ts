@@ -10,6 +10,38 @@ describe('http mocker', () => {
   const mocker = new HttpMocker(new JSONSchemaExampleGenerator());
 
   describe('request is valid', () => {
+    describe('given only enforced content type', () => {
+      test('and that content type exists should first 200 static example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              mediaType: 'text/plain',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('and that content type does not exist should throw', () => {
+        const rejection = mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              mediaType: 'text/funky',
+            },
+          },
+        });
+
+        return expect(rejection).rejects.toEqual(
+          new Error('Requested content type is not defined in the schema')
+        );
+      });
+    });
+
     describe('given enforced status code and contentType and exampleKey', () => {
       test('should return the matching example', async () => {
         const response = await mocker.mock({
@@ -147,17 +179,17 @@ describe('http mocker', () => {
       });
 
       describe('the media type requested does not match the example', () => {
-        test('return lowest 2xx, first example and matching media type', async () => {
-          const response = await mocker.mock({
+        test('throw exception', () => {
+          const rejection = mocker.mock({
             resource: httpOperations[0],
             input: Object.assign({}, httpRequests[0], {
               data: Object.assign({}, httpRequests[0].data, {
-                headers: { 'Content-type': 'application/xml' },
+                headers: { 'Content-type': 'application/yaml' },
               }),
             }),
           });
 
-          expect(response).toMatchSnapshot();
+          return expect(rejection).rejects.toMatchSnapshot();
         });
       });
     });

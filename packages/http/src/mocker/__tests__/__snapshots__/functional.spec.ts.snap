@@ -40,15 +40,7 @@ Object {
 }
 `;
 
-exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example return lowest 2xx, first example and matching media type 1`] = `
-Object {
-  "body": "{ \\"root\\": \\"first\\" }",
-  "headers": Object {
-    "Content-type": "application/xml",
-  },
-  "statusCode": 200,
-}
-`;
+exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example throw exception 1`] = `[Error: Requested content type is not defined in the schema]`;
 
 exports[`http mocker request is valid given enforced example key and mediaType should return 200 response 1`] = `
 Object {
@@ -113,5 +105,15 @@ Object {
     "Content-type": "application/json",
   },
   "statusCode": 201,
+}
+`;
+
+exports[`http mocker request is valid given only enforced content type and that content type exists should first 200 static example 1`] = `
+Object {
+  "body": "some text",
+  "headers": Object {
+    "Content-type": "text/plain",
+  },
+  "statusCode": 200,
 }
 `;

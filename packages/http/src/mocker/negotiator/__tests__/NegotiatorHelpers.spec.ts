@@ -413,27 +413,14 @@ describe('NegotiatorHelpers', () => {
           code: chance.string(),
           content: [],
         };
-        const fakeOperationConfig = {};
-        jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
-        jest.spyOn(helpers, 'negotiateDefaultMediaType').mockReturnValue(fakeOperationConfig);
 
-        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(
-          httpOperation,
-          desiredOptions,
-          httpResponseSchema
-        );
-
-        expect(helpers.negotiateByPartialOptionsAndHttpContent).not.toHaveBeenCalled();
-        expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledWith(
-          {
-            code: httpResponseSchema.code,
-            dynamic: desiredOptions.dynamic,
-            exampleKey: desiredOptions.exampleKey,
-          },
-          httpResponseSchema
-        );
-        expect(actualOperationConfig).toBe(fakeOperationConfig);
+        expect(() =>
+          helpers.negotiateOptionsBySpecificResponse(
+            httpOperation,
+            desiredOptions,
+            httpResponseSchema
+          )
+        ).toThrow('Requested content type is not defined in the schema');
       });
     });
 
