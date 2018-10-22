@@ -1,12 +1,7 @@
-import {
-  IFilesystemLoaderOpts,
-  IPrism,
-  IPrismComponents,
-  IPrismConfig,
-} from '@stoplight/prism-core';
+import { IPrism, IPrismComponents, IPrismConfig } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
-export type TPrismHttpInstance<LoaderInput = IFilesystemLoaderOpts> = IPrism<
+export type TPrismHttpInstance<LoaderInput> = IPrism<
   IHttpOperation,
   IHttpRequest,
   IHttpResponse,
@@ -14,7 +9,7 @@ export type TPrismHttpInstance<LoaderInput = IFilesystemLoaderOpts> = IPrism<
   LoaderInput
 >;
 
-export type TPrismHttpComponents<LoaderInput = IFilesystemLoaderOpts> = Partial<
+export type TPrismHttpComponents<LoaderInput> = Partial<
   IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, LoaderInput>
 >;
 

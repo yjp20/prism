@@ -1,24 +1,25 @@
-import { IFilesystemLoaderOpts } from '@stoplight/prism-core';
-import { createInstance } from '@stoplight/prism-http';
-import { IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http/types';
+import { createInstance, IHttpMethod } from '@stoplight/prism-http';
+import { TPrismHttpInstance } from '@stoplight/prism-http/types';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
 
-export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
+export const createServer = async <LoaderInput>(
   loaderInput: LoaderInput,
-  opts: IPrismHttpServerOpts<LoaderInput> = {}
-): IPrismHttpServer<LoaderInput> => {
+  opts: IPrismHttpServerOpts<LoaderInput>
+): Promise<IPrismHttpServer<LoaderInput>> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
 
+  const { components } = opts;
   const prism = createInstance<LoaderInput>({
     config: getHttpConfigFromRequest,
-    ...(opts.components || {}),
-  })(loaderInput);
+    ...components,
+  });
 
-  server.all('*', {}, replyHandler(prism));
+  await prism.load(loaderInput);
+  server.all('*', {}, replyHandler<LoaderInput>(prism));
 
   const prismServer: IPrismHttpServer<LoaderInput> = {
     get prism() {
@@ -37,8 +38,8 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
   return prismServer;
 };
 
-const replyHandler = (
-  prism: TPrismHttpInstance
+const replyHandler = <LoaderInput>(
+  prism: TPrismHttpInstance<LoaderInput>
 ): fastify.RequestHandler<IncomingMessage, ServerResponse> => {
   return async (request, reply) => {
     const { req } = request;

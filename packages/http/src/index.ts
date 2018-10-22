@@ -1,4 +1,4 @@
-import { factory, filesystemLoader, IFilesystemLoaderOpts } from '@stoplight/prism-core';
+import { factory, filesystemLoader } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { forwarder } from './forwarder';
@@ -14,9 +14,7 @@ import {
 } from './types';
 import { validator } from './validator';
 
-const createInstance = <LoaderInput = IFilesystemLoaderOpts>(
-  overrides: TPrismHttpComponents<LoaderInput>
-) => {
+const createInstance = <LoaderInput>(overrides?: TPrismHttpComponents<LoaderInput>) => {
   return factory<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, LoaderInput>({
     config: {
       mock: true,
