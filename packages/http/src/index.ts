@@ -1,28 +1,30 @@
-import { factory, filesystemLoader, IFilesystemLoaderOpts } from '@stoplight/prism-core';
+import { factory, filesystemLoader } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { forwarder } from './forwarder';
 import { HttpMocker } from './mocker';
 import { JSONSchemaExampleGenerator } from './mocker/generator/JSONSchemaExampleGenerator';
 import { router } from './router';
-import { IHttpConfig, IHttpMethod, IHttpRequest, IHttpResponse } from './types';
-import { validator } from './validator';
-
-const createInstance = factory<
-  IHttpOperation,
+import {
+  IHttpConfig,
+  IHttpMethod,
   IHttpRequest,
   IHttpResponse,
-  IHttpConfig,
-  IFilesystemLoaderOpts
->({
-  config: {
-    mock: true,
-  },
-  loader: filesystemLoader,
-  router,
-  forwarder,
-  validator,
-  mocker: new HttpMocker(new JSONSchemaExampleGenerator()),
-});
+  TPrismHttpComponents,
+} from './types';
+import { validator } from './validator';
+
+const createInstance = <LoaderInput>(overrides?: TPrismHttpComponents<LoaderInput>) => {
+  return factory<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, LoaderInput>({
+    config: {
+      mock: true,
+    },
+    loader: filesystemLoader,
+    router,
+    forwarder,
+    validator,
+    mocker: new HttpMocker(new JSONSchemaExampleGenerator()),
+  })(overrides);
+};
 
 export { IHttpConfig, IHttpMethod, IHttpRequest, IHttpResponse, createInstance };

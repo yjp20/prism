@@ -1,4 +1,5 @@
 import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
+import { ISchema } from '@stoplight/types/schema';
 import * as Ajv from 'ajv';
 
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';
@@ -9,6 +10,151 @@ describe('http mocker', () => {
   const mocker = new HttpMocker(new JSONSchemaExampleGenerator());
 
   describe('request is valid', () => {
+    describe('given only enforced content type', () => {
+      test('and that content type exists should first 200 static example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              mediaType: 'text/plain',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('and that content type does not exist should throw', () => {
+        const rejection = mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              mediaType: 'text/funky',
+            },
+          },
+        });
+
+        return expect(rejection).rejects.toEqual(
+          new Error('Requested content type is not defined in the schema')
+        );
+      });
+    });
+
+    describe('given enforced status code and contentType and exampleKey', () => {
+      test('should return the matching example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              exampleKey: 'second',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced status code and contentType', () => {
+      test('should return the first matching example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced example key', () => {
+      test('should return application/json, 200 response', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              exampleKey: 'bear',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('and mediaType should return 200 response', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              exampleKey: 'second',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced status code', () => {
+      test('should return the first matching example of application/json', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('given that status code is not defined should throw an error', () => {
+        const rejection = mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '205',
+            },
+          },
+        });
+
+        return expect(rejection).rejects.toEqual(
+          new Error('Requested status code is not defined in the schema.')
+        );
+      });
+
+      test('and example key should return application/json example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              exampleKey: 'second',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
     describe('HttpOperation contains example', () => {
       test('return lowest 2xx code and match response example to media type accepted by request', async () => {
         const response = await mocker.mock({
@@ -33,17 +179,17 @@ describe('http mocker', () => {
       });
 
       describe('the media type requested does not match the example', () => {
-        test('return lowest 2xx, first example and matching media type', async () => {
-          const response = await mocker.mock({
+        test('throw exception', () => {
+          const rejection = mocker.mock({
             resource: httpOperations[0],
             input: Object.assign({}, httpRequests[0], {
               data: Object.assign({}, httpRequests[0].data, {
-                headers: { 'Content-type': 'application/xml' },
+                headers: { 'Content-type': 'application/yaml' },
               }),
             }),
           });
 
-          expect(response).toMatchSnapshot();
+          return expect(rejection).rejects.toMatchSnapshot();
         });
       });
     });
@@ -55,7 +201,7 @@ describe('http mocker', () => {
         }
 
         const ajv = new Ajv();
-        const validate = ajv.compile(httpOperations[1].responses[0].content[0].schema);
+        const validate = ajv.compile(httpOperations[1].responses[0].content[0].schema as ISchema);
 
         const response = await mocker.mock({
           resource: httpOperations[1],
@@ -95,7 +241,7 @@ describe('http mocker', () => {
       });
 
       const ajv = new Ajv();
-      const validate = ajv.compile(httpOperations[1].responses[1].content[0].schema);
+      const validate = ajv.compile(httpOperations[1].responses[1].content[0].schema as ISchema);
 
       expect(validate(JSON.parse(response.body))).toBe(true);
     });
