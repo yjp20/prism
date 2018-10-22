@@ -42,6 +42,119 @@ describe('http mocker', () => {
       });
     });
 
+    describe('given enforced status code and contentType and exampleKey', () => {
+      test('should return the matching example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              exampleKey: 'second',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced status code and contentType', () => {
+      test('should return the first matching example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced example key', () => {
+      test('should return application/json, 200 response', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              exampleKey: 'bear',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('and mediaType should return 200 response', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              exampleKey: 'second',
+              mediaType: 'application/xml',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
+    describe('given enforced status code', () => {
+      test('should return the first matching example of application/json', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+
+      test('given that status code is not defined should throw an error', () => {
+        const rejection = mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '205',
+            },
+          },
+        });
+
+        return expect(rejection).rejects.toEqual(
+          new Error('Requested status code is not defined in the schema.')
+        );
+      });
+
+      test('and example key should return application/json example', async () => {
+        const response = await mocker.mock({
+          resource: httpOperations[0],
+          input: httpRequests[0],
+          config: {
+            mock: {
+              code: '201',
+              exampleKey: 'second',
+            },
+          },
+        });
+
+        expect(response).toMatchSnapshot();
+      });
+    });
+
     describe('HttpOperation contains example', () => {
       test('return lowest 2xx code and match response example to media type accepted by request', async () => {
         const response = await mocker.mock({
