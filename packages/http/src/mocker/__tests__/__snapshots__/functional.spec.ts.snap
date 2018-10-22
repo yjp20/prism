@@ -106,22 +106,6 @@ Object {
 }
 `;
 
-exports[`http mocker request is valid given enforced status code given that status code is not defined should fallback to 200 1`] = `
-Object {
-  "body": Array [
-    Object {
-      "completed": true,
-      "id": 1,
-      "name": "make prism",
-    },
-  ],
-  "headers": Object {
-    "Content-type": "application/json",
-  },
-  "statusCode": 200,
-}
-`;
-
 exports[`http mocker request is valid given enforced status code should return the first matching example of application/json 1`] = `
 Object {
   "body": "{ \\"root\\": \\"first\\" }",

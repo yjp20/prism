@@ -91,8 +91,8 @@ describe('http mocker', () => {
         expect(response).toMatchSnapshot();
       });
 
-      test('given that status code is not defined should fallback to 200', async () => {
-        const response = await mocker.mock({
+      test('given that status code is not defined should throw an error', () => {
+        const rejection = mocker.mock({
           resource: httpOperations[0],
           input: httpRequests[0],
           config: {
@@ -102,7 +102,9 @@ describe('http mocker', () => {
           },
         });
 
-        expect(response).toMatchSnapshot();
+        return expect(rejection).rejects.toEqual(
+          new Error('Requested status code is not defined in the schema.')
+        );
       });
 
       test('and example key should return application/json example', async () => {
