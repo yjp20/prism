@@ -1,15 +1,13 @@
-import { IFilesystemLoaderOpts } from '@stoplight/prism-core';
-import { TPrismHttpComponents, TPrismHttpInstance } from '@stoplight/prism-http';
+import { TPrismHttpComponents, TPrismHttpInstance } from '@stoplight/prism-http/types';
 import { FastifyInstance, ServerOptions } from 'fastify';
 
-export interface IPrismHttpServerOpts {
-  loaderOpts?: IFilesystemLoaderOpts;
+export interface IPrismHttpServerOpts<LoaderInput> {
   fastify?: ServerOptions;
-  components?: TPrismHttpComponents;
+  components?: TPrismHttpComponents<LoaderInput>;
 }
 
-export interface IPrismHttpServer {
-  readonly prism: TPrismHttpInstance;
+export interface IPrismHttpServer<LoaderInput> {
+  readonly prism: TPrismHttpInstance<LoaderInput>;
   readonly fastify: FastifyInstance;
   listen: ListenFunc;
 }

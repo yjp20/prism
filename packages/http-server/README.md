@@ -6,9 +6,7 @@ Usage:
 import { createServer } from '@stoplight/prism-http-server';
 
 const server = createServer({
-  loaderOpts: {
-    path: './api.oas2.json',
-  },
+  path: './api.oas2.json',
 });
 
 server.listen(3000).then(() => {

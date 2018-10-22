@@ -1,48 +1,51 @@
 import { createServer } from '../server';
 
 describe('server', () => {
-  const server = createServer({
-    components: {
-      // TODO: once validator is implemented, don't unset it here
-      validator: undefined,
+  const server = createServer(
+    {},
+    {
+      components: {
+        // TODO: once validator is implemented, don't unset it here
+        validator: undefined,
 
-      // set a custom loader for testing to mock back some HttpOperations
-      loader: {
-        load: async _opts => {
-          return [
-            {
-              id: '1',
-              method: 'get',
-              path: '/',
-              servers: [{ url: 'http://localhost:3000' }],
-              responses: [
-                {
-                  code: '200',
-                  content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-                },
-              ],
-            },
-            {
-              id: '1',
-              method: 'post',
-              path: '/todos',
-              servers: [{ url: 'http://localhost:3000' }],
-              responses: [
-                {
-                  code: '201',
-                  content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-                },
-                {
-                  code: '401',
-                  content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-                },
-              ],
-            },
-          ];
+        // set a custom loader for testing to mock back some HttpOperations
+        loader: {
+          load: async _opts => {
+            return [
+              {
+                id: '1',
+                method: 'get',
+                path: '/',
+                servers: [{ url: 'http://localhost:3000' }],
+                responses: [
+                  {
+                    code: '200',
+                    content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+                  },
+                ],
+              },
+              {
+                id: '1',
+                method: 'post',
+                path: '/todos',
+                servers: [{ url: 'http://localhost:3000' }],
+                responses: [
+                  {
+                    code: '201',
+                    content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+                  },
+                  {
+                    code: '401',
+                    content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+                  },
+                ],
+              },
+            ];
+          },
         },
       },
-    },
-  });
+    }
+  );
 
   afterAll(server.fastify.close);
 

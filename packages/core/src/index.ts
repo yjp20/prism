@@ -20,7 +20,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
   defaultComponents: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ): (
   customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
-) => ((opts?: LoadOpts) => IPrism<Resource, Input, Output, Config, LoadOpts>) {
+) => (opts?: LoadOpts) => IPrism<Resource, Input, Output, Config, LoadOpts> {
   return customComponents => {
     const components: Partial<
       IPrismComponents<Resource, Input, Output, Config, LoadOpts>
