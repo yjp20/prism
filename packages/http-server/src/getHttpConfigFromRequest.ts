@@ -20,19 +20,30 @@ export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequ
   const config: IHttpConfig = defaultConfig
     ? await getConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
     : { mock: true };
+  const httpOperationConfig: IHttpOperationConfig = {};
   const query = req.url.query;
+
   if (!query) {
     return config;
   }
 
   const { __code, __dynamic, __contentType, __example } = query;
 
-  const httpOperationConfig: IHttpOperationConfig = {
-    code: __code,
-    dynamic: __dynamic && __dynamic.toLowerCase() === 'true' ? true : false,
-    mediaType: __contentType,
-    exampleKey: __example,
-  };
+  if (__code) {
+    httpOperationConfig.code = __code;
+  }
+
+  if (__dynamic) {
+    httpOperationConfig.dynamic = __dynamic.toLowerCase() === 'true';
+  }
+
+  if (__contentType) {
+    httpOperationConfig.mediaType = __contentType;
+  }
+
+  if (__example) {
+    httpOperationConfig.exampleKey = __example;
+  }
 
   if (Object.keys(httpOperationConfig).length) {
     if (typeof config.mock === 'boolean') {
