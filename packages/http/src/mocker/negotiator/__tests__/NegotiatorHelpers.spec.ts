@@ -282,27 +282,13 @@ describe('NegotiatorHelpers', () => {
     it('given response not defined should fallback to default code', () => {
       const code = chance.string();
       const desiredOptions = {};
-      const fakeOperationConfig = {
-        code,
-      };
-      negotiateOptionsForDefaultCodeMock.mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation)
         .withResponses([])
         .instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(
-        httpOperation,
-        desiredOptions,
-        code
-      );
-
-      expect(negotiateOptionsBySpecificResponseMock).not.toHaveBeenCalled();
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(
-        httpOperation,
-        desiredOptions
-      );
-      expect(actualOperationConfig).toBe(fakeOperationConfig);
+      expect(() =>
+        helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code)
+      ).toThrow('Requested status code is not defined in the schema.');
     });
   });
 

@@ -211,8 +211,8 @@ const helpers = {
         return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
       }
     }
-    // if no response found under a status code, try to mock a default code
-    return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
+    // if no response found under a status code throw an error
+    throw new Error('Requested status code is not defined in the schema.');
   },
 
   negotiateOptionsForValidRequest(
