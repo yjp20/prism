@@ -40,17 +40,13 @@ Object {
 }
 `;
 
-exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example return lowest 2xx, first example and matching media type 1`] = `
+exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example throw exception 1`] = `[Error: Requested content type is not defined in the schema]`;
+
+exports[`http mocker request is valid given only enforced content type and that content type exists should first 200 static example 1`] = `
 Object {
-  "body": Array [
-    Object {
-      "completed": true,
-      "id": 1,
-      "name": "make prism",
-    },
-  ],
+  "body": "some text",
   "headers": Object {
-    "Content-type": "application/json",
+    "Content-type": "text/plain",
   },
   "statusCode": 200,
 }

@@ -12,10 +12,10 @@ export type IHttpMethod =
   | 'trace'; // ... etc
 
 export interface IHttpOperationConfig {
-  mediaType?: string;
-  code?: string;
-  exampleKey?: string;
-  dynamic?: boolean;
+  readonly mediaType?: string;
+  readonly code?: string;
+  readonly exampleKey?: string;
+  readonly dynamic?: boolean;
 }
 
 export interface IHttpConfig extends IPrismConfig {

@@ -1,6 +1,6 @@
 import { getHttpConfigFromRequest } from '../getHttpConfigFromRequest';
 
-describe.only('getHttpConfigFromRequest()', () => {
+describe('getHttpConfigFromRequest()', () => {
   describe('given no default config', () => {
     test('and no query should return my own default', () => {
       return expect(

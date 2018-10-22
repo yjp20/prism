@@ -51,6 +51,19 @@ export const httpOperations: IHttpOperation[] = [
               },
             ],
           },
+          {
+            mediaType: 'text/plain',
+            examples: [
+              {
+                key: 'text',
+                value: 'some text',
+              },
+              {
+                key: 'plain',
+                value: 'some plain',
+              },
+            ],
+          },
         ],
       },
       {
