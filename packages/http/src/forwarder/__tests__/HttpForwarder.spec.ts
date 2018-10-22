@@ -61,6 +61,7 @@ describe('HttpForwarder', () => {
             method: 'get',
             url: 'http://api.example.com/todos',
             responseType: 'text',
+            validateStatus: expect.any(Function),
           });
         });
       });

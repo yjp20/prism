@@ -26,6 +26,7 @@ export class HttpForwarder
       responseType: 'text',
       data: inputData.body,
       headers: inputData.headers,
+      validateStatus: () => true,
     });
 
     return {
