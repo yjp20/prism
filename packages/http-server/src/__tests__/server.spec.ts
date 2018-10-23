@@ -3,64 +3,64 @@ import { IHttpOperation } from '@stoplight/types';
 import { createServer } from '../server';
 import { IPrismHttpServer } from '../types';
 
-describe('server', async () => {
+describe('server', () => {
   let server: IPrismHttpServer<IHttpOperation[]>;
+
   beforeAll(async () => {
-    server = await createServer<IHttpOperation[]>(
-      [
-        {
-          id: '1',
-          method: 'get',
-          path: '/',
-          servers: [{ url: 'http://localhost:3000' }],
-          responses: [
-            {
-              code: '200',
-              content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-            },
-          ],
-        },
-        {
-          id: '1',
-          method: 'post',
-          path: '/todos',
-          servers: [{ url: 'http://localhost:3000' }],
-          responses: [
-            {
-              code: '201',
-              content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-            },
-            {
-              code: '401',
-              content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
-            },
-          ],
-        },
-      ],
+    const operations = [
       {
-        components: {
-          // TODO: once validator is implemented, don't unset it here
-          validator: undefined,
+        id: '1',
+        method: 'get',
+        path: '/',
+        servers: [{ url: 'http://localhost:3000' }],
+        responses: [
+          {
+            code: '200',
+            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+          },
+        ],
+      },
+      {
+        id: '1',
+        method: 'post',
+        path: '/todos',
+        servers: [{ url: 'http://localhost:3000' }],
+        responses: [
+          {
+            code: '201',
+            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+          },
+          {
+            code: '401',
+            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+          },
+        ],
+      },
+    ];
 
-          // set a custom loader for testing to mock back some HttpOperations
-          loader: {
-            load: async opts => {
-              if (!opts) {
-                return [];
-              }
+    server = createServer<IHttpOperation[]>(operations, {
+      components: {
+        // TODO: once validator is implemented, don't unset it here
+        validator: undefined,
 
-              return opts;
-            },
+        // set a custom loader for testing to mock back some HttpOperations
+        loader: {
+          load: async ops => {
+            if (!ops) {
+              return [];
+            }
+
+            return ops;
           },
         },
-      }
-    );
+      },
+    });
+
+    await server.prism.load(operations);
   });
 
-  afterAll(() => {
-    server.fastify.close(() => {
-      // close
-    });
+  afterAll(async () => {
+    await new Promise(resolve => server.fastify.close(resolve));
   });
 
   test('should mock back root path', async () => {

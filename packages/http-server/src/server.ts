@@ -6,10 +6,10 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
 
-export const createServer = async <LoaderInput>(
+export const createServer = <LoaderInput>(
   loaderInput: LoaderInput,
   opts: IPrismHttpServerOpts<LoaderInput>
-): Promise<IPrismHttpServer<LoaderInput>> => {
+): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
 
   const { components } = opts;
@@ -18,7 +18,6 @@ export const createServer = async <LoaderInput>(
     ...components,
   });
 
-  await prism.load(loaderInput);
   server.all('*', {}, replyHandler<LoaderInput>(prism));
 
   const prismServer: IPrismHttpServer<LoaderInput> = {
@@ -31,6 +30,13 @@ export const createServer = async <LoaderInput>(
     },
 
     listen: async (...args) => {
+      try {
+        await prism.load(loaderInput);
+      } catch (e) {
+        console.error('Error loading data into prism.', e);
+        throw e;
+      }
+
       return server.listen(...args);
     },
   };
