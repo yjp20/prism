@@ -1,0 +1,85 @@
+{
+  // The port to start on
+  "port": "4010",
+
+  // Where is prism forwarding requests?
+  // Example: "http://todos.stoplight.io"
+  // If a OAS spec is passed into the proxy, then the api host defined in that spec will override this.
+  "forwardHost": null,
+
+  // Is the api scoped under a base path?
+  // Example: "/v3"
+  // If a OAS spec is passed into the proxy, then the base path defined in that spec will override this.
+  "basePath": null,
+
+  // If true, logLocation must be defined.
+  "log": false,
+
+  // Where are requests being logged? http location, or mongodb uri.
+  // Example: "https://api.stoplight.io/v1" or "mongodb://localhost:27017/request_logs"
+  // If the logLocation is Stoplight's api, then stoplight.versionSecret must be defined.
+  "logLocation": "https://api.stoplight.io/v1",
+
+  // Prints extra information to std out.
+  "debug": true,
+
+  // Mock all requests.
+  // If dynamic is true, will dynamically generate responses even if the spec file has an example response defined.
+  "mock": {
+    "enabled": false,
+    "dynamic": false
+  },
+
+  // Instead of passing --spec in at Prism startup, you can define it here.
+  // Can be a absolute URL to the spec file, or path to spec file on your computer.
+  // When using a local spec file, Prism will hot reload when the updatedAt property below is changed.
+  // Example: "/path/to/my/swagger.json" or "http://petstore.swagger.io/v2/swagger.json"
+  "spec": null,
+
+  // A message to output to the terminal when Prism starts.
+  "startupMessage": "",
+
+  // Prism will use this cert instead of it's default cert, when decrypting and encrypting https traffic.
+  // The text content from your .csr file.
+  "sslCert": null,
+  // The text content from your .key file.
+  "sslKey": null,
+
+  // A script to run on all requests passing through Prism, before they are forwarded to the end API server.
+  // If defined in x-stoplight at root of spec file, then this is not used.
+  // Should be a stringified function.
+  // Example: "function(ctx, request) { ...javascript code }"
+  "beforeScript": null,
+
+  // A script to run on all requests passing through Prism, before they are returned to the API consumer.
+  // If defined in x-stoplight at root of spec file, then this is not used.
+  // Should be a stringified function.
+  // Example: "function(ctx, request, response) { ...javascript code }"
+  "afterScript": null,
+
+  // Initial variables.
+  "variables": {},
+
+  "stoplight": {
+    // Required if your scripts are updating variables.
+    "userSecret": null,
+
+    // Required for logging to stoplight servers, and updating variables.
+    "versionSecret": null
+  },
+
+  // When logging, clean requests/responses of any headers or query string params present
+  // in the blacklist, before logging the request.
+  // Example:
+  // {
+  //   "headers": ["Authorization"],
+  //   "queryString": ["auth_token"]
+  // }
+  "blacklist": {
+    "headers": [],
+    "queryString": []
+  },
+
+  // Touch this property to trigger a hot reload of the local spec file set in this config.
+  "updatedAt": null
+}

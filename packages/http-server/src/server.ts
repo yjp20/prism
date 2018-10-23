@@ -29,9 +29,7 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
       return server;
     },
 
-    listen: async (...args) => {
-      return server.listen(...args);
-    },
+    listen: server.listen.bind(server),
   };
 
   return prismServer;
