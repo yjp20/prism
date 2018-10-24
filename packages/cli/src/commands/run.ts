@@ -1,3 +1,4 @@
+import { Command } from '@oclif/command';
 import { createServer } from '@stoplight/prism-http-server';
 
 // NAME:
@@ -18,16 +19,28 @@ import { createServer } from '@stoplight/prism-http-server';
 //    --cors, --co                Turn CORS on, defaults to off.
 //    --variable, -v value  Overwrite enviroment variables, key=value.
 
-function handler(argv: any) {
-  console.log('Starting a Prism server', argv);
-  createServer({ path: argv.spec })
-    .listen(argv.port)
-    .then(console.log, console.log);
-}
+export default class Run extends Command {
+  public static description = 'Start a server with the given spec file';
 
-export default {
-  command: 'run',
-  aliases: ['start'],
-  describe: 'Start a server with the given spec file.',
-  handler,
-};
+  public async run() {
+    console.log('Running the command...');
+    const path = '';
+    const port = 3000;
+    const server = createServer(
+      { path },
+      {
+        components: {
+          loader: {
+            async load() {
+              return [];
+            },
+          },
+        },
+      }
+    );
+    server
+      .listen(port)
+      .then(console.log)
+      .catch(console.log);
+  }
+}
