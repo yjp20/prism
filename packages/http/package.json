@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@stoplight/prism-core": "0.0.0",
-    "ajv": "^6.5.4",
-    "json-schema-faker": "^0.5.0-rc16"
+    "ajv": "6.x.x",
+    "json-schema-faker": "0.5.0-rc16"
   }
 }
