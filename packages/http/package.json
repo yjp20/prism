@@ -1,8 +1,8 @@
 {
   "name": "@stoplight/prism-http",
   "version": "0.0.0",
-  "main": "lib/bundle.js",
-  "module": "lib/bundle.es.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "Stoplight <support@stoplight.io>",
   "license": "UNLICENSED",
   "repository": {
@@ -13,7 +13,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "json-schema-faker": "^0.5.0-rc16",
-    "@stoplight/prism-core": "0.0.0"
+    "@stoplight/prism-core": "0.0.0",
+    "json-schema-faker": "^0.5.0-rc16"
   }
 }

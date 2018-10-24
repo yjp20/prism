@@ -9,10 +9,11 @@
     "setup": "yarn",
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
     "lint": "tslint packages/*/src/**/*.{ts,js}",
-    "build": "tsc --skipLibCheck -p tsconfig.json",
+    "build": "tsc --skipLibCheck -b",
     "build.clean": "rm -rf lib",
-    "build.watch": "yarn build.clean && tsc --skipLibCheck -w -p tsconfig.json",
-    "test": "yarn lint && jest",
+    "build.watch": "yarn build.clean && tsc --skipLibCheck -b --watch",
+    "test": "yarn lint && yarn test.fast",
+    "pretest.fast": "tsc -b",
     "test.fast": "jest",
     "test.coverage.clean": "rm -rf coverage",
     "test.coverage": "yarn test.coverage.clean && yarn test --coverage",
@@ -20,7 +21,7 @@
     "test.update": "yarn test.fast --updateSnapshot"
   },
   "devDependencies": {
-    "@stoplight/types": "1.0.x",
+    "@stoplight/types": "stoplightio/types#develop",
     "@types/chance": "1.0.x",
     "@types/express": "4.16.x",
     "@types/jest": "23.3.x",
@@ -47,7 +48,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.json"
+        "tsConfig": "tsconfig.base.json"
       }
     },
     "transform": {

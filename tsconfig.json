@@ -1,43 +1,10 @@
 {
-  "include": ["packages/**/*"],
-  "exclude": ["node_modules", "__tests__", "fixtures"],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "noFallthroughCasesInSwitch": true,
-    "allowUnreachableCode": false,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "strict": true,
-    "pretty": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "listFiles": true,
-    "target": "es5",
-    "module": "commonjs",
-    "importHelpers": true,
-    "lib": ["es6", "es7"],
-    "outDir": "lib",
-    "noUnusedParameters": true,
-    "allowSyntheticDefaultImports": false,
-    "typeRoots": ["node_modules/@types", "reflect-metadata"],
-    "declaration": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "@stoplight/prism-core": ["./packages/core/src"],
-      "@stoplight/prism-core/*": ["./packages/core/src/*"],
-      "@stoplight/prism-cli": ["./packages/cli/src"],
-      "@stoplight/prism-cli/*": ["./packages/cli/src/*"],
-      "@stoplight/prism-http": ["./packages/http/src"],
-      "@stoplight/prism-http/*": ["./packages/http/src/*"],
-      "@stoplight/prism-http-server": ["./packages/http-server/src"],
-      "@stoplight/prism-http-server/*": ["./packages/http-server/src/*"]
-    }
-  }
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/cli" },
+    { "path": "packages/http" },
+    { "path": "packages/http-server" },
+    { "path": "packages/rpc" }
+  ]
 }

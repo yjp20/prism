@@ -1,8 +1,8 @@
 {
   "name": "@stoplight/prism-http-server",
   "version": "0.0.0",
-  "main": "lib/bundle.js",
-  "module": "lib/bundle.es.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "Stoplight <support@stoplight.io>",
   "license": "UNLICENSED",
   "repository": {
