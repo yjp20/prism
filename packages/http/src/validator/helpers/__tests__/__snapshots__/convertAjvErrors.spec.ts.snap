@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[` 1`] = `
+exports[`convertAjvErrors() all fields defined converts properly 1`] = `
+Array [
+  Object {
+    "message": "c is required",
+    "name": "required",
+    "path": Array [
+      "prefix",
+      "b",
+    ],
+    "severity": "error",
+    "summary": "c is required",
+  },
+]
+`;
+
+exports[`convertAjvErrors() errors are not set converts properly 1`] = `Array []`;
+
+exports[`convertAjvErrors() keyword field is missing converts properly 1`] = `
 Array [
   Object {
     "message": "c is required",
@@ -15,7 +32,7 @@ Array [
 ]
 `;
 
-exports[` 2`] = `
+exports[`convertAjvErrors() message field is missing converts properly 1`] = `
 Array [
   Object {
     "message": "",
@@ -26,21 +43,6 @@ Array [
     ],
     "severity": "error",
     "summary": "",
-  },
-]
-`;
-
-exports[`convertAjvErrors() all fields defined converts properly 1`] = `
-Array [
-  Object {
-    "message": "c is required",
-    "name": "required",
-    "path": Array [
-      "prefix",
-      "b",
-    ],
-    "severity": "error",
-    "summary": "c is required",
   },
 ]
 `;

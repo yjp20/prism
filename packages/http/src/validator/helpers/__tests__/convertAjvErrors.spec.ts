@@ -19,22 +19,32 @@ describe('convertAjvErrors()', () => {
   });
 
   describe('keyword field is missing', () => {
-    expect(
-      convertAjvErrors(
-        [Object.assign({}, errorObjectFixture, { keyword: undefined })],
-        'prefix',
-        ValidationSeverity.ERROR
-      )
-    ).toMatchSnapshot();
+    it('converts properly', () => {
+      expect(
+        convertAjvErrors(
+          [Object.assign({}, errorObjectFixture, { keyword: undefined })],
+          'prefix',
+          ValidationSeverity.ERROR
+        )
+      ).toMatchSnapshot();
+    });
   });
 
   describe('message field is missing', () => {
-    expect(
-      convertAjvErrors(
-        [Object.assign({}, errorObjectFixture, { message: undefined })],
-        'prefix',
-        ValidationSeverity.ERROR
-      )
-    ).toMatchSnapshot();
+    it('converts properly', () => {
+      expect(
+        convertAjvErrors(
+          [Object.assign({}, errorObjectFixture, { message: undefined })],
+          'prefix',
+          ValidationSeverity.ERROR
+        )
+      ).toMatchSnapshot();
+    });
+  });
+
+  describe('errors are not set', () => {
+    it('converts properly', () => {
+      expect(convertAjvErrors(null, 'prefix', ValidationSeverity.ERROR)).toMatchSnapshot();
+    });
   });
 });

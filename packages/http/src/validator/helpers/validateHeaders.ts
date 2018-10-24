@@ -69,7 +69,7 @@ function explodeAndValidateAgainstSchema(headers: { [name: string]: string }, sc
 
   const validate = ajv.compile(schema);
   if (!validate(validationSubject)) {
-    return convertAjvErrors(validate.errors || [], 'header', ValidationSeverity.ERROR);
+    return convertAjvErrors(validate.errors, 'header', ValidationSeverity.ERROR);
   }
 
   return [];
@@ -79,7 +79,7 @@ function validateAgainstSchema(value: string, schema: any): IValidation[] {
   const validate = ajv.compile(schema);
 
   if (!validate(value)) {
-    return convertAjvErrors(validate.errors || [], 'header', ValidationSeverity.ERROR);
+    return convertAjvErrors(validate.errors, 'header', ValidationSeverity.ERROR);
   }
 
   return [];
