@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `
+Array [
+  Object {
+    "message": "c is required",
+    "name": "",
+    "path": Array [
+      "prefix",
+      "b",
+    ],
+    "severity": "error",
+    "summary": "c is required",
+  },
+]
+`;
+
+exports[` 2`] = `
+Array [
+  Object {
+    "message": "",
+    "name": "required",
+    "path": Array [
+      "prefix",
+      "b",
+    ],
+    "severity": "error",
+    "summary": "",
+  },
+]
+`;
+
+exports[`convertAjvErrors() all fields defined converts properly 1`] = `
+Array [
+  Object {
+    "message": "c is required",
+    "name": "required",
+    "path": Array [
+      "prefix",
+      "b",
+    ],
+    "severity": "error",
+    "summary": "c is required",
+  },
+]
+`;
