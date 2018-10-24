@@ -1,6 +1,5 @@
 import { IFilesystemLoaderOpts } from '@stoplight/prism-core';
-import { createInstance } from '@stoplight/prism-http';
-import { IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http/types';
+import { createInstance, IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 

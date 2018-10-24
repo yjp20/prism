@@ -5,6 +5,7 @@ import {
   IForwarder,
   ILoader,
   IMocker,
+  IMockerOpts,
   IPrism,
   IPrismComponents,
   IPrismConfig,
@@ -13,7 +14,9 @@ import {
   IRouter,
   IValidation,
   IValidator,
+  PrismConfig,
   PrismConfigFactory,
+  ValidationSeverity,
 } from './types';
 
 export function factory<Resource, Input, Output, Config, LoadOpts>(
@@ -146,8 +149,11 @@ export {
   IPrismConfig,
   IPrismInput,
   IPrismOutput,
+  PrismConfig,
   IRouter,
   IValidation,
   IValidator,
   PrismConfigFactory,
+  IMockerOpts,
+  ValidationSeverity,
 };

@@ -8,9 +8,11 @@ import { router } from './router';
 import {
   IHttpConfig,
   IHttpMethod,
+  IHttpOperationConfig,
   IHttpRequest,
   IHttpResponse,
   TPrismHttpComponents,
+  TPrismHttpInstance,
 } from './types';
 import { validator } from './validator';
 
@@ -29,4 +31,13 @@ const createInstance = <LoaderInput = IFilesystemLoaderOpts>(
   })(overrides);
 };
 
-export { IHttpConfig, IHttpMethod, IHttpRequest, IHttpResponse, createInstance };
+export {
+  IHttpConfig,
+  IHttpMethod,
+  IHttpRequest,
+  IHttpResponse,
+  createInstance,
+  TPrismHttpInstance,
+  IHttpOperationConfig,
+  TPrismHttpComponents,
+};

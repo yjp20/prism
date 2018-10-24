@@ -1,8 +1,8 @@
-import { JSONSchemaExampleGenerator } from '@stoplight/prism-http/mocker/generator/JSONSchemaExampleGenerator';
 import { ISchema } from '@stoplight/types/schema';
 import * as Ajv from 'ajv';
 
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';
+import { JSONSchemaExampleGenerator } from '../generator/JSONSchemaExampleGenerator';
 import { HttpMocker } from '../index';
 
 // TODO: Turn examples into test cases -> https://stoplightio.atlassian.net/wiki/spaces/PN/pages/5996560/Prism+Feature+List+draft
@@ -51,12 +51,12 @@ describe('http mocker', () => {
 
     describe('HTTPOperation contain no examples', () => {
       test('return dynamic response', async () => {
-        if (!httpOperations[1].responses[0].content[0].schema) {
+        if (!httpOperations[1].responses[0].contents[0].schema) {
           throw new Error('Missing test');
         }
 
         const ajv = new Ajv();
-        const validate = ajv.compile(httpOperations[1].responses[0].content[0].schema as ISchema);
+        const validate = ajv.compile(httpOperations[1].responses[0].contents[0].schema as ISchema);
 
         const response = await mocker.mock({
           resource: httpOperations[1],
@@ -86,7 +86,7 @@ describe('http mocker', () => {
     });
 
     test('returns 400 and dynamic error response', async () => {
-      if (!httpOperations[1].responses[1].content[0].schema) {
+      if (!httpOperations[1].responses[1].contents[0].schema) {
         throw new Error('Missing test');
       }
 
@@ -96,7 +96,7 @@ describe('http mocker', () => {
       });
 
       const ajv = new Ajv();
-      const validate = ajv.compile(httpOperations[1].responses[1].content[0].schema as ISchema);
+      const validate = ajv.compile(httpOperations[1].responses[1].contents[0].schema as ISchema);
 
       expect(validate(JSON.parse(response.body))).toBe(true);
     });

@@ -1,5 +1,5 @@
-import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core/types';
-import { IHttpMethod, IHttpRequest } from '@stoplight/prism-http/types';
+import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core';
+import { IHttpMethod, IHttpRequest } from '@stoplight/prism-http';
 import { IHttpOperation } from '@stoplight/types';
 
 export const httpOperations: IHttpOperation[] = [
@@ -10,7 +10,7 @@ export const httpOperations: IHttpOperation[] = [
     responses: [
       {
         code: '200',
-        content: [
+        contents: [
           {
             mediaType: 'application/json',
             schema: {
@@ -55,7 +55,7 @@ export const httpOperations: IHttpOperation[] = [
       },
       {
         code: '400',
-        content: [
+        contents: [
           {
             mediaType: 'application/json',
             schema: {
@@ -89,7 +89,7 @@ export const httpOperations: IHttpOperation[] = [
     responses: [
       {
         code: '200',
-        content: [
+        contents: [
           {
             mediaType: 'application/json',
             schema: {
@@ -118,7 +118,7 @@ export const httpOperations: IHttpOperation[] = [
       },
       {
         code: '400',
-        content: [
+        contents: [
           {
             mediaType: 'application/json',
             schema: {

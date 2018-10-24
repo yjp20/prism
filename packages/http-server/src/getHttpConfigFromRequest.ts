@@ -1,5 +1,5 @@
-import { PrismConfig, PrismConfigFactory } from '@stoplight/prism-core/types';
-import { IHttpConfig, IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http/types';
+import { PrismConfig, PrismConfigFactory } from '@stoplight/prism-core';
+import { IHttpConfig, IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http';
 
 async function getConfig<Config, Input>(
   input: Input,

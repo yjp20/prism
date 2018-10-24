@@ -1,4 +1,4 @@
-import { IHttpMethod } from '@stoplight/prism-http/types';
+import { IHttpMethod } from '@stoplight/prism-http';
 import { Chance } from 'chance';
 
 const chance = new Chance();

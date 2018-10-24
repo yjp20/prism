@@ -1,4 +1,4 @@
-import { IMocker, IMockerOpts } from '@stoplight/prism-core/types';
+import { IMocker, IMockerOpts } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
