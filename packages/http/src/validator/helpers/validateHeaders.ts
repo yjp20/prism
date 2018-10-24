@@ -63,7 +63,7 @@ function explodeAndValidateAgainstSchema(headers: { [name: string]: string }, sc
   const schemaProperties = schema.properties || {};
 
   const validationSubject = Object.keys(schemaProperties).reduce(
-    (subject, key) => ({ ...subject, key: headers[key] }),
+    (subject, key) => ({ ...subject, [key]: headers[key] }),
     {}
   );
 

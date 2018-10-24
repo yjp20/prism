@@ -30,7 +30,19 @@ Array [
 ]
 `;
 
-exports[`validateHeaders() spec is present header is present explode flag is set header is invalid not validates 1`] = `Array []`;
+exports[`validateHeaders() spec is present header is present explode flag is set header is invalid not validates 1`] = `
+Array [
+  Object {
+    "message": "should be number",
+    "name": "type",
+    "path": Array [
+      "header",
+    ],
+    "severity": "error",
+    "summary": "should be number",
+  },
+]
+`;
 
 exports[`validateHeaders() spec is present header is present explode flag is set schema type is incorrect throws error 1`] = `"Explode can be only applied to header of object type"`;
 
