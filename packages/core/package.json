@@ -11,5 +11,11 @@
   },
   "engines": {
     "node": ">=8"
+  },
+  "devDependencies": {
+    "@types/deepmerge": "^2.2.0"
+  },
+  "dependencies": {
+    "deepmerge": "^2.2.1"
   }
 }

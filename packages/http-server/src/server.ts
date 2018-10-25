@@ -11,10 +11,11 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
   opts: IPrismHttpServerOpts<LoaderInput> = {}
 ): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
+  const { components = {} } = opts;
 
   const prism = createInstance<LoaderInput>({
+    ...components,
     config: getHttpConfigFromRequest,
-    ...(opts.components || {}),
   })(loaderInput);
 
   server.all('*', {}, replyHandler(prism));
