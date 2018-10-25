@@ -1,4 +1,4 @@
-import * as deepmerge from 'deepmerge';
+import * as _ from 'lodash';
 import { PrismConfig, PrismConfigFactory, resolveConfig } from '..';
 
 /**
@@ -11,7 +11,7 @@ export function configMergerFactory<C, I>(
     let mergedConfigObject;
     for (const config of configs) {
       if (config !== undefined) {
-        mergedConfigObject = deepmerge(
+        mergedConfigObject = _.merge(
           mergedConfigObject || {},
           await resolveConfig<C, I>(input, config, defaultConfig)
         );

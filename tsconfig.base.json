@@ -31,10 +31,6 @@
     ],
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": false,
-    "typeRoots": [
-      "./node_modules/@types",
-      "reflect-metadata"
-    ],
     "declaration": true,
     "resolveJsonModule": true
   }
