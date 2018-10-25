@@ -1,6 +1,6 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { IHttpContent, IHttpHeaderParam } from '@stoplight/types/http';
+import { IHttpContent, IHttpRequest } from '@stoplight/types/http';
 import * as Ajv from 'ajv';
 import { convertAjvErrors } from './convertAjvErrors';
 
@@ -8,10 +8,18 @@ const ajv = new Ajv({ allErrors: true, messages: true });
 
 export function validateHeaders(
   headers: { [name: string]: string } = {},
-  specs: IHttpHeaderParam[] = [],
+  requestSpec?: IHttpRequest,
   mediaType?: string
 ): IValidation[] {
-  return specs.reduce<IValidation[]>((results, spec) => {
+  if (!requestSpec) {
+    return [];
+  }
+
+  if (!requestSpec.headers) {
+    return [];
+  }
+
+  return requestSpec.headers.reduce<IValidation[]>((results, spec) => {
     if (!headers.hasOwnProperty(spec.name) && spec.required === true) {
       results.push({
         path: ['header', spec.name],
@@ -69,7 +77,9 @@ function explodeAndValidateAgainstSchema(headers: { [name: string]: string }, sc
 
   const validate = ajv.compile(schema);
   if (!validate(validationSubject)) {
-    return convertAjvErrors(validate.errors, 'header', ValidationSeverity.ERROR);
+    return convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error =>
+      Object.assign({}, error, { path: ['header', ...error.path] })
+    );
   }
 
   return [];
@@ -79,7 +89,9 @@ function validateAgainstSchema(value: string, schema: any): IValidation[] {
   const validate = ajv.compile(schema);
 
   if (!validate(value)) {
-    return convertAjvErrors(validate.errors, 'header', ValidationSeverity.ERROR);
+    return convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error =>
+      Object.assign({}, error, { path: ['header', ...error.path] })
+    );
   }
 
   return [];

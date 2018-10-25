@@ -1,18 +1,13 @@
-import { IValidation, IValidator, ValidationSeverity } from '@stoplight/prism-core/types';
+import { IValidation, IValidator } from '@stoplight/prism-core/types';
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '@stoplight/prism-http/types';
-import { IHttpContent, IHttpOperation } from '@stoplight/types';
-import { ISchema } from '@stoplight/types/schema';
-import * as Ajv from 'ajv';
-import { ErrorObject } from 'ajv';
+import { HttpRequestBodyValidator } from '@stoplight/prism-http/validator/helpers/HttpRequestBodyValidator';
+import { IHttpOperation } from '@stoplight/types';
 import { validateHeaders } from './helpers/validateHeaders';
 
 export class HttpValidator
   implements IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
-  private ajv: any;
+  constructor(private requestBodyValidator: HttpRequestBodyValidator) {}
 
-  constructor() {
-    this.ajv = new Ajv({ allErrors: true, messages: true });
-  }
   public async validateInput({
     resource,
     input,
@@ -26,36 +21,21 @@ export class HttpValidator
     const results: IValidation[] = [];
     const mediaType = this.getMediaType(input.headers || {});
 
-    if (config.body && resource.request && resource.request.body) {
-      const content = this.getContent(resource, mediaType);
-
-      if (content && content.schema) {
-        Array.prototype.push.apply(results, this.validateRequestBody(input.body, content.schema));
-      }
-    }
-
-    if (config.headers && resource.request && resource.request.headers) {
+    if (config.body) {
       Array.prototype.push.apply(
         results,
-        validateHeaders(input.headers, resource.request.headers, mediaType)
+        this.requestBodyValidator.validate(input.body, resource.request, mediaType)
+      );
+    }
+
+    if (config.headers) {
+      Array.prototype.push.apply(
+        results,
+        validateHeaders(input.headers, resource.request, mediaType)
       );
     }
 
     return results;
-  }
-
-  private convertAjvErrors(
-    errors: ErrorObject[],
-    pathPrefix: string,
-    severity: ValidationSeverity
-  ) {
-    return errors.map(error => ({
-      path: [pathPrefix, ...error.dataPath.split('.').slice(1)],
-      name: error.keyword || '',
-      summary: error.message || '',
-      message: error.message || '',
-      severity,
-    }));
   }
 
   private resolveValidationConfig(
@@ -99,50 +79,6 @@ export class HttpValidator
       query: request.query || true,
       body: request.body || true,
     };
-  }
-
-  private validateRequestBody(body: any, schema: ISchema): IValidation[] {
-    // assuming JSON body and JSON schema
-    const validate = this.ajv.compile(schema);
-    const errors = validate(JSON.parse(body)) ? [] : validate.errors;
-    return this.convertAjvErrors(errors, 'body', ValidationSeverity.ERROR);
-  }
-
-  private getContent(resource: IHttpOperation, mediaType?: string) {
-    if (!resource.request) {
-      return;
-    }
-
-    if (!resource.request.body) {
-      return;
-    }
-
-    const contentList = resource.request.body.content;
-
-    if (!mediaType) {
-      return this.getDefaultContent(contentList);
-    }
-
-    const content = contentList.find(c => c.mediaType === mediaType);
-
-    if (!content) {
-      return this.getDefaultContent(contentList);
-    }
-
-    return content;
-  }
-
-  private getDefaultContent(contentList: IHttpContent[]) {
-    const content = contentList.find(c => c.mediaType === 'application/json');
-    if (!content) {
-      return;
-    }
-
-    if (!contentList.length) {
-      return;
-    }
-
-    return contentList[0];
   }
 
   private getMediaType(headers: { [key: string]: string }): string | undefined {

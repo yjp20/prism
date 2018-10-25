@@ -1,3 +1,5 @@
-import { HttpValidator } from '@stoplight/prism-http/validator/HttpValidator';
+import { HttpRequestBodyValidator } from './helpers/HttpRequestBodyValidator';
+import { HttpValidator } from './HttpValidator';
+import { validatorRegistry } from './registry';
 
-export const validator = new HttpValidator();
+export const validator = new HttpValidator(new HttpRequestBodyValidator(validatorRegistry));
