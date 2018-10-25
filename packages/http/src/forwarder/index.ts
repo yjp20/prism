@@ -10,6 +10,6 @@ export const forwarder: IForwarder<IHttpOperation, IHttpRequest, IHttpConfig, IH
     }
   ) => {
     // forward request and return response
-    throw new Error('Method not implemented.');
+    throw new Error('Forwarder: Method not implemented.');
   },
 };

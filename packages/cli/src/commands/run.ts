@@ -1,5 +1,6 @@
-import { Command } from '@oclif/command';
+import { Command, flags as oflags } from '@oclif/command';
 import { createServer } from '@stoplight/prism-http-server';
+import resources from '../resources';
 
 // NAME:
 //    prism run - Start a server with the given spec file.
@@ -21,25 +22,39 @@ import { createServer } from '@stoplight/prism-http-server';
 
 export default class Run extends Command {
   public static description = 'Start a server with the given spec file';
+  public static flags = {
+    port: oflags.integer({
+      char: 'p',
+      description: 'Port that Prism will run on.',
+      default: 4010,
+    }),
+    spec: oflags.string({
+      char: 's',
+      description: 'File path or URL to the spec.',
+      required: true,
+    }),
+  };
 
   public async run() {
-    console.log('Running the command...');
+    const { flags } = this.parse(Run);
     const path = '';
-    const port = 3000;
+    const { port } = flags;
     const server = createServer(
       { path },
       {
         components: {
+          validator: undefined,
+          // TODO: remove once loader implemented
           loader: {
             async load() {
-              return [];
+              return resources;
             },
           },
         },
       }
     );
     server
-      .listen(port)
+      .listen(port as number)
       .then(console.log)
       .catch(console.log);
   }

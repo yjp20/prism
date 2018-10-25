@@ -1,11 +1,6 @@
 prism-cli
 =========
 
-Hints:
-
-1. Run `tsc -b` before executing the script
-2. Run `yarn link` to enjoin `prism` command in your global env.
-
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/prism-cli.svg)](https://npmjs.org/package/prism-cli)
 [![Downloads/week](https://img.shields.io/npm/dw/prism-cli.svg)](https://npmjs.org/package/prism-cli)
@@ -71,3 +66,25 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.3/src/commands/help.ts)_
 <!-- commandsstop -->
+
+## Development
+
+### Running
+
+1. Run `tsc -b` before executing the script
+2. Run `yarn link` to enjoin `prism` command in your global env.
+
+### Debugging
+
+1. `node --inspect ./bin/run run`
+2. .vscode/launch.json
+```
+{
+  "type": "node",
+  "request": "attach",
+  "name": "Attach",
+  "port": 9229
+},
+```
+3. Run VSCode debugger
+4. Enjoy breakpoints in VSCode :)
