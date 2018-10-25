@@ -12,9 +12,7 @@ describe('convertAjvErrors()', () => {
 
   describe('all fields defined', () => {
     it('converts properly', () => {
-      expect(
-        convertAjvErrors([errorObjectFixture], ValidationSeverity.ERROR)
-      ).toMatchSnapshot();
+      expect(convertAjvErrors([errorObjectFixture], ValidationSeverity.ERROR)).toMatchSnapshot();
     });
   });
 

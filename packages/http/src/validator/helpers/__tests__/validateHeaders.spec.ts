@@ -3,13 +3,19 @@ import { validateHeaders } from '../validateHeaders';
 describe('validateHeaders()', () => {
   describe('headers are missing', () => {
     it('returns empty validation error list', () => {
-      expect(validateHeaders(undefined, [], 'application/json')).toEqual([]);
+      expect(validateHeaders(undefined, { headers: [] }, 'application/json')).toEqual([]);
+    });
+  });
+
+  describe('spec for request is missing', () => {
+    it('returns empty validation error list', () => {
+      expect(validateHeaders({}, undefined, 'application/json')).toEqual([]);
     });
   });
 
   describe('spec for headers is missing', () => {
     it('returns empty validation error list', () => {
-      expect(validateHeaders({}, undefined, 'application/json')).toEqual([]);
+      expect(validateHeaders({}, {}, 'application/json')).toEqual([]);
     });
   });
 
@@ -18,7 +24,7 @@ describe('validateHeaders()', () => {
       describe('spec defines it as required', () => {
         it('returns validation error', () => {
           expect(
-            validateHeaders({}, [{ name: 'aHeader', required: true, content: {} }])
+            validateHeaders({}, { headers: [{ name: 'aHeader', required: true, content: {} }] })
           ).toMatchSnapshot();
         });
       });
@@ -29,12 +35,17 @@ describe('validateHeaders()', () => {
         describe('header is valid', () => {
           it('validates positively against schema', () => {
             expect(
-              validateHeaders({ 'x-test-header': 'abc' }, [
+              validateHeaders(
+                { 'x-test-header': 'abc' },
                 {
-                  name: 'x-test-header',
-                  content: { '*': { mediaType: '*', schema: { type: 'string' } } },
-                },
-              ])
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                    },
+                  ],
+                }
+              )
             ).toEqual([]);
           });
         });
@@ -42,12 +53,17 @@ describe('validateHeaders()', () => {
         describe('header is not valid', () => {
           it('not validates against schema', () => {
             expect(
-              validateHeaders({ 'x-test-header': 'abc' }, [
+              validateHeaders(
+                { 'x-test-header': 'abc' },
                 {
-                  name: 'x-test-header',
-                  content: { '*': { mediaType: '*', schema: { type: 'number' } } },
-                },
-              ])
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                    },
+                  ],
+                }
+              )
             ).toMatchSnapshot();
           });
         });
@@ -59,18 +75,20 @@ describe('validateHeaders()', () => {
             expect(
               validateHeaders(
                 { 'x-test-header': 'abc' },
-                [
-                  {
-                    name: 'x-test-header',
-                    content: {
-                      '*': { mediaType: '*', schema: { type: 'string' } },
-                      'application/testson': {
-                        mediaType: 'application/testson',
-                        schema: { type: 'number' },
+                {
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      content: {
+                        '*': { mediaType: '*', schema: { type: 'string' } },
+                        'application/testson': {
+                          mediaType: 'application/testson',
+                          schema: { type: 'number' },
+                        },
                       },
                     },
-                  },
-                ],
+                  ],
+                },
                 'application/testson'
               )
             ).toMatchSnapshot();
@@ -82,18 +100,20 @@ describe('validateHeaders()', () => {
             expect(
               validateHeaders(
                 { 'x-test-header': 'abc' },
-                [
-                  {
-                    name: 'x-test-header',
-                    content: {
-                      '*': { mediaType: '*', schema: { type: 'string' } },
-                      'application/testson': {
-                        mediaType: 'application/testson',
-                        schema: { type: 'number' },
+                {
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      content: {
+                        '*': { mediaType: '*', schema: { type: 'string' } },
+                        'application/testson': {
+                          mediaType: 'application/testson',
+                          schema: { type: 'number' },
+                        },
                       },
                     },
-                  },
-                ],
+                  ],
+                },
                 'application/failson'
               )
             ).toMatchSnapshot();
@@ -104,13 +124,18 @@ describe('validateHeaders()', () => {
       describe('deprecated flag is set', () => {
         it('returns deprecation warning', () => {
           expect(
-            validateHeaders({ 'x-test-header': 'abc' }, [
+            validateHeaders(
+              { 'x-test-header': 'abc' },
               {
-                name: 'x-test-header',
-                deprecated: true,
-                content: {},
-              },
-            ])
+                headers: [
+                  {
+                    name: 'x-test-header',
+                    deprecated: true,
+                    content: {},
+                  },
+                ],
+              }
+            )
           ).toMatchSnapshot();
         });
       });
@@ -119,15 +144,20 @@ describe('validateHeaders()', () => {
         describe('schema type is incorrect', () => {
           it('throws error', () => {
             expect(() =>
-              validateHeaders({ 'x-test-header': 'abc' }, [
+              validateHeaders(
+                { 'x-test-header': 'abc' },
                 {
-                  name: 'x-test-header',
-                  explode: true,
-                  content: {
-                    '*': { mediaType: '*', schema: { type: 'string' } },
-                  },
-                },
-              ])
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      explode: true,
+                      content: {
+                        '*': { mediaType: '*', schema: { type: 'string' } },
+                      },
+                    },
+                  ],
+                }
+              )
             ).toThrowErrorMatchingSnapshot();
           });
         });
@@ -140,24 +170,26 @@ describe('validateHeaders()', () => {
                   'x-test-header-1': 'abc',
                   'x-test-header-2': 'def',
                 },
-                [
-                  {
-                    name: 'x-test-header',
-                    explode: true,
-                    content: {
-                      '*': {
-                        mediaType: '*',
-                        schema: {
-                          type: 'object',
-                          properties: {
-                            'x-test-header-1': { type: 'string' },
-                            'x-test-header-2': { type: 'string' },
+                {
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      explode: true,
+                      content: {
+                        '*': {
+                          mediaType: '*',
+                          schema: {
+                            type: 'object',
+                            properties: {
+                              'x-test-header-1': { type: 'string' },
+                              'x-test-header-2': { type: 'string' },
+                            },
                           },
                         },
                       },
                     },
-                  },
-                ]
+                  ],
+                }
               )
             ).toEqual([]);
           });
@@ -171,24 +203,26 @@ describe('validateHeaders()', () => {
                   'x-test-header-1': 'abc',
                   'x-test-header-2': 'def',
                 },
-                [
-                  {
-                    name: 'x-test-header',
-                    explode: true,
-                    content: {
-                      '*': {
-                        mediaType: '*',
-                        schema: {
-                          type: 'object',
-                          properties: {
-                            'x-test-header-1': { type: 'string' },
-                            'x-test-header-2': { type: 'number' },
+                {
+                  headers: [
+                    {
+                      name: 'x-test-header',
+                      explode: true,
+                      content: {
+                        '*': {
+                          mediaType: '*',
+                          schema: {
+                            type: 'object',
+                            properties: {
+                              'x-test-header-1': { type: 'string' },
+                              'x-test-header-2': { type: 'number' },
+                            },
                           },
                         },
                       },
                     },
-                  },
-                ]
+                  ],
+                }
               )
             ).toMatchSnapshot();
           });
