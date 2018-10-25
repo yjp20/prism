@@ -1,24 +1,12 @@
-import { PrismConfig, PrismConfigFactory } from '@stoplight/prism-core';
+import { PrismConfig, PrismConfigFactory, resolveConfig } from '@stoplight/prism-core';
 import { IHttpConfig, IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http';
-
-async function getConfig<Config, Input>(
-  input: Input,
-  config: PrismConfig<Config, Input>,
-  defaultConfig?: PrismConfig<Config, Input>
-): Promise<Config> {
-  if (typeof config === 'function') {
-    // config factory function
-    return await (config as PrismConfigFactory<Config, Input>)(input, defaultConfig);
-  }
-  return config as Config;
-}
 
 export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequest> = async (
   req: IHttpRequest,
   defaultConfig?: PrismConfig<IHttpConfig, IHttpRequest>
 ) => {
   const config: IHttpConfig = defaultConfig
-    ? await getConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
+    ? await resolveConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
     : { mock: true };
   const httpOperationConfig: IHttpOperationConfig = {};
   const query = req.url.query;

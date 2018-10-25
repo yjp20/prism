@@ -1,4 +1,4 @@
-import { IFilesystemLoaderOpts } from '@stoplight/prism-core';
+import { configMergerFactory, IFilesystemLoaderOpts } from '@stoplight/prism-core';
 import { createInstance, IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
@@ -11,10 +11,12 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
   opts: IPrismHttpServerOpts<LoaderInput> = {}
 ): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
+  const { components = {} } = opts;
+  const config = configMergerFactory(components.config, getHttpConfigFromRequest);
 
   const prism = createInstance<LoaderInput>({
-    config: getHttpConfigFromRequest,
-    ...(opts.components || {}),
+    ...components,
+    config,
   })(loaderInput);
 
   server.all('*', {}, replyHandler(prism));
