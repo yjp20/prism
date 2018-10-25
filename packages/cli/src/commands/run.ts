@@ -43,6 +43,9 @@ export default class Run extends Command {
       { path },
       {
         components: {
+          config: {
+            mock: true,
+          },
           validator: undefined,
           // TODO: remove once loader implemented
           loader: {
