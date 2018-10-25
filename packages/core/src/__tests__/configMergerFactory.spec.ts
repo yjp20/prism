@@ -4,16 +4,14 @@ describe('configMerger', () => {
   const input = {};
   const defaultConfig = {};
 
-  test('should throw error if no configuration provided', () => {
+  test('should handle no configuration provided', () => {
     const configMerger = configMergerFactory<any, any>();
-
-    return expect(configMerger(input, defaultConfig)).rejects.toMatchSnapshot();
+    return expect(configMerger(input, defaultConfig)).resolves.toMatchSnapshot();
   });
 
-  test('should throw error if all provided configurations are undefined', () => {
+  test('should handle undefined configurations', () => {
     const configMerger = configMergerFactory<any, any>(undefined, undefined);
-
-    return expect(configMerger(input, defaultConfig)).rejects.toMatchSnapshot();
+    return expect(configMerger(input, defaultConfig)).resolves.toMatchSnapshot();
   });
 
   test('given one config object should return that object', async () => {
