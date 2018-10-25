@@ -13,7 +13,7 @@ describe('convertAjvErrors()', () => {
   describe('all fields defined', () => {
     it('converts properly', () => {
       expect(
-        convertAjvErrors([errorObjectFixture], 'prefix', ValidationSeverity.ERROR)
+        convertAjvErrors([errorObjectFixture], ValidationSeverity.ERROR)
       ).toMatchSnapshot();
     });
   });
@@ -23,7 +23,6 @@ describe('convertAjvErrors()', () => {
       expect(
         convertAjvErrors(
           [Object.assign({}, errorObjectFixture, { keyword: undefined })],
-          'prefix',
           ValidationSeverity.ERROR
         )
       ).toMatchSnapshot();
@@ -35,7 +34,6 @@ describe('convertAjvErrors()', () => {
       expect(
         convertAjvErrors(
           [Object.assign({}, errorObjectFixture, { message: undefined })],
-          'prefix',
           ValidationSeverity.ERROR
         )
       ).toMatchSnapshot();
@@ -44,7 +42,7 @@ describe('convertAjvErrors()', () => {
 
   describe('errors are not set', () => {
     it('converts properly', () => {
-      expect(convertAjvErrors(null, 'prefix', ValidationSeverity.ERROR)).toMatchSnapshot();
+      expect(convertAjvErrors(null, ValidationSeverity.ERROR)).toMatchSnapshot();
     });
   });
 });

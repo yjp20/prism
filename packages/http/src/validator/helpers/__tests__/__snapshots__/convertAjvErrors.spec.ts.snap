@@ -6,7 +6,6 @@ Array [
     "message": "c is required",
     "name": "required",
     "path": Array [
-      "prefix",
       "b",
     ],
     "severity": "error",
@@ -23,7 +22,6 @@ Array [
     "message": "c is required",
     "name": "",
     "path": Array [
-      "prefix",
       "b",
     ],
     "severity": "error",
@@ -38,7 +36,6 @@ Array [
     "message": "",
     "name": "required",
     "path": Array [
-      "prefix",
       "b",
     ],
     "severity": "error",
