@@ -1,4 +1,4 @@
-import { configMergerFactory, IFilesystemLoaderOpts } from '@stoplight/prism-core';
+import { configMergerFactory } from '@stoplight/prism-core';
 import { createInstance, IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
@@ -6,9 +6,9 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
 
-export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
+export const createServer = <LoaderInput>(
   loaderInput: LoaderInput,
-  opts: IPrismHttpServerOpts<LoaderInput> = {}
+  opts: IPrismHttpServerOpts<LoaderInput>
 ): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
   const { components = {} } = opts;
@@ -17,9 +17,9 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
   const prism = createInstance<LoaderInput>({
     ...components,
     config,
-  })(loaderInput);
+  });
 
-  server.all('*', {}, replyHandler(prism));
+  server.all('*', {}, replyHandler<LoaderInput>(prism));
 
   const prismServer: IPrismHttpServer<LoaderInput> = {
     get prism() {
@@ -30,14 +30,23 @@ export const createServer = <LoaderInput = IFilesystemLoaderOpts>(
       return server;
     },
 
-    listen: server.listen.bind(server),
+    listen: async (port: number, ...args: any[]) => {
+      try {
+        await prism.load(loaderInput);
+      } catch (e) {
+        console.error('Error loading data into prism.', e);
+        throw e;
+      }
+
+      return server.listen(port, ...args);
+    },
   };
 
   return prismServer;
 };
 
-const replyHandler = (
-  prism: TPrismHttpInstance
+const replyHandler = <LoaderInput>(
+  prism: TPrismHttpInstance<LoaderInput>
 ): fastify.RequestHandler<IncomingMessage, ServerResponse> => {
   return async (request, reply) => {
     const { req } = request;

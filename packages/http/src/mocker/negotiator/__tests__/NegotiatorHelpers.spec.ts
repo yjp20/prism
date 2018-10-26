@@ -282,27 +282,13 @@ describe('NegotiatorHelpers', () => {
     it('given response not defined should fallback to default code', () => {
       const code = chance.string();
       const desiredOptions = {};
-      const fakeOperationConfig = {
-        code,
-      };
-      negotiateOptionsForDefaultCodeMock.mockReturnValue(fakeOperationConfig);
       httpOperation = anHttpOperation(httpOperation)
         .withResponses([])
         .instance();
 
-      const actualOperationConfig = helpers.negotiateOptionsBySpecificCode(
-        httpOperation,
-        desiredOptions,
-        code
-      );
-
-      expect(negotiateOptionsBySpecificResponseMock).not.toHaveBeenCalled();
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledTimes(1);
-      expect(negotiateOptionsForDefaultCodeMock).toHaveBeenCalledWith(
-        httpOperation,
-        desiredOptions
-      );
-      expect(actualOperationConfig).toBe(fakeOperationConfig);
+      expect(() =>
+        helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code)
+      ).toThrow('Requested status code is not defined in the schema.');
     });
   });
 
@@ -427,27 +413,14 @@ describe('NegotiatorHelpers', () => {
           code: chance.string(),
           contents: [],
         };
-        const fakeOperationConfig = {};
-        jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
-        jest.spyOn(helpers, 'negotiateDefaultMediaType').mockReturnValue(fakeOperationConfig);
 
-        const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(
-          httpOperation,
-          desiredOptions,
-          httpResponseSchema
-        );
-
-        expect(helpers.negotiateByPartialOptionsAndHttpContent).not.toHaveBeenCalled();
-        expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledTimes(1);
-        expect(helpers.negotiateDefaultMediaType).toHaveBeenCalledWith(
-          {
-            code: httpResponseSchema.code,
-            dynamic: desiredOptions.dynamic,
-            exampleKey: desiredOptions.exampleKey,
-          },
-          httpResponseSchema
-        );
-        expect(actualOperationConfig).toBe(fakeOperationConfig);
+        expect(() =>
+          helpers.negotiateOptionsBySpecificResponse(
+            httpOperation,
+            desiredOptions,
+            httpResponseSchema
+          )
+        ).toThrow('Requested content type is not defined in the schema');
       });
     });
 

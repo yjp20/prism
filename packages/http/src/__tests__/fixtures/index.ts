@@ -51,6 +51,63 @@ export const httpOperations: IHttpOperation[] = [
               },
             ],
           },
+          {
+            mediaType: 'application/xml',
+            examples: [
+              {
+                key: 'first',
+                value: '{ "root": "first" }',
+              },
+              {
+                key: 'second',
+                value: '{ "root": "second" }',
+              },
+            ],
+          },
+          {
+            mediaType: 'text/plain',
+            examples: [
+              {
+                key: 'text',
+                value: 'some text',
+              },
+              {
+                key: 'plain',
+                value: 'some plain',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        code: '201',
+        contents: [
+          {
+            mediaType: 'application/json',
+            examples: [
+              {
+                key: 'first',
+                value: '{ "root": "first" }',
+              },
+              {
+                key: 'second',
+                value: '{ "root": "second" }',
+              },
+            ],
+          },
+          {
+            mediaType: 'application/xml',
+            examples: [
+              {
+                key: 'first',
+                value: '<root>first</root>',
+              },
+              {
+                key: 'second',
+                value: '<root>second</root>',
+              },
+            ],
+          },
         ],
       },
       {
