@@ -1,9 +1,9 @@
 import { IValidation } from '@stoplight/prism-core';
+import { IValidatorRegistry } from '@stoplight/prism-http/validator/registry/IValidatorRegistry';
 import { IHttpContent, IHttpRequest, IHttpRequestBody } from '@stoplight/types/http';
-import { ValidatorRegistry } from '../registry/ValidatorRegistry';
 
 export class HttpRequestBodyValidator {
-  constructor(private validatorRegistry: ValidatorRegistry) {}
+  constructor(private validatorRegistry: IValidatorRegistry) {}
 
   public validate(body: any, requestSpec?: IHttpRequest, mediaType?: string): IValidation[] {
     if (!requestSpec) {
@@ -20,11 +20,7 @@ export class HttpRequestBodyValidator {
       return [];
     }
 
-    if (!mediaType) {
-      return [];
-    }
-
-    const validate = this.validatorRegistry.get(mediaType);
+    const validate = this.validatorRegistry.get(content.mediaType);
 
     if (!validate) {
       return [];
@@ -44,28 +40,16 @@ export class HttpRequestBodyValidator {
     const contentList = requestBodySpec.content;
 
     if (!mediaType) {
-      return this.getDefaultContent(contentList);
+      return contentList[0];
     }
 
     const content = contentList.find(c => c.mediaType === mediaType);
 
     if (!content) {
-      return this.getDefaultContent(contentList);
+      return contentList[0];
     }
 
     return content;
   }
 
-  private getDefaultContent(contentList: IHttpContent[]) {
-    const content = contentList.find(c => c.mediaType === 'application/json');
-    if (!content) {
-      return;
-    }
-
-    if (!contentList.length) {
-      return;
-    }
-
-    return contentList[0];
-  }
 }

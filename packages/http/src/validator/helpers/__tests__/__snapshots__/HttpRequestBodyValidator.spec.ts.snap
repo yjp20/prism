@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HttpRequestBodyValidator validate() body spec is set body schema is provided validator for given media type exists return no validation errors 1`] = `
+Array [
+  Object {
+    "message": "testMessage",
+    "name": "testName",
+    "path": Array [
+      "a",
+    ],
+    "severity": "error",
+    "summary": "testSummary",
+  },
+]
+`;
