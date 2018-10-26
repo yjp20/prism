@@ -1,12 +1,12 @@
 import { IValidation, IValidator } from '@stoplight/prism-core/types';
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '@stoplight/prism-http/types';
-import { HttpRequestBodyValidator } from '@stoplight/prism-http/validator/helpers/HttpRequestBodyValidator';
+import { HttpRequestBodyValidator } from './helpers/HttpRequestBodyValidator';
 import { IHttpOperation } from '@stoplight/types';
-import { validateHeaders } from './helpers/validateHeaders';
+import { HttpHeadersValidator } from './helpers/HttpHeadersValidator';
 
 export class HttpValidator
   implements IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
-  constructor(private requestBodyValidator: HttpRequestBodyValidator) {}
+  constructor(private readonly requestBodyValidator: HttpRequestBodyValidator, private readonly headersValidator: HttpHeadersValidator) {}
 
   public async validateInput({
     resource,
@@ -31,7 +31,7 @@ export class HttpValidator
     if (config.headers) {
       Array.prototype.push.apply(
         results,
-        validateHeaders(input.headers, resource.request, mediaType)
+        this.headersValidator.validate(input.headers, resource.request, mediaType)
       );
     }
 
