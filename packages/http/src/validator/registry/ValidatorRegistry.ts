@@ -13,6 +13,6 @@ export class ValidatorRegistry implements IValidatorRegistry {
       return;
     }
 
-    return (content: any, schema: ISchema) => validator.validate(content, schema);
+    return validator.validate.bind(validator);
   }
 }
