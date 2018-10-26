@@ -6,12 +6,12 @@ describe('configMerger', () => {
 
   test('should handle no configuration provided', () => {
     const configMerger = configMergerFactory<any, any>();
-    return expect(configMerger(input, defaultConfig)).resolves.toMatchSnapshot();
+    return expect(configMerger(input, defaultConfig)).rejects.toMatchSnapshot();
   });
 
   test('should handle undefined configurations', () => {
     const configMerger = configMergerFactory<any, any>(undefined, undefined);
-    return expect(configMerger(input, defaultConfig)).resolves.toMatchSnapshot();
+    return expect(configMerger(input, defaultConfig)).rejects.toMatchSnapshot();
   });
 
   test('given one config object should return that object', async () => {
