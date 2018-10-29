@@ -33,8 +33,8 @@ export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
 
   private deserializeArray(value: string | string[]) {
     if (Array.isArray(value)) {
-      // todo: use last value? that's what most parsers do?
-      throw new Error('Multiple query parameters are not allowed when explode is disabled');
+      // last query param is taken into account
+      value = value[value.length - 1];
     }
 
     return value.split(',');
@@ -61,8 +61,8 @@ export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
 
   private deserializeObject(value: string | string[]) {
     if (Array.isArray(value)) {
-      // todo: use last value? that's what most parsers do?
-      throw new Error('Multiple query parameters are not allowed when explode is disabled');
+      // last query param is taken into account
+      value = value[value.length - 1];
     }
 
     return createObjectFromKeyValList(value.split(','));
