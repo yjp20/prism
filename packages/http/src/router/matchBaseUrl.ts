@@ -1,4 +1,4 @@
-import { INodeVariable } from '@stoplight/types/node';
+import { INodeVariable } from '@stoplight/types';
 import { IServer } from '@stoplight/types/server';
 import { MatchType } from './types';
 

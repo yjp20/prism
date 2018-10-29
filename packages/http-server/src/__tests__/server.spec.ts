@@ -7,7 +7,7 @@ describe('server', () => {
   let server: IPrismHttpServer<IHttpOperation[]>;
 
   beforeAll(async () => {
-    const operations = [
+    const operations: IHttpOperation[] = [
       {
         id: '1',
         method: 'get',
@@ -16,7 +16,7 @@ describe('server', () => {
         responses: [
           {
             code: '200',
-            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
           },
         ],
       },
@@ -28,11 +28,11 @@ describe('server', () => {
         responses: [
           {
             code: '201',
-            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
           },
           {
             code: '401',
-            content: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
           },
         ],
       },

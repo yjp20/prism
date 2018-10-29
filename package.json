@@ -9,10 +9,11 @@
     "setup": "yarn",
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
     "lint": "tslint packages/*/src/**/*.{ts,js}",
-    "build": "tsc --skipLibCheck -p tsconfig.json",
+    "build": "tsc --build",
     "build.clean": "rm -rf lib",
-    "build.watch": "yarn build.clean && tsc --skipLibCheck -w -p tsconfig.json",
-    "test": "yarn lint && jest",
+    "build.watch": "yarn build.clean && tsc --build --watch",
+    "test": "yarn lint && yarn test.fast",
+    "pretest.fast": "yarn build",
     "test.fast": "jest",
     "test.coverage.clean": "rm -rf coverage",
     "test.coverage": "yarn test.coverage.clean && yarn test --coverage",
@@ -22,15 +23,15 @@
   "devDependencies": {
     "@stoplight/types": "1.0.x",
     "@types/chance": "1.0.x",
-    "@types/express": "4.16.x",
     "@types/jest": "23.3.x",
-    "@types/node": "10.11.x",
+    "@types/node": "10.12.x",
     "ajv": "6.5.x",
     "chance": "1.0.x",
     "jest": "23.6.x",
+    "oclif": "^1.12.5",
     "ts-jest": "23.10.x",
     "tslint": "5.11.x",
-    "tslint-config-stoplight": "1.0.x",
+    "tslint-config-stoplight": "1.1.x",
     "tslint-eslint-rules": "5.4.x",
     "typescript": "3.1.x"
   },
@@ -38,42 +39,5 @@
     "printWidth": 100,
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "jest": {
-    "verbose": true,
-    "testMatch": [
-      "<rootDir>/packages/*/src/**/__tests__/*.spec.(ts|js)?(x)"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    },
-    "transform": {
-      "^.+\\.[tj]sx?$": "ts-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx"
-    ],
-    "collectCoverageFrom": [
-      "packages/*/src/**/*.{ts,tsx}",
-      "!**/*.d.ts",
-      "!**/__tests__/**"
-    ],
-    "coveragePathIgnorePatterns": [
-      "types.ts"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "@stoplight/prism-core(.*)": "<rootDir>/packages/core/src$1",
-      "@stoplight/prism-cli(.*)": "<rootDir>/packages/cli/src$1",
-      "@stoplight/prism-http(.*)": "<rootDir>/packages/http/src$1",
-      "@stoplight/prism-http-server(.*)": "<rootDir>/packages/http-server/src$1"
-    }
   }
 }

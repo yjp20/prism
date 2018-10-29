@@ -1,4 +1,4 @@
-import { TPrismHttpComponents, TPrismHttpInstance } from '@stoplight/prism-http/types';
+import { TPrismHttpComponents, TPrismHttpInstance } from '@stoplight/prism-http';
 import { FastifyInstance, ServerOptions } from 'fastify';
 
 export interface IPrismHttpServerOpts<LoaderInput> {

@@ -1,5 +1,5 @@
-import { createInstance, IHttpMethod } from '@stoplight/prism-http';
-import { TPrismHttpInstance } from '@stoplight/prism-http/types';
+import { configMergerFactory } from '@stoplight/prism-core';
+import { createInstance, IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
@@ -11,11 +11,12 @@ export const createServer = <LoaderInput>(
   opts: IPrismHttpServerOpts<LoaderInput>
 ): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
+  const { components = {} } = opts;
+  const config = configMergerFactory(components.config, getHttpConfigFromRequest);
 
-  const { components } = opts;
   const prism = createInstance<LoaderInput>({
-    config: getHttpConfigFromRequest,
     ...components,
+    config,
   });
 
   server.all('*', {}, replyHandler<LoaderInput>(prism));
@@ -29,7 +30,7 @@ export const createServer = <LoaderInput>(
       return server;
     },
 
-    listen: async (...args) => {
+    listen: async (port: number, ...args: any[]) => {
       try {
         await prism.load(loaderInput);
       } catch (e) {
@@ -37,7 +38,7 @@ export const createServer = <LoaderInput>(
         throw e;
       }
 
-      return server.listen(...args);
+      return server.listen(port, ...args);
     },
   };
 

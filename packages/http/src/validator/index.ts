@@ -9,7 +9,7 @@ export const validator: IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IH
       /*resource, input, config*/
     }
   ) => {
-    throw new Error('Method not implemented.');
+    throw new Error('Validator: Method not implemented.');
   },
 
   validateOutput: async (
@@ -17,6 +17,6 @@ export const validator: IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IH
       /* resource, output, config */
     }
   ) => {
-    throw new Error('Method not implemented.');
+    throw new Error('Validator: Method not implemented.');
   },
 };

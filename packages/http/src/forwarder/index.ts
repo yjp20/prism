@@ -1,3 +1,3 @@
-import { HttpForwarder } from '@stoplight/prism-http/forwarder/HttpForwarder';
+import { HttpForwarder } from './HttpForwarder';
 
 export const forwarder = new HttpForwarder();

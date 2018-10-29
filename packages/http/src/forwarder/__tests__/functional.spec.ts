@@ -1,7 +1,8 @@
 import { IHttpMethod } from '@stoplight/prism-http';
-import { httpOperations } from '@stoplight/prism-http/__tests__/fixtures';
-import { HttpForwarder } from '@stoplight/prism-http/forwarder/HttpForwarder';
 import * as axios from 'axios';
+
+import { httpOperations } from '../../__tests__/fixtures';
+import { HttpForwarder } from '../HttpForwarder';
 
 describe('HttpForwarder', () => {
   const forwarder = new HttpForwarder();

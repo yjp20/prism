@@ -1,4 +1,7 @@
-import { factory } from '../index';
+jest.mock('../utils/configMergerFactory');
+
+import { factory } from '../factory';
+import { configMergerFactory } from '../utils/configMergerFactory';
 
 describe('graph', () => {
   test('component functions pass the default component to user provided overrides', async () => {
@@ -69,6 +72,37 @@ describe('graph', () => {
   });
 
   describe('process', () => {
+    describe('config resolution', () => {
+      /**
+       * the user imports createInstance from an implementation (like prism-http)
+       * when creating an instance, the user can override any of the components, and receive the default component
+       * as an argument
+       */
+      test('custom config function should merge over default config', async () => {
+        const mergedConfig = {};
+        const configMergerStub = jest.fn().mockResolvedValue(mergedConfig);
+        (configMergerFactory as jest.Mock).mockReturnValue(configMergerStub);
+
+        const input = {};
+        const defaultConfig = 'default';
+        const customConfig = 'custom';
+        const paramConfig = 'param';
+        const createInstance = factory<any, any, any, any, any>({
+          config: defaultConfig,
+        });
+        const prism = await createInstance({
+          config: customConfig,
+        });
+
+        await prism.process(input, paramConfig);
+
+        expect(configMergerFactory).toHaveBeenCalledTimes(1);
+        expect(configMergerFactory).toHaveBeenCalledWith(defaultConfig, customConfig, paramConfig);
+        expect(configMergerStub).toHaveBeenCalledTimes(1);
+        expect(configMergerStub).toHaveBeenCalledWith(input, defaultConfig);
+      });
+    });
+
     test.skip('calls router to find the resource match', () => {
       // TODO
     });
