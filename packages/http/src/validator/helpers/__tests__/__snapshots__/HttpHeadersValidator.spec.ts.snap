@@ -29,33 +29,3 @@ Array [
   },
 ]
 `;
-
-exports[`HttpHeadersValidator validate() spec is present header is present mediaType is provided specific mediaType found in spec content list validates against more specific spec 1`] = `
-Array [
-  Object {
-    "message": "should be number",
-    "name": "type",
-    "path": Array [
-      "header",
-    ],
-    "severity": "error",
-    "summary": "should be number",
-  },
-]
-`;
-
-exports[`HttpHeadersValidator validate() spec is present header is present mediaType is provided specific mediaType not found in spec content list validates against default spec 1`] = `Array []`;
-
-exports[`HttpHeadersValidator validate() spec is present header is present schema is present deserializer is available header is not valid not validates against schema 1`] = `
-Array [
-  Object {
-    "message": "should be number",
-    "name": "type",
-    "path": Array [
-      "header",
-    ],
-    "severity": "error",
-    "summary": "should be number",
-  },
-]
-`;
