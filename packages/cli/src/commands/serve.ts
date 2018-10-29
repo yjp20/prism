@@ -3,7 +3,7 @@ import { TPrismHttpComponents } from '@stoplight/prism-http';
 import { createServer } from '@stoplight/prism-http-server';
 import resources from '../resources';
 
-export default class Run extends Command {
+export default class Serve extends Command {
   public static description = 'Start a server with the given spec file';
   public static flags = {
     port: oflags.integer({
@@ -13,8 +13,8 @@ export default class Run extends Command {
     }),
     spec: oflags.string({
       char: 's',
-      description: 'File path or URL to the spec.',
-      required: true,
+      description:
+        'Can be: path to the spec file, path to a folder full of spec files, or URL that points to a spec.',
     }),
     mock: oflags.boolean({
       char: 'm',
@@ -24,7 +24,7 @@ export default class Run extends Command {
   };
 
   public async run() {
-    const { flags } = this.parse(Run);
+    const { flags } = this.parse(Serve);
     const { port, spec, mock } = flags;
     const components: TPrismHttpComponents<any> = {
       // TODO: remove once validator implemented
