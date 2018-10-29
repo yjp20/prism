@@ -1,14 +1,14 @@
 import { IValidation, IValidator } from '@stoplight/prism-core/types';
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '@stoplight/prism-http/types';
 import { IHttpOperation, IHttpResponse as IHttpResponseSpec } from '@stoplight/types';
+import { HttpBodyValidator } from './helpers/HttpBodyValidator';
 import { HttpHeadersValidator } from './helpers/HttpHeadersValidator';
 import { HttpQueryValidator } from './helpers/HttpQueryValidator';
-import { HttpRequestBodyValidator } from './helpers/HttpRequestBodyValidator';
 
 export class HttpValidator
   implements IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
   constructor(
-    private readonly requestBodyValidator: HttpRequestBodyValidator,
+    private readonly bodyValidator: HttpBodyValidator,
     private readonly headersValidator: HttpHeadersValidator,
     private readonly queryValidator: HttpQueryValidator
   ) {}
@@ -29,7 +29,7 @@ export class HttpValidator
     if (config.body) {
       Array.prototype.push.apply(
         results,
-        this.requestBodyValidator.validate(input.body, resource.request, mediaType)
+        this.bodyValidator.validate(input.body, resource.request!.body!.content || [], mediaType)
       );
     }
 
@@ -74,6 +74,13 @@ export class HttpValidator
     const results: IValidation[] = [];
     const mediaType = this.getMediaType(output.headers || {});
     const responseSpec = this.findResponseSpec(resource.responses, output.statusCode);
+
+    if (config.body) {
+      Array.prototype.push.apply(
+        results,
+        this.bodyValidator.validate(output.body, responseSpec.content, mediaType)
+      );
+    }
 
     if (config.headers) {
       Array.prototype.push.apply(

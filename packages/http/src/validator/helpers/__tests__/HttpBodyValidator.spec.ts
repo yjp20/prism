@@ -1,11 +1,11 @@
 import { ValidationSeverity } from '@stoplight/prism-core/types';
 import { IValidatorRegistry } from '@stoplight/prism-http/validator/registry/IValidatorRegistry';
 import { ISchema } from '@stoplight/types/schema';
-import { HttpRequestBodyValidator } from '../HttpRequestBodyValidator';
+import { HttpBodyValidator } from '../HttpBodyValidator';
 
 describe('HttpRequestBodyValidator', () => {
   const validatorRegistry = { get: () => () => [] } as IValidatorRegistry;
-  const httpRequestBodyValidator = new HttpRequestBodyValidator(validatorRegistry);
+  const httpRequestBodyValidator = new HttpBodyValidator(validatorRegistry);
 
   beforeEach(() => {
     jest.clearAllMocks();
