@@ -1,11 +1,11 @@
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { IValidatorRegistry } from '@stoplight/prism-http/validator/registry/IValidatorRegistry';
+import { IValidatorRegistry } from '../../registry/IValidatorRegistry';
 import { ISchema } from '@stoplight/types/schema';
 import { HttpBodyValidator } from '../HttpBodyValidator';
 
-describe('HttpRequestBodyValidator', () => {
+describe('httpBodyValidator', () => {
   const validatorRegistry = { get: () => () => [] } as IValidatorRegistry;
-  const httpRequestBodyValidator = new HttpBodyValidator(validatorRegistry);
+  const httpBodyValidator = new HttpBodyValidator(validatorRegistry);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -13,126 +13,87 @@ describe('HttpRequestBodyValidator', () => {
   });
 
   describe('validate()', () => {
-    describe('request spec is not set', () => {
+    describe('content specs are missing', () => {
       it('returns no validation errors', () => {
-        expect(httpRequestBodyValidator.validate('test', undefined, 'application/json')).toEqual(
-          []
-        );
+        expect(httpBodyValidator.validate('test', [])).toEqual([]);
+        expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
     });
 
-    describe('body spec is not set', () => {
+    describe('request media type is not provided', () => {
       it('returns no validation errors', () => {
-        expect(httpRequestBodyValidator.validate('test', {}, 'application/json')).toEqual([]);
+        expect(
+          httpBodyValidator.validate('test', [{ mediaType: 'application/not-exists-son' }])
+        ).toEqual([]);
+        expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
     });
 
-    describe('body spec is set', () => {
-      describe('request media type is not provided', () => {
-        it('returns no validation errors', () => {
-          expect(
-            httpRequestBodyValidator.validate('test', {
-              body: {
-                content: [{ mediaType: 'application/not-exists-son' }],
-              },
-            })
-          ).toEqual([]);
-        });
+    describe('request media type was not found in spec', () => {
+      it('returns no validation errors', () => {
+        expect(
+          httpBodyValidator.validate(
+            'test',
+            [{ mediaType: 'application/not-exists-son' }],
+            'application/json'
+          )
+        ).toEqual([]);
+        expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
+    });
 
-      describe('request media type was not found in spec', () => {
-        it('returns no validation errors', () => {
+    describe('body schema is provided', () => {
+      describe('validator for given media type does not exists', () => {
+        it('return no validation errors', () => {
+          jest.spyOn(validatorRegistry, 'get').mockImplementation(mediaType => {
+            expect(mediaType).toBe('application/json');
+            return;
+          });
+
           expect(
-            httpRequestBodyValidator.validate(
+            httpBodyValidator.validate(
               'test',
-              {
-                body: {
-                  content: [{ mediaType: 'application/not-exists-son' }],
-                },
-              },
+              [{ mediaType: 'application/json', schema: {} }],
               'application/json'
             )
           ).toEqual([]);
+
+          expect(validatorRegistry.get).toHaveBeenCalledTimes(1);
         });
       });
 
-      describe('body schema is provided', () => {
-        describe('validator for given media type does not exists', () => {
-          it('return no validation errors', () => {
-            jest.spyOn(validatorRegistry, 'get').mockImplementation(mediaType => {
-              expect(mediaType).toBe('application/json');
-              return;
-            });
+      describe('validator for given media type exists', () => {
+        it('return validation errors', () => {
+          const mockSchema = { type: 'string' };
 
-            expect(
-              httpRequestBodyValidator.validate(
-                'test',
+          jest.spyOn(validatorRegistry, 'get').mockImplementation(mediaType => {
+            expect(mediaType).toBe('application/json');
+            return (content: any, schema: ISchema) => {
+              expect(content).toEqual('test');
+              expect(schema).toEqual(mockSchema);
+              return [
                 {
-                  body: {
-                    content: [{ mediaType: 'application/json', schema: {} }],
-                  },
+                  path: ['a'],
+                  name: 'testName',
+                  summary: 'testSummary',
+                  severity: ValidationSeverity.ERROR,
+                  message: 'testMessage',
                 },
-                'application/json'
-              )
-            ).toEqual([]);
-
-            expect(validatorRegistry.get).toHaveBeenCalledTimes(1);
+              ];
+            };
           });
-        });
 
-        describe('validator for given media type exists', () => {
-          it('return no validation errors', () => {
-            const mockSchema = { type: 'string' };
+          expect(
+            httpBodyValidator.validate(
+              'test',
+              [{ mediaType: 'application/json', schema: mockSchema }],
+              'application/json'
+            )
+          ).toMatchSnapshot();
 
-            jest.spyOn(validatorRegistry, 'get').mockImplementation(mediaType => {
-              expect(mediaType).toBe('application/json');
-              return (content: any, schema: ISchema) => {
-                expect(content).toEqual('test');
-                expect(schema).toEqual(mockSchema);
-                return [
-                  {
-                    path: ['a'],
-                    name: 'testName',
-                    summary: 'testSummary',
-                    severity: ValidationSeverity.ERROR,
-                    message: 'testMessage',
-                  },
-                ];
-              };
-            });
-
-            expect(
-              httpRequestBodyValidator.validate(
-                'test',
-                {
-                  body: {
-                    content: [{ mediaType: 'application/json', schema: mockSchema }],
-                  },
-                },
-                'application/json'
-              )
-            ).toMatchSnapshot();
-
-            expect(validatorRegistry.get).toHaveBeenCalledTimes(1);
-          });
+          expect(validatorRegistry.get).toHaveBeenCalledTimes(1);
         });
       });
-    });
-
-    it('', () => {
-      httpRequestBodyValidator.validate(
-        'test',
-        {
-          body: {
-            content: [
-              {
-                mediaType: 'application/json',
-              },
-            ],
-          },
-        },
-        'application/json'
-      );
     });
   });
 });
