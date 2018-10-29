@@ -1,9 +1,10 @@
-import { IHttpParamStyleDeserializer } from '@stoplight/prism-http/validator/deserializer/IHttpParamStyleDeserializer';
+import { IHttpParamDeserializerRegistry } from './IHttpParamDeserializerRegistry';
+import { IHttpParamStyleDeserializer } from './IHttpParamStyleDeserializer';
 
 export class HttpParamDeserializerRegistry<
   D extends IHttpParamStyleDeserializer<T>,
   T extends Function
-> {
+> implements IHttpParamDeserializerRegistry<T> {
   constructor(private deserializers: D[]) {}
 
   public get(style: string): T | undefined {

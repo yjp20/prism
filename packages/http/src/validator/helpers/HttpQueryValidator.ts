@@ -1,34 +1,30 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { DeserializeHttpHeader } from '@stoplight/prism-http/validator/deserializer/IHttpHeaderParamStyleDeserializer';
-import { IHttpParamDeserializerRegistry } from '@stoplight/prism-http/validator/deserializer/IHttpParamDeserializerRegistry';
 import { resolveContent } from '@stoplight/prism-http/validator/helpers/resolveContent';
 import { validateAgainstSchema } from '@stoplight/prism-http/validator/helpers/validateAgainstSchema';
 import { IHttpRequest } from '@stoplight/types/http';
+import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
+import { DeserializeHttpQuery } from '../deserializer/IHttpQueryParamStyleDeserializer';
 
-export class HttpHeadersValidator {
-  constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpHeader>) {}
+export class HttpQueryValidator {
+  constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
 
-  public validate(
-    headers: { [name: string]: string } = {},
-    requestSpec?: IHttpRequest,
-    mediaType?: string
-  ) {
+  public validate(query: string, requestSpec?: IHttpRequest, mediaType?: string) {
     if (!requestSpec) {
       return [];
     }
 
-    if (!requestSpec.headers) {
+    if (!requestSpec.query) {
       return [];
     }
 
-    return requestSpec.headers.reduce<IValidation[]>((results, spec) => {
-      if (!headers.hasOwnProperty(spec.name) && spec.required === true) {
+    return requestSpec.query.reduce<IValidation[]>((results, spec) => {
+      if (!this.queryParamExists(spec.name, query) && spec.required === true) {
         results.push({
-          path: ['header', spec.name],
+          path: ['query', spec.name],
           name: 'required',
           summary: '',
-          message: `Missing ${spec.name} header param`,
+          message: `Missing ${spec.name} query param`,
           severity: ValidationSeverity.ERROR,
         });
 
@@ -45,9 +41,9 @@ export class HttpHeadersValidator {
           Array.prototype.push.apply(
             results,
             validateAgainstSchema(
-              deserialize(headers[spec.name], content.schema.type, spec.explode || false),
+              deserialize(spec.name, query, content.schema, spec.explode || false),
               content.schema,
-              'header'
+              'query'
             )
           );
         }
@@ -55,15 +51,19 @@ export class HttpHeadersValidator {
 
       if (spec.deprecated === true) {
         results.push({
-          path: ['header', spec.name],
+          path: ['query', spec.name],
           name: 'deprecated',
           summary: '',
-          message: `Header param ${spec.name} is deprecated`,
+          message: `Query param ${spec.name} is deprecated`,
           severity: ValidationSeverity.WARN,
         });
       }
 
       return results;
     }, []);
+  }
+
+  private queryParamExists(name: string, query: string) {
+    return query.split('&').find(pair => pair.split('=')[0] === name);
   }
 }
