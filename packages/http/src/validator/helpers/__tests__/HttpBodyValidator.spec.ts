@@ -3,7 +3,7 @@ import { IValidatorRegistry } from '../../registry/IValidatorRegistry';
 import { ISchema } from '@stoplight/types/schema';
 import { HttpBodyValidator } from '../HttpBodyValidator';
 
-describe('httpBodyValidator', () => {
+describe('HttpBodyValidator', () => {
   const validatorRegistry = { get: () => () => [] } as IValidatorRegistry;
   const httpBodyValidator = new HttpBodyValidator(validatorRegistry);
 

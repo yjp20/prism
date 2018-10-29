@@ -43,7 +43,7 @@ export class HttpValidator
     if (config.query && input.url.query) {
       Array.prototype.push.apply(
         results,
-        this.queryValidator.validate(input.url.query, resource.request, mediaType)
+        this.queryValidator.validate(input.url.query, resource.request!.query || [], mediaType)
       );
     }
 

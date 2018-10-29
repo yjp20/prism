@@ -2,7 +2,7 @@ import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
 import { resolveContent } from '@stoplight/prism-http/validator/helpers/resolveContent';
 import { validateAgainstSchema } from '@stoplight/prism-http/validator/helpers/validateAgainstSchema';
-import { IHttpRequest } from '@stoplight/types/http';
+import { IHttpQueryParam } from '@stoplight/types/http';
 import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
 import { DeserializeHttpQuery } from '../deserializer/IHttpQueryParamStyleDeserializer';
 
@@ -13,18 +13,10 @@ export class HttpQueryValidator {
     query: {
       [name: string]: string | string[];
     },
-    requestSpec?: IHttpRequest,
+    querySpecs: IHttpQueryParam[],
     mediaType?: string
   ) {
-    if (!requestSpec) {
-      return [];
-    }
-
-    if (!requestSpec.query) {
-      return [];
-    }
-
-    return requestSpec.query.reduce<IValidation[]>((results, spec) => {
+    return querySpecs.reduce<IValidation[]>((results, spec) => {
       if (!query.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({
           path: ['query', spec.name],
