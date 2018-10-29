@@ -41,16 +41,9 @@ export class HttpValidator
     }
 
     if (config.query && input.url.query) {
-      // intentionally joining query back together
-      // it is going to be supplied as string in the future
-      // https://stoplightio.atlassian.net/browse/SL-216
-      const query = Object.keys(input.url.query)
-        .map(key => `${key}=${input.url.query![key]}`)
-        .join('&');
-
       Array.prototype.push.apply(
         results,
-        this.queryValidator.validate(query, resource.request, mediaType)
+        this.queryValidator.validate(input.url.query, resource.request, mediaType)
       );
     }
 

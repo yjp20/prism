@@ -3,7 +3,9 @@ import { IHttpParamStyleDeserializer } from 'packages/http/src/validator/deseria
 
 export type DeserializeHttpQuery = (
   key: string,
-  query: string,
+  query: {
+    [name: string]: string | string[];
+  },
   schema: ISchema,
   explode: boolean
 ) => any;

@@ -50,7 +50,7 @@ export interface IHttpRequest {
     baseUrl?: string;
     path: string;
     query?: {
-      [name: string]: string;
+      [name: string]: string | string[];
     };
   };
   headers?: {

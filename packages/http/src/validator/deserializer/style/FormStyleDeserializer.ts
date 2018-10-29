@@ -8,77 +8,63 @@ export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
     return style === 'form';
   }
 
-  public deserialize(key: string, query: string, schema: ISchema, explode: boolean = true) {
+  public deserialize(
+    key: string,
+    query: {
+      [name: string]: string | string[];
+    },
+    schema: ISchema,
+    explode: boolean = true
+  ) {
     if (schema.type === 'array') {
-      return explode ? this.deserializeImplodeArray(key, query) : this.deserializeArray(key, query);
+      return explode ? this.deserializeImplodeArray(query[key]) : this.deserializeArray(query[key]);
     } else if (schema.type === 'object') {
       return explode
         ? this.deserializeImplodeObject(query, schema)
-        : this.deserializeObject(key, query);
+        : this.deserializeObject(query[key]);
     } else {
-      return this.deserializePrimitive(key, query);
+      return query[key];
     }
   }
 
-  private deserializeImplodeArray(key: string, query: string) {
-    return query.split('&').reduce((result: string[], pair) => {
-      const [k, v] = pair.split('=');
-
-      if (k !== key) {
-        return result;
-      }
-
-      return [...(result || []), v];
-    }, []);
+  private deserializeImplodeArray(value: string | string[]) {
+    return Array.isArray(value) ? value : [value];
   }
 
-  private deserializeArray(key: string, query: string) {
-    return query.split('&').reduce((result: string[] | undefined, pair) => {
-      const [k, v] = pair.split('=');
+  private deserializeArray(value: string | string[]) {
+    if (Array.isArray(value)) {
+      // todo: use last value? that's what most parsers do?
+      throw new Error('Multiple query parameters are not allowed when explode is disabled');
+    }
 
-      if (k !== key) {
-        return result;
-      }
-
-      return v === '' ? [] : v.split(',');
-    }, undefined);
+    return value.split(',');
   }
 
-  private deserializeImplodeObject(query: string, schema: ISchema) {
+  private deserializeImplodeObject(
+    query: {
+      [name: string]: string | string[];
+    },
+    schema: ISchema
+  ) {
     const properties = schema.properties || {};
 
-    return query.split('&').reduce((result: object, pair) => {
-      const [k, v] = pair.split('=');
+    return Object.keys(query).reduce((result: object, key) => {
+      const value = query[key];
 
-      if (!properties.hasOwnProperty(k)) {
+      if (!properties.hasOwnProperty(key)) {
         return result;
       }
 
-      return { ...result, [k]: v };
+      return { ...result, [key]: value };
     }, {});
   }
 
-  private deserializeObject(key: string, query: string) {
-    return query.split('&').reduce((result: object | undefined, pair) => {
-      const [k, v] = pair.split('=');
+  private deserializeObject(value: string | string[]) {
+    if (Array.isArray(value)) {
+      // todo: use last value? that's what most parsers do?
+      throw new Error('Multiple query parameters are not allowed when explode is disabled');
+    }
 
-      if (k !== key) {
-        return result;
-      }
-
-      return createObjectFromKeyValList(v.split(','));
-    }, undefined);
-  }
-
-  private deserializePrimitive(key: string, query: string) {
-    return query.split('&').reduce((result: string | undefined, pair) => {
-      const [k, v] = pair.split('=');
-
-      if (k !== key) {
-        return result;
-      }
-
-      return v;
-    }, undefined);
+    return createObjectFromKeyValList(value.split(','));
   }
 }

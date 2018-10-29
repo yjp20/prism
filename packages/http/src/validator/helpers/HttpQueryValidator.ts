@@ -9,7 +9,13 @@ import { DeserializeHttpQuery } from '../deserializer/IHttpQueryParamStyleDeseri
 export class HttpQueryValidator {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
 
-  public validate(query: string, requestSpec?: IHttpRequest, mediaType?: string) {
+  public validate(
+    query: {
+      [name: string]: string | string[];
+    },
+    requestSpec?: IHttpRequest,
+    mediaType?: string
+  ) {
     if (!requestSpec) {
       return [];
     }
@@ -19,7 +25,7 @@ export class HttpQueryValidator {
     }
 
     return requestSpec.query.reduce<IValidation[]>((results, spec) => {
-      if (!this.queryParamExists(spec.name, query) && spec.required === true) {
+      if (!query.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({
           path: ['query', spec.name],
           name: 'required',
@@ -61,9 +67,5 @@ export class HttpQueryValidator {
 
       return results;
     }, []);
-  }
-
-  private queryParamExists(name: string, query: string) {
-    return query.split('&').find(pair => pair.split('=')[0] === name);
   }
 }

@@ -6,7 +6,13 @@ export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserial
     return style === 'deepObject';
   }
 
-  public deserialize(key: string, query: string, schema: ISchema) {
+  public deserialize(
+    key: string,
+    query: {
+      [name: string]: string | string[];
+    },
+    schema: ISchema
+  ) {
     if (schema.type === 'object') {
       return this.deserializeObject(key, query, schema);
     } else {
@@ -14,21 +20,16 @@ export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserial
     }
   }
 
-  private deserializeObject(key: string, query: string, schema: ISchema) {
-    const pairs = query.split('&');
-
+  private deserializeObject(
+    key: string,
+    query: {
+      [name: string]: string | string[];
+    },
+    schema: ISchema
+  ) {
     function resolve(path: string[]) {
       const name = key + path.map(el => `[${el}]`).join('');
-
-      pairs.reduce((result: string | undefined, pair) => {
-        const [k, v] = pair.split('=');
-
-        if (k === name) {
-          return v;
-        }
-
-        return result;
-      }, undefined);
+      return query[name];
     }
 
     function construct(currentPath: string[], props: any): object {
@@ -37,6 +38,8 @@ export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserial
         if (def.type === 'object') {
           return { ...result, [k]: construct([...currentPath, k], def.properties || {}) };
         }
+
+        // todo: implement array support?
 
         return { ...result, [k]: resolve([...currentPath, k]) };
       }, {});

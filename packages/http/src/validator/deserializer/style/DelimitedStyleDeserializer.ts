@@ -7,35 +7,31 @@ export class DelimitedStyleDeserializer implements IHttpQueryParamStyleDeseriali
     return style === this.styleName;
   }
 
-  public deserialize(key: string, query: string, schema: ISchema, explode: boolean) {
+  public deserialize(
+    key: string,
+    query: {
+      [name: string]: string | string[];
+    },
+    schema: ISchema,
+    explode: boolean
+  ) {
     if (schema.type === 'array') {
-      return explode ? this.deserializeImplodeArray(key, query) : this.deserializeArray(key, query);
+      return explode ? this.deserializeImplodeArray(query[key]) : this.deserializeArray(query[key]);
     } else {
       throw new Error('Space/pipe/.. delimited style is only applicable to array parameter');
     }
   }
 
-  private deserializeImplodeArray(key: string, query: string) {
-    return query.split('&').reduce((result: string[], pair) => {
-      const [k, v] = pair.split('=');
-
-      if (k !== key) {
-        return result;
-      }
-
-      return [...(result || []), v];
-    }, []);
+  private deserializeImplodeArray(value: string | string[]) {
+    return Array.isArray(value) ? value : [value];
   }
 
-  private deserializeArray(key: string, query: string) {
-    return query.split('&').reduce((result: string[] | undefined, pair) => {
-      const [k, v] = pair.split('=');
+  private deserializeArray(value: string | string[]) {
+    if (Array.isArray(value)) {
+      // todo: use last value? that's what most parsers do?
+      throw new Error('Multiple query parameters are not allowed when explode is disabled');
+    }
 
-      if (k !== key) {
-        return result;
-      }
-
-      return v === '' ? [] : v.split(this.separator);
-    }, undefined);
+    return value.split(this.separator);
   }
 }
