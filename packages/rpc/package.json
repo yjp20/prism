@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/stoplightio/prism.git"
   },
+  "files": [
+    "/lib"
+  ],
   "engines": {
     "node": ">=8"
   },

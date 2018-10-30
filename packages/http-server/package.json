@@ -12,6 +12,9 @@
   "engines": {
     "node": ">=8"
   },
+  "files": [
+    "/lib"
+  ],
   "dependencies": {
     "@stoplight/prism-core": "0.0.0",
     "@stoplight/prism-http": "0.0.0",
