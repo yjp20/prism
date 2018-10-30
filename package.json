@@ -8,15 +8,15 @@
   "scripts": {
     "setup": "yarn",
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
-    "lint": "tslint packages/*/src/**/*.{ts,js}",
-    "build": "tsc --build",
+    "lint": "tslint packages/*/src/**/*.{ts}",
+    "build": "tsc --build tsconfig.all.json",
     "build.clean": "rm -rf lib",
     "build.watch": "yarn build.clean && tsc --build --watch",
     "test": "yarn lint && yarn test.fast",
     "pretest.fast": "yarn build",
     "test.fast": "jest",
     "test.coverage.clean": "rm -rf coverage",
-    "test.coverage": "yarn test.coverage.clean && yarn test --coverage",
+    "test.coverage": "yarn test.coverage.clean && yarn test --coverage --projects packages/*",
     "test.watch": "yarn test --watchAll",
     "test.update": "yarn test.fast --updateSnapshot"
   },

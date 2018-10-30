@@ -1,7 +1,4 @@
-const config = {
+module.exports = {
   ...require('../../jest.base'),
+  displayName: 'CLI',
 };
-
-console.log('CLI', config.rootDir);
-
-module.exports = config;

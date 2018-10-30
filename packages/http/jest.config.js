@@ -1,7 +1,4 @@
-const config = {
+module.exports = {
   ...require('../../jest.base'),
+  displayName: 'HTTP',
 };
-
-console.log(process.cwd(), config);
-
-module.exports = config;
