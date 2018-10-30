@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeepObjectStyleDeserializer deserialize() schema type is not an object throws exception 1`] = `"Deep object style is only applicable to object parameter"`;

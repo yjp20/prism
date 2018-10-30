@@ -20,6 +20,14 @@ describe('HttpParamDeserializerRegistry', () => {
 
       const deserialize = httpParamDeserializerRegistry.get('form');
       expect(deserialize).toEqual(expect.any(Function));
+
+      if (!deserialize) {
+        throw new Error('Expectation failed');
+      }
+
+      deserialize();
+
+      expect(mockDeserializer.deserialize).toHaveBeenCalled();
     });
   });
 

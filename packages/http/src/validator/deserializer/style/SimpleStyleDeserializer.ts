@@ -21,6 +21,7 @@ export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserialize
   }
 
   private deserializeImplodeObject(value: string) {
+    // todo: what about escaping? e.g. "param=val\=ue"
     return value.split(',').reduce((result: object, pair) => {
       const [k, v] = pair.split('=');
       return { ...result, [k]: v };
