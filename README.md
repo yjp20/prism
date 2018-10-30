@@ -75,3 +75,12 @@ app.namespace('/v1').get('/', (req, res) => {
   return prism.process({ baseUrl: 'http://x.com/v1', path: '/' });
 });
 ```
+
+## Development
+
+### Common issues
+
+1. `jest --watch` throws ENOSPC error
+
+- [optional] Install `watchman` as per [documentation](https://facebook.github.io/watchman/docs/install.html#installing-from-source)
+- Modify `fs.inotify.max_user_watches` as per [issue resolution](https://github.com/facebook/jest/issues/3254)

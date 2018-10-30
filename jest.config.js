@@ -1,17 +1,5 @@
 module.exports = {
-  testMatch: ['<rootDir>/packages/*/src/**/__tests__/*.spec.(ts|js)?(x)'],
-  globals: {
-    'ts-jest': {
-      tsConfig: 'tsconfig.base.json',
-    },
-  },
-  transform: {
-    '.+\\.[tj]sx?$': 'ts-jest',
-  },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  collectCoverageFrom: ['packages/*/src/**/*.{ts,tsx}', '!**/*.d.ts', '!**/__tests__/**'],
-  coveragePathIgnorePatterns: ['types.ts'],
-  transformIgnorePatterns: ['node_modules'],
+  projects: ['<rootDir>/packages/*'],
   moduleNameMapper: {
     '@stoplight/prism-core': '<rootDir>/packages/core/src',
     '@stoplight/prism-core/(.*)': '<rootDir>/packages/core/src/$1',
