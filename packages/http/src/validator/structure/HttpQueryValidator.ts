@@ -1,12 +1,13 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { resolveContent } from '@stoplight/prism-http/validator/helpers/resolveContent';
-import { validateAgainstSchema } from '@stoplight/prism-http/validator/helpers/validateAgainstSchema';
+import { IHttpQueryValidator } from './IHttpQueryValidator';
 import { IHttpQueryParam } from '@stoplight/types/http';
 import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
 import { DeserializeHttpQuery } from '../deserializer/IHttpQueryParamStyleDeserializer';
+import { resolveContent } from '../helpers/resolveContent';
+import { validateAgainstSchema } from '../helpers/validateAgainstSchema';
 
-export class HttpQueryValidator {
+export class HttpQueryValidator implements IHttpQueryValidator {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
 
   public validate(
@@ -15,7 +16,7 @@ export class HttpQueryValidator {
     },
     querySpecs: IHttpQueryParam[],
     mediaType?: string
-  ) {
+  ): IValidation[] {
     return querySpecs.reduce<IValidation[]>((results, spec) => {
       if (!query.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({

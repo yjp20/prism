@@ -2,11 +2,11 @@ import {
   header as headerDeserializerRegistry,
   query as queryDeserializerRegistry,
 } from './deserializer';
-import { HttpBodyValidator } from './helpers/HttpBodyValidator';
-import { HttpHeadersValidator } from './helpers/HttpHeadersValidator';
-import { HttpQueryValidator } from './helpers/HttpQueryValidator';
 import { HttpValidator } from './HttpValidator';
 import { validatorRegistry } from './registry';
+import { HttpBodyValidator } from './structure/HttpBodyValidator';
+import { HttpHeadersValidator } from './structure/HttpHeadersValidator';
+import { HttpQueryValidator } from './structure/HttpQueryValidator';
 
 export const validator = new HttpValidator(
   new HttpBodyValidator(validatorRegistry),

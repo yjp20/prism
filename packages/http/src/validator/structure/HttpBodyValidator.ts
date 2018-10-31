@@ -1,8 +1,9 @@
 import { IValidation } from '@stoplight/prism-core';
-import { IValidatorRegistry } from '@stoplight/prism-http/validator/registry/IValidatorRegistry';
+import { IHttpBodyValidator } from './IHttpBodyValidator';
 import { IHttpContent } from '@stoplight/types/http';
+import { IValidatorRegistry } from '../registry/IValidatorRegistry';
 
-export class HttpBodyValidator {
+export class HttpBodyValidator implements IHttpBodyValidator {
   constructor(private validatorRegistry: IValidatorRegistry) {}
 
   public validate(body: any, contentSpecs: IHttpContent[], mediaType?: string): IValidation[] {

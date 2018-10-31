@@ -1,15 +1,15 @@
-import { IHttpParamDeserializerRegistry } from '@stoplight/prism-http/validator/deserializer/IHttpParamDeserializerRegistry';
-import { DeserializeHttpQuery } from '@stoplight/prism-http/validator/deserializer/IHttpQueryParamStyleDeserializer';
-import { HttpQueryValidator } from '@stoplight/prism-http/validator/helpers/HttpQueryValidator';
-import * as resolveContentModule from '../resolveContent';
-import * as validateAgainstSchemaModule from '../validateAgainstSchema';
+import { DeserializeHttpHeader } from '../../deserializer/IHttpHeaderParamStyleDeserializer';
+import { IHttpParamDeserializerRegistry } from '../../deserializer/IHttpParamDeserializerRegistry';
+import * as resolveContentModule from '../../helpers/resolveContent';
+import * as validateAgainstSchemaModule from '../../helpers/validateAgainstSchema';
+import { HttpHeadersValidator } from '../HttpHeadersValidator';
 
-describe('HttpQueryValidator', () => {
+describe('HttpHeadersValidator', () => {
   const httpParamDeserializerRegistry = {
     deserializers: [],
     get: () => v => v,
-  } as IHttpParamDeserializerRegistry<DeserializeHttpQuery>;
-  const httpQueryValidator = new HttpQueryValidator(httpParamDeserializerRegistry);
+  } as IHttpParamDeserializerRegistry<DeserializeHttpHeader>;
+  const httpHeadersValidator = new HttpHeadersValidator(httpParamDeserializerRegistry);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -22,11 +22,13 @@ describe('HttpQueryValidator', () => {
 
   describe('validate()', () => {
     describe('spec is present', () => {
-      describe('query param is not present', () => {
+      describe('header is not present', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpQueryValidator.validate({}, [{ name: 'aParam', required: true, content: {} }])
+              httpHeadersValidator.validate(undefined, [
+                { name: 'aHeader', required: true, content: {} },
+              ])
             ).toMatchSnapshot();
           });
         });
@@ -39,9 +41,9 @@ describe('HttpQueryValidator', () => {
               jest.spyOn(httpParamDeserializerRegistry, 'get').mockReturnValueOnce(undefined);
 
               expect(
-                httpQueryValidator.validate({ param: 'abc' }, [
+                httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
                   {
-                    name: 'param',
+                    name: 'x-test-header',
                     content: { '*': { mediaType: '*', schema: { type: 'number' } } },
                   },
                 ])
@@ -52,12 +54,12 @@ describe('HttpQueryValidator', () => {
           });
 
           describe('deserializer is available', () => {
-            describe('query param is valid', () => {
+            describe('header is valid', () => {
               it('validates positively against schema', () => {
                 expect(
-                  httpQueryValidator.validate({ param: 'abc' }, [
+                  httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
                     {
-                      name: 'param',
+                      name: 'x-test-header',
                       content: { '*': { mediaType: '*', schema: { type: 'string' } } },
                     },
                   ])
@@ -74,11 +76,11 @@ describe('HttpQueryValidator', () => {
             jest.spyOn(resolveContentModule, 'resolveContent').mockReturnValueOnce(undefined);
 
             expect(
-              httpQueryValidator.validate(
-                { param: 'abc' },
+              httpHeadersValidator.validate(
+                { 'x-test-header': 'abc' },
                 [
                   {
-                    name: 'param',
+                    name: 'x-test-header',
                     content: {
                       '*': { mediaType: '*', schema: { type: 'number' } },
                     },
@@ -96,9 +98,9 @@ describe('HttpQueryValidator', () => {
         describe('deprecated flag is set', () => {
           it('returns deprecation warning', () => {
             expect(
-              httpQueryValidator.validate({ param: 'abc' }, [
+              httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
                 {
-                  name: 'param',
+                  name: 'x-test-header',
                   deprecated: true,
                   content: {},
                 },

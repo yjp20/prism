@@ -1,5 +1,5 @@
 import { ISchema } from '@stoplight/types/schema';
-import { IHttpParamStyleDeserializer } from 'packages/http/src/validator/deserializer/IHttpParamStyleDeserializer';
+import { IHttpParamStyleDeserializer } from './IHttpParamStyleDeserializer';
 
 export type DeserializeHttpQuery = (
   key: string,

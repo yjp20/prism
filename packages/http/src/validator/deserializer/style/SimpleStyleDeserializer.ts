@@ -1,5 +1,5 @@
-import { IHttpHeaderParamStyleDeserializer } from 'packages/http/src/validator/deserializer/IHttpHeaderParamStyleDeserializer';
 import { createObjectFromKeyValList } from '../../helpers/createObjectFromKeyValList';
+import { IHttpHeaderParamStyleDeserializer } from '../IHttpHeaderParamStyleDeserializer';
 
 export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserializer {
   public supports(style: string) {
@@ -21,7 +21,6 @@ export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserialize
   }
 
   private deserializeImplodeObject(value: string) {
-    // todo: what about escaping? e.g. "param=val\=ue"
     return value.split(',').reduce((result: object, pair) => {
       const [k, v] = pair.split('=');
       return { ...result, [k]: v };

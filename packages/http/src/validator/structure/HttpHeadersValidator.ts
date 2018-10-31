@@ -1,19 +1,20 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { DeserializeHttpHeader } from '@stoplight/prism-http/validator/deserializer/IHttpHeaderParamStyleDeserializer';
-import { IHttpParamDeserializerRegistry } from '@stoplight/prism-http/validator/deserializer/IHttpParamDeserializerRegistry';
-import { resolveContent } from '@stoplight/prism-http/validator/helpers/resolveContent';
-import { validateAgainstSchema } from '@stoplight/prism-http/validator/helpers/validateAgainstSchema';
+import { IHttpHeadersValidator } from './IHttpHeadersValidator';
 import { IHttpHeaderParam } from '@stoplight/types/http';
+import { DeserializeHttpHeader } from '../deserializer/IHttpHeaderParamStyleDeserializer';
+import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
+import { resolveContent } from '../helpers/resolveContent';
+import { validateAgainstSchema } from '../helpers/validateAgainstSchema';
 
-export class HttpHeadersValidator {
+export class HttpHeadersValidator implements IHttpHeadersValidator {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpHeader>) {}
 
   public validate(
     headers: { [name: string]: string } = {},
     headerSpecs: IHttpHeaderParam[],
     mediaType?: string
-  ) {
+  ): IValidation[] {
     return headerSpecs.reduce<IValidation[]>((results, spec) => {
       if (!headers.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({
