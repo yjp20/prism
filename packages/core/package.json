@@ -16,7 +16,8 @@
     "node": ">=8"
   },
   "dependencies": {
-    "lodash": "4.x.x"
+    "lodash": "4.x.x",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
     "@types/lodash": "4.x.x"

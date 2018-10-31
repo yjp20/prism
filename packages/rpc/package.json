@@ -15,5 +15,8 @@
   "engines": {
     "node": ">=8"
   },
-  "dependencies": {}
+  "dependencies": {
+    "tslib": "^1.9.3"
+  },
+  "private": true
 }
