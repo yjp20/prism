@@ -2,6 +2,7 @@
   "private": true,
   "name": "prism",
   "license": "UNLICENSED",
+  "version": "0.0.0",
   "workspaces": [
     "packages/*"
   ],
