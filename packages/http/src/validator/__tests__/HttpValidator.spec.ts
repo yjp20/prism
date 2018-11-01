@@ -2,7 +2,7 @@ import { IHttpOperation } from '@stoplight/types';
 
 import { IHttpRequest } from '../../types';
 import * as findResponseSpecModule from '../helpers/findResponseSpec';
-import * as getMediaTypeFromHeadersModule from '../helpers/getMediaTypeFromHeaders';
+import * as getHeaderByNameModule from '../helpers/getHeaderByName';
 import * as resolveRequestValidationConfigModule from '../helpers/resolveRequestValidationConfig';
 import * as resolveResponseValidationConfigModule from '../helpers/resolveResponseValidationConfig';
 import { HttpValidator } from '../HttpValidator';
@@ -32,7 +32,7 @@ describe('HttpValidator', () => {
     jest.clearAllMocks();
     jest.spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig');
     jest.spyOn(resolveResponseValidationConfigModule, 'resolveResponseValidationConfig');
-    jest.spyOn(getMediaTypeFromHeadersModule, 'getMediaTypeFromHeaders').mockReturnValue(undefined);
+    jest.spyOn(getHeaderByNameModule, 'getHeaderByName').mockReturnValue(undefined);
     jest.spyOn(findResponseSpecModule, 'findResponseSpec').mockReturnValue({ content: [] });
     jest.spyOn(httpBodyValidator, 'validate');
     jest.spyOn(httpHeadersValidator, 'validate');
@@ -60,7 +60,7 @@ describe('HttpValidator', () => {
         expect(
           resolveRequestValidationConfigModule.resolveRequestValidationConfig
         ).toHaveBeenCalled();
-        expect(getMediaTypeFromHeadersModule.getMediaTypeFromHeaders).toHaveBeenCalled();
+        expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
         expect(httpQueryValidator.validate).not.toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe('HttpValidator', () => {
         expect(
           resolveRequestValidationConfigModule.resolveRequestValidationConfig
         ).toHaveBeenCalled();
-        expect(getMediaTypeFromHeadersModule.getMediaTypeFromHeaders).toHaveBeenCalled();
+        expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
         expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);
         expect(httpQueryValidator.validate).not.toHaveBeenCalled();
@@ -145,7 +145,7 @@ describe('HttpValidator', () => {
         expect(
           resolveRequestValidationConfigModule.resolveRequestValidationConfig
         ).toHaveBeenCalled();
-        expect(getMediaTypeFromHeadersModule.getMediaTypeFromHeaders).toHaveBeenCalled();
+        expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
         expect(httpQueryValidator.validate).toHaveBeenCalledWith({}, [], undefined);
@@ -203,7 +203,7 @@ describe('HttpValidator', () => {
           expect(
             resolveResponseValidationConfigModule.resolveResponseValidationConfig
           ).toHaveBeenCalled();
-          expect(getMediaTypeFromHeadersModule.getMediaTypeFromHeaders).toHaveBeenCalled();
+          expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
           expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
           expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
@@ -227,7 +227,7 @@ describe('HttpValidator', () => {
           expect(
             resolveResponseValidationConfigModule.resolveResponseValidationConfig
           ).toHaveBeenCalled();
-          expect(getMediaTypeFromHeadersModule.getMediaTypeFromHeaders).toHaveBeenCalled();
+          expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
           expect(httpBodyValidator.validate).not.toHaveBeenCalled();
           expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);

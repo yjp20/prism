@@ -1,9 +1,9 @@
-import { getMediaTypeFromHeaders } from '../getMediaTypeFromHeaders';
+import { getHeaderByName } from '../getHeaderByName';
 
-describe('getMediaTypeFromHeaders()', () => {
+describe('getHeaderByName()', () => {
   describe('Content-type header is present', () => {
     it('returns Content-type header value', () => {
-      expect(getMediaTypeFromHeaders({ 'Content-type': 'application/json' })).toBe(
+      expect(getHeaderByName({ 'Content-type': 'application/json' }, 'content-type')).toBe(
         'application/json'
       );
     });
@@ -11,7 +11,7 @@ describe('getMediaTypeFromHeaders()', () => {
 
   describe('Content-type header is not present', () => {
     it('returns undefined', () => {
-      expect(getMediaTypeFromHeaders({})).toBeUndefined();
+      expect(getHeaderByName({}, 'content-type')).toBeUndefined();
     });
   });
 });

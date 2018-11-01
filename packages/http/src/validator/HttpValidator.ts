@@ -3,7 +3,7 @@ import { IHttpOperation } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { findResponseSpec } from './helpers/findResponseSpec';
-import { getMediaTypeFromHeaders } from './helpers/getMediaTypeFromHeaders';
+import { getHeaderByName } from './helpers/getHeaderByName';
 import { resolveRequestValidationConfig } from './helpers/resolveRequestValidationConfig';
 import { resolveResponseValidationConfig } from './helpers/resolveResponseValidationConfig';
 import { IHttpBodyValidator } from './structure/IHttpBodyValidator';
@@ -29,7 +29,7 @@ export class HttpValidator
   }): Promise<IValidation[]> {
     const config = resolveRequestValidationConfig(originalConfig);
     const results: IValidation[] = [];
-    const mediaType = getMediaTypeFromHeaders(input.headers || {});
+    const mediaType = getHeaderByName(input.headers || {}, 'content-type');
 
     if (config.body) {
       Array.prototype.push.apply(
@@ -82,7 +82,7 @@ export class HttpValidator
 
     const config = resolveResponseValidationConfig(originalConfig);
     const results: IValidation[] = [];
-    const mediaType = getMediaTypeFromHeaders(output.headers || {});
+    const mediaType = getHeaderByName(output.headers || {}, 'content-type');
     const responseSpec = findResponseSpec(resource.responses, output.statusCode);
 
     if (config.body) {
