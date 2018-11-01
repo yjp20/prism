@@ -1,5 +1,5 @@
 import { createObjectFromKeyValList } from '../../helpers/createObjectFromKeyValList';
-import { IHttpHeaderParamStyleDeserializer } from '../IHttpHeaderParamStyleDeserializer';
+import { IHttpHeaderParamStyleDeserializer } from '../types';
 
 export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserializer {
   public supports(style: string) {

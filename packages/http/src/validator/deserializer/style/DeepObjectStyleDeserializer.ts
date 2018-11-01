@@ -1,6 +1,6 @@
 import { ISchema } from '@stoplight/types/schema';
 
-import { IHttpQueryParamStyleDeserializer } from '../IHttpQueryParamStyleDeserializer';
+import { IHttpQueryParamStyleDeserializer } from '../types';
 
 export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserializer {
   public supports(style: string) {

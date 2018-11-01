@@ -1,5 +1,4 @@
-import { IHttpParamDeserializerRegistry } from './IHttpParamDeserializerRegistry';
-import { IHttpParamStyleDeserializer } from './IHttpParamStyleDeserializer';
+import { IHttpParamDeserializerRegistry, IHttpParamStyleDeserializer } from './types';
 
 export class HttpParamDeserializerRegistry<
   D extends IHttpParamStyleDeserializer<T>,

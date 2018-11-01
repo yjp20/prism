@@ -1,16 +1,14 @@
 import { HttpParamDeserializerRegistry } from './HttpParamDeserializerRegistry';
-import {
-  DeserializeHttpHeader,
-  IHttpHeaderParamStyleDeserializer,
-} from './IHttpHeaderParamStyleDeserializer';
-import {
-  DeserializeHttpQuery,
-  IHttpQueryParamStyleDeserializer,
-} from './IHttpQueryParamStyleDeserializer';
 import { DeepObjectStyleDeserializer } from './style/DeepObjectStyleDeserializer';
 import { DelimitedStyleDeserializer } from './style/DelimitedStyleDeserializer';
 import { FormStyleDeserializer } from './style/FormStyleDeserializer';
 import { SimpleStyleDeserializer } from './style/SimpleStyleDeserializer';
+import {
+  DeserializeHttpHeader,
+  DeserializeHttpQuery,
+  IHttpHeaderParamStyleDeserializer,
+  IHttpQueryParamStyleDeserializer,
+} from './types';
 
 export const header = new HttpParamDeserializerRegistry<
   IHttpHeaderParamStyleDeserializer,

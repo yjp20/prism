@@ -1,7 +1,7 @@
 import { ISchema } from '@stoplight/types/schema';
 
 import { createObjectFromKeyValList } from '../../helpers/createObjectFromKeyValList';
-import { IHttpQueryParamStyleDeserializer } from '../IHttpQueryParamStyleDeserializer';
+import { IHttpQueryParamStyleDeserializer } from '../types';
 
 export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
   public supports(style: string) {
