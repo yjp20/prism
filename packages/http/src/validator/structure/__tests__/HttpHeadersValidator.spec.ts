@@ -1,5 +1,4 @@
-import { DeserializeHttpHeader } from '../../deserializer/IHttpHeaderParamStyleDeserializer';
-import { IHttpParamDeserializerRegistry } from '../../deserializer/IHttpParamDeserializerRegistry';
+import { DeserializeHttpHeader, IHttpParamDeserializerRegistry } from '../../deserializer/types';
 import * as resolveContentModule from '../../helpers/resolveContent';
 import * as validateAgainstSchemaModule from '../../helpers/validateAgainstSchema';
 import { HttpHeadersValidator } from '../HttpHeadersValidator';
