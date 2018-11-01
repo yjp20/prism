@@ -6,6 +6,7 @@ Array [
     "message": "testMessage",
     "name": "testName",
     "path": Array [
+      "body",
       "a",
     ],
     "severity": "error",
