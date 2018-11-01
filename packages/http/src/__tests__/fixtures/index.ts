@@ -1,5 +1,5 @@
 import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core/types';
-import { IHttpMethod, IHttpRequest } from '@stoplight/prism-http/types';
+import { IHttpMethod, IHttpRequest, IHttpResponse } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types';
 
 export const httpOperations: IHttpOperation[] = [
@@ -146,6 +146,17 @@ export const httpOperations: IHttpOperation[] = [
     responses: [
       {
         code: '200',
+        headers: [
+          {
+            name: 'x-todos-publish',
+            content: {
+              '*': {
+                mediaType: '*',
+                schema: { type: 'string', format: 'date-time' },
+              },
+            },
+          },
+        ],
         content: [
           {
             mediaType: 'application/json',
@@ -280,5 +291,18 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
       ],
     },
     data: httpInputs[1],
+  },
+];
+
+export const httpOutputs: IHttpResponse[] = [
+  {
+    statusCode: 200,
+  },
+  {
+    statusCode: 200,
+    headers: {
+      'x-todos-publish': '2018-11-01T11:42:00.05Z',
+    },
+    body: '{"name":"Shopping","completed":false}',
   },
 ];
