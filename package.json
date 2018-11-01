@@ -17,7 +17,7 @@
     "pretest.fast": "yarn build",
     "test.fast": "jest",
     "test.coverage.clean": "rm -rf coverage",
-    "test.coverage": "yarn test.coverage.clean && yarn test --coverage --projects packages/*",
+    "test.coverage": "yarn test.coverage.clean && yarn test --coverage",
     "test.watch": "yarn test --watchAll",
     "test.update": "yarn test.fast --updateSnapshot"
   },

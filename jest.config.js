@@ -1,5 +1,5 @@
 module.exports = {
-  projects: ['<rootDir>/packages/*'],
+  projects: ['<rootDir>/packages/rpc', '<rootDir>/packages/core'],
   moduleNameMapper: {
     '@stoplight/prism-core': '<rootDir>/packages/core/src',
     '@stoplight/prism-core/(.*)': '<rootDir>/packages/core/src/$1',
@@ -10,4 +10,5 @@ module.exports = {
     '@stoplight/prism-http-server': '<rootDir>/packages/http-server/src',
     '@stoplight/prism-http-server/(.*)': '<rootDir>/packages/http-server/src/$1',
   },
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!**/*.d.ts', '!**/__tests__/**'],
 };
