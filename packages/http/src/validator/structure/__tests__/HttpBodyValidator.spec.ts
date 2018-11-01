@@ -1,4 +1,4 @@
-import { ValidationSeverity } from '@stoplight/prism-core/types';
+import { ValidationSeverity } from '@stoplight/prism-core';
 import { ISchema } from '@stoplight/types/schema';
 
 import { IValidatorRegistry } from '../../registry/IValidatorRegistry';

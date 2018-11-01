@@ -1,4 +1,4 @@
-import { IValidation, IValidator } from '@stoplight/prism-core/types';
+import { IValidation, IValidator } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
@@ -88,14 +88,22 @@ export class HttpValidator
     if (config.body) {
       Array.prototype.push.apply(
         results,
-        this.bodyValidator.validate(output.body, responseSpec.content, mediaType)
+        this.bodyValidator.validate(
+          output.body,
+          (responseSpec && responseSpec.contents) || [],
+          mediaType
+        )
       );
     }
 
     if (config.headers) {
       Array.prototype.push.apply(
         results,
-        this.headersValidator.validate(output.headers || {}, responseSpec.headers || [], mediaType)
+        this.headersValidator.validate(
+          output.headers || {},
+          (responseSpec && responseSpec.headers) || [],
+          mediaType
+        )
       );
     }
 

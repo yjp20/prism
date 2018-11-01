@@ -1,4 +1,4 @@
-import { ValidationSeverity } from '@stoplight/prism-core/types';
+import { ValidationSeverity } from '@stoplight/prism-core';
 
 import { convertAjvErrors } from '../convertAjvErrors';
 

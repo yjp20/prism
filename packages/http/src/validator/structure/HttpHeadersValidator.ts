@@ -1,5 +1,4 @@
-import { IValidation } from '@stoplight/prism-core';
-import { ValidationSeverity } from '@stoplight/prism-core/types';
+import { IValidation, ValidationSeverity } from '@stoplight/prism-core';
 import { IHttpHeaderParam } from '@stoplight/types/http';
 
 import { DeserializeHttpHeader, IHttpParamDeserializerRegistry } from '../deserializer/types';

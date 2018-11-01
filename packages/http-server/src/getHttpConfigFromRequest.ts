@@ -22,7 +22,7 @@ export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequ
   }
 
   if (__dynamic) {
-    httpOperationConfig.dynamic = __dynamic.toLowerCase() === 'true';
+    httpOperationConfig.dynamic = __dynamic === 'true';
   }
 
   if (__contentType) {
