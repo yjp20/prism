@@ -34,7 +34,7 @@ export class HttpQueryValidator implements IHttpQueryValidator {
       const content = resolveContent(spec.content, mediaType);
 
       if (content && content.schema) {
-        const deserialize = this.registry.get(spec.style || 'simple');
+        const deserialize = this.registry.get(spec.style || 'form');
 
         if (deserialize) {
           Array.prototype.push.apply(

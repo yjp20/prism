@@ -1,7 +1,7 @@
 import { IValidation } from '@stoplight/prism-core';
-import { IHttpBodyValidator } from './IHttpBodyValidator';
 import { IHttpContent } from '@stoplight/types/http';
 import { IValidatorRegistry } from '../registry/IValidatorRegistry';
+import { IHttpBodyValidator } from './IHttpBodyValidator';
 
 export class HttpBodyValidator implements IHttpBodyValidator {
   constructor(private validatorRegistry: IValidatorRegistry) {}
@@ -23,7 +23,8 @@ export class HttpBodyValidator implements IHttpBodyValidator {
       return [];
     }
 
-    return validate(body, content.schema);
+    return validate(body, content.schema)
+      .map(error => Object.assign({}, error, { path: [ 'body', ...error.path ] }));
   }
 
   private getContent(contentSpecs: IHttpContent[], mediaType?: string): IHttpContent | undefined {

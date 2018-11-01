@@ -192,6 +192,72 @@ export const httpOperations: IHttpOperation[] = [
       },
     ],
   },
+  {
+    id: 'todos',
+    method: 'post',
+    path: '/todos',
+    responses: [],
+    request: {
+      body: {
+        content: [
+          {
+            mediaType: 'application/json',
+            schema: {
+              type: 'object',
+              properties: { name: { type: 'string' }, completed: { type: 'boolean' } },
+              required: ['name', 'completed'],
+            },
+          },
+        ],
+      },
+      query: [
+        {
+          name: 'overwrite',
+          content: {
+            '*': {
+              mediaType: '*',
+              schema: { type: 'string', pattern: '^(yes|no)$' },
+            },
+          },
+        },
+      ],
+      headers: [
+        {
+          name: 'x-todos-publish',
+          content: {
+            '*': {
+              mediaType: '*',
+              schema: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+      ],
+    },
+  },
+];
+
+export const httpInputs: IHttpRequest[] = [
+  {
+    method: 'get' as IHttpMethod,
+    url: { path: '/todos', baseUrl: '' },
+  },
+  {
+    method: 'get' as IHttpMethod,
+    url: { path: '/todos/5', baseUrl: '' },
+  },
+  {
+    method: 'post',
+    url: {
+      path: '/',
+      query: {
+        overwrite: 'yes',
+      },
+    },
+    body: '{"name":"Shopping","completed":true}',
+    headers: {
+      'x-todos-publish': '2018-11-01T10:50:00.05Z',
+    },
+  },
 ];
 
 export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
@@ -199,10 +265,7 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
     validations: {
       input: [],
     },
-    data: {
-      method: 'get' as IHttpMethod,
-      url: { path: '/todos', baseUrl: '' },
-    },
+    data: httpInputs[0],
   },
   {
     validations: {
@@ -216,9 +279,6 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
         },
       ],
     },
-    data: {
-      method: 'get' as IHttpMethod,
-      url: { path: '/todos/5', baseUrl: '' },
-    },
+    data: httpInputs[1],
   },
 ];

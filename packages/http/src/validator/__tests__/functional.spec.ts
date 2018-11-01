@@ -1,0 +1,80 @@
+import { httpInputs, httpOperations } from '@stoplight/prism-http/__tests__/fixtures';
+import { validator } from '../index';
+
+const BAD_INPUT = Object.assign({}, httpInputs[2], {
+  body: '{"name":"Shopping","completed":"yes"}',
+  url: Object.assign({}, httpInputs[2].url, { query: { overwrite: 'true' } }),
+  headers: { 'x-todos-publish': 'yesterday' },
+});
+
+describe('HttpValidator', () => {
+  describe('validateInput()', () => {
+    describe('all validations are turned on', () => {
+      it('returns validation errors for whole request structure', async () => {
+        expect(
+          await validator.validateInput({ resource: httpOperations[2], input: BAD_INPUT })
+        ).toMatchSnapshot();
+      });
+    });
+
+    describe('only headers validation is turned on', () => {
+      it('returns only headers validation errors', async () => {
+        expect(
+          await validator.validateInput({
+            resource: httpOperations[2],
+            input: BAD_INPUT,
+            config: {
+              mock: false,
+              validate: { request: { headers: true, query: false, body: false } },
+            },
+          })
+        ).toMatchSnapshot();
+      });
+    });
+
+    describe('only query validation is turned on', () => {
+      it('returns only query validation errors', async () => {
+        expect(
+          await validator.validateInput({
+            resource: httpOperations[2],
+            input: BAD_INPUT,
+            config: {
+              mock: false,
+              validate: { request: { headers: false, query: true, body: false } },
+            },
+          })
+        ).toMatchSnapshot();
+      });
+    });
+
+    describe('only body validation is turned on', () => {
+      it('returns only body validation errors', async () => {
+        expect(
+          await validator.validateInput({
+            resource: httpOperations[2],
+            input: BAD_INPUT,
+            config: {
+              mock: false,
+              validate: { request: { headers: false, query: false, body: true } },
+            },
+          })
+        ).toMatchSnapshot();
+      });
+    });
+
+    describe('all validations are turned off', () => {
+      it('returns no validation errors', async () => {
+        expect(
+          await validator.validateInput({
+            resource: httpOperations[2],
+            input: BAD_INPUT,
+            config: {
+              mock: false,
+              validate: { request: false },
+            },
+          })
+        ).toMatchSnapshot();
+      });
+    });
+  });
+});
