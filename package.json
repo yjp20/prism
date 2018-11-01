@@ -14,7 +14,7 @@
     "build.watch": "yarn build.clean && tsc --build --watch",
     "test": "yarn lint && yarn test.fast",
     "pretest.fast": "yarn build",
-    "test.fast": "jest",
+    "test.fast": "jest --runInBand",
     "test.coverage.clean": "rm -rf coverage",
     "test.coverage": "yarn test.coverage.clean && yarn test --coverage",
     "test.watch": "yarn test --watchAll",
