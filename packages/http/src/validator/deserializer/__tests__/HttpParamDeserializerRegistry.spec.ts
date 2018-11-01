@@ -1,5 +1,5 @@
-import { IHttpParamStyleDeserializer } from '@stoplight/prism-http/validator/deserializer/IHttpParamStyleDeserializer';
-import { DeserializeHttpQuery } from '@stoplight/prism-http/validator/deserializer/IHttpQueryParamStyleDeserializer';
+import { IHttpParamStyleDeserializer } from '../IHttpParamStyleDeserializer';
+import { DeserializeHttpQuery } from '../IHttpQueryParamStyleDeserializer';
 import { HttpParamDeserializerRegistry } from '..//HttpParamDeserializerRegistry';
 
 describe('HttpParamDeserializerRegistry', () => {

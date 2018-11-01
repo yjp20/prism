@@ -1,5 +1,6 @@
 import { IHttpRequest } from '@stoplight/prism-http';
 import { IHttpOperation } from '@stoplight/types';
+
 import * as findResponseSpecModule from '../helpers/findResponseSpec';
 import * as getMediaTypeFromHeadersModule from '../helpers/getMediaTypeFromHeaders';
 import * as resolveRequestValidationConfigModule from '../helpers/resolveRequestValidationConfig';

@@ -1,4 +1,4 @@
-import { IHttpConfig } from '@stoplight/prism-http';
+import { IHttpConfig } from '../../types';
 
 const DEFAULT = {
   hijack: true,

@@ -1,9 +1,10 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { convertAjvErrors } from '@stoplight/prism-http/validator/helpers/convertAjvErrors';
 import { ISchema } from '@stoplight/types/schema';
 import * as Ajv from 'ajv';
 import { Ajv as AjvClass } from 'ajv';
+
+import { convertAjvErrors } from '../helpers/convertAjvErrors';
 import { ISchemaValidator } from './ISchemaValidator';
 
 const SUPPORTED_MEDIATYPES = ['application/json'];

@@ -1,4 +1,4 @@
-import { resolveRequestValidationConfig } from '@stoplight/prism-http/validator/helpers/resolveRequestValidationConfig';
+import { resolveRequestValidationConfig } from '../resolveRequestValidationConfig';
 
 describe('resolveRequestValidationConfig()', () => {
   const defaultEnabledConfig = {

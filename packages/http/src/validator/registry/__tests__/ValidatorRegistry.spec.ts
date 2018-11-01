@@ -1,5 +1,6 @@
-import { ISchemaValidator } from '@stoplight/prism-http/validator/registry/ISchemaValidator';
 import { ISchema } from '@stoplight/types/schema';
+
+import { ISchemaValidator } from '../ISchemaValidator';
 import { ValidatorRegistry } from '../ValidatorRegistry';
 
 describe('ValidatorRegistry', () => {

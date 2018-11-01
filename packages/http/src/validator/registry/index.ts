@@ -1,4 +1,4 @@
-import { JSONSchemaValidator } from '@stoplight/prism-http/validator/registry/JSONSchemaValidator';
-import { ValidatorRegistry } from '@stoplight/prism-http/validator/registry/ValidatorRegistry';
+import { JSONSchemaValidator } from './JSONSchemaValidator';
+import { ValidatorRegistry } from './ValidatorRegistry';
 
 export const validatorRegistry = new ValidatorRegistry([new JSONSchemaValidator()]);

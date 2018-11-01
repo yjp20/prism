@@ -1,4 +1,5 @@
 import { ValidationSeverity } from '@stoplight/prism-core/types';
+
 import { convertAjvErrors } from '../convertAjvErrors';
 
 describe('convertAjvErrors()', () => {

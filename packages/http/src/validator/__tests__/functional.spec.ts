@@ -1,4 +1,4 @@
-import { httpInputs, httpOperations, httpOutputs } from '@stoplight/prism-http/__tests__/fixtures';
+import { httpInputs, httpOperations, httpOutputs } from '../../__tests__/fixtures';
 import { validator } from '../index';
 
 const BAD_INPUT = Object.assign({}, httpInputs[2], {

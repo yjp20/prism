@@ -1,6 +1,7 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
 import { IHttpHeaderParam } from '@stoplight/types/http';
+
 import { DeserializeHttpHeader } from '../deserializer/IHttpHeaderParamStyleDeserializer';
 import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
 import { resolveContent } from '../helpers/resolveContent';

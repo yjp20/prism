@@ -1,5 +1,6 @@
 import { IValidation } from '@stoplight/prism-core';
 import { IHttpContent } from '@stoplight/types/http';
+
 import { IValidatorRegistry } from '../registry/IValidatorRegistry';
 import { IHttpBodyValidator } from './IHttpBodyValidator';
 

@@ -1,6 +1,7 @@
 import { IValidation, IValidator } from '@stoplight/prism-core/types';
-import { IHttpConfig, IHttpRequest, IHttpResponse } from '@stoplight/prism-http/types';
 import { IHttpOperation } from '@stoplight/types';
+
+import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { findResponseSpec } from './helpers/findResponseSpec';
 import { getMediaTypeFromHeaders } from './helpers/getMediaTypeFromHeaders';
 import { resolveRequestValidationConfig } from './helpers/resolveRequestValidationConfig';

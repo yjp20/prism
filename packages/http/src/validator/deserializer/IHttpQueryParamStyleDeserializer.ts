@@ -1,4 +1,5 @@
 import { ISchema } from '@stoplight/types/schema';
+
 import { IHttpParamStyleDeserializer } from './IHttpParamStyleDeserializer';
 
 export type DeserializeHttpQuery = (
