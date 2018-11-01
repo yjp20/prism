@@ -1,4 +1,4 @@
-import * as createObjectFromKeyValListModule from '../../../helpers/createObjectFromKeyValList';
+import * as createObjectFromKeyValListModule from '../../../helpers/object';
 import { FormStyleDeserializer } from '../FormStyleDeserializer';
 
 describe('FormStyleDeserializer', () => {

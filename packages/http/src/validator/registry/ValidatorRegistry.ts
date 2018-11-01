@@ -1,8 +1,7 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ISchema } from '@stoplight/types/schema';
 
-import { ISchemaValidator } from './ISchemaValidator';
-import { IValidatorRegistry } from './IValidatorRegistry';
+import { ISchemaValidator, IValidatorRegistry } from './types';
 
 export class ValidatorRegistry implements IValidatorRegistry {
   constructor(private validators: Array<ISchemaValidator<ISchema>>) {}

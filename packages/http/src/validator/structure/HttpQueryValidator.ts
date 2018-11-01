@@ -1,23 +1,22 @@
 import { IValidation, ValidationSeverity } from '@stoplight/prism-core';
 import { IHttpQueryParam } from '@stoplight/types/http';
 
+import { IHttpNameValues } from '../../types';
 import { DeserializeHttpQuery, IHttpParamDeserializerRegistry } from '../deserializer/types';
-import { resolveContent } from '../helpers/resolveContent';
-import { validateAgainstSchema } from '../helpers/validateAgainstSchema';
-import { IHttpQueryValidator } from './IHttpQueryValidator';
+import { resolveContent } from '../helpers/http';
+import { validateAgainstSchema } from '../helpers/validate';
+import { IHttpValidator } from './types';
 
-export class HttpQueryValidator implements IHttpQueryValidator {
+export class HttpQueryValidator implements IHttpValidator<IHttpNameValues, IHttpQueryParam> {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
 
   public validate(
-    query: {
-      [name: string]: string | string[];
-    },
-    querySpecs: IHttpQueryParam[],
+    obj: IHttpNameValues,
+    specs: IHttpQueryParam[],
     mediaType?: string
   ): IValidation[] {
-    return querySpecs.reduce<IValidation[]>((results, spec) => {
-      if (!query.hasOwnProperty(spec.name) && spec.required === true) {
+    return specs.reduce<IValidation[]>((results, spec) => {
+      if (!obj.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({
           path: ['query', spec.name],
           name: 'required',
@@ -39,7 +38,7 @@ export class HttpQueryValidator implements IHttpQueryValidator {
           Array.prototype.push.apply(
             results,
             validateAgainstSchema(
-              deserialize(spec.name, query, content.schema, spec.explode || false),
+              deserialize(spec.name, obj, content.schema, spec.explode || false),
               content.schema,
               'query'
             )

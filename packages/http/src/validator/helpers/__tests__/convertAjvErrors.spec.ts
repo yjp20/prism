@@ -1,6 +1,6 @@
 import { ValidationSeverity } from '@stoplight/prism-core';
 
-import { convertAjvErrors } from '../convertAjvErrors';
+import { convertAjvErrors } from '../validate';
 
 describe('convertAjvErrors()', () => {
   const errorObjectFixture = {

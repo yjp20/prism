@@ -1,6 +1,6 @@
 import { DeserializeHttpHeader, IHttpParamDeserializerRegistry } from '../../deserializer/types';
-import * as resolveContentModule from '../../helpers/resolveContent';
-import * as validateAgainstSchemaModule from '../../helpers/validateAgainstSchema';
+import * as resolveContentModule from '../../helpers/http';
+import * as validateAgainstSchemaModule from '../../helpers/validate';
 import { HttpHeadersValidator } from '../HttpHeadersValidator';
 
 describe('HttpHeadersValidator', () => {

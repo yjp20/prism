@@ -3,11 +3,12 @@ import { ISchema } from '@stoplight/types/schema';
 import * as Ajv from 'ajv';
 import { Ajv as AjvClass } from 'ajv';
 
-import { convertAjvErrors } from '../helpers/convertAjvErrors';
-import { ISchemaValidator } from './ISchemaValidator';
+import { convertAjvErrors } from '../helpers/validate';
+import { ISchemaValidator } from './types';
 
 const SUPPORTED_MEDIATYPES = ['application/json'];
 
+// TODO: Should this be in the structure folder? It looks like that is where the validation logic is.
 export class JSONSchemaValidator implements ISchemaValidator<ISchema> {
   private ajv: AjvClass;
 

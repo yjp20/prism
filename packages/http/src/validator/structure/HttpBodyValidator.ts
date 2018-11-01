@@ -1,14 +1,14 @@
 import { IValidation } from '@stoplight/prism-core';
 import { IHttpContent } from '@stoplight/types/http';
 
-import { IValidatorRegistry } from '../registry/IValidatorRegistry';
-import { IHttpBodyValidator } from './IHttpBodyValidator';
+import { IValidatorRegistry } from '../registry/types';
+import { IHttpValidator } from './types';
 
-export class HttpBodyValidator implements IHttpBodyValidator {
+export class HttpBodyValidator implements IHttpValidator<any, IHttpContent> {
   constructor(private validatorRegistry: IValidatorRegistry) {}
 
-  public validate(body: any, contentSpecs: IHttpContent[], mediaType?: string): IValidation[] {
-    const content = this.getContent(contentSpecs, mediaType);
+  public validate(obj: any, specs: IHttpContent[], mediaType?: string): IValidation[] {
+    const content = this.getContent(specs, mediaType);
 
     if (!content) {
       return [];
@@ -24,20 +24,20 @@ export class HttpBodyValidator implements IHttpBodyValidator {
       return [];
     }
 
-    return validate(body, content.schema).map(error =>
+    return validate(obj, content.schema).map(error =>
       Object.assign({}, error, { path: ['body', ...error.path] })
     );
   }
 
-  private getContent(contentSpecs: IHttpContent[], mediaType?: string): IHttpContent | undefined {
+  private getContent(specs: IHttpContent[], mediaType?: string): IHttpContent | undefined {
     if (!mediaType) {
-      return contentSpecs[0];
+      return specs[0];
     }
 
-    const content = contentSpecs.find(c => c.mediaType === mediaType);
+    const content = specs.find(c => c.mediaType === mediaType);
 
     if (!content) {
-      return contentSpecs[0];
+      return specs[0];
     }
 
     return content;

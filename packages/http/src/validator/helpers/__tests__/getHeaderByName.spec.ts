@@ -1,4 +1,4 @@
-import { getHeaderByName } from '../getHeaderByName';
+import { getHeaderByName } from '../http';
 
 describe('getHeaderByName()', () => {
   describe('Content-type header is present', () => {

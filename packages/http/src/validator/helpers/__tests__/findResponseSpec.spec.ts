@@ -1,4 +1,4 @@
-import { findResponseSpec } from '../findResponseSpec';
+import { findResponseSpec } from '../spec';
 
 describe('findResponseSpec()', () => {
   it('works', () => {

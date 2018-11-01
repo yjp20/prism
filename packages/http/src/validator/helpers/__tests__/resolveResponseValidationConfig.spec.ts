@@ -1,4 +1,4 @@
-import { resolveResponseValidationConfig } from '../resolveResponseValidationConfig';
+import { resolveResponseValidationConfig } from '../config';
 
 describe('resolveResponseValidationConfig()', () => {
   const defaultEnabledConfig = {

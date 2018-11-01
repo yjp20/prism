@@ -1,5 +1,5 @@
-import * as convertAjvErrorsModule from '../convertAjvErrors';
-import { validateAgainstSchema } from '../validateAgainstSchema';
+import * as convertAjvErrorsModule from '../validate';
+import { validateAgainstSchema } from '../validate';
 
 describe('validateAgainstSchema()', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { resolveContent } from '../resolveContent';
+import { resolveContent } from '../http';
 
 describe('resolveContent()', () => {
   describe('mediaType not provided', () => {

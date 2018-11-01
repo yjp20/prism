@@ -1,4 +1,4 @@
-import * as createObjectFromKeyValListModule from '../../../helpers/createObjectFromKeyValList';
+import * as createObjectFromKeyValListModule from '../../../helpers/object';
 import { SimpleStyleDeserializer } from '../SimpleStyleDeserializer';
 
 describe('SimpleStyleDeserializer', () => {

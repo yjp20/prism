@@ -1,21 +1,18 @@
 import { IValidation, IValidator } from '@stoplight/prism-core';
-import { IHttpOperation } from '@stoplight/types';
+import { IHttpContent, IHttpHeaderParam, IHttpOperation, IHttpQueryParam } from '@stoplight/types';
 
-import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
-import { findResponseSpec } from './helpers/findResponseSpec';
-import { getHeaderByName } from './helpers/getHeaderByName';
-import { resolveRequestValidationConfig } from './helpers/resolveRequestValidationConfig';
-import { resolveResponseValidationConfig } from './helpers/resolveResponseValidationConfig';
-import { IHttpBodyValidator } from './structure/IHttpBodyValidator';
-import { IHttpHeadersValidator } from './structure/IHttpHeadersValidator';
-import { IHttpQueryValidator } from './structure/IHttpQueryValidator';
+import { IHttpConfig, IHttpNameValue, IHttpNameValues, IHttpRequest, IHttpResponse } from '..';
+import { resolveRequestValidationConfig, resolveResponseValidationConfig } from './helpers/config';
+import { getHeaderByName } from './helpers/http';
+import { findResponseSpec } from './helpers/spec';
+import { IHttpValidator } from './structure';
 
 export class HttpValidator
   implements IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
   constructor(
-    private readonly bodyValidator: IHttpBodyValidator,
-    private readonly headersValidator: IHttpHeadersValidator,
-    private readonly queryValidator: IHttpQueryValidator
+    private readonly bodyValidator: IHttpValidator<any, IHttpContent>,
+    private readonly headersValidator: IHttpValidator<IHttpNameValue, IHttpHeaderParam>,
+    private readonly queryValidator: IHttpValidator<IHttpNameValues, IHttpQueryParam>
   ) {}
 
   public async validateInput({

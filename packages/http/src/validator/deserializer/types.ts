@@ -1,5 +1,7 @@
 import { ISchema } from '@stoplight/types/schema';
 
+import { IHttpNameValues } from '../../types';
+
 export type DeserializeHttpHeader = (value: string, type: string, explode: boolean) => any;
 
 export interface IHttpHeaderParamStyleDeserializer {
@@ -18,9 +20,7 @@ export interface IHttpParamStyleDeserializer<T> {
 
 export type DeserializeHttpQuery = (
   key: string,
-  query: {
-    [name: string]: string | string[];
-  },
+  query: IHttpNameValues,
   schema: ISchema,
   explode: boolean
 ) => any;

@@ -1,4 +1,4 @@
-import { createObjectFromKeyValList } from '../createObjectFromKeyValList';
+import { createObjectFromKeyValList } from '../object';
 
 describe('createObjectFromKeyValList()', () => {
   it('works', () => {

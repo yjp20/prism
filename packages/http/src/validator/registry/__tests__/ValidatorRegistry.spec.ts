@@ -1,6 +1,6 @@
 import { ISchema } from '@stoplight/types/schema';
 
-import { ISchemaValidator } from '../ISchemaValidator';
+import { ISchemaValidator } from '../types';
 import { ValidatorRegistry } from '../ValidatorRegistry';
 
 describe('ValidatorRegistry', () => {

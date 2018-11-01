@@ -1,14 +1,12 @@
-import { IHttpOperation } from '@stoplight/types';
+import { IHttpContent, IHttpHeaderParam, IHttpOperation, IHttpQueryParam } from '@stoplight/types';
 
+import { IHttpNameValue, IHttpNameValues } from '../..';
 import { IHttpRequest } from '../../types';
-import * as findResponseSpecModule from '../helpers/findResponseSpec';
-import * as getHeaderByNameModule from '../helpers/getHeaderByName';
-import * as resolveRequestValidationConfigModule from '../helpers/resolveRequestValidationConfig';
-import * as resolveResponseValidationConfigModule from '../helpers/resolveResponseValidationConfig';
+import * as resolveValidationConfigModule from '../helpers/config';
+import * as getHeaderByNameModule from '../helpers/http';
+import * as findResponseSpecModule from '../helpers/spec';
 import { HttpValidator } from '../HttpValidator';
-import { IHttpBodyValidator } from '../structure/IHttpBodyValidator';
-import { IHttpHeadersValidator } from '../structure/IHttpHeadersValidator';
-import { IHttpQueryValidator } from '../structure/IHttpQueryValidator';
+import { IHttpValidator } from '../structure/types';
 
 const mockError = {
   message: 'c is required',
@@ -19,9 +17,15 @@ const mockError = {
 };
 
 describe('HttpValidator', () => {
-  const httpBodyValidator = { validate: () => [mockError] } as IHttpBodyValidator;
-  const httpHeadersValidator = { validate: () => [mockError] } as IHttpHeadersValidator;
-  const httpQueryValidator = { validate: () => [mockError] } as IHttpQueryValidator;
+  const httpBodyValidator = { validate: () => [mockError] } as IHttpValidator<any, IHttpContent>;
+  const httpHeadersValidator = { validate: () => [mockError] } as IHttpValidator<
+    IHttpNameValue,
+    IHttpHeaderParam
+  >;
+  const httpQueryValidator = { validate: () => [mockError] } as IHttpValidator<
+    IHttpNameValues,
+    IHttpQueryParam
+  >;
   const httpValidator = new HttpValidator(
     httpBodyValidator,
     httpHeadersValidator,
@@ -30,8 +34,8 @@ describe('HttpValidator', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig');
-    jest.spyOn(resolveResponseValidationConfigModule, 'resolveResponseValidationConfig');
+    jest.spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig');
+    jest.spyOn(resolveValidationConfigModule, 'resolveResponseValidationConfig');
     jest.spyOn(getHeaderByNameModule, 'getHeaderByName').mockReturnValue(undefined);
     jest.spyOn(findResponseSpecModule, 'findResponseSpec').mockReturnValue({ content: [] });
     jest.spyOn(httpBodyValidator, 'validate');
@@ -43,7 +47,7 @@ describe('HttpValidator', () => {
     describe('body validation in enabled', () => {
       const test = (extendResource?: Partial<IHttpOperation>) => async () => {
         jest
-          .spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig')
+          .spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig')
           .mockReturnValueOnce({ body: true });
 
         await expect(
@@ -57,9 +61,7 @@ describe('HttpValidator', () => {
           })
         ).resolves.toEqual([mockError]);
 
-        expect(
-          resolveRequestValidationConfigModule.resolveRequestValidationConfig
-        ).toHaveBeenCalled();
+        expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
@@ -84,7 +86,7 @@ describe('HttpValidator', () => {
     describe('headers validation in enabled', () => {
       const test = (extendResource?: Partial<IHttpOperation>) => async () => {
         jest
-          .spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig')
+          .spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig')
           .mockReturnValueOnce({ headers: true });
 
         await expect(
@@ -98,9 +100,7 @@ describe('HttpValidator', () => {
           })
         ).resolves.toEqual([mockError]);
 
-        expect(
-          resolveRequestValidationConfigModule.resolveRequestValidationConfig
-        ).toHaveBeenCalled();
+        expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
         expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);
@@ -128,7 +128,7 @@ describe('HttpValidator', () => {
         extendInput?: Partial<IHttpRequest>
       ) => async () => {
         jest
-          .spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig')
+          .spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig')
           .mockReturnValueOnce({ query: true });
 
         await expect(
@@ -142,9 +142,7 @@ describe('HttpValidator', () => {
           })
         ).resolves.toEqual([mockError]);
 
-        expect(
-          resolveRequestValidationConfigModule.resolveRequestValidationConfig
-        ).toHaveBeenCalled();
+        expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
@@ -189,7 +187,7 @@ describe('HttpValidator', () => {
       describe('body validation is enabled', () => {
         it('validates body', async () => {
           jest
-            .spyOn(resolveResponseValidationConfigModule, 'resolveResponseValidationConfig')
+            .spyOn(resolveValidationConfigModule, 'resolveResponseValidationConfig')
             .mockReturnValueOnce({ body: true });
 
           await expect(
@@ -200,9 +198,7 @@ describe('HttpValidator', () => {
             })
           ).resolves.toEqual([mockError]);
 
-          expect(
-            resolveResponseValidationConfigModule.resolveResponseValidationConfig
-          ).toHaveBeenCalled();
+          expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
           expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
@@ -213,7 +209,7 @@ describe('HttpValidator', () => {
       describe('headers validation is enabled', () => {
         it('validates headers', async () => {
           jest
-            .spyOn(resolveResponseValidationConfigModule, 'resolveResponseValidationConfig')
+            .spyOn(resolveValidationConfigModule, 'resolveResponseValidationConfig')
             .mockReturnValueOnce({ headers: true });
 
           await expect(
@@ -224,9 +220,7 @@ describe('HttpValidator', () => {
             })
           ).resolves.toEqual([mockError]);
 
-          expect(
-            resolveResponseValidationConfigModule.resolveResponseValidationConfig
-          ).toHaveBeenCalled();
+          expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
           expect(httpBodyValidator.validate).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { createObjectFromKeyValList } from '../../helpers/createObjectFromKeyValList';
+import { createObjectFromKeyValList } from '../../helpers/object';
 import { IHttpHeaderParamStyleDeserializer } from '../types';
 
 export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserializer {

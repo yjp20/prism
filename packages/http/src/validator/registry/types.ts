@@ -5,3 +5,7 @@ export interface ISchemaValidator<S extends ISchema> {
   validate(content: any, schema: S): IValidation[];
   supports(mediaType: string): boolean;
 }
+
+export interface IValidatorRegistry {
+  get(mediaType: string): ((content: any, schema: ISchema) => IValidation[]) | undefined;
+}
