@@ -1,3 +1,4 @@
+import { IHttpRequest } from '@stoplight/prism-http';
 import { IHttpOperation } from '@stoplight/types';
 import * as findResponseSpecModule from '../helpers/findResponseSpec';
 import * as getMediaTypeFromHeadersModule from '../helpers/getMediaTypeFromHeaders';
@@ -121,7 +122,10 @@ describe('HttpValidator', () => {
     });
 
     describe('query validation in enabled', () => {
-      const test = (extendResource?: Partial<IHttpOperation>) => async () => {
+      const test = (
+        extendResource?: Partial<IHttpOperation>,
+        extendInput?: Partial<IHttpRequest>
+      ) => async () => {
         jest
           .spyOn(resolveRequestValidationConfigModule, 'resolveRequestValidationConfig')
           .mockReturnValueOnce({ query: true });
@@ -132,7 +136,7 @@ describe('HttpValidator', () => {
               { method: 'get', path: '/', responses: [], id: '1' },
               extendResource
             ),
-            input: { method: 'get', url: { path: '/', query: {} } },
+            input: Object.assign({ method: 'get', url: { path: '/', query: {} } }, extendInput),
             config: { mock: true, validate: { request: { query: true } } },
           })
         ).resolves.toEqual([mockError]);
@@ -158,6 +162,10 @@ describe('HttpValidator', () => {
         describe('request.query is set', () => {
           it('validates query', test({ request: { query: [] } }));
         });
+      });
+
+      describe('input.url.query is not set', () => {
+        it("validates query assuming it's empty", test(undefined, { url: { path: '/' } }));
       });
     });
   });

@@ -52,11 +52,11 @@ export class HttpValidator
       );
     }
 
-    if (config.query && input.url.query) {
+    if (config.query) {
       Array.prototype.push.apply(
         results,
         this.queryValidator.validate(
-          input.url.query,
+          input.url.query || {},
           (resource.request && resource.request.query) || [],
           mediaType
         )
