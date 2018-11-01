@@ -68,7 +68,10 @@ describe('resolveRequestValidationConfig()', () => {
           describe('all parameters are set', () => {
             it('resolves to default config', () => {
               expect(
-                resolveRequestValidationConfig({ mock: true, validate: { request: defaultDisabledConfig } })
+                resolveRequestValidationConfig({
+                  mock: true,
+                  validate: { request: defaultDisabledConfig },
+                })
               ).toEqual(defaultDisabledConfig);
             });
           });

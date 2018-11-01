@@ -23,8 +23,9 @@ export class HttpBodyValidator implements IHttpBodyValidator {
       return [];
     }
 
-    return validate(body, content.schema)
-      .map(error => Object.assign({}, error, { path: [ 'body', ...error.path ] }));
+    return validate(body, content.schema).map(error =>
+      Object.assign({}, error, { path: ['body', ...error.path] })
+    );
   }
 
   private getContent(contentSpecs: IHttpContent[], mediaType?: string): IHttpContent | undefined {

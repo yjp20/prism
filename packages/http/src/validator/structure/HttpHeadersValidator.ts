@@ -1,11 +1,11 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { IHttpHeadersValidator } from './IHttpHeadersValidator';
 import { IHttpHeaderParam } from '@stoplight/types/http';
 import { DeserializeHttpHeader } from '../deserializer/IHttpHeaderParamStyleDeserializer';
 import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
 import { resolveContent } from '../helpers/resolveContent';
 import { validateAgainstSchema } from '../helpers/validateAgainstSchema';
+import { IHttpHeadersValidator } from './IHttpHeadersValidator';
 
 export class HttpHeadersValidator implements IHttpHeadersValidator {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpHeader>) {}

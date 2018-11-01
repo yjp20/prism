@@ -1,11 +1,11 @@
 import { IValidation } from '@stoplight/prism-core';
 import { ValidationSeverity } from '@stoplight/prism-core/types';
-import { IHttpQueryValidator } from './IHttpQueryValidator';
 import { IHttpQueryParam } from '@stoplight/types/http';
 import { IHttpParamDeserializerRegistry } from '../deserializer/IHttpParamDeserializerRegistry';
 import { DeserializeHttpQuery } from '../deserializer/IHttpQueryParamStyleDeserializer';
 import { resolveContent } from '../helpers/resolveContent';
 import { validateAgainstSchema } from '../helpers/validateAgainstSchema';
+import { IHttpQueryValidator } from './IHttpQueryValidator';
 
 export class HttpQueryValidator implements IHttpQueryValidator {
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
