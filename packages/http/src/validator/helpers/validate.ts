@@ -5,10 +5,10 @@ import { ErrorObject } from 'ajv';
 
 const ajv = new Ajv({ allErrors: true, messages: true });
 
-export function convertAjvErrors(
+export const convertAjvErrors = (
   errors: ErrorObject[] | undefined | null,
   severity: ValidationSeverity
-) {
+) => {
   if (!errors) {
     return [];
   }
@@ -20,16 +20,21 @@ export function convertAjvErrors(
     message: error.message || '',
     severity,
   }));
-}
+};
 
-export function validateAgainstSchema(value: any, schema: ISchema, prefix: string): IValidation[] {
+export const validateAgainstSchema = (
+  value: any,
+  schema: ISchema,
+  prefix: string
+): IValidation[] => {
   const validate = ajv.compile(schema);
-
-  if (!validate(value)) {
-    return convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error =>
+  const valid = validate(value);
+  let errors: IValidation[] = [];
+  if (!valid) {
+    errors = convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error =>
       Object.assign({}, error, { path: [prefix, ...error.path] })
     );
   }
 
-  return [];
-}
+  return errors;
+};

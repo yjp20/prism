@@ -11,7 +11,7 @@ export class HttpQueryValidator implements IHttpValidator<IHttpNameValues, IHttp
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpQuery>) {}
 
   public validate(
-    obj: IHttpNameValues,
+    obj: IHttpNameValues = {},
     specs: IHttpQueryParam[],
     mediaType?: string
   ): IValidation[] {

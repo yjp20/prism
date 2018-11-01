@@ -11,7 +11,7 @@ export class HttpHeadersValidator implements IHttpValidator<IHttpNameValue, IHtt
   constructor(private readonly registry: IHttpParamDeserializerRegistry<DeserializeHttpHeader>) {}
 
   public validate(
-    obj: IHttpNameValue,
+    obj: IHttpNameValue = {},
     specs: IHttpHeaderParam[],
     mediaType?: string
   ): IValidation[] {

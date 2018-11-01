@@ -1,10 +1,16 @@
 import { IHttpConfig } from '../../types';
 
 const DEFAULT = {
-  hijack: false,
-  headers: true,
-  query: true,
-  body: true,
+  REQEUST: {
+    hijack: false,
+    headers: true,
+    query: true,
+    body: true,
+  },
+  RESPONSE: {
+    headers: true,
+    body: true,
+  },
 };
 
 export function resolveResponseValidationConfig(
@@ -13,14 +19,15 @@ export function resolveResponseValidationConfig(
   headers: boolean;
   body: boolean;
 } {
+  const { RESPONSE: def } = DEFAULT;
   if (!config || !config.validate) {
-    return DEFAULT;
+    return def;
   }
 
   const response = config.validate.response;
 
   if (response === true) {
-    return DEFAULT;
+    return def;
   }
 
   if (response === false) {
@@ -31,12 +38,12 @@ export function resolveResponseValidationConfig(
   }
 
   if (!response) {
-    return DEFAULT;
+    return def;
   }
 
   return {
-    headers: response.headers === false ? false : DEFAULT.headers,
-    body: response.body === false ? false : DEFAULT.body,
+    headers: response.headers === false ? false : def.headers,
+    body: response.body === false ? false : def.body,
   };
 }
 
@@ -48,14 +55,15 @@ export function resolveRequestValidationConfig(
   query: boolean;
   body: boolean;
 } {
+  const { REQEUST: def } = DEFAULT;
   if (!config || !config.validate) {
-    return DEFAULT;
+    return def;
   }
 
   const request = config.validate.request;
 
   if (request === true) {
-    return DEFAULT;
+    return def;
   }
 
   if (request === false) {
@@ -68,13 +76,13 @@ export function resolveRequestValidationConfig(
   }
 
   if (!request) {
-    return DEFAULT;
+    return def;
   }
 
   return {
-    hijack: request.hijack === false ? false : DEFAULT.hijack,
-    headers: request.headers === false ? false : DEFAULT.headers,
-    query: request.query === false ? false : DEFAULT.query,
-    body: request.body === false ? false : DEFAULT.body,
+    hijack: request.hijack === false ? false : def.hijack,
+    headers: request.headers === false ? false : def.headers,
+    query: request.query === false ? false : def.query,
+    body: request.body === false ? false : def.body,
   };
 }
