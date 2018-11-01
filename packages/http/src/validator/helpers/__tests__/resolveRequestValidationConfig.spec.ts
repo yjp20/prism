@@ -16,7 +16,7 @@ describe('resolveRequestValidationConfig()', () => {
   };
 
   describe('config is not set', () => {
-    it('resolves to default config', () => {
+    it('resolves to default request config', () => {
       expect(resolveRequestValidationConfig()).toEqual(defaultEnabledConfig);
     });
   });

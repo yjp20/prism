@@ -12,7 +12,7 @@ describe('resolveResponseValidationConfig()', () => {
   };
 
   describe('config is not set', () => {
-    it('resolves to default config', () => {
+    it('resolves to default response config', () => {
       expect(resolveResponseValidationConfig()).toEqual(defaultEnabledConfig);
     });
   });
