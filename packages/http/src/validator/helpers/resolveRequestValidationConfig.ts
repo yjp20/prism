@@ -1,7 +1,7 @@
 import { IHttpConfig } from '../../types';
 
 const DEFAULT = {
-  hijack: true,
+  hijack: false,
   headers: true,
   query: true,
   body: true,

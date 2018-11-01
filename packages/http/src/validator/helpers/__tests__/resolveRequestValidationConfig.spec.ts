@@ -2,7 +2,7 @@ import { resolveRequestValidationConfig } from '../resolveRequestValidationConfi
 
 describe('resolveRequestValidationConfig()', () => {
   const defaultEnabledConfig = {
-    hijack: true,
+    hijack: false,
     headers: true,
     query: true,
     body: true,
