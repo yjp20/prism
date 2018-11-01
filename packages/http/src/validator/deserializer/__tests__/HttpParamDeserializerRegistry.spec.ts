@@ -1,6 +1,5 @@
-import { IHttpParamStyleDeserializer } from '../IHttpParamStyleDeserializer';
-import { DeserializeHttpQuery } from '../IHttpQueryParamStyleDeserializer';
 import { HttpParamDeserializerRegistry } from '..//HttpParamDeserializerRegistry';
+import { DeserializeHttpQuery, IHttpParamStyleDeserializer } from '../types';
 
 describe('HttpParamDeserializerRegistry', () => {
   const mockDeserializer = {
