@@ -14,7 +14,7 @@ function findHttpContentByMediaType(
   response: IHttpResponse,
   mediaType: string
 ): IHttpContent | undefined {
-  return response.content.find(content => content.mediaType === mediaType);
+  return response.contents.find(content => content.mediaType === mediaType);
 }
 
 function findLowest2xx(httpResponses: IHttpResponse[]): IHttpResponse | undefined {
@@ -242,11 +242,11 @@ const helpers = {
       throw new Error('No 400 response defined');
     }
     // find first response with any static examples
-    const responseWithExamples = response.content.find(
+    const responseWithExamples = response.contents.find(
       content => !!content.examples && content.examples.length !== 0
     );
     // find first response with a schema
-    const responseWithSchema = response.content.find(content => !!content.schema);
+    const responseWithSchema = response.contents.find(content => !!content.schema);
 
     if (responseWithExamples) {
       return {

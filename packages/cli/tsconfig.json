@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "target": "es2017"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "references": [
+    { "path": "../http-server" }
+  ]
+}

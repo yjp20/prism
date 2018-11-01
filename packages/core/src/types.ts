@@ -23,9 +23,10 @@ export interface IValidation {
 
 // END
 
-export interface IPrism<Resource, Input, Output, Config, _LoadOpts> {
+export interface IPrism<Resource, Input, Output, Config, LoadOpts> {
   process: (input: Input, config?: Config) => Promise<IPrismOutput<Input, Output>>;
-  readonly resources: Promise<Resource[]>;
+  load: (opts?: LoadOpts) => Promise<void>;
+  readonly resources: Resource[];
 }
 
 export interface IPrismConfig {
@@ -42,7 +43,7 @@ export interface ILoader<Options, Resource> {
 }
 
 export interface IFilesystemLoaderOpts {
-  path: string;
+  path?: string;
 }
 
 export interface IRouter<Resource, Input, Config> {
@@ -101,7 +102,7 @@ export interface IPrismInput<I> {
 
 export interface IPrismOutput<I, O> {
   input?: I;
-  data?: O;
+  output?: O;
   validations: {
     input: IValidation[];
     output: IValidation[];

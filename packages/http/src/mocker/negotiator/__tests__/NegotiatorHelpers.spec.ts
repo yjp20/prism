@@ -45,7 +45,7 @@ describe('NegotiatorHelpers', () => {
           .withResponses([
             {
               code: actualCode,
-              content: [
+              contents: [
                 {
                   mediaType: actualMediaType,
                   examples: [{ key: actualExampleKey }, { key: chance.string() }],
@@ -65,13 +65,13 @@ describe('NegotiatorHelpers', () => {
         expect(actualConfig).toEqual(expectedConfig);
       });
 
-      describe('and has no static content', () => {
-        test('and has schemable content should return first such content', () => {
+      describe('and has no static contents', () => {
+        test('and has schemable contents should return first such contents', () => {
           httpOperation = anHttpOperation(httpOperation)
             .withResponses([
               {
                 code: actualCode,
-                content: [
+                contents: [
                   {
                     mediaType: actualMediaType + chance.character(),
                     examples: [],
@@ -101,12 +101,12 @@ describe('NegotiatorHelpers', () => {
           expect(actualConfig).toEqual(expectedConfig);
         });
 
-        test('and no schemable content should return error', () => {
+        test('and no schemable contents should return error', () => {
           httpOperation = anHttpOperation(httpOperation)
             .withResponses([
               {
                 code: actualCode,
-                content: [
+                contents: [
                   {
                     mediaType: actualMediaType,
                     examples: [],
@@ -212,7 +212,7 @@ describe('NegotiatorHelpers', () => {
       const code = chance.string();
       const fakeResponse = {
         code,
-        content: [],
+        contents: [],
       };
       const desiredOptions = {};
       const fakeOperationConfig = {
@@ -243,7 +243,7 @@ describe('NegotiatorHelpers', () => {
       const code = chance.string();
       const fakeResponse = {
         code,
-        content: [],
+        contents: [],
       };
       const desiredOptions = {};
       const fakeOperationConfig = {
@@ -297,7 +297,7 @@ describe('NegotiatorHelpers', () => {
       const desiredOptions = {};
       const response = {
         code: '2xx',
-        content: [],
+        contents: [],
       };
       const fakeOperationConfig = {
         code: response.code,
@@ -322,7 +322,7 @@ describe('NegotiatorHelpers', () => {
       const desiredOptions = {};
       const response = {
         code: '200',
-        content: [],
+        contents: [],
       };
       const fakeOperationConfig = {
         code: response.code,
@@ -335,11 +335,11 @@ describe('NegotiatorHelpers', () => {
           response,
           {
             code: '201',
-            content: [],
+            contents: [],
           },
           {
             code: '2xx',
-            content: [],
+            contents: [],
           },
         ])
         .instance();
@@ -365,18 +365,18 @@ describe('NegotiatorHelpers', () => {
 
   describe('negotiateOptionsBySpecificResponse()', () => {
     describe('given forced mediaType', () => {
-      it('and httpContent exists should negotiate that content', () => {
+      it('and httpContent exists should negotiate that contents', () => {
         const desiredOptions = {
           mediaType: chance.string(),
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
-        const content: IHttpContent = {
+        const contents: IHttpContent = {
           mediaType: desiredOptions.mediaType,
         };
         const httpResponseSchema: IHttpResponse = {
           code: chance.string(),
-          content: [content],
+          contents: [contents],
         };
         const fakeOperationConfig = {};
         jest
@@ -397,7 +397,7 @@ describe('NegotiatorHelpers', () => {
             dynamic: desiredOptions.dynamic,
             exampleKey: desiredOptions.exampleKey,
           },
-          content
+          contents
         );
         expect(helpers.negotiateDefaultMediaType).not.toHaveBeenCalled();
         expect(actualOperationConfig).toBe(fakeOperationConfig);
@@ -411,7 +411,7 @@ describe('NegotiatorHelpers', () => {
         };
         const httpResponseSchema: IHttpResponse = {
           code: chance.string(),
-          content: [],
+          contents: [],
         };
 
         expect(() =>
@@ -432,7 +432,7 @@ describe('NegotiatorHelpers', () => {
         };
         const httpResponseSchema: IHttpResponse = {
           code: chance.string(),
-          content: [],
+          contents: [],
         };
         const fakeOperationConfig = {};
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
@@ -460,19 +460,19 @@ describe('NegotiatorHelpers', () => {
   });
 
   describe('negotiateDefaultMediaType()', () => {
-    it('given default content exists should negotiate that', () => {
+    it('given default contents exists should negotiate that', () => {
       const code = chance.string();
       const partialOptions = {
         code,
         dynamic: chance.bool(),
         exampleKey: chance.string(),
       };
-      const content: IHttpContent = {
+      const contents: IHttpContent = {
         mediaType: 'application/json',
       };
       const response: IHttpResponse = {
         code,
-        content: [content],
+        contents: [contents],
       };
       const fakeOperationConfig = {};
       jest
@@ -488,23 +488,23 @@ describe('NegotiatorHelpers', () => {
           dynamic: partialOptions.dynamic,
           exampleKey: partialOptions.exampleKey,
         },
-        content
+        contents
       );
       expect(actualOperationConfig).toBe(fakeOperationConfig);
     });
 
-    it('given no default content should throw', () => {
+    it('given no default contents should throw', () => {
       const code = chance.string();
       const partialOptions = { code: '200' };
       const response: IHttpResponse = {
         code,
-        content: [],
+        contents: [],
       };
 
       expect(() => {
         helpers.negotiateDefaultMediaType(partialOptions, response);
       }).toThrow(
-        /Could not generate response for provided content type or no content type provided/
+        'Could not generate response for provided content type or no content type provided. Tried to fallback to application/json, but no definition found.'
       );
     });
   });
@@ -561,7 +561,7 @@ describe('NegotiatorHelpers', () => {
     });
 
     describe('given exampleKey not forced but dynamic forced', () => {
-      it('and httpContent has schema return that content', () => {
+      it('and httpContent has schema return that contents', () => {
         const partialOptions = {
           code: chance.string(),
           dynamic: true,

@@ -33,7 +33,7 @@ describe('HttpMocker', () => {
       responses: [
         {
           code: '200',
-          content: [
+          contents: [
             {
               mediaType: 'application/json',
               schema: mockSchema,
@@ -96,7 +96,7 @@ describe('HttpMocker', () => {
         jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(() => ({
           code: '202',
           mediaType: 'test',
-          example: mockResource.responses![0].content![0].examples![0],
+          example: mockResource.responses![0].contents![0].examples![0],
         }));
 
         return expect(
@@ -111,7 +111,7 @@ describe('HttpMocker', () => {
         jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(() => ({
           code: '202',
           mediaType: 'test',
-          schema: mockResource.responses![0].content![0].schema,
+          schema: mockResource.responses![0].contents![0].schema,
         }));
 
         jest.spyOn(mockExampleGenerator, 'generate').mockImplementation(() => 'example value');
@@ -130,7 +130,7 @@ describe('HttpMocker', () => {
           .mockImplementation(() => ({
             code: '202',
             mediaType: 'test',
-            example: mockResource.responses![0].content![0].examples![0],
+            example: mockResource.responses![0].contents![0].examples![0],
           }));
 
         await httpMocker.mock({
@@ -148,7 +148,7 @@ describe('HttpMocker', () => {
         jest.spyOn(helpers, 'negotiateOptionsForInvalidRequest').mockImplementation(() => ({
           code: '202',
           mediaType: 'test',
-          example: mockResource.responses![0].content![0].examples![0],
+          example: mockResource.responses![0].contents![0].examples![0],
         }));
 
         return expect(
