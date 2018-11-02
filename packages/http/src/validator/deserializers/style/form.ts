@@ -7,7 +7,7 @@ import { createObjectFromKeyValList } from './utils';
 
 export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
   public supports(style: HttpParamStyles) {
-    return style === HttpParamStyles.form;
+    return style === HttpParamStyles.Form;
   }
 
   public deserialize(

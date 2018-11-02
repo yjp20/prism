@@ -13,7 +13,7 @@ describe('SimpleStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(simpleStyleDeserializer.supports(HttpParamStyles.simple)).toBe(true);
+        expect(simpleStyleDeserializer.supports(HttpParamStyles.Simple)).toBe(true);
       });
     });
 

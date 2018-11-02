@@ -8,7 +8,7 @@ describe('DeepObjectStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(deepObjectStyleDeserializer.supports(HttpParamStyles.deepObject)).toBe(true);
+        expect(deepObjectStyleDeserializer.supports(HttpParamStyles.DeepObject)).toBe(true);
       });
     });
 

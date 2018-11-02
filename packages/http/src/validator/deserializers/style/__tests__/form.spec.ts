@@ -13,7 +13,7 @@ describe('FormStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(formStyleDeserializer.supports(HttpParamStyles.form)).toBe(true);
+        expect(formStyleDeserializer.supports(HttpParamStyles.Form)).toBe(true);
       });
     });
 

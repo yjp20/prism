@@ -1,6 +1,7 @@
 import { HttpParamStyles } from '@stoplight/types';
 import { ISchema } from '@stoplight/types/schema';
 
+import { IHttpNameValue } from '../../../types';
 import { HttpParamDeserializerRegistry } from '../../deserializers/registry';
 import * as resolveContentModule from '../../utils/http';
 import { HttpHeadersValidator } from '../headers';
@@ -10,7 +11,7 @@ describe('HttpHeadersValidator', () => {
   const registry = new HttpParamDeserializerRegistry([
     {
       supports: (_style: HttpParamStyles) => true,
-      deserialize: (_name: string, _parameters: any, _schema: ISchema) => ({}),
+      deserialize: (_name: string, _parameters: IHttpNameValue, _schema: ISchema) => ({}),
     },
   ]);
   const httpHeadersValidator = new HttpHeadersValidator(registry, 'header');

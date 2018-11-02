@@ -5,13 +5,13 @@ import { DelimitedStyleDeserializer } from '../delimited';
 describe('DelimitedStyleDeserializer', () => {
   const delimitedStyleDeserializer = new DelimitedStyleDeserializer(
     '|',
-    HttpParamStyles.pipeDelimited
+    HttpParamStyles.PipeDelimited
   );
 
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(delimitedStyleDeserializer.supports(HttpParamStyles.pipeDelimited)).toBe(true);
+        expect(delimitedStyleDeserializer.supports(HttpParamStyles.PipeDelimited)).toBe(true);
       });
     });
 

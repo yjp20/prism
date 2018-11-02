@@ -7,7 +7,7 @@ import { createObjectFromKeyValList } from './utils';
 
 export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserializer {
   public supports(style: HttpParamStyles) {
-    return style === HttpParamStyles.simple;
+    return style === HttpParamStyles.Simple;
   }
 
   public deserialize(

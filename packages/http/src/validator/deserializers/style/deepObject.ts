@@ -6,7 +6,7 @@ import { IHttpQueryParamStyleDeserializer } from '../types';
 
 export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserializer {
   public supports(style: HttpParamStyles) {
-    return style === HttpParamStyles.deepObject;
+    return style === HttpParamStyles.DeepObject;
   }
 
   public deserialize(name: string, parameters: IHttpNameValues, schema: ISchema) {
