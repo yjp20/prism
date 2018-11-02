@@ -1,4 +1,4 @@
-import { HttpParamStyles } from '@stoplight/types/http.d';
+import { HttpParamStyles } from '@stoplight/types';
 import { ISchema } from '@stoplight/types/schema';
 
 import { HttpParamDeserializerRegistry } from '../../deserializers/registry';
@@ -13,7 +13,7 @@ describe('HttpQueryValidator', () => {
       deserialize: (_name: string, _parameters: any, _schema: ISchema) => ({}),
     },
   ]);
-  const httpQueryValidator = new HttpQueryValidator();
+  const httpQueryValidator = new HttpQueryValidator(registry, 'query');
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -30,12 +30,7 @@ describe('HttpQueryValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpQueryValidator.validate(
-                {},
-                [{ name: 'aParam', required: true, content: {} }],
-                registry,
-                'query'
-              )
+              httpQueryValidator.validate({}, [{ name: 'aParam', required: true, content: {} }])
             ).toMatchSnapshot();
           });
         });
@@ -48,17 +43,12 @@ describe('HttpQueryValidator', () => {
               jest.spyOn(registry, 'get').mockReturnValueOnce(undefined);
 
               expect(
-                httpQueryValidator.validate(
-                  { param: 'abc' },
-                  [
-                    {
-                      name: 'param',
-                      content: { '*': { mediaType: '*', schema: { type: 'number' } } },
-                    },
-                  ],
-                  registry,
-                  'query'
-                )
+                httpQueryValidator.validate({ param: 'abc' }, [
+                  {
+                    name: 'param',
+                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                  },
+                ])
               ).toEqual([]);
 
               expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
@@ -69,17 +59,12 @@ describe('HttpQueryValidator', () => {
             describe('query param is valid', () => {
               it('validates positively against schema', () => {
                 expect(
-                  httpQueryValidator.validate(
-                    { param: 'abc' },
-                    [
-                      {
-                        name: 'param',
-                        content: { '*': { mediaType: '*', schema: { type: 'string' } } },
-                      },
-                    ],
-                    registry,
-                    'query'
-                  )
+                  httpQueryValidator.validate({ param: 'abc' }, [
+                    {
+                      name: 'param',
+                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                    },
+                  ])
                 ).toEqual([]);
 
                 expect(validateAgainstSchemaModule.validateAgainstSchema).toHaveBeenCalled();
@@ -103,8 +88,6 @@ describe('HttpQueryValidator', () => {
                     },
                   },
                 ],
-                registry,
-                'query',
                 'application/testson'
               )
             ).toEqual([]);
@@ -117,18 +100,13 @@ describe('HttpQueryValidator', () => {
         describe('deprecated flag is set', () => {
           it('returns deprecation warning', () => {
             expect(
-              httpQueryValidator.validate(
-                { param: 'abc' },
-                [
-                  {
-                    name: 'param',
-                    deprecated: true,
-                    content: {},
-                  },
-                ],
-                registry,
-                'query'
-              )
+              httpQueryValidator.validate({ param: 'abc' }, [
+                {
+                  name: 'param',
+                  deprecated: true,
+                  content: {},
+                },
+              ])
             ).toMatchSnapshot();
           });
         });

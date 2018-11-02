@@ -3,14 +3,11 @@ import { IHttpContent } from '@stoplight/types/http';
 
 import { IHttpValidator, IValidatorRegistry } from './types';
 
-export class HttpBodyValidator implements IHttpValidator<any, IValidatorRegistry, IHttpContent> {
-  public validate(
-    target: any,
-    specs: IHttpContent[],
-    registry: IValidatorRegistry,
-    mediaType?: string,
-    prefix: string = 'body'
-  ): IValidation[] {
+export class HttpBodyValidator implements IHttpValidator<any, IHttpContent> {
+  constructor(private _registry: IValidatorRegistry, private _prefix: string) {}
+
+  public validate(target: any, specs: IHttpContent[], mediaType?: string): IValidation[] {
+    const { _registry: registry, _prefix: prefix } = this;
     const content = this.getContent(specs, mediaType);
 
     if (!content) {

@@ -1,4 +1,4 @@
-import { HttpParamStyles } from '@stoplight/types/http.d';
+import { HttpParamStyles } from '@stoplight/types';
 
 import { SimpleStyleDeserializer } from '../simple';
 import * as createObjectFromKeyValListModule from '../utils';

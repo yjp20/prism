@@ -6,7 +6,7 @@ Array [
     "message": "testMessage",
     "name": "testName",
     "path": Array [
-      "application/json",
+      "body",
       "a",
     ],
     "severity": "error",

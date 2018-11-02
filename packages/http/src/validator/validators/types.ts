@@ -1,16 +1,8 @@
 import { IValidation } from '@stoplight/prism-core';
-import { HttpParamStyles } from '@stoplight/types/http.d';
 import { ISchema } from '@stoplight/types/schema';
 
-export interface IHttpValidator<Target, Registry, Specs> {
-  validate(
-    target: Target,
-    specs: Specs[],
-    registry: Registry,
-    prefix: string,
-    mediaType?: string,
-    style?: HttpParamStyles
-  ): IValidation[];
+export interface IHttpValidator<Target, Specs> {
+  validate(target: Target, specs: Specs[], mediaType?: string): IValidation[];
 }
 
 export interface ISchemaValidator<S extends ISchema> {

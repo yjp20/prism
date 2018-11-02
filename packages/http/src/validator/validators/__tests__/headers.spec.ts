@@ -1,4 +1,4 @@
-import { HttpParamStyles } from '@stoplight/types/http.d';
+import { HttpParamStyles } from '@stoplight/types';
 import { ISchema } from '@stoplight/types/schema';
 
 import { HttpParamDeserializerRegistry } from '../../deserializers/registry';
@@ -13,7 +13,7 @@ describe('HttpHeadersValidator', () => {
       deserialize: (_name: string, _parameters: any, _schema: ISchema) => ({}),
     },
   ]);
-  const httpHeadersValidator = new HttpHeadersValidator();
+  const httpHeadersValidator = new HttpHeadersValidator(registry, 'header');
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -30,12 +30,7 @@ describe('HttpHeadersValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpHeadersValidator.validate(
-                {},
-                [{ name: 'aHeader', required: true, content: {} }],
-                registry,
-                'header'
-              )
+              httpHeadersValidator.validate({}, [{ name: 'aHeader', required: true, content: {} }])
             ).toMatchSnapshot();
           });
         });
@@ -48,17 +43,12 @@ describe('HttpHeadersValidator', () => {
               jest.spyOn(registry, 'get').mockReturnValueOnce(undefined);
 
               expect(
-                httpHeadersValidator.validate(
-                  { 'x-test-header': 'abc' },
-                  [
-                    {
-                      name: 'x-test-header',
-                      content: { '*': { mediaType: '*', schema: { type: 'number' } } },
-                    },
-                  ],
-                  registry,
-                  'header'
-                )
+                httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
+                  {
+                    name: 'x-test-header',
+                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                  },
+                ])
               ).toEqual([]);
 
               expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
@@ -69,17 +59,12 @@ describe('HttpHeadersValidator', () => {
             describe('header is valid', () => {
               it('validates positively against schema', () => {
                 expect(
-                  httpHeadersValidator.validate(
-                    { 'x-test-header': 'abc' },
-                    [
-                      {
-                        name: 'x-test-header',
-                        content: { '*': { mediaType: '*', schema: { type: 'string' } } },
-                      },
-                    ],
-                    registry,
-                    'header'
-                  )
+                  httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
+                    {
+                      name: 'x-test-header',
+                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                    },
+                  ])
                 ).toEqual([]);
 
                 expect(validateAgainstSchemaModule.validateAgainstSchema).toHaveBeenCalled();
@@ -103,8 +88,6 @@ describe('HttpHeadersValidator', () => {
                     },
                   },
                 ],
-                registry,
-                'header',
                 'application/testson'
               )
             ).toEqual([]);
@@ -117,18 +100,13 @@ describe('HttpHeadersValidator', () => {
         describe('deprecated flag is set', () => {
           it('returns deprecation warning', () => {
             expect(
-              httpHeadersValidator.validate(
-                { 'x-test-header': 'abc' },
-                [
-                  {
-                    name: 'x-test-header',
-                    deprecated: true,
-                    content: {},
-                  },
-                ],
-                registry,
-                'header'
-              )
+              httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
+                {
+                  name: 'x-test-header',
+                  deprecated: true,
+                  content: {},
+                },
+              ])
             ).toMatchSnapshot();
           });
         });

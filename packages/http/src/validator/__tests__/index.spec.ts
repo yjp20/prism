@@ -2,17 +2,11 @@ import { IHttpContent, IHttpHeaderParam, IHttpOperation, IHttpQueryParam } from 
 
 import { IHttpNameValue, IHttpNameValues } from '../../types';
 import { IHttpRequest } from '../../types';
-import {
-  header as headerDeserializerRegistry,
-  query as queryDeserializerRegistry,
-} from '../deserializers';
-import { IHttpParamDeserializerRegistry } from '../deserializers/types';
 import { HttpValidator } from '../index';
 import * as resolveValidationConfigModule from '../utils/config';
 import * as getHeaderByNameModule from '../utils/http';
 import * as findResponseSpecModule from '../utils/spec';
-import { validatorRegistry } from '../validators';
-import { IHttpValidator, IValidatorRegistry } from '../validators/types';
+import { IHttpValidator } from '../validators/types';
 
 const mockError = {
   message: 'c is required',
@@ -23,19 +17,13 @@ const mockError = {
 };
 
 describe('HttpValidator', () => {
-  const httpBodyValidator = { validate: () => [mockError] } as IHttpValidator<
-    any,
-    IValidatorRegistry,
-    IHttpContent
-  >;
+  const httpBodyValidator = { validate: () => [mockError] } as IHttpValidator<any, IHttpContent>;
   const httpHeadersValidator = { validate: () => [mockError] } as IHttpValidator<
     IHttpNameValue,
-    IHttpParamDeserializerRegistry<IHttpNameValue>,
     IHttpHeaderParam
   >;
   const httpQueryValidator = { validate: () => [mockError] } as IHttpValidator<
     IHttpNameValues,
-    IHttpParamDeserializerRegistry<IHttpNameValues>,
     IHttpQueryParam
   >;
   const httpValidator = new HttpValidator(
@@ -75,13 +63,7 @@ describe('HttpValidator', () => {
 
         expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
-        expect(httpBodyValidator.validate).toHaveBeenCalledWith(
-          undefined,
-          [],
-          validatorRegistry,
-          'body',
-          undefined
-        );
+        expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
         expect(httpQueryValidator.validate).not.toHaveBeenCalled();
       };
@@ -121,13 +103,7 @@ describe('HttpValidator', () => {
         expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
-        expect(httpHeadersValidator.validate).toHaveBeenCalledWith(
-          {},
-          [],
-          headerDeserializerRegistry,
-          'header',
-          undefined
-        );
+        expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);
         expect(httpQueryValidator.validate).not.toHaveBeenCalled();
       };
 
@@ -170,13 +146,7 @@ describe('HttpValidator', () => {
         expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
         expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
-        expect(httpQueryValidator.validate).toHaveBeenCalledWith(
-          {},
-          [],
-          queryDeserializerRegistry,
-          'query',
-          undefined
-        );
+        expect(httpQueryValidator.validate).toHaveBeenCalledWith({}, [], undefined);
       };
 
       describe('request is not set', () => {
@@ -231,13 +201,7 @@ describe('HttpValidator', () => {
           expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
-          expect(httpBodyValidator.validate).toHaveBeenCalledWith(
-            undefined,
-            [],
-            validatorRegistry,
-            'body',
-            undefined
-          );
+          expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
           expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
         });
       });
@@ -260,13 +224,7 @@ describe('HttpValidator', () => {
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
           expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
           expect(httpBodyValidator.validate).not.toHaveBeenCalled();
-          expect(httpHeadersValidator.validate).toHaveBeenCalledWith(
-            {},
-            [],
-            headerDeserializerRegistry,
-            'header',
-            undefined
-          );
+          expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);
         });
       });
     });

@@ -8,15 +8,15 @@ import { IHttpValidator } from './types';
 import { validateAgainstSchema } from './utils';
 
 export class HttpParamsValidator<Target, Spec extends IHttpParam>
-  implements IHttpValidator<Target, IHttpParamDeserializerRegistry<Target>, Spec> {
-  public validate(
-    target: Target,
-    specs: Spec[],
-    registry: IHttpParamDeserializerRegistry<Target>,
-    prefix: string,
-    mediaType?: string,
-    style?: HttpParamStyles
-  ): IValidation[] {
+  implements IHttpValidator<Target, Spec> {
+  constructor(
+    private _registry: IHttpParamDeserializerRegistry<Target>,
+    private _prefix: string,
+    private _style: HttpParamStyles
+  ) {}
+
+  public validate(target: Target, specs: Spec[], mediaType?: string): IValidation[] {
+    const { _registry: registry, _prefix: prefix, _style: style } = this;
     return specs.reduce<IValidation[]>((results, spec) => {
       if (!target.hasOwnProperty(spec.name) && spec.required === true) {
         results.push({
