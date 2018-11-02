@@ -34,20 +34,18 @@ export class HttpParamsValidator<Target, Spec extends IHttpParam>
       const content = resolveContent(spec.content, mediaType);
 
       const resolvedStyle = spec.style || style;
-      if (resolvedStyle) {
-        if (content && content.schema) {
-          const deserializer = registry.get(resolvedStyle);
+      if (content && content.schema) {
+        const deserializer = registry.get(resolvedStyle);
 
-          if (deserializer) {
-            Array.prototype.push.apply(
-              results,
-              validateAgainstSchema(
-                deserializer.deserialize(spec.name, target, content.schema, spec.explode || false),
-                content.schema,
-                prefix
-              )
-            );
-          }
+        if (deserializer) {
+          Array.prototype.push.apply(
+            results,
+            validateAgainstSchema(
+              deserializer.deserialize(spec.name, target, content.schema, spec.explode || false),
+              content.schema,
+              prefix
+            )
+          );
         }
       }
 
