@@ -2,14 +2,15 @@
   "private": true,
   "name": "prism",
   "license": "UNLICENSED",
+  "version": "0.0.0",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "setup": "yarn",
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
-    "lint": "tslint packages/*/src/**/*.{ts,js}",
-    "build": "tsc --build",
+    "lint": "tslint packages/*/src/**/*.{ts}",
+    "build": "tsc --build tsconfig.all.json",
     "build.clean": "rm -rf lib",
     "build.watch": "yarn build.clean && tsc --build --watch",
     "test": "yarn lint && yarn test.fast",
@@ -27,8 +28,8 @@
     "@types/node": "10.12.x",
     "ajv": "6.5.x",
     "chance": "1.0.x",
-    "jest": "23.6.x",
-    "oclif": "^1.12.5",
+    "jest": "^23.6.x",
+    "oclif": "^1.12.x",
     "ts-jest": "23.10.x",
     "tslint": "5.11.x",
     "tslint-config-stoplight": "1.1.x",
