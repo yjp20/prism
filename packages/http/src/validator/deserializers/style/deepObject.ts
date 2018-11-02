@@ -10,32 +10,49 @@ export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserial
   }
 
   public deserialize(name: string, parameters: IHttpNameValues, schema: ISchema) {
-    if (schema.type === 'object') {
-      return this.deserializeObject(name, parameters, schema);
-    } else {
-      throw new Error('Deep object style is only applicable to object parameter');
-    }
-  }
-
-  private deserializeObject(key: string, parameters: IHttpNameValues, schema: ISchema) {
     function resolve(path: string[]) {
-      const name = key + path.map(el => `[${el}]`).join('');
-      return parameters[name];
+      return name + path.map(el => `[${el}]`).join('');
     }
 
-    function construct(currentPath: string[], props: any): object {
-      return Object.keys(props).reduce((result, k) => {
-        const def = props[k];
-        if (def.type === 'object') {
-          return { ...result, [k]: construct([...currentPath, k], def.properties || {}) };
+    function constructArray(currentPath: string[], items: any): object[] {
+      const path = resolve(currentPath)
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]');
+
+      const regexp = new RegExp(`^${path}\\[([0-9]+)\\]`);
+
+      const indexes = Object.keys(parameters).reduce((list, k) => {
+        const matches = k.match(regexp);
+
+        if (!matches) {
+          return list;
         }
 
-        // todo: implement array support?
-
-        return { ...result, [k]: resolve([...currentPath, k]) };
+        return { ...list, [matches[1]]: null };
       }, {});
+
+      return Object.keys(indexes).map(i => construct([...currentPath, String(i)], items));
     }
 
-    return construct([], schema.properties || {});
+    function constructObject(currentPath: string[], props: any): object {
+      return Object.keys(props).reduce(
+        (result, k) => ({ ...result, [k]: construct([...currentPath, k], props[k]) }),
+        {}
+      );
+    }
+
+    function construct(currentPath: string[], def: any): any {
+      if (def.type === 'object') {
+        return constructObject(currentPath, def.properties || {});
+      }
+
+      if (def.type === 'array') {
+        return constructArray(currentPath, def.items || {});
+      }
+
+      return parameters[resolve(currentPath)];
+    }
+
+    return construct([], schema);
   }
 }
