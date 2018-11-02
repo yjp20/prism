@@ -19,7 +19,7 @@ describe('HttpParamDeserializerRegistry', () => {
       spyOn(mockDeserializer, 'supports').and.returnValue(true);
       spyOn(mockDeserializer, 'deserialize');
 
-      const deserializer = httpParamDeserializerRegistry.get(HttpParamStyles.form);
+      const deserializer = httpParamDeserializerRegistry.get(HttpParamStyles.Form);
       if (!deserializer) {
         throw new Error('Expectation failed');
       }
