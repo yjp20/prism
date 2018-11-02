@@ -11,7 +11,7 @@
     "fmt": "prettier --write \"packages/*/src/**/*.{ts,js}\"",
     "lint": "tslint packages/*/src/**/*.{ts}",
     "build": "tsc --build tsconfig.all.json",
-    "build.clean": "rm -rf lib",
+    "build.clean": "find ./packages -name lib -type d -exec rm -rf {} \\;",
     "build.watch": "yarn build.clean && tsc --build --watch tsconfig.all.json",
     "test": "yarn lint && yarn test.fast",
     "pretest.fast": "yarn build",
