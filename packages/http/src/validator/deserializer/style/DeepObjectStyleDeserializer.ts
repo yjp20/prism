@@ -14,16 +14,6 @@ export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserial
     },
     schema: ISchema
   ) {
-    return this.deserializeObject(key, query, schema);
-  }
-
-  private deserializeObject(
-    key: string,
-    query: {
-      [name: string]: string | string[];
-    },
-    schema: ISchema
-  ) {
     function resolve(path: string[]) {
       return key + path.map(el => `[${el}]`).join('');
     }
