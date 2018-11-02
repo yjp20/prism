@@ -1,18 +1,23 @@
-import { DeserializeHttpQuery, IHttpParamDeserializerRegistry } from '../../deserializers/types';
+import { HttpParamStyles } from '@stoplight/types/http.d';
+import { ISchema } from '@stoplight/types/schema';
+
+import { HttpParamDeserializerRegistry } from '../../deserializers/registry';
 import * as resolveContentModule from '../../utils/http';
 import { HttpQueryValidator } from '../query';
 import * as validateAgainstSchemaModule from '../utils';
 
 describe('HttpQueryValidator', () => {
-  const httpParamDeserializerRegistry = {
-    deserializers: [],
-    get: () => v => v,
-  } as IHttpParamDeserializerRegistry<DeserializeHttpQuery>;
-  const httpQueryValidator = new HttpQueryValidator(httpParamDeserializerRegistry);
+  const registry = new HttpParamDeserializerRegistry([
+    {
+      supports: (_style: HttpParamStyles) => true,
+      deserialize: (_name: string, _parameters: any, _schema: ISchema) => ({}),
+    },
+  ]);
+  const httpQueryValidator = new HttpQueryValidator();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(httpParamDeserializerRegistry, 'get');
+    jest.spyOn(registry, 'get');
     jest
       .spyOn(resolveContentModule, 'resolveContent')
       .mockImplementation(contentSpecs => contentSpecs[Object.keys(contentSpecs)[0]]);
@@ -25,7 +30,12 @@ describe('HttpQueryValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpQueryValidator.validate({}, [{ name: 'aParam', required: true, content: {} }])
+              httpQueryValidator.validate(
+                {},
+                [{ name: 'aParam', required: true, content: {} }],
+                registry,
+                'query'
+              )
             ).toMatchSnapshot();
           });
         });
@@ -35,15 +45,20 @@ describe('HttpQueryValidator', () => {
         describe('schema is present', () => {
           describe('deserializer not available', () => {
             it('omits schema validation', () => {
-              jest.spyOn(httpParamDeserializerRegistry, 'get').mockReturnValueOnce(undefined);
+              jest.spyOn(registry, 'get').mockReturnValueOnce(undefined);
 
               expect(
-                httpQueryValidator.validate({ param: 'abc' }, [
-                  {
-                    name: 'param',
-                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
-                  },
-                ])
+                httpQueryValidator.validate(
+                  { param: 'abc' },
+                  [
+                    {
+                      name: 'param',
+                      content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                    },
+                  ],
+                  registry,
+                  'query'
+                )
               ).toEqual([]);
 
               expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
@@ -54,12 +69,17 @@ describe('HttpQueryValidator', () => {
             describe('query param is valid', () => {
               it('validates positively against schema', () => {
                 expect(
-                  httpQueryValidator.validate({ param: 'abc' }, [
-                    {
-                      name: 'param',
-                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
-                    },
-                  ])
+                  httpQueryValidator.validate(
+                    { param: 'abc' },
+                    [
+                      {
+                        name: 'param',
+                        content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                      },
+                    ],
+                    registry,
+                    'query'
+                  )
                 ).toEqual([]);
 
                 expect(validateAgainstSchemaModule.validateAgainstSchema).toHaveBeenCalled();
@@ -83,11 +103,13 @@ describe('HttpQueryValidator', () => {
                     },
                   },
                 ],
+                registry,
+                'query',
                 'application/testson'
               )
             ).toEqual([]);
 
-            expect(httpParamDeserializerRegistry.get).not.toHaveBeenCalled();
+            expect(registry.get).not.toHaveBeenCalled();
             expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
           });
         });
@@ -95,13 +117,18 @@ describe('HttpQueryValidator', () => {
         describe('deprecated flag is set', () => {
           it('returns deprecation warning', () => {
             expect(
-              httpQueryValidator.validate({ param: 'abc' }, [
-                {
-                  name: 'param',
-                  deprecated: true,
-                  content: {},
-                },
-              ])
+              httpQueryValidator.validate(
+                { param: 'abc' },
+                [
+                  {
+                    name: 'param',
+                    deprecated: true,
+                    content: {},
+                  },
+                ],
+                registry,
+                'query'
+              )
             ).toMatchSnapshot();
           });
         });

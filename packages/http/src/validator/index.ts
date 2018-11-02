@@ -1,11 +1,18 @@
 import { IValidation, IValidator } from '@stoplight/prism-core';
 import { IHttpContent, IHttpHeaderParam, IHttpOperation, IHttpQueryParam } from '@stoplight/types';
 
-import { IHttpConfig, IHttpNameValue, IHttpNameValues, IHttpRequest, IHttpResponse } from '..';
+import {
+  IHttpConfig,
+  IHttpNameValue,
+  IHttpNameValues,
+  IHttpRequest,
+  IHttpResponse,
+} from '../types';
 import {
   header as headerDeserializerRegistry,
   query as queryDeserializerRegistry,
 } from './deserializers';
+import { IHttpParamDeserializerRegistry } from './deserializers/types';
 import { resolveRequestValidationConfig, resolveResponseValidationConfig } from './utils/config';
 import { getHeaderByName } from './utils/http';
 import { findResponseSpec } from './utils/spec';
@@ -16,13 +23,22 @@ import {
   IHttpValidator,
   validatorRegistry,
 } from './validators';
+import { IValidatorRegistry } from './validators/types';
 
 export class HttpValidator
   implements IValidator<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
   constructor(
-    private readonly bodyValidator: IHttpValidator<any, IHttpContent>,
-    private readonly headersValidator: IHttpValidator<IHttpNameValue, IHttpHeaderParam>,
-    private readonly queryValidator: IHttpValidator<IHttpNameValues, IHttpQueryParam>
+    private readonly bodyValidator: IHttpValidator<any, IValidatorRegistry, IHttpContent>,
+    private readonly headersValidator: IHttpValidator<
+      IHttpNameValue,
+      IHttpParamDeserializerRegistry<IHttpNameValue>,
+      IHttpHeaderParam
+    >,
+    private readonly queryValidator: IHttpValidator<
+      IHttpNameValues,
+      IHttpParamDeserializerRegistry<IHttpNameValues>,
+      IHttpQueryParam
+    >
   ) {}
 
   public async validateInput({
@@ -44,6 +60,8 @@ export class HttpValidator
         this.bodyValidator.validate(
           input.body,
           (resource.request && resource.request.body && resource.request.body.content) || [],
+          validatorRegistry,
+          'body',
           mediaType
         )
       );
@@ -55,6 +73,8 @@ export class HttpValidator
         this.headersValidator.validate(
           input.headers || {},
           (resource.request && resource.request.headers) || [],
+          headerDeserializerRegistry,
+          'header',
           mediaType
         )
       );
@@ -66,6 +86,8 @@ export class HttpValidator
         this.queryValidator.validate(
           input.url.query || {},
           (resource.request && resource.request.query) || [],
+          queryDeserializerRegistry,
+          'query',
           mediaType
         )
       );
@@ -98,6 +120,8 @@ export class HttpValidator
         this.bodyValidator.validate(
           output.body,
           (responseSpec && responseSpec.contents) || [],
+          validatorRegistry,
+          'body',
           mediaType
         )
       );
@@ -109,6 +133,8 @@ export class HttpValidator
         this.headersValidator.validate(
           output.headers || {},
           (responseSpec && responseSpec.headers) || [],
+          headerDeserializerRegistry,
+          'header',
           mediaType
         )
       );
@@ -119,7 +145,7 @@ export class HttpValidator
 }
 
 export const validator = new HttpValidator(
-  new HttpBodyValidator(validatorRegistry),
-  new HttpHeadersValidator(headerDeserializerRegistry),
-  new HttpQueryValidator(queryDeserializerRegistry)
+  new HttpBodyValidator(),
+  new HttpHeadersValidator(),
+  new HttpQueryValidator()
 );

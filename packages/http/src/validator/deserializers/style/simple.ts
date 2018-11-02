@@ -1,12 +1,24 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+import { ISchema } from '@stoplight/types/schema';
+
+import { IHttpNameValue } from '../../../types';
 import { IHttpHeaderParamStyleDeserializer } from '../types';
 import { createObjectFromKeyValList } from './utils';
 
 export class SimpleStyleDeserializer implements IHttpHeaderParamStyleDeserializer {
-  public supports(style: string) {
-    return style === 'simple';
+  public supports(style: HttpParamStyles) {
+    return style === HttpParamStyles.simple;
   }
 
-  public deserialize(value: string, type: string, explode: boolean): any {
+  public deserialize(
+    name: string,
+    parameters: IHttpNameValue,
+    schema: ISchema,
+    explode?: boolean
+  ): any {
+    const { type } = schema;
+    const value = parameters[name];
+
     if (type === 'array') {
       return this.deserializeArray(value);
     } else if (type === 'object') {

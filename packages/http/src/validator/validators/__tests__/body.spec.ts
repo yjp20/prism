@@ -6,7 +6,7 @@ import { IValidatorRegistry } from '../types';
 
 describe('HttpBodyValidator', () => {
   const validatorRegistry = { get: () => () => [] } as IValidatorRegistry;
-  const httpBodyValidator = new HttpBodyValidator(validatorRegistry);
+  const httpBodyValidator = new HttpBodyValidator();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -16,7 +16,7 @@ describe('HttpBodyValidator', () => {
   describe('validate()', () => {
     describe('content specs are missing', () => {
       it('returns no validation errors', () => {
-        expect(httpBodyValidator.validate('test', [])).toEqual([]);
+        expect(httpBodyValidator.validate('test', [], validatorRegistry, 'body')).toEqual([]);
         expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
     });
@@ -24,7 +24,12 @@ describe('HttpBodyValidator', () => {
     describe('request media type is not provided', () => {
       it('returns no validation errors', () => {
         expect(
-          httpBodyValidator.validate('test', [{ mediaType: 'application/not-exists-son' }])
+          httpBodyValidator.validate(
+            'test',
+            [{ mediaType: 'application/not-exists-son' }],
+            validatorRegistry,
+            'body'
+          )
         ).toEqual([]);
         expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
@@ -36,6 +41,8 @@ describe('HttpBodyValidator', () => {
           httpBodyValidator.validate(
             'test',
             [{ mediaType: 'application/not-exists-son' }],
+            validatorRegistry,
+            'body',
             'application/json'
           )
         ).toEqual([]);
@@ -55,6 +62,8 @@ describe('HttpBodyValidator', () => {
             httpBodyValidator.validate(
               'test',
               [{ mediaType: 'application/json', schema: {} }],
+              validatorRegistry,
+              'body',
               'application/json'
             )
           ).toEqual([]);
@@ -88,6 +97,8 @@ describe('HttpBodyValidator', () => {
             httpBodyValidator.validate(
               'test',
               [{ mediaType: 'application/json', schema: mockSchema }],
+              validatorRegistry,
+              'body',
               'application/json'
             )
           ).toMatchSnapshot();

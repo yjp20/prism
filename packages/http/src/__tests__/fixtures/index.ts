@@ -1,6 +1,7 @@
 import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core';
-import { IHttpMethod, IHttpRequest, IHttpResponse } from '@stoplight/prism-http';
 import { IHttpOperation } from '@stoplight/types';
+
+import { IHttpMethod, IHttpRequest, IHttpResponse } from '../../types';
 
 export const httpOperations: IHttpOperation[] = [
   {

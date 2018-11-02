@@ -1,3 +1,5 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { SimpleStyleDeserializer } from '../simple';
 import * as createObjectFromKeyValListModule from '../utils';
 
@@ -11,12 +13,14 @@ describe('SimpleStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(simpleStyleDeserializer.supports('simple')).toBe(true);
+        expect(simpleStyleDeserializer.supports(HttpParamStyles.simple)).toBe(true);
       });
     });
 
     describe('style is not supported', () => {
       it('returns false', () => {
+        // Force compile to succeed
+        // @ts-ignore
         expect(simpleStyleDeserializer.supports('invalid')).toBe(false);
       });
     });
@@ -25,28 +29,32 @@ describe('SimpleStyleDeserializer', () => {
   describe('deserialize()', () => {
     describe('type is a primitive', () => {
       it('returns unmodified value', () => {
-        expect(simpleStyleDeserializer.deserialize('value', 'string', false)).toEqual('value');
+        expect(
+          simpleStyleDeserializer.deserialize('name', { name: 'value' }, { type: 'string' }, false)
+        ).toEqual('value');
       });
     });
 
     describe('type is an array', () => {
       describe('value is empty', () => {
         it('returns empty array', () => {
-          expect(simpleStyleDeserializer.deserialize('', 'array', false)).toEqual([]);
+          expect(
+            simpleStyleDeserializer.deserialize('name', { name: '' }, { type: 'array' }, false)
+          ).toEqual([]);
         });
       });
 
       describe('value is comma separated', () => {
         it('returns exploded array', () => {
-          expect(simpleStyleDeserializer.deserialize('a,b,c', 'array', false)).toEqual([
-            'a',
-            'b',
-            'c',
-          ]);
+          expect(
+            simpleStyleDeserializer.deserialize('name', { name: 'a,b,c' }, { type: 'array' }, false)
+          ).toEqual(['a', 'b', 'c']);
         });
       });
       it('returns unmodified value', () => {
-        expect(simpleStyleDeserializer.deserialize('value', 'string', false)).toEqual('value');
+        expect(
+          simpleStyleDeserializer.deserialize('name', { name: 'value' }, { type: 'string' }, false)
+        ).toEqual('value');
       });
     });
 
@@ -59,7 +67,14 @@ describe('SimpleStyleDeserializer', () => {
               expect(list).toEqual(['a', 'b', 'c', 'd']);
               return { a: 'b', c: 'd' };
             });
-          expect(simpleStyleDeserializer.deserialize('a,b,c,d', 'object', false)).toEqual({
+          expect(
+            simpleStyleDeserializer.deserialize(
+              'name',
+              { name: 'a,b,c,d' },
+              { type: 'object' },
+              false
+            )
+          ).toEqual({
             a: 'b',
             c: 'd',
           });
@@ -69,7 +84,14 @@ describe('SimpleStyleDeserializer', () => {
 
       describe('explode is set', () => {
         it('splits by comma and equality sign and returns object', () => {
-          expect(simpleStyleDeserializer.deserialize('a=b,c=d', 'object', true)).toEqual({
+          expect(
+            simpleStyleDeserializer.deserialize(
+              'name',
+              { name: 'a=b,c=d' },
+              { type: 'object' },
+              true
+            )
+          ).toEqual({
             a: 'b',
             c: 'd',
           });

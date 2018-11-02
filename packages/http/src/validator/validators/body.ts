@@ -3,10 +3,14 @@ import { IHttpContent } from '@stoplight/types/http';
 
 import { IHttpValidator, IValidatorRegistry } from './types';
 
-export class HttpBodyValidator implements IHttpValidator<any, IHttpContent> {
-  constructor(private validatorRegistry: IValidatorRegistry) {}
-
-  public validate(obj: any, specs: IHttpContent[], mediaType?: string): IValidation[] {
+export class HttpBodyValidator implements IHttpValidator<any, IValidatorRegistry, IHttpContent> {
+  public validate(
+    target: any,
+    specs: IHttpContent[],
+    registry: IValidatorRegistry,
+    mediaType?: string,
+    prefix: string = 'body'
+  ): IValidation[] {
     const content = this.getContent(specs, mediaType);
 
     if (!content) {
@@ -17,14 +21,14 @@ export class HttpBodyValidator implements IHttpValidator<any, IHttpContent> {
       return [];
     }
 
-    const validate = this.validatorRegistry.get(content.mediaType);
+    const validate = registry.get(content.mediaType);
 
     if (!validate) {
       return [];
     }
 
-    return validate(obj, content.schema).map(error =>
-      Object.assign({}, error, { path: ['body', ...error.path] })
+    return validate(target, content.schema).map(error =>
+      Object.assign({}, error, { path: [prefix, ...error.path] })
     );
   }
 

@@ -1,3 +1,5 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { DeepObjectStyleDeserializer } from '../deepObject';
 
 describe('DeepObjectStyleDeserializer', () => {
@@ -6,12 +8,13 @@ describe('DeepObjectStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(deepObjectStyleDeserializer.supports('deepObject')).toBe(true);
+        expect(deepObjectStyleDeserializer.supports(HttpParamStyles.deepObject)).toBe(true);
       });
     });
 
     describe('style is not supported', () => {
       it('returns false', () => {
+        // @ts-ignore
         expect(deepObjectStyleDeserializer.supports('invalid')).toBe(false);
       });
     });

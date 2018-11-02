@@ -1,3 +1,5 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { FormStyleDeserializer } from '../form';
 import * as createObjectFromKeyValListModule from '../utils';
 
@@ -11,12 +13,13 @@ describe('FormStyleDeserializer', () => {
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(formStyleDeserializer.supports('form')).toBe(true);
+        expect(formStyleDeserializer.supports(HttpParamStyles.form)).toBe(true);
       });
     });
 
     describe('style is not supported', () => {
       it('returns false', () => {
+        // @ts-ignore
         expect(formStyleDeserializer.supports('invalid')).toBe(false);
       });
     });

@@ -1,36 +1,26 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
 import { ISchema } from '@stoplight/types/schema';
 
+import { IHttpNameValues } from '../../../types';
 import { IHttpQueryParamStyleDeserializer } from '../types';
 
 export class DeepObjectStyleDeserializer implements IHttpQueryParamStyleDeserializer {
-  public supports(style: string) {
-    return style === 'deepObject';
+  public supports(style: HttpParamStyles) {
+    return style === HttpParamStyles.deepObject;
   }
 
-  public deserialize(
-    key: string,
-    query: {
-      [name: string]: string | string[];
-    },
-    schema: ISchema
-  ) {
+  public deserialize(name: string, parameters: IHttpNameValues, schema: ISchema) {
     if (schema.type === 'object') {
-      return this.deserializeObject(key, query, schema);
+      return this.deserializeObject(name, parameters, schema);
     } else {
       throw new Error('Deep object style is only applicable to object parameter');
     }
   }
 
-  private deserializeObject(
-    key: string,
-    query: {
-      [name: string]: string | string[];
-    },
-    schema: ISchema
-  ) {
+  private deserializeObject(key: string, parameters: IHttpNameValues, schema: ISchema) {
     function resolve(path: string[]) {
       const name = key + path.map(el => `[${el}]`).join('');
-      return query[name];
+      return parameters[name];
     }
 
     function construct(currentPath: string[], props: any): object {

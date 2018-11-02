@@ -1,31 +1,16 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
 import { ISchema } from '@stoplight/types/schema';
 
-import { IHttpNameValues } from '../../types';
+import { IHttpNameValue, IHttpNameValues } from '../../types';
 
-export type DeserializeHttpHeader = (value: string, type: string, explode: boolean) => any;
-
-export interface IHttpHeaderParamStyleDeserializer {
-  supports: (style: string) => boolean;
-  deserialize: DeserializeHttpHeader;
+export interface IHttpParamDeserializerRegistry<Parameters, S = HttpParamStyles> {
+  get(style: S): IHttpParamStyleDeserializer<Parameters> | undefined;
 }
 
-export interface IHttpParamDeserializerRegistry<T extends Function> {
-  get(style: string): T | undefined;
+export interface IHttpParamStyleDeserializer<Parameters, S = HttpParamStyles> {
+  supports: (style: S) => boolean;
+  deserialize: (name: string, parameters: Parameters, schema: ISchema, explode?: boolean) => any;
 }
 
-export interface IHttpParamStyleDeserializer<T> {
-  supports: (style: string) => boolean;
-  deserialize: T;
-}
-
-export type DeserializeHttpQuery = (
-  key: string,
-  query: IHttpNameValues,
-  schema: ISchema,
-  explode: boolean
-) => any;
-
-export interface IHttpQueryParamStyleDeserializer
-  extends IHttpParamStyleDeserializer<DeserializeHttpQuery> {
-  deserialize: DeserializeHttpQuery;
-}
+export type IHttpHeaderParamStyleDeserializer = IHttpParamStyleDeserializer<IHttpNameValue>;
+export type IHttpQueryParamStyleDeserializer = IHttpParamStyleDeserializer<IHttpNameValues>;

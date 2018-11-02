@@ -1,18 +1,23 @@
-import { DeserializeHttpHeader, IHttpParamDeserializerRegistry } from '../../deserializers/types';
+import { HttpParamStyles } from '@stoplight/types/http.d';
+import { ISchema } from '@stoplight/types/schema';
+
+import { HttpParamDeserializerRegistry } from '../../deserializers/registry';
 import * as resolveContentModule from '../../utils/http';
 import { HttpHeadersValidator } from '../headers';
 import * as validateAgainstSchemaModule from '../utils';
 
 describe('HttpHeadersValidator', () => {
-  const httpParamDeserializerRegistry = {
-    deserializers: [],
-    get: () => v => v,
-  } as IHttpParamDeserializerRegistry<DeserializeHttpHeader>;
-  const httpHeadersValidator = new HttpHeadersValidator(httpParamDeserializerRegistry);
+  const registry = new HttpParamDeserializerRegistry([
+    {
+      supports: (_style: HttpParamStyles) => true,
+      deserialize: (_name: string, _parameters: any, _schema: ISchema) => ({}),
+    },
+  ]);
+  const httpHeadersValidator = new HttpHeadersValidator();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(httpParamDeserializerRegistry, 'get');
+    jest.spyOn(registry, 'get');
     jest
       .spyOn(resolveContentModule, 'resolveContent')
       .mockImplementation(contentSpecs => contentSpecs[Object.keys(contentSpecs)[0]]);
@@ -25,9 +30,12 @@ describe('HttpHeadersValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpHeadersValidator.validate(undefined, [
-                { name: 'aHeader', required: true, content: {} },
-              ])
+              httpHeadersValidator.validate(
+                {},
+                [{ name: 'aHeader', required: true, content: {} }],
+                registry,
+                'header'
+              )
             ).toMatchSnapshot();
           });
         });
@@ -37,15 +45,20 @@ describe('HttpHeadersValidator', () => {
         describe('schema is present', () => {
           describe('deserializer not available', () => {
             it('omits schema validation', () => {
-              jest.spyOn(httpParamDeserializerRegistry, 'get').mockReturnValueOnce(undefined);
+              jest.spyOn(registry, 'get').mockReturnValueOnce(undefined);
 
               expect(
-                httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
-                  {
-                    name: 'x-test-header',
-                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
-                  },
-                ])
+                httpHeadersValidator.validate(
+                  { 'x-test-header': 'abc' },
+                  [
+                    {
+                      name: 'x-test-header',
+                      content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                    },
+                  ],
+                  registry,
+                  'header'
+                )
               ).toEqual([]);
 
               expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
@@ -56,12 +69,17 @@ describe('HttpHeadersValidator', () => {
             describe('header is valid', () => {
               it('validates positively against schema', () => {
                 expect(
-                  httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
-                    {
-                      name: 'x-test-header',
-                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
-                    },
-                  ])
+                  httpHeadersValidator.validate(
+                    { 'x-test-header': 'abc' },
+                    [
+                      {
+                        name: 'x-test-header',
+                        content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                      },
+                    ],
+                    registry,
+                    'header'
+                  )
                 ).toEqual([]);
 
                 expect(validateAgainstSchemaModule.validateAgainstSchema).toHaveBeenCalled();
@@ -85,11 +103,13 @@ describe('HttpHeadersValidator', () => {
                     },
                   },
                 ],
+                registry,
+                'header',
                 'application/testson'
               )
             ).toEqual([]);
 
-            expect(httpParamDeserializerRegistry.get).not.toHaveBeenCalled();
+            expect(registry.get).not.toHaveBeenCalled();
             expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
           });
         });
@@ -97,13 +117,18 @@ describe('HttpHeadersValidator', () => {
         describe('deprecated flag is set', () => {
           it('returns deprecation warning', () => {
             expect(
-              httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
-                {
-                  name: 'x-test-header',
-                  deprecated: true,
-                  content: {},
-                },
-              ])
+              httpHeadersValidator.validate(
+                { 'x-test-header': 'abc' },
+                [
+                  {
+                    name: 'x-test-header',
+                    deprecated: true,
+                    content: {},
+                  },
+                ],
+                registry,
+                'header'
+              )
             ).toMatchSnapshot();
           });
         });

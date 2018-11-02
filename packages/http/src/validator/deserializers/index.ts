@@ -1,3 +1,5 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { HttpParamDeserializerRegistry } from './registry';
 import {
   DeepObjectStyleDeserializer,
@@ -5,24 +7,12 @@ import {
   FormStyleDeserializer,
   SimpleStyleDeserializer,
 } from './style';
-import {
-  DeserializeHttpHeader,
-  DeserializeHttpQuery,
-  IHttpHeaderParamStyleDeserializer,
-  IHttpQueryParamStyleDeserializer,
-} from './types';
 
-export const header = new HttpParamDeserializerRegistry<
-  IHttpHeaderParamStyleDeserializer,
-  DeserializeHttpHeader
->([new SimpleStyleDeserializer()]);
+export const header = new HttpParamDeserializerRegistry([new SimpleStyleDeserializer()]);
 
-export const query = new HttpParamDeserializerRegistry<
-  IHttpQueryParamStyleDeserializer,
-  DeserializeHttpQuery
->([
+export const query = new HttpParamDeserializerRegistry([
   new FormStyleDeserializer(),
-  new DelimitedStyleDeserializer('%20', 'spaceDelimited'),
-  new DelimitedStyleDeserializer('|', 'pipeDelimited'),
+  new DelimitedStyleDeserializer('%20', HttpParamStyles.spaceDelimited),
+  new DelimitedStyleDeserializer('|', HttpParamStyles.pipeDelimited),
   new DeepObjectStyleDeserializer(),
 ]);

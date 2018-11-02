@@ -1,23 +1,29 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
 import { ISchema } from '@stoplight/types/schema';
 
+import { IHttpNameValues } from '../../../types';
 import { IHttpQueryParamStyleDeserializer } from '../types';
 
 export class DelimitedStyleDeserializer implements IHttpQueryParamStyleDeserializer {
-  constructor(private readonly separator: string, private readonly styleName: string) {}
-  public supports(style: string) {
+  constructor(
+    private readonly separator: string,
+    private readonly styleName: HttpParamStyles.pipeDelimited | HttpParamStyles.spaceDelimited
+  ) {}
+  public supports(style: HttpParamStyles) {
     return style === this.styleName;
   }
 
   public deserialize(
-    key: string,
-    query: {
-      [name: string]: string | string[];
-    },
+    name: string,
+    parameters: IHttpNameValues,
     schema: ISchema,
-    explode: boolean
+    explode?: boolean
   ) {
-    if (schema.type === 'array') {
-      return explode ? this.deserializeImplodeArray(query[key]) : this.deserializeArray(query[key]);
+    const { type } = schema;
+    const values = parameters[name];
+
+    if (type === 'array') {
+      return explode ? this.deserializeImplodeArray(values) : this.deserializeArray(values);
     } else {
       throw new Error('Space/pipe/.. delimited style is only applicable to array parameter');
     }

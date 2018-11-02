@@ -1,29 +1,32 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
 import { ISchema } from '@stoplight/types/schema';
 
+import { IHttpNameValues } from '../../../types';
 import { IHttpQueryParamStyleDeserializer } from '../types';
 import { createObjectFromKeyValList } from './utils';
 
 export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
-  public supports(style: string) {
-    return style === 'form';
+  public supports(style: HttpParamStyles) {
+    return style === HttpParamStyles.form;
   }
 
   public deserialize(
-    key: string,
-    query: {
-      [name: string]: string | string[];
-    },
+    name: string,
+    parameters: IHttpNameValues,
     schema: ISchema,
     explode: boolean = true
   ) {
-    if (schema.type === 'array') {
-      return explode ? this.deserializeImplodeArray(query[key]) : this.deserializeArray(query[key]);
-    } else if (schema.type === 'object') {
+    const { type } = schema;
+    const values = parameters[name];
+
+    if (type === 'array') {
+      return explode ? this.deserializeImplodeArray(values) : this.deserializeArray(values);
+    } else if (type === 'object') {
       return explode
-        ? this.deserializeImplodeObject(query, schema)
-        : this.deserializeObject(query[key]);
+        ? this.deserializeImplodeObject(parameters, schema)
+        : this.deserializeObject(values);
     } else {
-      return query[key];
+      return values;
     }
   }
 
@@ -40,16 +43,11 @@ export class FormStyleDeserializer implements IHttpQueryParamStyleDeserializer {
     return value.split(',');
   }
 
-  private deserializeImplodeObject(
-    query: {
-      [name: string]: string | string[];
-    },
-    schema: ISchema
-  ) {
+  private deserializeImplodeObject(parameters: IHttpNameValues, schema: ISchema) {
     const properties = schema.properties || {};
 
-    return Object.keys(query).reduce((result: object, key) => {
-      const value = query[key];
+    return Object.keys(parameters).reduce((result: object, key) => {
+      const value = parameters[key];
 
       if (!properties.hasOwnProperty(key)) {
         return result;

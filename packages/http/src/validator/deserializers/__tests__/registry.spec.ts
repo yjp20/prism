@@ -1,11 +1,13 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { HttpParamDeserializerRegistry } from '../registry';
-import { DeserializeHttpQuery, IHttpParamStyleDeserializer } from '../types';
+import { IHttpQueryParamStyleDeserializer } from '../types';
 
 describe('HttpParamDeserializerRegistry', () => {
   const mockDeserializer = {
     deserialize: jest.fn(),
     supports: jest.fn(),
-  } as IHttpParamStyleDeserializer<DeserializeHttpQuery>;
+  } as IHttpQueryParamStyleDeserializer;
   const httpParamDeserializerRegistry = new HttpParamDeserializerRegistry([mockDeserializer]);
 
   beforeEach(() => {
@@ -17,14 +19,14 @@ describe('HttpParamDeserializerRegistry', () => {
       spyOn(mockDeserializer, 'supports').and.returnValue(true);
       spyOn(mockDeserializer, 'deserialize');
 
-      const deserialize = httpParamDeserializerRegistry.get('form');
-      expect(deserialize).toEqual(expect.any(Function));
-
-      if (!deserialize) {
+      const deserializer = httpParamDeserializerRegistry.get(HttpParamStyles.form);
+      if (!deserializer) {
         throw new Error('Expectation failed');
       }
 
-      deserialize();
+      expect(deserializer.deserialize).toEqual(expect.any(Function));
+
+      deserializer.deserialize('', {}, {});
 
       expect(mockDeserializer.deserialize).toHaveBeenCalled();
     });
@@ -33,6 +35,7 @@ describe('HttpParamDeserializerRegistry', () => {
   describe('deserializer for given style does not exists', () => {
     it('returns undefined', () => {
       spyOn(mockDeserializer, 'supports').and.returnValue(false);
+      // @ts-ignore
       expect(httpParamDeserializerRegistry.get('style')).toBeUndefined();
     });
   });

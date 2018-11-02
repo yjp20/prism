@@ -1,17 +1,24 @@
+import { HttpParamStyles } from '@stoplight/types/http.d';
+
 import { DelimitedStyleDeserializer } from '../delimited';
 
 describe('DelimitedStyleDeserializer', () => {
-  const delimitedStyleDeserializer = new DelimitedStyleDeserializer('|', 'pipeDelimited');
+  const delimitedStyleDeserializer = new DelimitedStyleDeserializer(
+    '|',
+    HttpParamStyles.pipeDelimited
+  );
 
   describe('supports()', () => {
     describe('style is supported', () => {
       it('returns true', () => {
-        expect(delimitedStyleDeserializer.supports('pipeDelimited')).toBe(true);
+        expect(delimitedStyleDeserializer.supports(HttpParamStyles.pipeDelimited)).toBe(true);
       });
     });
 
     describe('style is not supported', () => {
       it('returns false', () => {
+        // Force compile to pass for purpose of test.
+        // @ts-ignore
         expect(delimitedStyleDeserializer.supports('invalid')).toBe(false);
       });
     });
