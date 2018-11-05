@@ -1,3 +1,5 @@
 import { HttpForwarder } from './HttpForwarder';
 
-export const forwarder = new HttpForwarder();
+const forwarder = new HttpForwarder();
+
+export { forwarder };
