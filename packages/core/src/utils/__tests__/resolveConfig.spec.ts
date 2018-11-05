@@ -1,4 +1,4 @@
-import { resolveConfig } from '../utils/resolveConfig';
+import { resolveConfig } from '../resolveConfig';
 
 describe('resolveConfig', () => {
   test('given config is an object return that object', async () => {

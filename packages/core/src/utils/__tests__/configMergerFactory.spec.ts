@@ -1,4 +1,4 @@
-import { configMergerFactory } from '../utils/configMergerFactory';
+import { configMergerFactory } from '../configMergerFactory';
 
 describe('configMerger', () => {
   const input = {};

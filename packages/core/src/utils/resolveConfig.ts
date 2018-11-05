@@ -9,5 +9,5 @@ export async function resolveConfig<Config, Input>(
     // config factory function
     return await (config as PrismConfigFactory<Config, Input>)(input, defaultConfig);
   }
-  return config as Config;
+  return config;
 }

@@ -6,7 +6,9 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
 ): (
   customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
 ) => IPrism<Resource, Input, Output, Config, LoadOpts> {
-  return customComponents => {
+  const prism = (
+    customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+  ) => {
     const components: Partial<
       IPrismComponents<Resource, Input, Output, Config, LoadOpts>
     > = Object.assign({}, defaultComponents, customComponents);
@@ -26,7 +28,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         }
       },
 
-      process: async (input, c) => {
+      process: async (input: Input, c?: Config) => {
         // build the config for this request
         const configMerger = configMergerFactory(defaultComponents.config, components.config, c);
         const configObj: Config | undefined = await configMerger(input, defaultComponents.config);
@@ -101,4 +103,5 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
       },
     };
   };
+  return prism;
 }
