@@ -1,4 +1,4 @@
 export * from './types';
-export * from './factory';
+export { factory } from './factory';
 export * from './loaders/filesystem';
 export * from './utils';

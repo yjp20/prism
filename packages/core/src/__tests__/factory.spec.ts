@@ -47,7 +47,6 @@ describe('graph', () => {
       id: 123,
     });
 
-    await prism.resources;
     expect(defaultLoaderId).toEqual(123);
     expect(customLoaderId).toEqual(123);
   });
@@ -67,7 +66,7 @@ describe('graph', () => {
       id: 123,
     });
 
-    const resources = await prism.resources;
+    const { resources } = prism;
     expect(resources).toEqual([123]);
   });
 
@@ -94,6 +93,7 @@ describe('graph', () => {
           config: customConfig,
         });
 
+        await prism.load();
         await prism.process(input, paramConfig);
 
         expect(configMergerFactory).toHaveBeenCalledTimes(1);
@@ -103,24 +103,24 @@ describe('graph', () => {
       });
     });
 
-    test.skip('calls router to find the resource match', () => {
-      // TODO
-    });
+    // test.skip('calls router to find the resource match', () => {
+    //   // TODO
+    // });
 
-    test.skip('runs validator on input', () => {
-      // TODO
-    });
+    // test.skip('runs validator on input', () => {
+    //   // TODO
+    // });
 
-    test.skip('calls mocker if config mock property is truthy', () => {
-      // TODO
-    });
+    // test.skip('calls mocker if config mock property is truthy', () => {
+    //   // TODO
+    // });
 
-    test.skip('calls forwarder if config mock property is falsy', () => {
-      // TODO
-    });
+    // test.skip('calls forwarder if config mock property is falsy', () => {
+    //   // TODO
+    // });
 
-    test.skip('runs validator on output', () => {
-      // TODO
-    });
+    // test.skip('runs validator on output', () => {
+    //   // TODO
+    // });
   });
 });

@@ -1,2 +1,2 @@
-export * from './resolveConfig';
-export * from './configMergerFactory';
+export { resolveConfig } from './resolveConfig';
+export { configMergerFactory } from './configMergerFactory';

@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convertAjvErrors() all fields defined converts properly 1`] = `
+Array [
+  Object {
+    "message": "c is required",
+    "name": "required",
+    "path": Array [
+      "b",
+    ],
+    "severity": "error",
+    "summary": "c is required",
+  },
+]
+`;
+
+exports[`convertAjvErrors() errors are not set converts properly 1`] = `Array []`;
+
+exports[`convertAjvErrors() keyword field is missing converts properly 1`] = `
+Array [
+  Object {
+    "message": "c is required",
+    "name": "",
+    "path": Array [
+      "b",
+    ],
+    "severity": "error",
+    "summary": "c is required",
+  },
+]
+`;
+
+exports[`convertAjvErrors() message field is missing converts properly 1`] = `
+Array [
+  Object {
+    "message": "",
+    "name": "required",
+    "path": Array [
+      "b",
+    ],
+    "severity": "error",
+    "summary": "",
+  },
+]
+`;
+
+exports[`validateAgainstSchema() has validation errors returns validation errors 1`] = `
+Array [
+  Object {
+    "message": "should be number",
+    "name": "type",
+    "path": Array [
+      "pfx",
+    ],
+    "severity": "error",
+    "summary": "should be number",
+  },
+]
+`;

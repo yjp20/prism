@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JSONSchemaValidator validate() validates negatively 1`] = `
+Array [
+  Object {
+    "message": "should be string",
+    "name": "type",
+    "path": Array [],
+    "severity": "error",
+    "summary": "should be string",
+  },
+]
+`;

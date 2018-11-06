@@ -57,25 +57,29 @@ export interface IHttpConfig extends IPrismConfig {
   };
 }
 
+export interface IHttpNameValues {
+  [name: string]: string | string[];
+}
+
+export interface IHttpNameValue {
+  [name: string]: string;
+}
+
+export interface IHttpUrl {
+  baseUrl?: string;
+  path: string;
+  query?: IHttpNameValues;
+}
+
 export interface IHttpRequest {
   method: IHttpMethod;
-  url: {
-    baseUrl?: string;
-    path: string;
-    query?: {
-      [name: string]: string;
-    };
-  };
-  headers?: {
-    [name: string]: string;
-  };
+  url: IHttpUrl;
+  headers?: IHttpNameValue;
   body?: any;
 }
 
 export interface IHttpResponse {
   statusCode: number;
-  headers?: {
-    [name: string]: string;
-  };
+  headers?: IHttpNameValue;
   body?: any;
 }

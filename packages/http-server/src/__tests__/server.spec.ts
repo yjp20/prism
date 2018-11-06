@@ -1,6 +1,6 @@
 import { IHttpOperation } from '@stoplight/types';
 
-import { createServer } from '../server';
+import { createServer } from '../';
 import { IPrismHttpServer } from '../types';
 
 describe('server', () => {

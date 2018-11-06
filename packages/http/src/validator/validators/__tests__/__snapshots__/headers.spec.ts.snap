@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HttpHeadersValidator validate() spec is present header is not present spec defines it as required returns validation error 1`] = `
+Array [
+  Object {
+    "message": "Missing aHeader header param",
+    "name": "required",
+    "path": Array [
+      "header",
+      "aHeader",
+    ],
+    "severity": "error",
+    "summary": "",
+  },
+]
+`;
+
+exports[`HttpHeadersValidator validate() spec is present header is present deprecated flag is set returns deprecation warning 1`] = `
+Array [
+  Object {
+    "message": "Header param x-test-header is deprecated",
+    "name": "deprecated",
+    "path": Array [
+      "header",
+      "x-test-header",
+    ],
+    "severity": "warn",
+    "summary": "",
+  },
+]
+`;

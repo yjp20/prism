@@ -9,7 +9,7 @@ const _merge = require('lodash/merge');
 export function configMergerFactory<C, I>(
   ...configs: Array<PrismConfig<C, I> | undefined>
 ): PrismConfigFactory<C, I> {
-  return async (input: I, defaultConfig?: PrismConfig<C, I>): Promise<C> => {
+  const factory = async (input: I, defaultConfig?: PrismConfig<C, I>): Promise<C> => {
     const resolvedConfigs =
       // remove any falsy resolved configs
       _compact(
@@ -28,4 +28,5 @@ export function configMergerFactory<C, I>(
     // merge the configs over each other, in order
     return _merge({}, ...resolvedConfigs);
   };
+  return factory;
 }

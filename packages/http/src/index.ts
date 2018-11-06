@@ -8,6 +8,8 @@ import { router } from './router';
 import {
   IHttpConfig,
   IHttpMethod,
+  IHttpNameValue,
+  IHttpNameValues,
   IHttpOperationConfig,
   IHttpRequest,
   IHttpResponse,
@@ -34,6 +36,8 @@ export {
   IHttpMethod,
   IHttpRequest,
   IHttpResponse,
+  IHttpNameValue,
+  IHttpNameValues,
   createInstance,
   TPrismHttpInstance,
   IHttpOperationConfig,

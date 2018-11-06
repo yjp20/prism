@@ -5,9 +5,12 @@ export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequ
   req: IHttpRequest,
   defaultConfig?: PrismConfig<IHttpConfig, IHttpRequest>
 ) => {
-  const config: IHttpConfig = defaultConfig
-    ? await resolveConfig<IHttpConfig, IHttpRequest>(req, defaultConfig)
-    : { mock: true };
+  // For some reason this fixed the code coverage.
+  let config: IHttpConfig = { mock: true };
+  if (defaultConfig) {
+    config = await resolveConfig<IHttpConfig, IHttpRequest>(req, defaultConfig);
+  }
+
   const httpOperationConfig: any = {};
   const query = req.url.query;
 
@@ -22,7 +25,7 @@ export const getHttpConfigFromRequest: PrismConfigFactory<IHttpConfig, IHttpRequ
   }
 
   if (__dynamic) {
-    httpOperationConfig.dynamic = __dynamic.toLowerCase() === 'true';
+    httpOperationConfig.dynamic = __dynamic === 'true';
   }
 
   if (__contentType) {

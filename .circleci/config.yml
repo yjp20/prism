@@ -28,7 +28,7 @@ jobs:
             - node_modules/
       - run:
           name: Run tests
-          command: yarn test.coverage
+          command: yarn test.coverage --verbose
       - run:
           name: cc-after
           command: |

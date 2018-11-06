@@ -31,4 +31,4 @@ checks:
   #   config:
   #     threshold: # language-specific defaults. an override will affect all languages.
 exclude_patterns:
-  - '**/__test__/'
+  - '**/__tests__/'

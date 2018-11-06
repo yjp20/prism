@@ -48,7 +48,10 @@ export const createServer = <LoaderInput>(
 const replyHandler = <LoaderInput>(
   prism: TPrismHttpInstance<LoaderInput>
 ): fastify.RequestHandler<IncomingMessage, ServerResponse> => {
-  return async (request, reply) => {
+  const handler = async (
+    request: fastify.FastifyRequest<IncomingMessage>,
+    reply: fastify.FastifyReply<ServerResponse>
+  ) => {
     const { req } = request;
 
     try {
@@ -78,4 +81,5 @@ const replyHandler = <LoaderInput>(
       reply.code(500).send(e);
     }
   };
+  return handler;
 };
