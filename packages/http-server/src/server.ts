@@ -58,7 +58,7 @@ const replyHandler = <LoaderInput>(
       const response = await prism.process({
         method: (req.method || 'get') as IHttpMethod,
         url: {
-          path: req.url || '/',
+          path: (req.url || '/').split('?')[0],
           query: request.query,
         },
         headers: request.headers,
