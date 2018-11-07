@@ -12,7 +12,7 @@ describe('JSONSchemaExampleGenerator', () => {
       const schema = {
         type: 'object',
         properties: {
-          name: { type: 'string' },
+          name: { type: 'string', minLength: 1 },
           email: { type: 'string', format: 'email' },
         },
         required: ['name', 'email'],
