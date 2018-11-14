@@ -81,9 +81,7 @@ describe('server', () => {
     expect(response.statusCode).toBe(201);
   });
 
-  // TODO: this test is failing because of our weird URL handling.
-  // should just be able to pass full url into prism, and prism should break out the parts
-  test.skip('should support choosing a response code', async () => {
+  test('should support choosing a response code', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
       url: '/todos?__code=401',

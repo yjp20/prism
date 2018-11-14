@@ -52,17 +52,22 @@ const replyHandler = <LoaderInput>(
     request: fastify.FastifyRequest<IncomingMessage>,
     reply: fastify.FastifyReply<ServerResponse>
   ) => {
-    const { req } = request;
-
     try {
+      const {
+        req: { method, url },
+        body,
+        headers,
+        query,
+      } = request;
+
       const response = await prism.process({
-        method: (req.method || 'get') as IHttpMethod,
+        method: (method ? method.toLowerCase() : 'get') as IHttpMethod,
         url: {
-          path: req.url || '/',
-          query: request.query,
+          path: (url || '/').split('?')[0],
+          query,
         },
-        headers: request.headers,
-        body: request.body,
+        headers,
+        body,
       });
 
       const { output } = response;
