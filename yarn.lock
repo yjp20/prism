@@ -181,10 +181,10 @@
     tslint-eslint-rules "^5.4.0"
     tslint-xo "^0.9.0"
 
-"@stoplight/types@1.0.x":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-1.0.4.tgz#858f9158e671706da63d59f558ea50bf7ff32776"
-  integrity sha512-iPvtnrhQdu+AtXHHSU2MrxHkECn1l85qbX0HAJuEBlWrn7iSQzIVZs3+ME3N/kJLSRytPDHsACnIQRgOiEeB4w==
+"@stoplight/types@3.x.x":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/types/-/types-3.0.0.tgz#2464b3149accd0ef4b822a6079a1a8ece416e9c3"
+  integrity sha512-08VUdzyHUenrk5m8rP6DiCQjZ/6DIjmFDKryBTuBNCrQQ6dwlqqGRN+f4nCOPc+Ks6jhHRLjT3hUCn8TUwIKuw==
 
 "@types/chai@4.x.x":
   version "4.1.7"

@@ -1,5 +1,5 @@
 import { IValidation } from '@stoplight/prism-core';
-import { ISchema } from '@stoplight/types/schema';
+import { ISchema } from '@stoplight/types/schemas';
 
 export interface IHttpValidator<Target, Specs> {
   validate(target: Target, specs: Specs[], mediaType?: string): IValidation[];

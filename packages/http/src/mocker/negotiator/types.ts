@@ -1,5 +1,5 @@
 import { IExample } from '@stoplight/types/http';
-import { ISchema } from '@stoplight/types/schema';
+import { ISchema } from '@stoplight/types/schemas';
 
 export interface IHttpNegotiationResult {
   code: string;

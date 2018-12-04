@@ -31,7 +31,7 @@ export class HttpParamsValidator<Target, Spec extends IHttpParam>
         return results;
       }
 
-      const content = resolveContent(spec.content, mediaType);
+      const content = resolveContent(spec.contents, mediaType);
 
       const resolvedStyle = spec.style || style;
       if (content && content.schema) {

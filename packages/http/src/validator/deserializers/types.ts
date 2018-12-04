@@ -1,5 +1,5 @@
 import { HttpParamStyles } from '@stoplight/types';
-import { ISchema } from '@stoplight/types/schema';
+import { ISchema } from '@stoplight/types/schemas';
 
 import { IHttpNameValue, IHttpNameValues } from '../../types';
 

@@ -1,4 +1,4 @@
-import { ISchema } from '@stoplight/types/schema';
+import { ISchema } from '@stoplight/types/schemas';
 import * as Ajv from 'ajv';
 
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';

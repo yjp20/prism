@@ -1,5 +1,5 @@
 import { IValidation } from '@stoplight/prism-core';
-import { ISchema } from '@stoplight/types/schema';
+import { ISchema } from '@stoplight/types/schemas';
 
 import { ISchemaValidator, IValidatorRegistry } from './types';
 
