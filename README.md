@@ -1,12 +1,34 @@
-# Prism API Server
+# Prism API Server by [Stoplight](http://stoplight.io/?utm_source=github&utm_medium=prism)
 
-Current Prism Versions 2.0.16
+### Current Prism Version: 2.0.16
 
-The perfect OAS (Swagger 2) companion. Turn any OAS file into an API server with dynamic mocking, transformations, validations, and more.
+The perfect OpenAPI Specification (formerly known as Swagger) companion. Turn any OpenAPI Specification document into an API server with dynamic mocking, transformations, validations, and more.
 
-[Homepage](http://stoplight.io/platform/prism?utm_source=github&utm_medium=prism)
+```shell
+Usage:
+  prism [command]
 
-[Documentation](https://help.stoplight.io/prism/getting-started?utm_source=github&utm_medium=prism)
+Available Commands:
+  conduct     Run scenarios to orchestrate and test web APIs
+  help        Help about any command
+  login       Login to Stoplight
+  logout      Logout of Stoplight
+  mock        Create a mock server given an OASv2 specification
+  serve       Start a prism server instance
+  update      Update prism to latest or specific version
+  validate    Run a contract server, validating upstream responses match a OASv2 specification
+  version     Print prism version
+
+Flags:
+  -h, --help           help for prism
+  -t, --token string   Stoplight token for user account
+
+Use "prism [command] --help" for more information about a command.
+```
+
+Supports OpenAPI Specification 2. OpenAPI Specification 3 coming soon. 
+
+[More documentation](https://docs.stoplight.io/mocking/introduction?utm_source=github&utm_medium=prism)
 
 ## Installation
 
@@ -28,10 +50,4 @@ On Windows download [binary](https://github.com/stoplightio/prism/releases).
 
 ```
 prism update
-```
-
-or
-
-```
-prism up
 ```
