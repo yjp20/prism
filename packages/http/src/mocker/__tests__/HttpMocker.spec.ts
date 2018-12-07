@@ -1,4 +1,4 @@
-import { IHttpOperation } from '@stoplight/types/http';
+import { IHttpOperation } from '@stoplight/types/http-spec';
 
 import { HttpMocker } from '../../mocker';
 import { JSONSchemaExampleGenerator } from '../../mocker/generator/JSONSchemaExampleGenerator';
@@ -30,9 +30,18 @@ describe('HttpMocker', () => {
       id: 'id',
       method: 'get',
       path: '/test',
+      servers: [],
+      security: [],
+      request: {
+        headers: [],
+        query: [],
+        cookie: [],
+        path: [],
+      },
       responses: [
         {
           code: '200',
+          headers: [],
           contents: [
             {
               mediaType: 'application/json',
@@ -43,6 +52,7 @@ describe('HttpMocker', () => {
                   value: 'test value',
                 },
               ],
+              encodings: [],
             },
           ],
         },

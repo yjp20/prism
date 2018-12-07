@@ -30,7 +30,9 @@ describe('HttpQueryValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpQueryValidator.validate({}, [{ name: 'aParam', required: true, content: {} }])
+              httpQueryValidator.validate({}, [
+                { name: 'aParam', style: HttpParamStyles.Form, required: true, contents: [] },
+              ])
             ).toMatchSnapshot();
           });
         });
@@ -46,7 +48,10 @@ describe('HttpQueryValidator', () => {
                 httpQueryValidator.validate({ param: 'abc' }, [
                   {
                     name: 'param',
-                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                    style: HttpParamStyles.Form,
+                    contents: [
+                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
+                    ],
                   },
                 ])
               ).toEqual([]);
@@ -62,7 +67,10 @@ describe('HttpQueryValidator', () => {
                   httpQueryValidator.validate({ param: 'abc' }, [
                     {
                       name: 'param',
-                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                      style: HttpParamStyles.Form,
+                      contents: [
+                        { mediaType: '*', schema: { type: 'string' }, examples: [], encodings: [] },
+                      ],
                     },
                   ])
                 ).toEqual([]);
@@ -83,9 +91,10 @@ describe('HttpQueryValidator', () => {
                 [
                   {
                     name: 'param',
-                    content: {
-                      '*': { mediaType: '*', schema: { type: 'number' } },
-                    },
+                    style: HttpParamStyles.Form,
+                    contents: [
+                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
+                    ],
                   },
                 ],
                 'application/testson'
@@ -104,7 +113,8 @@ describe('HttpQueryValidator', () => {
                 {
                   name: 'param',
                   deprecated: true,
-                  content: {},
+                  style: HttpParamStyles.Form,
+                  contents: [],
                 },
               ])
             ).toMatchSnapshot();

@@ -1,4 +1,4 @@
-import { IHttpResponse as IHttpResponseSpec } from '@stoplight/types/http';
+import { IHttpOperationResponse as IHttpResponseSpec } from '@stoplight/types/http-spec';
 
 export function findResponseSpec(
   responseSpecs: IHttpResponseSpec[],

@@ -21,8 +21,12 @@ describe('resolveContent()', () => {
     it('returns default content', () => {
       expect(
         resolveContent({
-          '*': { mediaType: '*' },
-          'application/exists-son': { mediaType: 'application/exists-son' },
+          '*': { mediaType: '*', examples: [], encodings: [] },
+          'application/exists-son': {
+            mediaType: 'application/exists-son',
+            examples: [],
+            encodings: [],
+          },
         })
       ).toMatchSnapshot();
     });
@@ -34,8 +38,12 @@ describe('resolveContent()', () => {
         expect(
           resolveContent(
             {
-              '*': { mediaType: '*' },
-              'application/exists-son': { mediaType: 'application/exists-son' },
+              '*': { mediaType: '*', examples: [], encodings: [] },
+              'application/exists-son': {
+                mediaType: 'application/exists-son',
+                examples: [],
+                encodings: [],
+              },
             },
             'application/exists-son'
           )
@@ -48,8 +56,12 @@ describe('resolveContent()', () => {
         expect(
           resolveContent(
             {
-              '*': { mediaType: '*' },
-              'application/exists-son': { mediaType: 'application/exists-son' },
+              '*': { mediaType: '*', examples: [], encodings: [] },
+              'application/exists-son': {
+                mediaType: 'application/exists-son',
+                examples: [],
+                encodings: [],
+              },
             },
             'application/non-exists-son'
           )

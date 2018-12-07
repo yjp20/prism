@@ -13,10 +13,25 @@ describe('server', () => {
         method: 'get',
         path: '/',
         servers: [{ url: 'http://localhost:3000' }],
+        security: [],
+        request: {
+          path: [],
+          query: [],
+          headers: [],
+          cookie: [],
+        },
         responses: [
           {
             code: '200',
-            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            headers: [],
+            contents: [
+              {
+                mediaType: 'application/json',
+                schema: { type: 'string' },
+                examples: [],
+                encodings: [],
+              },
+            ],
           },
         ],
       },
@@ -24,15 +39,38 @@ describe('server', () => {
         id: '1',
         method: 'post',
         path: '/todos',
+        security: [],
+        request: {
+          path: [],
+          query: [],
+          headers: [],
+          cookie: [],
+        },
         servers: [{ url: 'http://localhost:3000' }],
         responses: [
           {
             code: '201',
-            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            headers: [],
+            contents: [
+              {
+                mediaType: 'application/json',
+                schema: { type: 'string' },
+                examples: [],
+                encodings: [],
+              },
+            ],
           },
           {
             code: '401',
-            contents: [{ mediaType: 'application/json', schema: { type: 'string' } }],
+            headers: [],
+            contents: [
+              {
+                mediaType: 'application/json',
+                schema: { type: 'string' },
+                examples: [],
+                encodings: [],
+              },
+            ],
           },
         ],
       },

@@ -1,4 +1,4 @@
-import { IHttpOperation } from '@stoplight/types/http';
+import { IHttpOperation } from '@stoplight/types/http-spec';
 
 export type Nullable<T> = T | null;
 

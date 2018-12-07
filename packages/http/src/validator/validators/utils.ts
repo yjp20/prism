@@ -1,5 +1,5 @@
 import { IValidation, ValidationSeverity } from '@stoplight/prism-core';
-import { ISchema } from '@stoplight/types/schemass';
+import { ISchema } from '@stoplight/types/schemas';
 import * as Ajv from 'ajv';
 import { ErrorObject } from 'ajv';
 

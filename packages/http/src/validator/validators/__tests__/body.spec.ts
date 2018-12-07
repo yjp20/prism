@@ -24,7 +24,9 @@ describe('HttpBodyValidator', () => {
     describe('request media type is not provided', () => {
       it('returns no validation errors', () => {
         expect(
-          httpBodyValidator.validate('test', [{ mediaType: 'application/not-exists-son' }])
+          httpBodyValidator.validate('test', [
+            { mediaType: 'application/not-exists-son', examples: [], encodings: [] },
+          ])
         ).toEqual([]);
         expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
@@ -35,7 +37,7 @@ describe('HttpBodyValidator', () => {
         expect(
           httpBodyValidator.validate(
             'test',
-            [{ mediaType: 'application/not-exists-son' }],
+            [{ mediaType: 'application/not-exists-son', examples: [], encodings: [] }],
             'application/json'
           )
         ).toEqual([]);
@@ -54,7 +56,7 @@ describe('HttpBodyValidator', () => {
           expect(
             httpBodyValidator.validate(
               'test',
-              [{ mediaType: 'application/json', schema: {} }],
+              [{ mediaType: 'application/json', schema: {}, examples: [], encodings: [] }],
               'application/json'
             )
           ).toEqual([]);
@@ -87,7 +89,7 @@ describe('HttpBodyValidator', () => {
           expect(
             httpBodyValidator.validate(
               'test',
-              [{ mediaType: 'application/json', schema: mockSchema }],
+              [{ mediaType: 'application/json', schema: mockSchema, examples: [], encodings: [] }],
               'application/json'
             )
           ).toMatchSnapshot();

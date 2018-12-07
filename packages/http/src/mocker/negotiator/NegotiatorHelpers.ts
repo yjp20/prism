@@ -1,4 +1,4 @@
-import { IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types/http';
+import { IHttpContent, IHttpOperation, IHttpOperationResponse } from '@stoplight/types/http-spec';
 
 import { IHttpNegotiationResult } from './types';
 
@@ -11,25 +11,29 @@ function findExampleByKey(httpContent: IHttpContent, exampleKey: string) {
 }
 
 function findHttpContentByMediaType(
-  response: IHttpResponse,
+  response: IHttpOperationResponse,
   mediaType: string
 ): IHttpContent | undefined {
   return response.contents.find(content => content.mediaType === mediaType);
 }
 
-function findLowest2xx(httpResponses: IHttpResponse[]): IHttpResponse | undefined {
+function findLowest2xx(
+  httpResponses: IHttpOperationResponse[]
+): IHttpOperationResponse | undefined {
   const generic2xxResponse = findResponseByStatusCode(httpResponses, '2XX');
   const sorted2xxResponses = httpResponses
     .filter(response => response.code.match(/2\d\d/))
-    .sort((a: IHttpResponse, b: IHttpResponse) => Number(a.code) - Number(b.code));
+    .sort(
+      (a: IHttpOperationResponse, b: IHttpOperationResponse) => Number(a.code) - Number(b.code)
+    );
 
   return sorted2xxResponses[0] || generic2xxResponse;
 }
 
 function findResponseByStatusCode(
-  responses: IHttpResponse[],
+  responses: IHttpOperationResponse[],
   statusCode: string
-): IHttpResponse | undefined {
+): IHttpOperationResponse | undefined {
   return responses.find(response => response.code.toLowerCase() === statusCode.toLowerCase());
 }
 
@@ -103,7 +107,7 @@ const helpers = {
       readonly dynamic?: boolean;
       readonly exampleKey?: string;
     },
-    response: IHttpResponse
+    response: IHttpOperationResponse
   ): IHttpNegotiationResult {
     const { code, dynamic, exampleKey } = partialOptions;
     const mediaType = 'application/json';
@@ -133,7 +137,7 @@ const helpers = {
       readonly exampleKey?: string;
       readonly dynamic?: boolean;
     },
-    response: IHttpResponse
+    response: IHttpOperationResponse
   ): IHttpNegotiationResult {
     const { code } = response;
     const { mediaType, dynamic, exampleKey } = desiredOptions;
@@ -233,7 +237,9 @@ const helpers = {
     return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
   },
 
-  negotiateOptionsForInvalidRequest(httpResponses: IHttpResponse[]): IHttpNegotiationResult {
+  negotiateOptionsForInvalidRequest(
+    httpResponses: IHttpOperationResponse[]
+  ): IHttpNegotiationResult {
     // currently only try to find a 400 response, but we may want to support other cases in the future
     const code = '400';
     const response = findResponseByStatusCode(httpResponses, code);

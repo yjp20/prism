@@ -53,7 +53,15 @@ describe('HttpValidator', () => {
         await expect(
           httpValidator.validateInput({
             resource: Object.assign(
-              { method: 'get', path: '/', responses: [], id: '1' },
+              {
+                method: 'get',
+                path: '/',
+                responses: [],
+                id: '1',
+                servers: [],
+                security: [],
+                request: { headers: [], cookie: [], query: [], path: [] },
+              },
               extendResource
             ),
             input: { method: 'get', url: { path: '/' } },
@@ -74,11 +82,16 @@ describe('HttpValidator', () => {
 
       describe('request is set', () => {
         describe('request.body is not set', () => {
-          it('validates body', test({ request: {} }));
+          it('validates body', test({ request: { path: [], headers: [], query: [], cookie: [] } }));
         });
 
         describe('request.body is set', () => {
-          it('validates body', test({ request: { body: { content: [] } } }));
+          it(
+            'validates body',
+            test({
+              request: { body: { contents: [] }, path: [], query: [], headers: [], cookie: [] },
+            })
+          );
         });
       });
     });
@@ -92,7 +105,15 @@ describe('HttpValidator', () => {
         await expect(
           httpValidator.validateInput({
             resource: Object.assign(
-              { method: 'get', path: '/', responses: [], id: '1' },
+              {
+                method: 'get',
+                path: '/',
+                responses: [],
+                id: '1',
+                servers: [],
+                security: [],
+                request: { path: [], query: [], cookie: [], headers: [] },
+              },
               extendResource
             ),
             input: { method: 'get', url: { path: '/' } },
@@ -113,11 +134,17 @@ describe('HttpValidator', () => {
 
       describe('request is set', () => {
         describe('request.headers is not set', () => {
-          it('validates headers', test({ request: {} }));
+          it(
+            'validates headers',
+            test({ request: { path: [], query: [], cookie: [], headers: [] } })
+          );
         });
 
         describe('request.headers is set', () => {
-          it('validates headers', test({ request: { headers: [] } }));
+          it(
+            'validates headers',
+            test({ request: { path: [], query: [], cookie: [], headers: [] } })
+          );
         });
       });
     });
@@ -134,7 +161,15 @@ describe('HttpValidator', () => {
         await expect(
           httpValidator.validateInput({
             resource: Object.assign(
-              { method: 'get', path: '/', responses: [], id: '1' },
+              {
+                method: 'get',
+                path: '/',
+                responses: [],
+                id: '1',
+                servers: [],
+                security: [],
+                request: { path: [], query: [], cookie: [], headers: [] },
+              },
               extendResource
             ),
             input: Object.assign({ method: 'get', url: { path: '/', query: {} } }, extendInput),
@@ -155,11 +190,17 @@ describe('HttpValidator', () => {
 
       describe('request is set', () => {
         describe('request.query is not set', () => {
-          it('validates query', test({ request: {} }));
+          it(
+            'validates query',
+            test({ request: { path: [], query: [], cookie: [], headers: [] } })
+          );
         });
 
         describe('request.query is set', () => {
-          it('validates query', test({ request: { query: [] } }));
+          it(
+            'validates query',
+            test({ request: { path: [], query: [], cookie: [], headers: [] } })
+          );
         });
       });
 
@@ -174,7 +215,15 @@ describe('HttpValidator', () => {
       it('omits validation', async () => {
         await expect(
           httpValidator.validateOutput({
-            resource: { method: 'get', path: '/', responses: [], id: '1' },
+            resource: {
+              method: 'get',
+              path: '/',
+              responses: [],
+              id: '1',
+              servers: [],
+              security: [],
+              request: { path: [], query: [], cookie: [], headers: [] },
+            },
             config: { mock: true, validate: { response: { body: true } } },
           })
         ).resolves.toEqual([]);
@@ -192,7 +241,15 @@ describe('HttpValidator', () => {
 
           await expect(
             httpValidator.validateOutput({
-              resource: { method: 'get', path: '/', responses: [], id: '1' },
+              resource: {
+                method: 'get',
+                path: '/',
+                responses: [],
+                id: '1',
+                servers: [],
+                security: [],
+                request: { query: [], path: [], cookie: [], headers: [] },
+              },
               output: { statusCode: 200 },
               config: { mock: true, validate: { response: { body: true } } },
             })
@@ -214,7 +271,15 @@ describe('HttpValidator', () => {
 
           await expect(
             httpValidator.validateOutput({
-              resource: { method: 'get', path: '/', responses: [], id: '1' },
+              resource: {
+                method: 'get',
+                path: '/',
+                responses: [],
+                id: '1',
+                servers: [],
+                security: [],
+                request: { query: [], path: [], cookie: [], headers: [] },
+              },
               output: { statusCode: 200 },
               config: { mock: true, validate: { response: { headers: true } } },
             })

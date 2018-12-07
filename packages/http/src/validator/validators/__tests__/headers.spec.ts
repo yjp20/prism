@@ -30,7 +30,9 @@ describe('HttpHeadersValidator', () => {
         describe('spec defines it as required', () => {
           it('returns validation error', () => {
             expect(
-              httpHeadersValidator.validate({}, [{ name: 'aHeader', required: true, content: {} }])
+              httpHeadersValidator.validate({}, [
+                { name: 'aHeader', style: HttpParamStyles.Simple, required: true, contents: [] },
+              ])
             ).toMatchSnapshot();
           });
         });
@@ -46,7 +48,10 @@ describe('HttpHeadersValidator', () => {
                 httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
                   {
                     name: 'x-test-header',
-                    content: { '*': { mediaType: '*', schema: { type: 'number' } } },
+                    style: HttpParamStyles.Simple,
+                    contents: [
+                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
+                    ],
                   },
                 ])
               ).toEqual([]);
@@ -62,7 +67,10 @@ describe('HttpHeadersValidator', () => {
                   httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
                     {
                       name: 'x-test-header',
-                      content: { '*': { mediaType: '*', schema: { type: 'string' } } },
+                      style: HttpParamStyles.Simple,
+                      contents: [
+                        { mediaType: '*', schema: { type: 'string' }, examples: [], encodings: [] },
+                      ],
                     },
                   ])
                 ).toEqual([]);
@@ -83,9 +91,10 @@ describe('HttpHeadersValidator', () => {
                 [
                   {
                     name: 'x-test-header',
-                    content: {
-                      '*': { mediaType: '*', schema: { type: 'number' } },
-                    },
+                    style: HttpParamStyles.Simple,
+                    contents: [
+                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
+                    ],
                   },
                 ],
                 'application/testson'
@@ -104,7 +113,8 @@ describe('HttpHeadersValidator', () => {
                 {
                   name: 'x-test-header',
                   deprecated: true,
-                  content: {},
+                  style: HttpParamStyles.Simple,
+                  contents: [],
                 },
               ])
             ).toMatchSnapshot();

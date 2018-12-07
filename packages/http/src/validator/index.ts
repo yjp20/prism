@@ -49,7 +49,7 @@ export class HttpValidator
         results,
         this.bodyValidator.validate(
           input.body,
-          (resource.request && resource.request.body && resource.request.body.content) || [],
+          (resource.request && resource.request.body && resource.request.body.contents) || [],
           mediaType
         )
       );
