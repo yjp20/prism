@@ -57,21 +57,13 @@ export class HttpValidator
 
     if (config.headers) {
       this.headersValidator
-        .validate(
-          input.headers || {},
-          (resource.request && resource.request.headers) || [],
-          mediaType
-        )
+        .validate(input.headers || {}, (request && request.headers) || [], mediaType)
         .forEach(validationResult => results.push(validationResult));
     }
 
     if (config.query) {
       this.queryValidator
-        .validate(
-          input.url.query || {},
-          (resource.request && resource.request.query) || [],
-          mediaType
-        )
+        .validate(input.url.query || {}, (request && request.query) || [], mediaType)
         .forEach(validationResult => results.push(validationResult));
     }
 
