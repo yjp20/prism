@@ -1,4 +1,4 @@
-import { IHttpOperation } from '@stoplight/types/http-spec';
+import { IHttpOperation } from '@stoplight/types';
 
 import { HttpMocker } from '../../mocker';
 import { JSONSchemaExampleGenerator } from '../../mocker/generator/JSONSchemaExampleGenerator';

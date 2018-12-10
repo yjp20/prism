@@ -45,11 +45,9 @@ export class HttpMocker
 
     // preparing response body
     let body;
-    if (
-      negotiationResult.example &&
-      (negotiationResult.example as INodeExample).value !== undefined
-    ) {
-      body = (negotiationResult.example as INodeExample).value;
+    const example = negotiationResult.example as INodeExample;
+    if (example && example.value !== undefined) {
+      body = example.value;
     } else {
       body = await this._exampleGenerator.generate(
         negotiationResult.schema,

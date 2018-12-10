@@ -1,5 +1,4 @@
-import { INodeExample, INodeExternalExample } from '@stoplight/types/graph';
-import { ISchema } from '@stoplight/types/schemas';
+import { INodeExample, INodeExternalExample, ISchema } from '@stoplight/types';
 
 export interface IHttpNegotiationResult {
   code: string;
