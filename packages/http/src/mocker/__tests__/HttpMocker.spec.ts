@@ -1,4 +1,4 @@
-import { IHttpOperation } from '@stoplight/types/http';
+import { IHttpOperation } from '@stoplight/types';
 
 import { HttpMocker } from '../../mocker';
 import { JSONSchemaExampleGenerator } from '../../mocker/generator/JSONSchemaExampleGenerator';
@@ -30,9 +30,18 @@ describe('HttpMocker', () => {
       id: 'id',
       method: 'get',
       path: '/test',
+      servers: [],
+      security: [],
+      request: {
+        headers: [],
+        query: [],
+        cookie: [],
+        path: [],
+      },
       responses: [
         {
           code: '200',
+          headers: [],
           contents: [
             {
               mediaType: 'application/json',
@@ -42,7 +51,12 @@ describe('HttpMocker', () => {
                   key: 'test key',
                   value: 'test value',
                 },
+                {
+                  key: 'test key2',
+                  externalValue: 'http://example.org/examples/example1',
+                },
               ],
+              encodings: [],
             },
           ],
         },
@@ -155,6 +169,27 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: Object.assign({}, mockInput, { validations: { input: [{}] } }),
+          })
+        ).resolves.toMatchSnapshot();
+      });
+    });
+
+    describe('when example is of type INodeExternalExample', () => {
+      it('generates a dynamic example', () => {
+        jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(() => ({
+          code: '202',
+          mediaType: 'test',
+          example: mockResource.responses![0].contents![0].examples![1],
+        }));
+
+        jest
+          .spyOn(mockExampleGenerator, 'generate')
+          .mockImplementation(() => 'example value chelsea');
+
+        return expect(
+          httpMocker.mock({
+            resource: mockResource,
+            input: mockInput,
           })
         ).resolves.toMatchSnapshot();
       });

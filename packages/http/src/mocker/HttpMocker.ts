@@ -1,5 +1,5 @@
 import { IMocker, IMockerOpts } from '@stoplight/prism-core';
-import { IHttpOperation } from '@stoplight/types';
+import { IHttpOperation, INodeExample } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { IExampleGenerator } from './generator/IExampleGenerator';
@@ -45,8 +45,9 @@ export class HttpMocker
 
     // preparing response body
     let body;
-    if (negotiationResult.example) {
-      body = negotiationResult.example.value;
+    const example = negotiationResult.example as INodeExample;
+    if (example && example.value !== undefined) {
+      body = example.value;
     } else {
       body = await this._exampleGenerator.generate(
         negotiationResult.schema,

@@ -2,18 +2,24 @@
 
 exports[`resolveContent() mediaType not provided returns default content 1`] = `
 Object {
+  "encodings": Array [],
+  "examples": Array [],
   "mediaType": "*",
 }
 `;
 
 exports[`resolveContent() mediaType provided specific content does not exist returns default content 1`] = `
 Object {
+  "encodings": Array [],
+  "examples": Array [],
   "mediaType": "*",
 }
 `;
 
 exports[`resolveContent() mediaType provided specific content exists returns specific content 1`] = `
 Object {
+  "encodings": Array [],
+  "examples": Array [],
   "mediaType": "application/exists-son",
 }
 `;

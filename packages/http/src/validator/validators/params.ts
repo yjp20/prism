@@ -1,5 +1,5 @@
 import { IValidation, ValidationSeverity } from '@stoplight/prism-core';
-import { HttpParamStyles, IHttpParam } from '@stoplight/types';
+import { HttpParamStyles, IHttpContent, IHttpParam } from '@stoplight/types';
 import { upperFirst } from 'lodash';
 
 import { IHttpParamDeserializerRegistry } from '../deserializers/types';
@@ -31,7 +31,10 @@ export class HttpParamsValidator<Target, Spec extends IHttpParam>
         return results;
       }
 
-      const content = resolveContent(spec.content, mediaType);
+      // turn contents into format expected
+      const contentMap: { [mediaType: string]: IHttpContent } = {};
+      spec.contents.forEach(cont => (contentMap[cont.mediaType] = cont));
+      const content = resolveContent(contentMap, mediaType);
 
       const resolvedStyle = spec.style || style;
       if (content && content.schema) {

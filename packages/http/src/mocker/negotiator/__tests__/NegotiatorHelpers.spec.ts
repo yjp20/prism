@@ -1,4 +1,10 @@
-import { IExample, IHttpContent, IHttpOperation, IHttpResponse } from '@stoplight/types';
+import {
+  IHttpContent,
+  IHttpOperation,
+  IHttpOperationResponse,
+  INodeExample,
+  INodeExternalExample,
+} from '@stoplight/types';
 import { Chance } from 'chance';
 
 import helpers from '../NegotiatorHelpers';
@@ -11,12 +17,15 @@ function anHttpOperation(givenHttpOperation?: IHttpOperation) {
     path: chance.url(),
     responses: [],
     id: chance.string(),
+    servers: [],
+    security: [],
+    request: { query: [], path: [], cookie: [], headers: [] },
   };
   return {
     instance() {
       return httpOperation;
     },
-    withResponses(responses: IHttpResponse[]) {
+    withResponses(responses: IHttpOperationResponse[]) {
       httpOperation.responses = responses;
       return this;
     },
@@ -45,10 +54,15 @@ describe('NegotiatorHelpers', () => {
           .withResponses([
             {
               code: actualCode,
+              headers: [],
               contents: [
                 {
                   mediaType: actualMediaType,
-                  examples: [{ key: actualExampleKey }, { key: chance.string() }],
+                  examples: [
+                    { key: actualExampleKey, value: '', externalValue: '' },
+                    { key: chance.string(), value: '', externalValue: '' },
+                  ],
+                  encodings: [],
                 },
               ],
             },
@@ -59,7 +73,7 @@ describe('NegotiatorHelpers', () => {
         const expectedConfig = {
           code: actualCode,
           mediaType: actualMediaType,
-          example: { key: actualExampleKey },
+          example: { key: actualExampleKey, value: '', externalValue: '' },
         };
 
         expect(actualConfig).toEqual(expectedConfig);
@@ -71,20 +85,24 @@ describe('NegotiatorHelpers', () => {
             .withResponses([
               {
                 code: actualCode,
+                headers: [],
                 contents: [
                   {
                     mediaType: actualMediaType + chance.character(),
                     examples: [],
+                    encodings: [],
                   },
                   {
                     schema: { type: 'type1' },
                     mediaType: actualMediaType,
                     examples: [],
+                    encodings: [],
                   },
                   {
                     schema: { type: 'type2' },
                     mediaType: actualMediaType + chance.character(),
                     examples: [],
+                    encodings: [],
                   },
                 ],
               },
@@ -106,13 +124,17 @@ describe('NegotiatorHelpers', () => {
             .withResponses([
               {
                 code: actualCode,
+                headers: [],
                 contents: [
                   {
                     mediaType: actualMediaType,
                     examples: [],
+                    encodings: [],
                   },
                   {
                     mediaType: actualMediaType,
+                    examples: [],
+                    encodings: [],
                   },
                 ],
               },
@@ -213,6 +235,7 @@ describe('NegotiatorHelpers', () => {
       const fakeResponse = {
         code,
         contents: [],
+        headers: [],
       };
       const desiredOptions = {};
       const fakeOperationConfig = {
@@ -244,6 +267,7 @@ describe('NegotiatorHelpers', () => {
       const fakeResponse = {
         code,
         contents: [],
+        headers: [],
       };
       const desiredOptions = {};
       const fakeOperationConfig = {
@@ -298,6 +322,7 @@ describe('NegotiatorHelpers', () => {
       const response = {
         code: '2xx',
         contents: [],
+        headers: [],
       };
       const fakeOperationConfig = {
         code: response.code,
@@ -323,6 +348,7 @@ describe('NegotiatorHelpers', () => {
       const response = {
         code: '200',
         contents: [],
+        headers: [],
       };
       const fakeOperationConfig = {
         code: response.code,
@@ -336,10 +362,12 @@ describe('NegotiatorHelpers', () => {
           {
             code: '201',
             contents: [],
+            headers: [],
           },
           {
             code: '2xx',
             contents: [],
+            headers: [],
           },
         ])
         .instance();
@@ -373,10 +401,13 @@ describe('NegotiatorHelpers', () => {
         };
         const contents: IHttpContent = {
           mediaType: desiredOptions.mediaType,
+          examples: [],
+          encodings: [],
         };
-        const httpResponseSchema: IHttpResponse = {
+        const httpResponseSchema: IHttpOperationResponse = {
           code: chance.string(),
           contents: [contents],
+          headers: [],
         };
         const fakeOperationConfig = {};
         jest
@@ -409,9 +440,10 @@ describe('NegotiatorHelpers', () => {
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
-        const httpResponseSchema: IHttpResponse = {
+        const httpResponseSchema: IHttpOperationResponse = {
           code: chance.string(),
           contents: [],
+          headers: [],
         };
 
         expect(() =>
@@ -430,9 +462,10 @@ describe('NegotiatorHelpers', () => {
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
-        const httpResponseSchema: IHttpResponse = {
+        const httpResponseSchema: IHttpOperationResponse = {
           code: chance.string(),
           contents: [],
+          headers: [],
         };
         const fakeOperationConfig = {};
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
@@ -469,10 +502,13 @@ describe('NegotiatorHelpers', () => {
       };
       const contents: IHttpContent = {
         mediaType: 'application/json',
+        examples: [],
+        encodings: [],
       };
-      const response: IHttpResponse = {
+      const response: IHttpOperationResponse = {
         code,
         contents: [contents],
+        headers: [],
       };
       const fakeOperationConfig = {};
       jest
@@ -496,9 +532,10 @@ describe('NegotiatorHelpers', () => {
     it('given no default contents should throw', () => {
       const code = chance.string();
       const partialOptions = { code: '200' };
-      const response: IHttpResponse = {
+      const response: IHttpOperationResponse = {
         code,
         contents: [],
+        headers: [],
       };
 
       expect(() => {
@@ -518,12 +555,15 @@ describe('NegotiatorHelpers', () => {
           exampleKey,
           dynamic: chance.bool(),
         };
-        const example: IExample = {
+        const example: INodeExample | INodeExternalExample = {
           key: exampleKey,
+          value: '',
+          externalValue: '',
         };
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [example],
+          encodings: [],
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -548,6 +588,7 @@ describe('NegotiatorHelpers', () => {
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [],
+          encodings: [],
         };
 
         expect(() => {
@@ -570,6 +611,7 @@ describe('NegotiatorHelpers', () => {
           mediaType: chance.string(),
           examples: [],
           schema: { type: 'string' },
+          encodings: [],
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -592,6 +634,7 @@ describe('NegotiatorHelpers', () => {
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [],
+          encodings: [],
         };
 
         expect(() => {
@@ -609,8 +652,10 @@ describe('NegotiatorHelpers', () => {
         const partialOptions = {
           code: chance.string(),
         };
-        const example: IExample = {
+        const example: INodeExample | INodeExternalExample = {
           key: chance.string(),
+          value: '',
+          externalValue: '',
         };
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
@@ -618,8 +663,11 @@ describe('NegotiatorHelpers', () => {
             example,
             {
               key: chance.string(),
+              value: '',
+              externalValue: '',
             },
           ],
+          encodings: [],
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -642,6 +690,7 @@ describe('NegotiatorHelpers', () => {
           mediaType: chance.string(),
           examples: [],
           schema: { type: 'string' },
+          encodings: [],
         };
 
         const actualOperationConfig = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -663,6 +712,7 @@ describe('NegotiatorHelpers', () => {
         const httpContent: IHttpContent = {
           mediaType: chance.string(),
           examples: [],
+          encodings: [],
         };
 
         expect(() => {

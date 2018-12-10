@@ -12,13 +12,15 @@ import { pickOneHttpMethod, pickSetOfHttpMethods, randomPath } from './utils';
 
 const chance = new Chance();
 
-function createResource(method: string, path: string, servers?: IServer[]): IHttpOperation {
+function createResource(method: string, path: string, servers: IServer[]): IHttpOperation {
   return {
     id: chance.guid(),
     method,
     path,
     responses: [],
     servers,
+    security: [],
+    request: { path: [], query: [], cookie: [], headers: [] },
   };
 }
 
@@ -61,7 +63,7 @@ describe('http router', () => {
         const method = pickOneHttpMethod();
         const path = randomPath();
         const resourcePromise = router.route({
-          resources: [createResource(method, path)],
+          resources: [createResource(method, path, [])],
           input: {
             method,
             url: {

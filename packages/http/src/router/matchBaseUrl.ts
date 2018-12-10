@@ -1,5 +1,4 @@
-import { INodeVariable } from '@stoplight/types';
-import { IServer } from '@stoplight/types/server';
+import { INodeVariable, IServer } from '@stoplight/types';
 import { MatchType } from './types';
 
 const variableRegexp = /{(.*?)}/g;

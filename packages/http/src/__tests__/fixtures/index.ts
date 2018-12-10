@@ -1,5 +1,5 @@
 import { IPrismInput, ValidationSeverity } from '@stoplight/prism-core';
-import { IHttpOperation } from '@stoplight/types';
+import { HttpParamStyles, IHttpOperation } from '@stoplight/types';
 
 import { IHttpMethod, IHttpRequest, IHttpResponse } from '../../types';
 
@@ -8,6 +8,14 @@ export const httpOperations: IHttpOperation[] = [
     id: 'todos',
     method: 'get',
     path: '/todos',
+    request: {
+      path: [],
+      query: [],
+      headers: [],
+      cookie: [],
+    },
+    servers: [],
+    security: [],
     responses: [
       {
         code: '200',
@@ -51,6 +59,7 @@ export const httpOperations: IHttpOperation[] = [
                 ],
               },
             ],
+            encodings: [],
           },
           {
             mediaType: 'application/xml',
@@ -64,6 +73,7 @@ export const httpOperations: IHttpOperation[] = [
                 value: '{ "root": "second" }',
               },
             ],
+            encodings: [],
           },
           {
             mediaType: 'text/plain',
@@ -77,8 +87,10 @@ export const httpOperations: IHttpOperation[] = [
                 value: 'some plain',
               },
             ],
+            encodings: [],
           },
         ],
+        headers: [],
       },
       {
         code: '201',
@@ -95,6 +107,7 @@ export const httpOperations: IHttpOperation[] = [
                 value: '{ "root": "second" }',
               },
             ],
+            encodings: [],
           },
           {
             mediaType: 'application/xml',
@@ -108,8 +121,10 @@ export const httpOperations: IHttpOperation[] = [
                 value: '<root>second</root>',
               },
             ],
+            encodings: [],
           },
         ],
+        headers: [],
       },
       {
         code: '400',
@@ -135,8 +150,10 @@ export const httpOperations: IHttpOperation[] = [
                 ],
               },
             ],
+            encodings: [],
           },
         ],
+        headers: [],
       },
     ],
   },
@@ -144,18 +161,29 @@ export const httpOperations: IHttpOperation[] = [
     id: 'todo',
     method: 'get',
     path: '/todos/{todoId}',
+    request: {
+      path: [],
+      query: [],
+      headers: [],
+      cookie: [],
+    },
+    servers: [],
+    security: [],
     responses: [
       {
         code: '200',
         headers: [
           {
             name: 'x-todos-publish',
-            content: {
-              '*': {
+            style: HttpParamStyles.Simple,
+            contents: [
+              {
                 mediaType: '*',
                 schema: { type: 'string', format: 'date-time' },
+                examples: [],
+                encodings: [],
               },
-            },
+            ],
           },
         ],
         contents: [
@@ -173,6 +201,8 @@ export const httpOperations: IHttpOperation[] = [
               },
               required: ['name', 'completed'],
             },
+            examples: [],
+            encodings: [],
           },
           {
             mediaType: 'application/xml',
@@ -182,11 +212,13 @@ export const httpOperations: IHttpOperation[] = [
                 value: '<todo><name>Shopping</name><completed>false</completed></todo>',
               },
             ],
+            encodings: [],
           },
         ],
       },
       {
         code: '400',
+        headers: [],
         contents: [
           {
             mediaType: 'application/json',
@@ -199,6 +231,8 @@ export const httpOperations: IHttpOperation[] = [
               },
               required: ['message'],
             },
+            examples: [],
+            encodings: [],
           },
         ],
       },
@@ -208,10 +242,12 @@ export const httpOperations: IHttpOperation[] = [
     id: 'todos',
     method: 'post',
     path: '/todos',
+    servers: [],
+    security: [],
     responses: [],
     request: {
       body: {
-        content: [
+        contents: [
           {
             mediaType: 'application/json',
             schema: {
@@ -219,31 +255,41 @@ export const httpOperations: IHttpOperation[] = [
               properties: { name: { type: 'string' }, completed: { type: 'boolean' } },
               required: ['name', 'completed'],
             },
+            examples: [],
+            encodings: [],
           },
         ],
       },
       query: [
         {
           name: 'overwrite',
-          content: {
-            '*': {
+          style: HttpParamStyles.Form,
+          contents: [
+            {
               mediaType: '*',
               schema: { type: 'string', pattern: '^(yes|no)$' },
+              examples: [],
+              encodings: [],
             },
-          },
+          ],
         },
       ],
       headers: [
         {
           name: 'x-todos-publish',
-          content: {
-            '*': {
+          style: HttpParamStyles.Simple,
+          contents: [
+            {
               mediaType: '*',
               schema: { type: 'string', format: 'date-time' },
+              examples: [],
+              encodings: [],
             },
-          },
+          ],
         },
       ],
+      cookie: [],
+      path: [],
     },
   },
 ];

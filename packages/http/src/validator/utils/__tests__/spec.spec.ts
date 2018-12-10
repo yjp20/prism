@@ -1,16 +1,16 @@
-import { findResponseSpec } from '../spec';
+import { findOperationResponse } from '../spec';
 
-describe('findResponseSpec()', () => {
+describe('findOperationResponse()', () => {
   it('works', () => {
     expect(
-      findResponseSpec(
+      findOperationResponse(
         [
-          { code: '2XX', contents: [] },
-          { code: '20X', contents: [] },
-          { code: '1XX', contents: [] },
+          { code: '2XX', contents: [], headers: [] },
+          { code: '20X', contents: [], headers: [] },
+          { code: '1XX', contents: [], headers: [] },
         ],
         200
       )
-    ).toEqual({ code: '20X', contents: [] });
+    ).toEqual({ code: '20X', contents: [], headers: [] });
   });
 });
