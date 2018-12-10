@@ -14,7 +14,7 @@ import {
 } from './deserializers';
 import { resolveRequestValidationConfig, resolveResponseValidationConfig } from './utils/config';
 import { getHeaderByName } from './utils/http';
-import { findResponseSpec } from './utils/spec';
+import { findOperationResponse } from './utils/spec';
 import {
   HttpBodyValidator,
   HttpHeadersValidator,
@@ -44,37 +44,35 @@ export class HttpValidator
     const results: IValidation[] = [];
     const mediaType = getHeaderByName(input.headers || {}, 'content-type');
 
+    // Replace resource.request in this function with request
+    const { request } = resource;
+
     if (config.body) {
-      Array.prototype.push.apply(
-        results,
-        this.bodyValidator.validate(
-          input.body,
-          (resource.request && resource.request.body && resource.request.body.contents) || [],
-          mediaType
-        )
-      );
+      const { body } = input;
+
+      this.bodyValidator
+        .validate(body, (request && request.body && request.body.contents) || [], mediaType)
+        .forEach(validationResult => results.push(validationResult));
     }
 
     if (config.headers) {
-      Array.prototype.push.apply(
-        results,
-        this.headersValidator.validate(
+      this.headersValidator
+        .validate(
           input.headers || {},
           (resource.request && resource.request.headers) || [],
           mediaType
         )
-      );
+        .forEach(validationResult => results.push(validationResult));
     }
 
     if (config.query) {
-      Array.prototype.push.apply(
-        results,
-        this.queryValidator.validate(
+      this.queryValidator
+        .validate(
           input.url.query || {},
           (resource.request && resource.request.query) || [],
           mediaType
         )
-      );
+        .forEach(validationResult => results.push(validationResult));
     }
 
     return results;
@@ -96,28 +94,18 @@ export class HttpValidator
     const config = resolveResponseValidationConfig(originalConfig);
     const results: IValidation[] = [];
     const mediaType = getHeaderByName(output.headers || {}, 'content-type');
-    const responseSpec = findResponseSpec(resource.responses, output.statusCode);
+    const responseSpec = findOperationResponse(resource.responses, output.statusCode);
 
     if (config.body) {
-      Array.prototype.push.apply(
-        results,
-        this.bodyValidator.validate(
-          output.body,
-          (responseSpec && responseSpec.contents) || [],
-          mediaType
-        )
-      );
+      this.bodyValidator
+        .validate(output.body, (responseSpec && responseSpec.contents) || [], mediaType)
+        .forEach(validationResult => results.push(validationResult));
     }
 
     if (config.headers) {
-      Array.prototype.push.apply(
-        results,
-        this.headersValidator.validate(
-          output.headers || {},
-          (responseSpec && responseSpec.headers) || [],
-          mediaType
-        )
-      );
+      this.headersValidator
+        .validate(output.headers || {}, (responseSpec && responseSpec.headers) || [], mediaType)
+        .forEach(validationResult => results.push(validationResult));
     }
 
     return results;

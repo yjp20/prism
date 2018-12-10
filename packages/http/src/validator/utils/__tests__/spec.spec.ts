@@ -1,9 +1,9 @@
-import { findResponseSpec } from '../spec';
+import { findOperationResponse } from '../spec';
 
-describe('findResponseSpec()', () => {
+describe('findOperationResponse()', () => {
   it('works', () => {
     expect(
-      findResponseSpec(
+      findOperationResponse(
         [
           { code: '2XX', contents: [], headers: [] },
           { code: '20X', contents: [], headers: [] },

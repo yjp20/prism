@@ -37,7 +37,7 @@ describe('HttpValidator', () => {
     jest.spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig');
     jest.spyOn(resolveValidationConfigModule, 'resolveResponseValidationConfig');
     jest.spyOn(getHeaderByNameModule, 'getHeaderByName').mockReturnValue(undefined);
-    jest.spyOn(findResponseSpecModule, 'findResponseSpec').mockReturnValue({ content: [] });
+    jest.spyOn(findResponseSpecModule, 'findOperationResponse').mockReturnValue({ content: [] });
     jest.spyOn(httpBodyValidator, 'validate');
     jest.spyOn(httpHeadersValidator, 'validate');
     jest.spyOn(httpQueryValidator, 'validate');
@@ -257,7 +257,7 @@ describe('HttpValidator', () => {
 
           expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
-          expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
+          expect(findResponseSpecModule.findOperationResponse).toHaveBeenCalled();
           expect(httpBodyValidator.validate).toHaveBeenCalledWith(undefined, [], undefined);
           expect(httpHeadersValidator.validate).not.toHaveBeenCalled();
         });
@@ -287,7 +287,7 @@ describe('HttpValidator', () => {
 
           expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
           expect(getHeaderByNameModule.getHeaderByName).toHaveBeenCalled();
-          expect(findResponseSpecModule.findResponseSpec).toHaveBeenCalled();
+          expect(findResponseSpecModule.findOperationResponse).toHaveBeenCalled();
           expect(httpBodyValidator.validate).not.toHaveBeenCalled();
           expect(httpHeadersValidator.validate).toHaveBeenCalledWith({}, [], undefined);
         });

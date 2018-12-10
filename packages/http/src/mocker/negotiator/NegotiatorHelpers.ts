@@ -1,4 +1,4 @@
-import { IHttpContent, IHttpOperation, IHttpOperationResponse } from '@stoplight/types/http-spec';
+import { IHttpContent, IHttpOperation, IHttpOperationResponse } from '@stoplight/types';
 
 import { IHttpNegotiationResult } from './types';
 

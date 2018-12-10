@@ -1,5 +1,5 @@
 import { ValidationSeverity } from '@stoplight/prism-core';
-import { ISchema } from '@stoplight/types/schemas';
+import { ISchema } from '@stoplight/types';
 
 import { HttpBodyValidator } from '../body';
 import { IValidatorRegistry } from '../types';

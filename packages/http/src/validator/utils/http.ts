@@ -1,4 +1,4 @@
-import { IHttpContent } from '@stoplight/types/http-spec';
+import { IHttpContent } from '@stoplight/types';
 
 import { IHttpNameValue } from '../../types';
 

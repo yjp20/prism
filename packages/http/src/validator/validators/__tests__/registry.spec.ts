@@ -1,4 +1,4 @@
-import { ISchema } from '@stoplight/types/schemas';
+import { ISchema } from '@stoplight/types';
 
 import { ValidatorRegistry } from '../registry';
 import { ISchemaValidator } from '../types';
