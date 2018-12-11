@@ -1,7 +1,6 @@
 import { Command, flags as oflags } from '@oclif/command';
 import { TPrismHttpComponents } from '@stoplight/prism-http';
 import { createServer } from '@stoplight/prism-http-server';
-import resources from '../resources';
 
 export default class Serve extends Command {
   public static description = 'Start a server with the given spec file';
@@ -26,21 +25,7 @@ export default class Serve extends Command {
   public async run() {
     const { flags } = this.parse(Serve);
     const { port, spec, mock } = flags;
-    const components: TPrismHttpComponents<any> = {
-      // TODO: remove once validator implemented
-      validator: undefined,
-      // TODO: remove once loader implemented
-      loader: {
-        async load() {
-          return resources;
-        },
-      },
-    };
-    if (!mock) {
-      components.config = {
-        mock: false,
-      };
-    }
+    const components: TPrismHttpComponents<any> = !mock ? { config: { mock: false } } : {};
     const server = createServer({ path: spec }, { components });
     server
       .listen(port as number)
