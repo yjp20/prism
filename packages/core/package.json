@@ -16,7 +16,6 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@stoplight/graph": "github:stoplightio/graph#next",
     "lodash": "4.x.x",
     "tslib": "1.9.x"
   },

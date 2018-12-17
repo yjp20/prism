@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Http Prism Instance function tests given correct route should return correct response 1`] = `
+Object {
+  "input": Object {
+    "method": "get",
+    "url": Object {
+      "path": "/pet/findByStatus",
+      "query": Object {
+        "status": Array [
+          "available",
+          "pending",
+        ],
+      },
+    },
+  },
+  "output": Object {
+    "headers": Object {
+      "Content-type": "application/json",
+    },
+    "statusCode": 200,
+  },
+  "validations": Object {
+    "input": Array [],
+    "output": Array [],
+  },
+}
+`;
