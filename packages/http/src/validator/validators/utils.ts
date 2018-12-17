@@ -1,9 +1,10 @@
 import { IValidation, ValidationSeverity } from '@stoplight/prism-core';
 import { ISchema } from '@stoplight/types';
-import * as Ajv from 'ajv';
 import { ErrorObject } from 'ajv';
+// @ts-ignore
+import * as AjvOAI from 'ajv-oai';
 
-const ajv = new Ajv({ allErrors: true, messages: true });
+const ajv = new AjvOAI({ allErrors: true, messages: true });
 
 export const convertAjvErrors = (
   errors: ErrorObject[] | undefined | null,
@@ -25,16 +26,20 @@ export const convertAjvErrors = (
 export const validateAgainstSchema = (
   value: any,
   schema: ISchema,
-  prefix: string
+  prefix?: string
 ): IValidation[] => {
-  const validate = ajv.compile(schema);
-  const valid = validate(value);
-  let errors: IValidation[] = [];
-  if (!valid) {
-    errors = convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error =>
-      Object.assign({}, error, { path: [prefix, ...error.path] })
-    );
+  try {
+    const validate = ajv.compile(schema);
+    const valid = validate(value);
+    let errors: IValidation[] = [];
+    if (!valid) {
+      errors = convertAjvErrors(validate.errors, ValidationSeverity.ERROR).map(error => {
+        const path = prefix ? [prefix, ...error.path] : [...error.path];
+        return Object.assign({}, error, { path });
+      });
+    }
+    return errors;
+  } catch (error) {
+    throw new Error(`AJV validation error: "${error}"`);
   }
-
-  return errors;
 };
