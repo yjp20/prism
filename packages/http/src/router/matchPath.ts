@@ -14,10 +14,12 @@ function getTemplateParamName(pathFragment: string) {
  */
 export function matchPath(requestPath: string, operationPath: string): MatchType {
   if (!requestPath.startsWith('/')) {
-    throw new Error('The request path must start with a slash.');
+    throw new Error(`The request path '${requestPath}' must start with a slash.`);
   }
   if (!operationPath.startsWith('/')) {
-    throw new Error('The operation path must start with a slash.');
+    throw new Error(
+      `Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`
+    );
   }
   const operationPathFragments = fragmentarize(operationPath);
   const requestPathFragments = fragmentarize(requestPath);
