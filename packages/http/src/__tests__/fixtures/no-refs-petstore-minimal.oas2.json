@@ -1,0 +1,87 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Swagger Petstore"
+  },
+  "host": "petstore.swagger.io",
+  "basePath": "/v2",
+  "tags": [],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/pet/findByStatus": {
+      "get": {
+        "tags": ["pet"],
+        "summary": "Finds Pets by status",
+        "operationId": "findPetsByStatus",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status values that need to be considered for filter",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["available", "pending", "sold"],
+              "default": "available"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "photoUrls"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "doggie"
+                  },
+                  "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                      "name": "photoUrl",
+                      "wrapped": true
+                    },
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": ["write:pets", "read:pets"]
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  }
+}

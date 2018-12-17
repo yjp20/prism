@@ -9,7 +9,9 @@ describe('Http Prism Instance function tests', () => {
 
   beforeAll(async () => {
     prism = createInstance();
-    await prism.load({ path: resolve(__dirname, 'fixtures', 'no-refs-petstore.oas2.json') });
+    await prism.load({
+      path: resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json'),
+    });
   });
 
   test('given incorrect route should throw error', () => {
@@ -42,5 +44,15 @@ describe('Http Prism Instance function tests', () => {
     });
     // because body is generated randomly
     expect(omit(response, 'output.body')).toMatchSnapshot();
+  });
+
+  test('given route with invalid param should return a validation error', async () => {
+    const response = await prism.process({
+      method: 'get',
+      url: {
+        path: '/pet/findByStatus',
+      },
+    });
+    expect(response).toMatchSnapshot();
   });
 });

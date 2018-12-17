@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Http Prism Instance function tests given correct route should return correct response 1`] = `
+Object {
+  "input": Object {
+    "method": "get",
+    "url": Object {
+      "path": "/pet/findByStatus",
+      "query": Object {
+        "status": Array [
+          "available",
+          "pending",
+        ],
+      },
+    },
+  },
+  "output": Object {
+    "headers": Object {
+      "Content-type": "application/json",
+    },
+    "statusCode": 200,
+  },
+  "validations": Object {
+    "input": Array [],
+    "output": Array [],
+  },
+}
+`;
+
+exports[`Http Prism Instance function tests given route with invalid param should return a validation error 1`] = `
+Object {
+  "input": Object {
+    "method": "get",
+    "url": Object {
+      "path": "/pet/findByStatus",
+    },
+  },
+  "output": Object {
+    "body": "ERROR: Your request is not valid.
+We cannot generate a sensible response because your '400'
+response has neither example nor schema or is not defined.
+Here is the original validation result instead: [{\\"path\\":[\\"query\\",\\"status\\"],\\"name\\":\\"required\\",\\"summary\\":\\"\\",\\"message\\":\\"Missing status query param\\",\\"severity\\":\\"error\\"}]",
+    "headers": Object {
+      "Content-type": "text/plain",
+    },
+    "statusCode": 400,
+  },
+  "validations": Object {
+    "input": Array [
+      Object {
+        "message": "Missing status query param",
+        "name": "required",
+        "path": Array [
+          "query",
+          "status",
+        ],
+        "severity": "error",
+        "summary": "",
+      },
+    ],
+    "output": Array [],
+  },
+}
+`;

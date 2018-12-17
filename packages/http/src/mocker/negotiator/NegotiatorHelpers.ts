@@ -267,7 +267,9 @@ const helpers = {
         schema: responseWithSchema.schema,
       };
     } else {
-      throw new Error('Data corrupted');
+      throw new Error(
+        'Request invalid but mock data corrupted. Neither schema nor example defined for 400 response.'
+      );
     }
   },
 };

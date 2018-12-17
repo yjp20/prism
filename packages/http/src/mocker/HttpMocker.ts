@@ -34,7 +34,20 @@ export class HttpMocker
     // looking up proper example
     let negotiationResult;
     if (input.validations.input.length > 0) {
-      negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
+      try {
+        negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
+      } catch (error) {
+        return {
+          statusCode: 400,
+          headers: {
+            'Content-type': 'text/plain',
+          },
+          body: `ERROR: Your request is not valid.
+We cannot generate a sensible response because your '400'
+response has neither example nor schema or is not defined.
+Here is the original validation result instead: ${JSON.stringify(input.validations.input)}`,
+        };
+      }
     } else {
       negotiationResult = helpers.negotiateOptionsForValidRequest(resource, mockConfig);
     }
