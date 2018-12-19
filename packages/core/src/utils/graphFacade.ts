@@ -18,16 +18,13 @@ import * as fs from 'fs';
 import compact = require('lodash/compact');
 
 export class GraphFacade {
-  private graph: Graph;
-
-  constructor() {
-    const graph = (this.graph = new Graph());
+  constructor(private graph: Graph) {
     // TODO(sl-732): we should probably export these as a collection of default plugins
-    graph.addPlugin(createFilesystemPlugin());
-    graph.addPlugin(createJsonPlugin());
-    graph.addPlugin(createYamlPlugin());
-    graph.addPlugin(createOas2Plugin());
-    graph.addPlugin(createOas3Plugin());
+    this.graph.addPlugin(createFilesystemPlugin());
+    this.graph.addPlugin(createJsonPlugin());
+    this.graph.addPlugin(createYamlPlugin());
+    this.graph.addPlugin(createOas2Plugin());
+    this.graph.addPlugin(createOas3Plugin());
   }
 
   public async createFilesystemNode(fsPath: string | undefined) {
