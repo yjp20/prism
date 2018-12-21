@@ -1,6 +1,6 @@
 # Prism API Server by [Stoplight](http://stoplight.io/?utm_source=github&utm_medium=prism)
 
-### Current Prism Version: 2.0.16
+### Current Prism Version: 2.0.17
 
 The perfect OpenAPI Specification (formerly known as Swagger) companion. Turn any OpenAPI Specification document into an API server with dynamic mocking, transformations, validations, and more.
 
@@ -26,7 +26,7 @@ Flags:
 Use "prism [command] --help" for more information about a command.
 ```
 
-Supports OpenAPI Specification 2. OpenAPI Specification 3 coming soon. 
+Supports OpenAPI Specification 2. OpenAPI Specification 3 coming soon.
 
 [More documentation](https://docs.stoplight.io/mocking/introduction?utm_source=github&utm_medium=prism)
 
