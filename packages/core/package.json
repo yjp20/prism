@@ -16,6 +16,7 @@
     "node": ">=8"
   },
   "dependencies": {
+    "@stoplight/graphite": "^1.4.0",
     "lodash": "4.x.x",
     "tslib": "1.9.x"
   },

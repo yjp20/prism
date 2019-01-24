@@ -1,4 +1,3 @@
-import { Graph } from '@stoplight/graph';
 import { IHttpOperation } from '@stoplight/types';
 import { IFilesystemLoaderOpts } from '../../types';
 import { GraphFacade } from '../../utils/graphFacade';
@@ -19,4 +18,4 @@ export class FilesystemLoader {
   }
 }
 
-export const filesystemLoaderInstance = new FilesystemLoader(new GraphFacade(new Graph()));
+export const filesystemLoaderInstance = new FilesystemLoader(new GraphFacade());

@@ -13,7 +13,7 @@ export default class Serve extends Command {
     spec: oflags.string({
       char: 's',
       description:
-        'Can be: path to the spec file, path to a folder full of spec files, or URL that points to a spec.',
+        'Path to a spec file or directory. Must be relative to current working directory.',
     }),
     mock: oflags.boolean({
       char: 'm',

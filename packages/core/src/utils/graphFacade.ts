@@ -1,60 +1,61 @@
-import { Graph, INodeInstance } from '@stoplight/graph';
 import {
-  createFilesystemPlugin,
-  FilesystemTypes,
-  IDirectory,
-  IDirectoryInput,
-  IFile,
-  IFileInput,
-} from '@stoplight/graph/dist/plugins/filesystem';
-import { createJsonPlugin } from '@stoplight/graph/dist/plugins/json';
-import { NODE_TYPE as OAS2_HTTP_OPERATION } from '@stoplight/graph/dist/plugins/oas/http-operation/oas2/hooks/operation';
-import { NODE_TYPE as OAS3_HTTP_OPERATION } from '@stoplight/graph/dist/plugins/oas/http-operation/oas3/hooks/operation';
-import { createOas2Plugin } from '@stoplight/graph/dist/plugins/oas/oas2';
-import { createOas3Plugin } from '@stoplight/graph/dist/plugins/oas/oas3';
-import { createYamlPlugin } from '@stoplight/graph/dist/plugins/yaml';
+  createFileSystemBackend,
+  FileSystemBackend,
+  FilesystemNodeType,
+} from '@stoplight/graphite/backends/filesystem';
+import { createGraphite } from '@stoplight/graphite/graphite';
+import { createOas2HttpPlugin } from '@stoplight/graphite/plugins/http/oas2';
+import { createOas3HttpPlugin } from '@stoplight/graphite/plugins/http/oas3';
+import { createJsonPlugin } from '@stoplight/graphite/plugins/json';
+import { createOas2Plugin } from '@stoplight/graphite/plugins/oas2';
+
+import { IGraphite } from '@stoplight/graphite';
+import { NodeCategory } from '@stoplight/graphite/graph/nodes';
 import { IHttpOperation } from '@stoplight/types';
 import * as fs from 'fs';
 import compact = require('lodash/compact');
+import { join } from 'path';
 
 export class GraphFacade {
-  constructor(private graph: Graph) {
-    // TODO(sl-732): we should probably export these as a collection of default plugins
-    this.graph.addPlugin(createFilesystemPlugin());
-    this.graph.addPlugin(createJsonPlugin());
-    this.graph.addPlugin(createYamlPlugin());
-    this.graph.addPlugin(createOas2Plugin());
-    this.graph.addPlugin(createOas3Plugin());
+  private fsBackend: FileSystemBackend;
+  private graphite: IGraphite;
+
+  constructor() {
+    const graphite = (this.graphite = createGraphite());
+    graphite.registerPlugins(
+      createJsonPlugin(),
+      createOas2Plugin(),
+      createOas2HttpPlugin(),
+      createOas3HttpPlugin()
+    );
+    this.fsBackend = createFileSystemBackend(process.cwd(), graphite, fs);
   }
 
   public async createFilesystemNode(fsPath: string | undefined) {
     if (fsPath) {
-      const stat = fs.lstatSync(fsPath);
-      // TODO(SL-732): I feel like constructing this path is an implementation detail of how Graph works.
-      // I would really appreciate if we had an abstraction for this.
-      const path = `file://${fsPath}`;
+      const stat = fs.lstatSync(join(process.cwd(), fsPath));
       if (stat.isDirectory()) {
-        return this.graph.createNode<IDirectoryInput, IDirectory>({
-          type: FilesystemTypes.DIRECTORY,
-          path,
-          fsPath,
+        this.graphite.graph.addNode({
+          category: NodeCategory.Source,
+          type: FilesystemNodeType.Directory,
+          path: fsPath,
         });
+        this.fsBackend.readdir(fsPath);
       } else if (stat.isFile()) {
-        return this.graph.createNode<IFileInput, IFile>({
-          type: FilesystemTypes.FILE,
-          path,
-          fsPath,
+        this.graphite.graph.addNode({
+          category: NodeCategory.Source,
+          type: FilesystemNodeType.File,
+          path: fsPath,
         });
+        this.fsBackend.readFile(fsPath);
       }
+      return await this.graphite.scheduler.drain();
     }
     return null;
   }
 
   get httpOperations(): IHttpOperation[] {
-    const nodes = this.graph.nodes.filter(node =>
-      [OAS2_HTTP_OPERATION, OAS3_HTTP_OPERATION].includes(node.type)
-    ) as Array<INodeInstance<IHttpOperation>>;
-
-    return compact(nodes.map(node => node.content));
+    const nodes = this.graphite.graph.virtualNodes.filter(node => node.type === 'http-operation');
+    return compact(nodes.map<IHttpOperation>(node => node.data as IHttpOperation));
   }
 }
