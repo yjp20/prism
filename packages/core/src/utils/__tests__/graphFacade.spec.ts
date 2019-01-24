@@ -6,13 +6,6 @@ describe('graphFacade', () => {
   test('httpOperations should return filtered nodes', async () => {
     await graphFacade.createFilesystemNode('packages/cli/src/samples/no-refs-petstore.oas2.json');
 
-    expect(graphFacade.httpOperations).toEqual([
-      {
-        id: 'abc-oas2',
-      },
-      {
-        id: 'abc-oas311',
-      },
-    ]);
+    expect(graphFacade.httpOperations).toMatchSnapshot();
   });
 });
