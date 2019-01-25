@@ -58,4 +58,20 @@ describe('Http Prism Instance function tests', () => {
     });
     expect(response).toMatchSnapshot();
   });
+
+  test('should support collection format multi', async () => {
+    const response = await prism.process({
+      method: 'get',
+      url: {
+        path: '/pet/findByStatus',
+        query: {
+          status: ['sold', 'available'],
+        },
+      },
+    });
+    expect(response.validations).toEqual({
+      input: [],
+      output: [],
+    });
+  });
 });

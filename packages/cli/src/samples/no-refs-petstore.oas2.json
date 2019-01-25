@@ -1161,10 +1161,11 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "successful operation",
             "schema": {
               "type": "object",
+              "required": ["id", "username"],
               "properties": {
                 "id": {
                   "type": "integer",
