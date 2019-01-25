@@ -214,7 +214,11 @@ const helpers = {
         );
       } catch (error) {
         // if negotiations fail try a default code
-        return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
+        try {
+          return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
+        } catch (error2) {
+          throw new Error(`${error}. We tried default response, but we got ${error2}`);
+        }
       }
     }
     // if no response found under a status code throw an error
