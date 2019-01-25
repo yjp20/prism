@@ -4,7 +4,7 @@ import { ErrorObject } from 'ajv';
 // @ts-ignore
 import * as AjvOAI from 'ajv-oai';
 
-const ajv = new AjvOAI({ allErrors: true, messages: true });
+const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
 
 export const convertAjvErrors = (
   errors: ErrorObject[] | undefined | null,
