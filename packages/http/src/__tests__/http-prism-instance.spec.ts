@@ -1,7 +1,7 @@
 import { IPrism } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types/http-spec';
 import { omit } from 'lodash';
-import { resolve } from 'path';
+import { relative, resolve } from 'path';
 import { createInstance, IHttpConfig, IHttpRequest, IHttpResponse } from '../';
 
 describe('Http Prism Instance function tests', () => {
@@ -10,7 +10,10 @@ describe('Http Prism Instance function tests', () => {
   beforeAll(async () => {
     prism = createInstance();
     await prism.load({
-      path: resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json'),
+      path: relative(
+        process.cwd(),
+        resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')
+      ),
     });
   });
 

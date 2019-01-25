@@ -8,7 +8,7 @@ describe('filesystemLoader', () => {
   let createFileSystemNodeMock: any;
 
   beforeEach(() => {
-    graphFacadeMock = new GraphFacade(null);
+    graphFacadeMock = new GraphFacade();
     createFileSystemNodeMock = graphFacadeMock.createFilesystemNode as jest.Mock;
     createFileSystemNodeMock.mockResolvedValue(true);
     Object.defineProperty(graphFacadeMock, 'httpOperations', {

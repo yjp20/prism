@@ -19,6 +19,7 @@ import compact = require('lodash/compact');
 export class GraphFacade {
   private fsBackend: FileSystemBackend;
   private graphite: IGraphite;
+  private cwd: string;
 
   constructor() {
     const graphite = (this.graphite = createGraphite());
@@ -28,7 +29,8 @@ export class GraphFacade {
       createOas2HttpPlugin(),
       createOas3HttpPlugin()
     );
-    this.fsBackend = createFileSystemBackend(process.cwd(), graphite, fs);
+    this.cwd = process.cwd();
+    this.fsBackend = createFileSystemBackend(this.cwd, graphite, fs);
   }
 
   public async createFilesystemNode(fsPath: string | undefined) {
