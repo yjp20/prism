@@ -2,6 +2,7 @@ import { IMocker, IMockerOpts } from '@stoplight/prism-core';
 import { IHttpOperation, INodeExample } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
+import { getHeaderByName } from '../validator/utils/http';
 import { IExampleGenerator } from './generator/IExampleGenerator';
 import helpers from './negotiator/NegotiatorHelpers';
 
@@ -24,7 +25,8 @@ export class HttpMocker
     }
 
     // setting default values
-    const inputMediaType = input.data.headers && input.data.headers['Content-type'];
+    const inputMediaType =
+      input.data.headers && getHeaderByName(input.data.headers, 'content-type');
     config = config || { mock: {} };
     const mockConfig: any = typeof config.mock === 'boolean' ? {} : Object.assign({}, config.mock);
     if (!mockConfig.mediaType && inputMediaType) {
