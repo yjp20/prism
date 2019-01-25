@@ -2694,7 +2694,7 @@ Array [
     },
     "responses": Array [
       Object {
-        "code": "200",
+        "code": "201",
         "contents": Array [
           Object {
             "examples": Array [],
@@ -2729,6 +2729,10 @@ Array [
                   "type": "string",
                 },
               },
+              "required": Array [
+                "id",
+                "username",
+              ],
               "type": "object",
               "xml": Object {
                 "name": "User",
@@ -2768,6 +2772,10 @@ Array [
                   "type": "string",
                 },
               },
+              "required": Array [
+                "id",
+                "username",
+              ],
               "type": "object",
               "xml": Object {
                 "name": "User",
