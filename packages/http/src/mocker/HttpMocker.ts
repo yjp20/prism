@@ -2,6 +2,7 @@ import { IMocker, IMockerOpts } from '@stoplight/prism-core';
 import { IHttpOperation, INodeExample } from '@stoplight/types';
 
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
+import { getHeaderByName } from '../validator/utils/http';
 import { IExampleGenerator } from './generator/IExampleGenerator';
 import helpers from './negotiator/NegotiatorHelpers';
 
@@ -24,7 +25,8 @@ export class HttpMocker
     }
 
     // setting default values
-    const inputMediaType = input.data.headers && input.data.headers['Content-type'];
+    const inputMediaType =
+      input.data.headers && getHeaderByName(input.data.headers, 'content-type');
     config = config || { mock: {} };
     const mockConfig: any = typeof config.mock === 'boolean' ? {} : Object.assign({}, config.mock);
     if (!mockConfig.mediaType && inputMediaType) {
@@ -34,7 +36,20 @@ export class HttpMocker
     // looking up proper example
     let negotiationResult;
     if (input.validations.input.length > 0) {
-      negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
+      try {
+        negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
+      } catch (error) {
+        return {
+          statusCode: 400,
+          headers: {
+            'Content-type': 'text/plain',
+          },
+          body: `ERROR: Your request is not valid.
+We cannot generate a sensible response because your '400'
+response has neither example nor schema or is not defined.
+Here is the original validation result instead: ${JSON.stringify(input.validations.input)}`,
+        };
+      }
     } else {
       negotiationResult = helpers.negotiateOptionsForValidRequest(resource, mockConfig);
     }

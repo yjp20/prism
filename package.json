@@ -26,7 +26,7 @@
     "@types/chance": "1.0.x",
     "@types/jest": "23.3.x",
     "@types/node": "10.12.x",
-    "ajv": "6.5.x",
+    "ajv": "6.6.x",
     "chance": "1.0.x",
     "jest": "^23.6.x",
     "oclif": "^1.12.x",
@@ -40,5 +40,8 @@
     "printWidth": 100,
     "singleQuote": true,
     "trailingComma": "es5"
+  },
+  "dependencies": {
+    "mobx": "^5.9.0"
   }
 }

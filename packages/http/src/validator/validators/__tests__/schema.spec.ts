@@ -19,11 +19,13 @@ describe('JSONSchemaValidator', () => {
 
   describe('validate()', () => {
     it('validates positively', () => {
-      expect(jsonSchemaValidator.validate('"str"', { type: 'string' })).toEqual([]);
+      expect(jsonSchemaValidator.validate(JSON.parse('"str"'), { type: 'string' })).toEqual([]);
     });
 
     it('validates negatively', () => {
-      expect(jsonSchemaValidator.validate('{"key":"str"}', { type: 'string' })).toMatchSnapshot();
+      expect(
+        jsonSchemaValidator.validate(JSON.parse('{"key":"str"}'), { type: 'string' })
+      ).toMatchSnapshot();
     });
   });
 });

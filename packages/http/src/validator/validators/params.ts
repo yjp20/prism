@@ -18,7 +18,7 @@ export class HttpParamsValidator<Target, Spec extends IHttpParam>
   public validate(target: Target, specs: Spec[], mediaType?: string): IValidation[] {
     const { _registry: registry, _prefix: prefix, _style: style } = this;
     return specs.reduce<IValidation[]>((results, spec) => {
-      if (!target.hasOwnProperty(spec.name) && spec.required === true) {
+      if (!(spec.name in target) && spec.required === true) {
         results.push({
           path: [prefix, spec.name],
           name: 'required',

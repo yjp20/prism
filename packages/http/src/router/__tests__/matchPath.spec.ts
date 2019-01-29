@@ -10,15 +10,15 @@ describe('matchPath()', () => {
     const requestPath = randomPath({ leadingSlash: false });
     const operationPath = randomPath({ leadingSlash: true });
     expect(() => matchPath(requestPath, operationPath)).toThrow(
-      'The request path must start with a slash.'
+      `The request path '${requestPath}' must start with a slash.`
     );
   });
 
-  test('option path must start with a slash or throw error', () => {
+  test('operation path must start with a slash or throw error', () => {
     const requestPath = randomPath({ leadingSlash: true });
     const operationPath = randomPath({ leadingSlash: false });
     expect(() => matchPath(requestPath, operationPath)).toThrow(
-      'The operation path must start with a slash.'
+      `Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`
     );
   });
 
