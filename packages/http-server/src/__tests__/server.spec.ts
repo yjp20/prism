@@ -55,4 +55,21 @@ describe('server', () => {
 
     expect(response.statusCode).toBe(200);
   });
+
+  test('should support body params', async () => {
+    const response = await server.fastify.inject({
+      method: 'POST',
+      url: '/store/order',
+      payload: {
+        id: 1,
+        petId: 2,
+        quantity: 3,
+        shipDate: '12-01-2018',
+        status: 'placed',
+        complete: true,
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+  });
 });

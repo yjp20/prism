@@ -74,4 +74,25 @@ describe('Http Prism Instance function tests', () => {
       output: [],
     });
   });
+
+  test('support param in body', async () => {
+    const response = await prism.process({
+      method: 'post',
+      url: {
+        path: '/store/order',
+      },
+      body: {
+        id: 1,
+        petId: 2,
+        quantity: 3,
+        shipDate: '12-01-2018',
+        status: 'placed',
+        complete: true,
+      },
+    });
+    expect(response.validations).toEqual({
+      input: [],
+      output: [],
+    });
+  });
 });
