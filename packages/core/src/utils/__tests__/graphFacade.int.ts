@@ -1,4 +1,4 @@
-import { GraphFacade } from '../../utils/graphFacade';
+import { GraphFacade } from '../graphFacade';
 
 describe('graphFacade', () => {
   const graphFacade = new GraphFacade();

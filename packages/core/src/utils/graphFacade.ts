@@ -54,7 +54,7 @@ export class GraphFacade {
         });
         this.fsBackend.readFile(fsPath);
       }
-      return await this.graphite.scheduler.drain();
+      return this.graphite.scheduler.drain();
     }
     return null;
   }
