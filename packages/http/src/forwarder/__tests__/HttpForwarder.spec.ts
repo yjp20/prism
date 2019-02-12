@@ -11,29 +11,29 @@ describe('HttpForwarder', () => {
   });
 
   describe('forward()', () => {
-    describe('parameters are invalid', () => {
-      it('throws error when resource is missing', async () => {
-        return expect(
-          forwarder.forward({ input: httpRequests[0] })
-        ).rejects.toThrowErrorMatchingSnapshot();
-      });
+    describe("parameters haven' been provided", () => {
+      it('proxies request correctly', async () => {
+        jest.spyOn(axios, 'default').mockImplementation(() => ({
+          status: 200,
+          headers: {
+            'Content-type': 'application/json',
+          },
+          data: '[{},{}]',
+          statusText: 'ok',
+        }));
 
-      it('throws error when server list is missing', async () => {
-        return expect(
-          forwarder.forward({
-            resource: Object.assign({}, httpOperations[0], { servers: undefined }),
-            input: httpRequests[0],
-          })
-        ).rejects.toThrowErrorMatchingSnapshot();
-      });
+        const request = Object.assign({}, httpRequests[0]);
+        request.data.url.baseUrl = 'http://api.example.com';
 
-      it('throws error when server list is empty', async () => {
-        return expect(
-          forwarder.forward({
-            resource: Object.assign({}, httpOperations[0], { servers: [] }),
-            input: httpRequests[0],
-          })
-        ).rejects.toThrowErrorMatchingSnapshot();
+        await forwarder.forward({ input: request });
+
+        expect(axios.default).toHaveBeenCalledWith({
+          method: 'get',
+          url: '/todos',
+          baseURL: 'http://api.example.com',
+          responseType: 'text',
+          validateStatus: expect.any(Function),
+        });
       });
     });
 
@@ -60,7 +60,8 @@ describe('HttpForwarder', () => {
 
           expect(axios.default).toHaveBeenCalledWith({
             method: 'get',
-            url: 'http://api.example.com/todos',
+            url: '/todos',
+            baseURL: 'http://api.example.com',
             responseType: 'text',
             validateStatus: expect.any(Function),
           });
@@ -104,7 +105,7 @@ describe('HttpForwarder', () => {
           });
 
           expect(axios.default).toHaveBeenCalledWith(
-            expect.objectContaining({ url: 'http://api.example.com/todos' })
+            expect.objectContaining({ baseURL: 'http://api.example.com', url: '/todos' })
           );
         });
 
@@ -126,7 +127,7 @@ describe('HttpForwarder', () => {
           });
 
           expect(axios.default).toHaveBeenCalledWith(
-            expect.objectContaining({ url: 'http://api.example.com/todos' })
+            expect.objectContaining({ baseURL: 'http://api.example.com', url: '/todos' })
           );
         });
       });

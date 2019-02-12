@@ -36,7 +36,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         // find the correct resource
         let resource: Resource | undefined;
         if (components.router) {
-          resource = await components.router.route(
+          resource = components.router.route(
             { resources, input, config: configObj },
             defaultComponents.router
           );

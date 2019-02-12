@@ -3,6 +3,7 @@ import { IHttpOperation } from '@stoplight/types/http-spec';
 import { omit } from 'lodash';
 import { relative, resolve } from 'path';
 import { createInstance, IHttpConfig, IHttpRequest, IHttpResponse } from '../';
+import { forwarder } from '../forwarder';
 
 describe('Http Prism Instance function tests', () => {
   let prism: IPrism<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, { path: string }>;
@@ -90,6 +91,32 @@ describe('Http Prism Instance function tests', () => {
         complete: true,
       },
     });
+    expect(response.validations).toEqual({
+      input: [],
+      output: [],
+    });
+  });
+
+  test("should forward the request correclty even if resources haven't been provided", async () => {
+    // Recreate Prism with no loaded document
+    prism = createInstance({ forwarder, router: undefined, mocker: undefined });
+
+    const response = await prism.process({
+      method: 'post',
+      url: {
+        path: '/store/order',
+        baseUrl: 'https://petstore.swagger.io',
+      },
+      body: {
+        id: 1,
+        petId: 2,
+        quantity: 3,
+        shipDate: '12-01-2018',
+        status: 'placed',
+        complete: true,
+      },
+    });
+
     expect(response.validations).toEqual({
       input: [],
       output: [],
