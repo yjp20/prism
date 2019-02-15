@@ -1,4 +1,5 @@
 # Prism API Server by [Stoplight](http://stoplight.io/?utm_source=github&utm_medium=prism)
+[![Maintainability](https://api.codeclimate.com/v1/badges/64eb87e8bb92267e322e/maintainability)](https://codeclimate.com/github/stoplightio/prism/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/64eb87e8bb92267e322e/test_coverage)](https://codeclimate.com/github/stoplightio/prism/test_coverage)
 
 ### Current Prism Version: 2.0.17
 
