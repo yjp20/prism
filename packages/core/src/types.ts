@@ -29,6 +29,15 @@ export interface IPrism<Resource, Input, Output, Config, LoadOpts> {
   readonly resources: Resource[];
 }
 
+export type PartialPrismConfigFactory<C, I> = (
+  input: I,
+  defaultConfig?: PartialPrismConfig<C, I> | PrismConfig<C, I>
+) => Partial<C>;
+export type PartialPrismConfig<C, I> =
+  | Partial<C>
+  | PrismConfigFactory<C, I>
+  | PartialPrismConfigFactory<C, I>;
+
 export interface IPrismConfig {
   mock?: boolean | object;
   security?: boolean | object;
@@ -89,7 +98,6 @@ export interface IValidator<Resource, Input, Config, Output> {
 }
 
 export interface IPrismComponents<Resource, Input, Output, Config, LoadOpts> {
-  config: PrismConfig<Config, Input>;
   loader: ILoader<LoadOpts, Resource>;
   router: IRouter<Resource, Input, Config>;
   forwarder: IForwarder<Resource, Input, Config, Output>;

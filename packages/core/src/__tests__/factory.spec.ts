@@ -8,7 +8,7 @@ describe('graph', () => {
     let defaultLoaderId = 0;
     let customLoaderId = 0;
 
-    const createInstance = factory<any, any, any, any, { id: number }>({
+    const createInstance = factory<any, any, any, any, { id: number }>(undefined, {
       // the default loader, what implementations of prism define (prism-http, etc)
       loader: {
         load: async opts => {
@@ -23,7 +23,7 @@ describe('graph', () => {
      * when creating an instance, the user can override any of the components, and receive the default component
      * as an argument
      */
-    const prism = createInstance({
+    const prism = createInstance(undefined, {
       loader: {
         load: async (opts, defaultLoader) => {
           /**
@@ -52,7 +52,7 @@ describe('graph', () => {
   });
 
   test('load calls loader and sets resources', async () => {
-    const createInstance = factory<any, any, any, any, { id: number }>({
+    const createInstance = factory<any, any, any, any, { id: number }>(undefined, {
       loader: {
         load: async opts => {
           return [opts ? opts.id : 0];
@@ -83,15 +83,11 @@ describe('graph', () => {
         (configMergerFactory as jest.Mock).mockReturnValue(configMergerStub);
 
         const input = {};
-        const defaultConfig = 'default';
-        const customConfig = 'custom';
-        const paramConfig = 'param';
-        const createInstance = factory<any, any, any, any, any>({
-          config: defaultConfig,
-        });
-        const prism = await createInstance({
-          config: customConfig,
-        });
+        const defaultConfig = { test: 'default' };
+        const customConfig = { test: 'custom' };
+        const paramConfig = { test: 'param' };
+        const createInstance = factory<any, any, any, any, any>(defaultConfig, {});
+        const prism = await createInstance(customConfig);
 
         await prism.load();
         await prism.process(input, paramConfig);
@@ -99,7 +95,7 @@ describe('graph', () => {
         expect(configMergerFactory).toHaveBeenCalledTimes(1);
         expect(configMergerFactory).toHaveBeenCalledWith(defaultConfig, customConfig, paramConfig);
         expect(configMergerStub).toHaveBeenCalledTimes(1);
-        expect(configMergerStub).toHaveBeenCalledWith(input, defaultConfig);
+        expect(configMergerStub).toHaveBeenCalledWith(input);
       });
     });
   });
