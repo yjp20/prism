@@ -11,9 +11,9 @@ describe('HttpMocker', () => {
 
   beforeEach(() => {
     httpMocker = new HttpMocker(mockExampleGenerator);
-    jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(jest.fn);
-    jest.spyOn(helpers, 'negotiateOptionsForInvalidRequest').mockImplementation(jest.fn);
-    jest.spyOn(mockExampleGenerator, 'generate').mockImplementation(jest.fn);
+    jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(jest.fn());
+    jest.spyOn(helpers, 'negotiateOptionsForInvalidRequest').mockImplementation(jest.fn());
+    jest.spyOn(mockExampleGenerator, 'generate').mockImplementation(jest.fn());
   });
 
   describe('mock()', () => {
@@ -128,7 +128,7 @@ describe('HttpMocker', () => {
           schema: mockResource.responses![0].contents![0].schema,
         }));
 
-        jest.spyOn(mockExampleGenerator, 'generate').mockImplementation(() => 'example value');
+        jest.spyOn(mockExampleGenerator, 'generate').mockResolvedValue('example value');
 
         return expect(
           httpMocker.mock({
@@ -183,9 +183,7 @@ describe('HttpMocker', () => {
           schema: { type: 'string' },
         }));
 
-        jest
-          .spyOn(mockExampleGenerator, 'generate')
-          .mockImplementation(() => 'example value chelsea');
+        jest.spyOn(mockExampleGenerator, 'generate').mockResolvedValue('example value chelsea');
 
         return expect(
           httpMocker.mock({

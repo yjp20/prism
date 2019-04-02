@@ -6,21 +6,18 @@ import { HttpForwarder } from '../HttpForwarder';
 describe('HttpForwarder', () => {
   const forwarder = new HttpForwarder();
 
-  beforeEach(() => {
-    jest.spyOn(axios, 'default').mockImplementation(jest.fn);
-  });
-
   describe('forward()', () => {
     describe("parameters haven' been provided", () => {
       it('proxies request correctly', async () => {
-        jest.spyOn(axios, 'default').mockImplementation(() => ({
+        jest.spyOn(axios, 'default').mockResolvedValue({
           status: 200,
           headers: {
             'Content-type': 'application/json',
           },
           data: '[{},{}]',
           statusText: 'ok',
-        }));
+          config: {},
+        });
 
         const request = Object.assign({}, httpRequests[0]);
         request.data.url.baseUrl = 'http://api.example.com';
@@ -40,14 +37,15 @@ describe('HttpForwarder', () => {
     describe('parameters are valid', () => {
       describe('server url has no variables', () => {
         it('proxies request correctly', async () => {
-          jest.spyOn(axios, 'default').mockImplementation(() => ({
+          jest.spyOn(axios, 'default').mockResolvedValue({
             status: 200,
             headers: {
               'Content-type': 'application/json',
             },
             data: '[{},{}]',
             statusText: 'ok',
-          }));
+            config: {},
+          });
 
           const response = await forwarder.forward({
             input: httpRequests[0],
