@@ -38,7 +38,7 @@ jobs:
           command: yarn build
       - run:
           name: Release if necessary
-          command: npx semantic-release -e semantic-release-monorepo
+          command: yarn workspaces run semantic-release --branch feat/pre-release --dry-run --no-ci -e semantic-release-monorepo
 
 workflows:
   version: 2
