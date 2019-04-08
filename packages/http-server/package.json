@@ -1,6 +1,6 @@
 {
   "name": "@stoplight/prism-http-server",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "author": "Stoplight <support@stoplight.io>",
@@ -16,8 +16,8 @@
     "/lib"
   ],
   "dependencies": {
-    "@stoplight/prism-core": "0.0.0",
-    "@stoplight/prism-http": "0.0.0",
+    "@stoplight/prism-core": "^1.0.0-alpha.0",
+    "@stoplight/prism-http": "^1.0.0-alpha.0",
     "fastify": "2.2.x",
     "tslib": "1.9.x"
   }
