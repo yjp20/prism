@@ -2,7 +2,6 @@ import { IHttpOperation, IServer } from '@stoplight/types';
 import { Chance } from 'chance';
 import {
   NO_RESOURCE_PROVIDED_ERROR,
-  NO_SERVER_CONFIGURATION_PROVIDED_ERROR,
   NONE_METHOD_MATCHED_ERROR,
   NONE_PATH_MATCHED_ERROR,
   NONE_SERVER_MATCHED_ERROR,
@@ -42,13 +41,14 @@ describe('http router', () => {
     });
 
     describe('given a resource', () => {
-      test('should not match if no server defined', () => {
+      test('should match even if no server defined', () => {
         const method = pickOneHttpMethod();
         const path = randomPath();
+        const expectedResource = createResource(method, path, []);
 
-        return expect(() =>
+        return expect(
           router.route({
-            resources: [createResource(method, path, [])],
+            resources: [expectedResource],
             input: {
               method,
               url: {
@@ -57,25 +57,7 @@ describe('http router', () => {
               },
             },
           })
-        ).toThrow(NO_SERVER_CONFIGURATION_PROVIDED_ERROR);
-      });
-
-      test('should not match if no servers arrays provided', () => {
-        const method = pickOneHttpMethod();
-        const path = randomPath();
-
-        return expect(() =>
-          router.route({
-            resources: [createResource(method, path, [])],
-            input: {
-              method,
-              url: {
-                baseUrl: '',
-                path,
-              },
-            },
-          })
-        ).toThrow(NO_SERVER_CONFIGURATION_PROVIDED_ERROR);
+        ).toEqual(expectedResource);
       });
 
       test('given a concrete matching server and unmatched methods should not match', () => {

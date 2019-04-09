@@ -4,7 +4,6 @@ import { IHttpOperation, IServer } from '@stoplight/types';
 import { IHttpConfig, IHttpRequest } from '../types';
 import {
   NO_RESOURCE_PROVIDED_ERROR,
-  NO_SERVER_CONFIGURATION_PROVIDED_ERROR,
   NONE_METHOD_MATCHED_ERROR,
   NONE_PATH_MATCHED_ERROR,
   NONE_SERVER_MATCHED_ERROR,
@@ -23,26 +22,25 @@ export const router: IRouter<IHttpOperation, IHttpRequest, IHttpConfig> = {
       throw NO_RESOURCE_PROVIDED_ERROR;
     }
 
-    let noServerProvided: boolean = true;
     let noneMethodMatched: boolean = true;
     let nonePathMatched: boolean = true;
-    let noneServerMatched: boolean = !ignoreServers;
+    let noneServerMatched: boolean = true;
 
     for (const resource of resources) {
       if (!matchByMethod(input, resource)) continue;
       noneMethodMatched = false;
 
       const pathMatch = matchPath(requestPath, resource.path);
-      const { servers = [] } = resource;
-
-      if (servers.length) noServerProvided = false;
       if (pathMatch !== MatchType.NOMATCH) nonePathMatched = false;
 
+      const { servers = [] } = resource;
       let serverMatch: MatchType | null = null;
 
-      if (!ignoreServers) {
+      if (!ignoreServers && servers.length > 0) {
         serverMatch = matchServer(servers, requestBaseUrl as string);
         if (serverMatch) noneServerMatched = false;
+      } else {
+        noneServerMatched = false;
       }
 
       if (pathMatch !== MatchType.NOMATCH) {
@@ -56,10 +54,6 @@ export const router: IRouter<IHttpOperation, IHttpRequest, IHttpConfig> = {
 
     if (noneMethodMatched) {
       throw NONE_METHOD_MATCHED_ERROR;
-    }
-
-    if (noServerProvided) {
-      throw NO_SERVER_CONFIGURATION_PROVIDED_ERROR;
     }
 
     if (nonePathMatched) {
