@@ -138,7 +138,6 @@ If you have a base path of `/api` and your path is defined as `hello`, then a re
 
 ## TODO
 
-- [ ] OpenAPI v3.0 support
 - [ ] Server Validation
 - [ ] Security Validation
 - [ ] Dynamic Mocking (use JS to script custom interactions)
