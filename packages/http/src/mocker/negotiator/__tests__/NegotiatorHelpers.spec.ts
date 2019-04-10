@@ -527,7 +527,7 @@ describe('NegotiatorHelpers', () => {
       expect(actualOperationConfig).toBe(fakeOperationConfig);
     });
 
-    it('given no default contents should return default response', () => {
+    it('when no default response return text/plain with empty body', () => {
       const code = chance.string();
       const partialOptions = { code: '200' };
       const response: IHttpOperationResponse = {
