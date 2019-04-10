@@ -14,7 +14,8 @@
     "test.fast": "jest --env=node --maxWorkers=2",
     "test.coverage": "yarn test --coverage",
     "test.watch": "yarn test --watchAll",
-    "test.update": "yarn test.fast --updateSnapshot"
+    "test.update": "yarn test.fast --updateSnapshot",
+    "release": "lerna version prerelease --conventional-commit"
   },
   "devDependencies": {
     "@stoplight/types": "4.x.x",
