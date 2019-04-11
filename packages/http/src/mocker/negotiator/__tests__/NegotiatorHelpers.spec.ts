@@ -540,7 +540,7 @@ describe('NegotiatorHelpers', () => {
         code: '200',
         mediaType: 'text/plain',
         example: {
-          externalValue: '',
+          value: undefined,
           key: 'default',
         },
       });
