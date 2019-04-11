@@ -63,11 +63,10 @@ describe('http router', () => {
       test('should match even if no server defined', () => {
         const method = pickOneHttpMethod();
         const path = randomPath();
-        const expectedResource = createResource(method, path, []);
 
-        return expect(
+        return expect(() =>
           router.route({
-            resources: [expectedResource],
+            resources: [createResource(method, path, [])],
             input: {
               method,
               url: {
@@ -76,7 +75,7 @@ describe('http router', () => {
               },
             },
           })
-        ).toEqual(expectedResource);
+        ).not.toThrowError();
       });
 
       test('given a concrete matching server and unmatched methods should not match', () => {
