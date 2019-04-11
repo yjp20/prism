@@ -131,7 +131,7 @@ const helpers = {
         code,
         mediaType: 'text/plain',
         example: {
-          externalValue: '',
+          value: undefined,
           key: 'default',
         },
       };
