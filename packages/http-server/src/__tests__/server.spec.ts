@@ -102,7 +102,7 @@ describe('server', () => {
   test('should return response even if there is no content defined in spec', async () => {
     server = createServer({}, { components: {}, config: { mock: true } });
     await server.prism.load({
-      path: relative(process.cwd(), resolve(__dirname, 'fixtures', 'no-responses.oas2.yaml')),
+      path: resolve(__dirname, 'fixtures', 'no-responses.oas2.yaml'),
     });
 
     const response = await server.fastify.inject({ method: 'GET', url: '/' });
