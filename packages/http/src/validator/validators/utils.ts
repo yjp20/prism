@@ -31,14 +31,13 @@ export const validateAgainstSchema = (
   try {
     const validate = ajv.compile(schema);
     const valid = validate(value);
-    let errors: IPrismDiagnostic[] = [];
     if (!valid) {
-      errors = convertAjvErrors(validate.errors, DiagnosticSeverity.Error).map(error => {
+      return convertAjvErrors(validate.errors, DiagnosticSeverity.Error).map(error => {
         const path = prefix ? [prefix, ...error.path] : [...error.path];
         return Object.assign({}, error, { path });
       });
     }
-    return errors;
+    return [];
   } catch (error) {
     throw new Error(`AJV validation error: "${error}"`);
   }
