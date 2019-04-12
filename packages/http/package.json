@@ -25,7 +25,8 @@
     "tslib": "1.9.x"
   },
   "devDependencies": {
-    "@types/caseless": "0.12.2"
+    "@types/caseless": "0.12.2",
+    "@types/json-schema": "^7.0.3"
   },
   "publishConfig": {
     "access": "public"

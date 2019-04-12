@@ -1,8 +1,9 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core/src/types';
-import { DiagnosticSeverity, ISchema, Segment } from '@stoplight/types';
+import { DiagnosticSeverity, Segment } from '@stoplight/types';
 import { ErrorObject } from 'ajv';
 // @ts-ignore
 import * as AjvOAI from 'ajv-oai';
+import { JSONSchema4 } from 'json-schema';
 
 const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
 
@@ -24,7 +25,7 @@ export const convertAjvErrors = (
 
 export const validateAgainstSchema = (
   value: any,
-  schema: ISchema,
+  schema: JSONSchema4,
   prefix?: string
 ): IPrismDiagnostic[] => {
   try {
