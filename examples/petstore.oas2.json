@@ -269,6 +269,12 @@
           },
           "404": {
             "description": "Pet not found"
+          },
+          "418": {
+            "description": "teapot response",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
           }
         },
         "security": [
