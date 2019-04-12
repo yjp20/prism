@@ -1,14 +1,14 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core/src/types';
 import { DiagnosticSeverity, Segment } from '@stoplight/types';
-import { ErrorObject } from 'ajv';
+import * as Ajv from 'ajv';
 // @ts-ignore
 import * as AjvOAI from 'ajv-oai';
 import { JSONSchema4 } from 'json-schema';
 
-const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
+const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' }) as Ajv.Ajv;
 
 export const convertAjvErrors = (
-  errors: ErrorObject[] | undefined | null,
+  errors: Ajv.ErrorObject[] | undefined | null,
   severity: DiagnosticSeverity
 ) => {
   if (!errors) {
