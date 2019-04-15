@@ -78,7 +78,7 @@ describe('server', () => {
       method: 'GET',
       url: '/findPetByName',
     });
-    console.log(response.payload)
+
     expect(response.statusCode).toBe(400);
   });
 
@@ -100,28 +100,23 @@ describe('server', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test('should default to 200 and mock from schema', async () => {
-    const response = await server.fastify.inject({
-      method: 'GET',
-      url: '/user/username',
-    });
-
-    expect(response.statusCode).toBe(200);
-    const payload = JSON.parse(response.payload);
-    expect(payload).toHaveProperty('id');
-    expect(payload).toHaveProperty('username');
-    expect(payload).toHaveProperty('firstName');
-    expect(payload).toHaveProperty('lastName');
-    expect(payload).toHaveProperty('email');
-    expect(payload).toHaveProperty('password');
-    expect(payload).toHaveProperty('phone');
-    expect(payload).toHaveProperty('userStatus');
-  });
-
-  test('should support body params', async () => {
+  test('should validate the body params and return an error code', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
-      url: '/store/order',
+      url: '/pets',
+      payload: {
+        id: 1,
+        name: 'bobby',
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+  });
+
+  test('should validate the body params and return a 2XX response', async () => {
+    const response = await server.fastify.inject({
+      method: 'POST',
+      url: '/pets',
       payload: {
         id: 1,
         petId: 2,
@@ -131,8 +126,7 @@ describe('server', () => {
         complete: true,
       },
     });
-
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(400);
   });
 
   test('should return response even if there is no content defined in spec', async () => {

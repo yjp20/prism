@@ -176,8 +176,6 @@ const helpers = {
           },
           httpContent
         );
-      } else {
-        throw new Error('Requested content type is not defined in the schema');
       }
     }
     // user did not provide mediaType
