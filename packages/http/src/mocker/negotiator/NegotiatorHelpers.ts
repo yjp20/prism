@@ -34,7 +34,11 @@ function findResponseByStatusCode(
   responses: IHttpOperationResponse[],
   statusCode: string
 ): IHttpOperationResponse | undefined {
-  return responses.find(response => response.code.toLowerCase() === statusCode.toLowerCase());
+  const candidate = responses.find(response => response.code.toLowerCase() === statusCode.toLowerCase());
+  if (candidate) {
+    return candidate;
+  }
+  return Object.assign(responses.find(response => response.code === 'default'), { code: statusCode });
 }
 
 const helpers = {
