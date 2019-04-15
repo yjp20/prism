@@ -39,14 +39,16 @@ describe('server', () => {
     expect(response.statusCode).toBe(500);
   });
 
-  test('will return requested response using the __code property', async () => {
+  test('will return the default response when using the __code property with a non existing code', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
       url: '/pets/123?__code=404',
     });
 
     expect(response.statusCode).toBe(404);
-    expect(response.payload).toBe('');
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('code');
+    expect(payload).toHaveProperty('message');
   });
 
   test('will return requested error response with payload', async () => {
