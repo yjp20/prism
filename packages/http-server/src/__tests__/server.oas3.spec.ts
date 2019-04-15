@@ -76,9 +76,9 @@ describe('server', () => {
   test('should not mock a request that is missing the required query parameters with no default', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pets/findByTags',
+      url: '/findPetByName',
     });
-
+    console.log(response.payload)
     expect(response.statusCode).toBe(400);
   });
 
