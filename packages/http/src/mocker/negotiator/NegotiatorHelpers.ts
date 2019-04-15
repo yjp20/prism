@@ -40,9 +40,13 @@ function findResponseByStatusCode(
   if (candidate) {
     return candidate;
   }
-  return Object.assign(responses.find(response => response.code === 'default'), {
-    code: statusCode,
-  });
+
+  const defaultResponse = responses.find(response => response.code === 'default');
+  if (defaultResponse) {
+    return Object.assign(defaultResponse, { code: statusCode });
+  }
+
+  return undefined;
 }
 
 const helpers = {
