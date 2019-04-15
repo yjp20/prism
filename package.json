@@ -10,7 +10,7 @@
     "lint": "tslint -p packages/tsconfig.json",
     "build": "tsc --build ./packages/tsconfig.build.json",
     "build.watch": "tsc --build --watch ./packages/tsconfig.build.json",
-    "pretest": "yarn lint",
+    "posttest": "yarn lint",
     "test": "yarn test.ci",
     "test.ci": "jest --env=node --maxWorkers=2",
     "test.coverage": "yarn test --coverage",
