@@ -56,7 +56,7 @@ describe('server', () => {
       method: 'GET',
       url: '/pets/123?__code=418',
     });
-    console.log(response.payload);
+
     expect(response.statusCode).toBe(418);
 
     const payload = JSON.parse(response.payload);

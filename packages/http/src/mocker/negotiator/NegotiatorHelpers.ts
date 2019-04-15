@@ -43,7 +43,7 @@ function findResponseByStatusCode(
 
   const defaultResponse = responses.find(response => response.code === 'default');
   if (defaultResponse) {
-    return Object.assign(defaultResponse, { code: statusCode });
+    return Object.assign({}, defaultResponse, { code: statusCode });
   }
 
   return undefined;
