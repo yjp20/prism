@@ -82,7 +82,7 @@ describe('server', () => {
     expect(response.statusCode).toBe(400);
   });
 
-  test('should automagically provide the parameters when not provided in the query string and a default is defined', async () => {
+  test.skip('should automagically provide the parameters when not provided in the query string and a default is defined', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
       url: '/pet/findByStatus',
