@@ -17,7 +17,9 @@
       "get": {
         "summary": "List all pets",
         "operationId": "listPets",
-        "tags": ["pets"],
+        "tags": [
+          "pets"
+        ],
         "parameters": [
           {
             "name": "limit",
@@ -46,7 +48,10 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "required": ["id", "name"],
+                    "required": [
+                      "id",
+                      "name"
+                    ],
                     "properties": {
                       "id": {
                         "type": "integer",
@@ -64,12 +69,32 @@
               }
             }
           },
+          "415": {
+            "description": "unprocessable entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "property": {
+                      "type": "string"
+                    },
+                    "validationError": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "default": {
             "description": "unexpected error",
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["code", "message"],
+                  "required": [
+                    "code",
+                    "message"
+                  ],
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -88,7 +113,9 @@
       "post": {
         "summary": "Create a pet",
         "operationId": "createPets",
-        "tags": ["pets"],
+        "tags": [
+          "pets"
+        ],
         "responses": {
           "201": {
             "description": "Null response"
@@ -98,7 +125,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["code", "message"],
+                  "required": [
+                    "code",
+                    "message"
+                  ],
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -119,7 +149,9 @@
       "get": {
         "summary": "Info for a specific pet",
         "operationId": "showPetById",
-        "tags": ["pets"],
+        "tags": [
+          "pets"
+        ],
         "parameters": [
           {
             "name": "petId",
@@ -138,7 +170,10 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["id", "name"],
+                  "required": [
+                    "id",
+                    "name"
+                  ],
                   "properties": {
                     "id": {
                       "type": "integer",
@@ -160,7 +195,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["code", "message"],
+                  "required": [
+                    "code",
+                    "message"
+                  ],
                   "properties": {
                     "code": {
                       "type": "integer",
@@ -181,7 +219,10 @@
   "components": {
     "schemas": {
       "Pet": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -198,7 +239,10 @@
       "Pets": {
         "type": "array",
         "items": {
-          "required": ["id", "name"],
+          "required": [
+            "id",
+            "name"
+          ],
           "properties": {
             "id": {
               "type": "integer",
@@ -214,7 +258,10 @@
         }
       },
       "Error": {
-        "required": ["code", "message"],
+        "required": [
+          "code",
+          "message"
+        ],
         "properties": {
           "code": {
             "type": "integer",

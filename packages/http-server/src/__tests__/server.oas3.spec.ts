@@ -39,6 +39,19 @@ describe('server', () => {
     expect(response.statusCode).toBe(500);
   });
 
+  test('will return requested error response with payload', async () => {
+    const response = await server.fastify.inject({
+      method: 'GET',
+      url: '/pets?__code=415',
+    });
+
+    expect(response.statusCode).toBe(415);
+
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('property');
+    expect(payload).toHaveProperty('validationError');
+  });
+
   test('will return the default response when using the __code property with a non existing code', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
@@ -49,18 +62,6 @@ describe('server', () => {
     const payload = JSON.parse(response.payload);
     expect(payload).toHaveProperty('code');
     expect(payload).toHaveProperty('message');
-  });
-
-  test('will return requested error response with payload', async () => {
-    const response = await server.fastify.inject({
-      method: 'GET',
-      url: '/pets/123?__code=418',
-    });
-
-    expect(response.statusCode).toBe(418);
-
-    const payload = JSON.parse(response.payload);
-    expect(payload).toHaveProperty('name');
   });
 
   test('will return 500 with error when an undefined code is requested', async () => {
