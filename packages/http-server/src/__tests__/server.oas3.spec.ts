@@ -64,10 +64,10 @@ describe('server', () => {
     expect(payload).toHaveProperty('message');
   });
 
-  test('will return 500 with error when an undefined code is requested', async () => {
+  test('will return 500 with error when an undefined code is requested and there is no default response', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pets/123?__code=499',
+      url: '/petFood/123?__code=499',
     });
 
     expect(response.statusCode).toBe(500);
