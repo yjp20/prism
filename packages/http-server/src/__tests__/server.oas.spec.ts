@@ -115,7 +115,7 @@ describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', fil
     expect(payload).toHaveProperty('userStatus');
   });
 
-  test('should support body params', async () => {
+  test('should validate body params', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
       url: '/store/order',
@@ -132,6 +132,22 @@ describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', fil
     expect(response.statusCode).toBe(200);
   });
 
+  test('should validate the body params and return an error code', async () => {
+    const response = await server.fastify.inject({
+      method: 'POST',
+      url: '/pets',
+      payload: {
+        id: 1,
+        petId: 2,
+        quantity: 3,
+        shipDate: '12-01-2018',
+        status: 'placed',
+        complete: true,
+      },
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
   test('should return response even if there is no content defined in spec', async () => {
     server = createServer({}, { components: {}, config: { mock: true } });
     await server.prism.load({
@@ -144,4 +160,28 @@ describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', fil
     expect(response.headers['content-type']).toEqual('text/plain');
     expect(response.payload).toEqual('');
   });
+
+  if (file.includes('oas3')) {
+    test('will return the default response when using the __code property with a non existing code', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/pets/123?__code=404',
+      });
+
+      expect(response.statusCode).toBe(404);
+
+      const payload = JSON.parse(response.payload);
+      expect(payload).toHaveProperty('code');
+      expect(payload).toHaveProperty('message');
+    });
+
+    test('will return 500 with error when an undefined code is requested and there is no default response', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/findByStatus/?__code=499',
+      });
+
+      expect(response.statusCode).toBe(500);
+    });
+  }
 });
