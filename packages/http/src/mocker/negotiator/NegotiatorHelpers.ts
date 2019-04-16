@@ -176,6 +176,11 @@ const helpers = {
           },
           httpContent
         );
+      } else {
+        return {
+          code,
+          mediaType: 'text/plain',
+        };
       }
     }
     // user did not provide mediaType
