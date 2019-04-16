@@ -61,15 +61,6 @@ describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', fil
     expect(payload).toHaveProperty('name');
   });
 
-  test('will return 500 with error when an undefined code is requested', async () => {
-    const response = await server.fastify.inject({
-      method: 'GET',
-      url: '/pets/123?__code=499',
-    });
-
-    expect(response.statusCode).toBe(500);
-  });
-
   test('should not mock a request that is missing the required query parameters with no default', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
@@ -148,20 +139,22 @@ describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', fil
     expect(response.statusCode).toBe(400);
   });
 
-  test('should return response even if there is no content defined in spec', async () => {
-    server = createServer({}, { components: {}, config: { mock: true } });
-    await server.prism.load({
-      path: resolve(__dirname, 'fixtures', 'no-responses.oas2.yaml'),
+  if (file === 'petstore.oas2.json') {
+    test('should return response even if there is no content defined in spec', async () => {
+      server = createServer({}, { components: {}, config: { mock: true } });
+      await server.prism.load({
+        path: resolve(__dirname, 'fixtures', 'no-responses.oas2.yaml'),
+      });
+
+      const response = await server.fastify.inject({ method: 'GET', url: '/' });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers['content-type']).toEqual('text/plain');
+      expect(response.payload).toEqual('');
     });
+  }
 
-    const response = await server.fastify.inject({ method: 'GET', url: '/' });
-
-    expect(response.statusCode).toBe(200);
-    expect(response.headers['content-type']).toEqual('text/plain');
-    expect(response.payload).toEqual('');
-  });
-
-  if (file.includes('oas3')) {
+  if (file === 'petstore.oas3.json') {
     test('will return the default response when using the __code property with a non existing code', async () => {
       const response = await server.fastify.inject({
         method: 'GET',
