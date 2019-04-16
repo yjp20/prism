@@ -2,25 +2,22 @@ import { relative, resolve } from 'path';
 import { createServer } from '../';
 import { IPrismHttpServer } from '../types';
 
-describe('server', () => {
+describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', file => {
   let server: IPrismHttpServer<any>;
 
   beforeAll(async () => {
     server = createServer({}, { components: {}, config: { mock: true } });
     await server.prism.load({
-      path: relative(
-        process.cwd(),
-        resolve(__dirname, '..', '..', '..', '..', 'examples', 'petstore.oas2.json')
-      ),
+      path: relative(process.cwd(), resolve(__dirname, '..', '..', '..', '..', 'examples', file)),
     });
   });
 
   afterAll(() => new Promise(res => server.fastify.close(res)));
 
-  test('should mock back /pet/:petId', async () => {
+  test('should mock back /pets/:petId', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/123',
+      url: '/pets/123',
     });
 
     expect(response.statusCode).toBe(200);
@@ -37,7 +34,7 @@ describe('server', () => {
   test('should not mock a verb that is not defined on a path', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
-      url: '/pet/123',
+      url: '/pets/123',
     });
     expect(response.statusCode).toBe(500);
   });
@@ -45,7 +42,7 @@ describe('server', () => {
   test('will return requested response using the __code property', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/123?__code=404',
+      url: '/pets/123?__code=404',
     });
 
     expect(response.statusCode).toBe(404);
@@ -55,7 +52,7 @@ describe('server', () => {
   test('will return requested error response with payload', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/123?__code=418',
+      url: '/pets/123?__code=418',
     });
 
     expect(response.statusCode).toBe(418);
@@ -67,7 +64,7 @@ describe('server', () => {
   test('will return 500 with error when an undefined code is requested', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/123?__code=499',
+      url: '/pets/123?__code=499',
     });
 
     expect(response.statusCode).toBe(500);
@@ -76,7 +73,7 @@ describe('server', () => {
   test('should not mock a request that is missing the required query parameters with no default', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/findByTags',
+      url: '/pets/findByTags',
     });
 
     expect(response.statusCode).toBe(400);
@@ -85,7 +82,7 @@ describe('server', () => {
   test.skip('should automagically provide the parameters when not provided in the query string and a default is defined', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/findByStatus',
+      url: '/pets/findByStatus',
     });
 
     expect(response.statusCode).toBe(200);
@@ -94,7 +91,7 @@ describe('server', () => {
   test('should support multiple param values', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
-      url: '/pet/findByStatus?status=available&status=sold',
+      url: '/pets/findByStatus?status=available&status=sold',
     });
 
     expect(response.statusCode).toBe(200);
@@ -126,7 +123,7 @@ describe('server', () => {
         id: 1,
         petId: 2,
         quantity: 3,
-        shipDate: '12-01-2018',
+        shipDate: '2002-10-02T10:00:00-05:00',
         status: 'placed',
         complete: true,
       },
