@@ -1,4 +1,4 @@
-import { factory, createFilesystemLoaderInstance, PartialPrismConfig } from '@stoplight/prism-core';
+import { createFilesystemLoaderInstance, factory, PartialPrismConfig } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { forwarder } from './forwarder';

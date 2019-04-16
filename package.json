@@ -12,7 +12,7 @@
     "build.watch": "tsc --build --watch ./packages/tsconfig.build.json",
     "posttest": "yarn lint",
     "test": "yarn test.ci",
-    "test.ci": "jest --env=node --maxWorkers=2",
+    "test.ci": "jest --maxWorkers=2",
     "test.coverage": "yarn test --coverage",
     "test.watch": "yarn test --watchAll",
     "test.update": "yarn test.fast --updateSnapshot",

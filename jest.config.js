@@ -11,6 +11,7 @@ const moduleNameMapper = {
 
 const transformIgnorePatterns = ['node_modules', 'lib'];
 const moduleFileExtensions = ['js', 'json', 'jsx', 'node', 'jsx', 'ts', 'tsx'];
+const testEnvironment = 'node';
 const transform = {
   '^.+\\.(ts|tsx)$': 'ts-jest',
 };
@@ -24,6 +25,7 @@ module.exports = {
       moduleFileExtensions,
       transformIgnorePatterns,
       moduleNameMapper,
+      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/http-server/tsconfig.json',
@@ -37,6 +39,7 @@ module.exports = {
       moduleFileExtensions,
       transformIgnorePatterns,
       moduleNameMapper,
+      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/http/tsconfig.json',
@@ -50,6 +53,7 @@ module.exports = {
       moduleFileExtensions,
       transformIgnorePatterns,
       moduleNameMapper,
+      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/core/tsconfig.json',
@@ -63,6 +67,7 @@ module.exports = {
       moduleFileExtensions,
       transformIgnorePatterns,
       moduleNameMapper,
+      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/cli/tsconfig.json',

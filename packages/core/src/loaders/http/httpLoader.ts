@@ -7,7 +7,7 @@ import { IHttpLoaderOpts } from '../../types';
 import { GraphFacade } from '../../utils/graphFacade';
 
 export class HttpLoader {
-  constructor(private graphFacade: GraphFacade) { }
+  constructor(private graphFacade: GraphFacade) {}
 
   public async load(opts?: IHttpLoaderOpts): Promise<IHttpOperation[]> {
     if (!opts || !opts.url) return [];
