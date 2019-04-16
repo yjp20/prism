@@ -30,8 +30,6 @@ Object {
 }
 `;
 
-exports[`http mocker request is valid HttpOperation contains example the media type requested does not match the example throw exception 1`] = `[Error: Requested content type is not defined in the schema]`;
-
 exports[`http mocker request is valid given enforced example key and mediaType should return 200 response 1`] = `
 Object {
   "body": "{ \\"root\\": \\"second\\" }",

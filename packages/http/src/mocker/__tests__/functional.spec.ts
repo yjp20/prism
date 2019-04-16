@@ -5,7 +5,6 @@ import { httpOperations, httpRequests } from '../../__tests__/fixtures';
 import { JSONSchemaExampleGenerator } from '../generator/JSONSchemaExampleGenerator';
 import { HttpMocker } from '../index';
 
-// TODO: Turn examples into test cases -> https://stoplightio.atlassian.net/wiki/spaces/PN/pages/5996560/Prism+Feature+List+draft
 describe('http mocker', () => {
   const mocker = new HttpMocker(new JSONSchemaExampleGenerator());
 
@@ -25,20 +24,18 @@ describe('http mocker', () => {
         expect(response).toMatchSnapshot();
       });
 
-      test('and that content type does not exist should throw', () => {
-        const rejection = mocker.mock({
-          resource: httpOperations[0],
-          input: httpRequests[0],
-          config: {
-            mock: {
-              mediaType: 'text/funky',
+      test('and that content type does not exist should return empty body', () => {
+        return expect(
+          mocker.mock({
+            resource: httpOperations[0],
+            input: httpRequests[0],
+            config: {
+              mock: {
+                mediaType: 'text/funky',
+              },
             },
-          },
-        });
-
-        return expect(rejection).rejects.toEqual(
-          new Error('Requested content type is not defined in the schema')
-        );
+          })
+        ).resolves.toMatchObject({ headers: { 'Content-type': 'application/json' } });
       });
     });
 
@@ -180,16 +177,18 @@ describe('http mocker', () => {
 
       describe('the media type requested does not match the example', () => {
         test('throw exception', () => {
-          const rejection = mocker.mock({
-            resource: httpOperations[0],
-            input: Object.assign({}, httpRequests[0], {
-              data: Object.assign({}, httpRequests[0].data, {
-                headers: { 'Content-type': 'application/yaml' },
+          return expect(
+            mocker.mock({
+              resource: httpOperations[0],
+              input: Object.assign({}, httpRequests[0], {
+                data: Object.assign({}, httpRequests[0].data, {
+                  headers: { 'Content-type': 'application/yaml' },
+                }),
               }),
-            }),
+            })
+          ).resolves.toMatchObject({
+            headers: { 'Content-type': 'application/json' },
           });
-
-          return expect(rejection).rejects.toMatchSnapshot();
         });
       });
     });
