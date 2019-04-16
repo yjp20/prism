@@ -1,13 +1,14 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core/src/types';
-import { DiagnosticSeverity, ISchema, Segment } from '@stoplight/types';
-import { ErrorObject } from 'ajv';
+import { DiagnosticSeverity, Segment } from '@stoplight/types';
+import * as Ajv from 'ajv';
 // @ts-ignore
 import * as AjvOAI from 'ajv-oai';
+import { JSONSchema4 } from 'json-schema';
 
-const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
+const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' }) as Ajv.Ajv;
 
 export const convertAjvErrors = (
-  errors: ErrorObject[] | undefined | null,
+  errors: Ajv.ErrorObject[] | undefined | null,
   severity: DiagnosticSeverity
 ) => {
   if (!errors) {
@@ -24,20 +25,19 @@ export const convertAjvErrors = (
 
 export const validateAgainstSchema = (
   value: any,
-  schema: ISchema,
+  schema: JSONSchema4,
   prefix?: string
 ): IPrismDiagnostic[] => {
   try {
     const validate = ajv.compile(schema);
     const valid = validate(value);
-    let errors: IPrismDiagnostic[] = [];
     if (!valid) {
-      errors = convertAjvErrors(validate.errors, DiagnosticSeverity.Error).map(error => {
+      return convertAjvErrors(validate.errors, DiagnosticSeverity.Error).map(error => {
         const path = prefix ? [prefix, ...error.path] : [...error.path];
         return Object.assign({}, error, { path });
       });
     }
-    return errors;
+    return [];
   } catch (error) {
     throw new Error(`AJV validation error: "${error}"`);
   }

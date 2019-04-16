@@ -14,13 +14,10 @@ node_modules/
 # Optional npm cache directory
 .npm
 
-# Distribution directory
-dist
-
 *.tsbuildinfo
 
 # IDE
 .idea
 lib
-
+.vscode
 oclif.manifest.json

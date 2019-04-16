@@ -10,7 +10,7 @@ describe('server', () => {
     await server.prism.load({
       path: relative(
         process.cwd(),
-        resolve(__dirname, '..', '..', '..', 'cli', 'src', 'samples', 'no-refs-petstore.oas2.json')
+        resolve(__dirname, '..', '..', '..', '..', 'examples', 'petstore.oas2.json')
       ),
     });
   });
@@ -24,9 +24,25 @@ describe('server', () => {
     });
 
     expect(response.statusCode).toBe(200);
+
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('id');
+    expect(payload).toHaveProperty('category');
+    expect(payload).toHaveProperty('name');
+    expect(payload).toHaveProperty('photoUrls');
+    expect(payload).toHaveProperty('tags');
+    expect(payload).toHaveProperty('status');
   });
 
-  test('will return requested error response even if no schema or examples defined', async () => {
+  test('should not mock a verb that is not defined on a path', async () => {
+    const response = await server.fastify.inject({
+      method: 'POST',
+      url: '/pet/123',
+    });
+    expect(response.statusCode).toBe(500);
+  });
+
+  test('will return requested response using the __code property', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
       url: '/pet/123?__code=404',
@@ -36,13 +52,16 @@ describe('server', () => {
     expect(response.payload).toBe('');
   });
 
-  test('will return requested error response when schema is provided', async () => {
+  test('will return requested error response with payload', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
       url: '/pet/123?__code=418',
     });
 
     expect(response.statusCode).toBe(418);
+
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('name');
   });
 
   test('will return 500 with error when an undefined code is requested', async () => {
@@ -54,6 +73,24 @@ describe('server', () => {
     expect(response.statusCode).toBe(500);
   });
 
+  test('should not mock a request that is missing the required query parameters with no default', async () => {
+    const response = await server.fastify.inject({
+      method: 'GET',
+      url: '/pet/findByTags',
+    });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  test.skip('should automagically provide the parameters when not provided in the query string and a default is defined', async () => {
+    const response = await server.fastify.inject({
+      method: 'GET',
+      url: '/pet/findByStatus',
+    });
+
+    expect(response.statusCode).toBe(200);
+  });
+
   test('should support multiple param values', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
@@ -63,23 +100,22 @@ describe('server', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test('should default to 201 and mock from schema', async () => {
+  test('should default to 200 and mock from schema', async () => {
     const response = await server.fastify.inject({
       method: 'GET',
       url: '/user/username',
     });
 
-    expect(Object.keys(JSON.parse(response.payload))).toEqual([
-      'id',
-      'username',
-      'firstName',
-      'lastName',
-      'email',
-      'password',
-      'phone',
-      'userStatus',
-    ]);
-    expect(response.statusCode).toBe(201);
+    expect(response.statusCode).toBe(200);
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('id');
+    expect(payload).toHaveProperty('username');
+    expect(payload).toHaveProperty('firstName');
+    expect(payload).toHaveProperty('lastName');
+    expect(payload).toHaveProperty('email');
+    expect(payload).toHaveProperty('password');
+    expect(payload).toHaveProperty('phone');
+    expect(payload).toHaveProperty('userStatus');
   });
 
   test('should support body params', async () => {

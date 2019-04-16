@@ -19,7 +19,7 @@ module.exports = {
   projects: [
     {
       displayName: 'HTTP-SERVER',
-      testMatch: ['<rootDir>/packages/http-server/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
+      testMatch: ['<rootDir>/packages/http-server/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
       transform,
       moduleFileExtensions,
       transformIgnorePatterns,
@@ -32,7 +32,7 @@ module.exports = {
     },
     {
       displayName: 'HTTP',
-      testMatch: ['<rootDir>/packages/http/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
+      testMatch: ['<rootDir>/packages/http/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
       transform,
       moduleFileExtensions,
       transformIgnorePatterns,
@@ -45,7 +45,7 @@ module.exports = {
     },
     {
       displayName: 'CORE',
-      testMatch: ['<rootDir>/packages/core/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
+      testMatch: ['<rootDir>/packages/core/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
       transform,
       moduleFileExtensions,
       transformIgnorePatterns,
@@ -58,7 +58,7 @@ module.exports = {
     },
     {
       displayName: 'CLI',
-      testMatch: ['<rootDir>/packages/cli/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
+      testMatch: ['<rootDir>/packages/cli/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
       transform,
       moduleFileExtensions,
       transformIgnorePatterns,
