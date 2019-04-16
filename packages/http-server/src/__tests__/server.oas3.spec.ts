@@ -100,7 +100,7 @@ describe('server', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test('should validate the body params and return an error code', async () => {
+  test('should validate the body params and return a 2XX response', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
       url: '/pets',
@@ -113,7 +113,7 @@ describe('server', () => {
     expect(response.statusCode).toBe(201);
   });
 
-  test('should validate the body params and return a 2XX response', async () => {
+  test('should validate the body params and return an error code', async () => {
     const response = await server.fastify.inject({
       method: 'POST',
       url: '/pets',
