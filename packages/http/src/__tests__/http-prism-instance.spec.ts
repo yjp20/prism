@@ -129,7 +129,7 @@ describe('Http Prism Instance function tests', () => {
       path: relative(process.cwd(), resolve(__dirname, 'fixtures', 'petstore.oas2.yaml')),
     });
 
-    expect(prism.resources).toHaveLength(5);
+    expect(prism.resources).toHaveLength(3);
   });
 
   test('returns stringified static example when one defined in spec', async () => {
