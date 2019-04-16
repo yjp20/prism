@@ -2,7 +2,7 @@ import { relative, resolve } from 'path';
 import { createServer } from '../';
 import { IPrismHttpServer } from '../types';
 
-describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', file => {
+describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', file => {
   let server: IPrismHttpServer<any>;
 
   beforeAll(async () => {
@@ -165,10 +165,10 @@ describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', fil
     test('will return the default response when using the __code property with a non existing code', async () => {
       const response = await server.fastify.inject({
         method: 'GET',
-        url: '/pets/123?__code=404',
+        url: '/pets/123?__code=499',
       });
 
-      expect(response.statusCode).toBe(404);
+      expect(response.statusCode).toBe(499);
 
       const payload = JSON.parse(response.payload);
       expect(payload).toHaveProperty('code');
@@ -178,7 +178,7 @@ describe.each([['petstore.oas3.json'], ['petstore.oas2.json']])('server %s', fil
     test('will return 500 with error when an undefined code is requested and there is no default response', async () => {
       const response = await server.fastify.inject({
         method: 'GET',
-        url: '/findByStatus/?__code=499',
+        url: '/pets/findByStatus?status=available&__code=499',
       });
 
       expect(response.statusCode).toBe(500);
