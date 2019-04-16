@@ -42,7 +42,7 @@
     "http"
   ],
   "paths": {
-    "/pet": {
+    "/pets": {
       "post": {
         "tags": [
           "pet"
@@ -130,7 +130,7 @@
         ]
       }
     },
-    "/pet/findByStatus": {
+    "/pets/findByStatus": {
       "get": {
         "tags": [
           "pet"
@@ -185,7 +185,7 @@
         ]
       }
     },
-    "/pet/findByTags": {
+    "/pets/findByTags": {
       "get": {
         "tags": [
           "pet"
@@ -235,7 +235,7 @@
         "deprecated": true
       }
     },
-    "/pet/{petId}": {
+    "/pets/{petId}": {
       "get": {
         "tags": [
           "pet"
@@ -380,7 +380,7 @@
         ]
       }
     },
-    "/pet/{petId}/uploadImage": {
+    "/pets/{petId}/uploadImage": {
       "post": {
         "tags": [
           "pet"
