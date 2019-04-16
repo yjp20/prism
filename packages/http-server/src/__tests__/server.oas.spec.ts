@@ -12,7 +12,7 @@ describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', fil
     });
   });
 
-  afterAll(() => new Promise(res => server.fastify.close(res)));
+  afterAll(() => server.fastify.close());
 
   test('should mock back /pets/:petId', async () => {
     const response = await server.fastify.inject({
