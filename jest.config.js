@@ -9,23 +9,22 @@ const moduleNameMapper = {
   '@stoplight/prism-http-server/(.*)': '<rootDir>/packages/http-server/src/$1',
 };
 
-const transformIgnorePatterns = ['node_modules', 'lib'];
-const moduleFileExtensions = ['js', 'json', 'jsx', 'node', 'jsx', 'ts', 'tsx'];
-const testEnvironment = 'node';
-const transform = {
-  '^.+\\.(ts|tsx)$': 'ts-jest',
+const projectDefault = {
+  moduleNameMapper,
+  transformIgnorePatterns: ['node_modules', 'lib'],
+  moduleFileExtensions: ['js', 'json', 'jsx', 'node', 'jsx', 'ts', 'tsx'],
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  }
 };
 
 module.exports = {
   projects: [
     {
+      ...projectDefault,
       displayName: 'HTTP-SERVER',
       testMatch: ['<rootDir>/packages/http-server/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
-      transform,
-      moduleFileExtensions,
-      transformIgnorePatterns,
-      moduleNameMapper,
-      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/http-server/tsconfig.json',
@@ -33,13 +32,9 @@ module.exports = {
       },
     },
     {
+      ...projectDefault,
       displayName: 'HTTP',
       testMatch: ['<rootDir>/packages/http/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
-      transform,
-      moduleFileExtensions,
-      transformIgnorePatterns,
-      moduleNameMapper,
-      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/http/tsconfig.json',
@@ -47,13 +42,9 @@ module.exports = {
       },
     },
     {
+      ...projectDefault,
       displayName: 'CORE',
       testMatch: ['<rootDir>/packages/core/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
-      transform,
-      moduleFileExtensions,
-      transformIgnorePatterns,
-      moduleNameMapper,
-      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/core/tsconfig.json',
@@ -61,13 +52,9 @@ module.exports = {
       },
     },
     {
+      ...projectDefault,
       displayName: 'CLI',
       testMatch: ['<rootDir>/packages/cli/src/**/__tests__/*.(spec|unit|int|func).(ts)?(x)'],
-      transform,
-      moduleFileExtensions,
-      transformIgnorePatterns,
-      moduleNameMapper,
-      testEnvironment,
       globals: {
         'ts-jest': {
           tsConfig: '<rootDir>/packages/cli/tsconfig.json',
