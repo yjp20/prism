@@ -26,7 +26,7 @@ describe('server command', () => {
 
     expect(createPrismServer).toHaveBeenLastCalledWith(
       { url: 'http://path.to/spec.oas2.yaml' },
-      { components: { loader: new HttpLoader() }, config: { mock: false } }
+      { components: { loader: expect.any(HttpLoader) }, config: { mock: false } }
     );
   });
 });
