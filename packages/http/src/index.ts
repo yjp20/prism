@@ -1,4 +1,4 @@
-import { createFilesystemLoaderInstance, factory, PartialPrismConfig } from '@stoplight/prism-core';
+import { factory, FilesystemLoader, PartialPrismConfig } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import { forwarder } from './forwarder';
@@ -25,7 +25,7 @@ const createInstance = <LoaderInput>(
   return factory<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, LoaderInput>(
     { mock: true },
     {
-      loader: createFilesystemLoaderInstance(),
+      loader: new FilesystemLoader(),
       router,
       forwarder,
       validator,

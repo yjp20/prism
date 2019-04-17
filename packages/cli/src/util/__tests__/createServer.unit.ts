@@ -1,4 +1,4 @@
-import { createHttpLoaderInstance } from '@stoplight/prism-core';
+import { HttpLoader } from '@stoplight/prism-core';
 import { createServer as createPrismServer } from '@stoplight/prism-http-server';
 import { createServer } from '../createServer';
 
@@ -26,7 +26,7 @@ describe('server command', () => {
 
     expect(createPrismServer).toHaveBeenLastCalledWith(
       { url: 'http://path.to/spec.oas2.yaml' },
-      { components: { loader: createHttpLoaderInstance() }, config: { mock: false } }
+      { components: { loader: new HttpLoader() }, config: { mock: false } }
     );
   });
 });

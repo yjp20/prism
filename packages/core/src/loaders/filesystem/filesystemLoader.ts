@@ -6,7 +6,7 @@ import { GraphFacade } from '../../utils/graphFacade';
 const DEFAULT_PATH = '.';
 
 export class FilesystemLoader {
-  constructor(private graphFacade: GraphFacade) {}
+  constructor(private graphFacade: GraphFacade = new GraphFacade()) {}
 
   /**
    * TODO(sl-732): we can't assure we will return an array of 'Resource'.
@@ -31,4 +31,4 @@ export class FilesystemLoader {
   }
 }
 
-export const createFilesystemLoaderInstance = () => new FilesystemLoader(new GraphFacade());
+export default FilesystemLoader;
