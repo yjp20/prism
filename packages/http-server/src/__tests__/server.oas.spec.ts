@@ -138,6 +138,27 @@ describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', fil
     });
     expect(response.statusCode).toBe(400);
   });
+
+  test('will return the default response when using the __code property with a non existing code', async () => {
+    const response = await server.fastify.inject({
+      method: 'GET',
+      url: '/pets/123?__code=499',
+    });
+
+    expect(response.statusCode).toBe(499);
+    const payload = JSON.parse(response.payload);
+    expect(payload).toHaveProperty('code');
+    expect(payload).toHaveProperty('message');
+  });
+
+  test('will return 500 with error when an undefined code is requested and there is no default response', async () => {
+    const response = await server.fastify.inject({
+      method: 'GET',
+      url: '/pets/findByStatus?status=available&__code=499',
+    });
+
+    expect(response.statusCode).toBe(500);
+  });
 });
 
 describe('oas2 specific tests', () => {
@@ -154,43 +175,5 @@ describe('oas2 specific tests', () => {
     expect(response.payload).toEqual('');
 
     await server.fastify.close();
-  });
-});
-
-describe('oas3 specific', () => {
-  let server: IPrismHttpServer<{}>;
-
-  beforeAll(async () => {
-    server = createServer({}, { components: {}, config: { mock: true } });
-    await server.prism.load({
-      path: relative(
-        process.cwd(),
-        resolve(__dirname, '..', '..', '..', '..', 'examples', 'petstore.oas3.json')
-      ),
-    });
-  });
-
-  afterAll(() => server.fastify.close());
-
-  test('will return the default response when using the __code property with a non existing code', async () => {
-    const response = await server.fastify.inject({
-      method: 'GET',
-      url: '/pets/123?__code=499',
-    });
-
-    expect(response.statusCode).toBe(499);
-
-    const payload = JSON.parse(response.payload);
-    expect(payload).toHaveProperty('code');
-    expect(payload).toHaveProperty('message');
-  });
-
-  test('will return 500 with error when an undefined code is requested and there is no default response', async () => {
-    const response = await server.fastify.inject({
-      method: 'GET',
-      url: '/pets/findByStatus?status=available&__code=499',
-    });
-
-    expect(response.statusCode).toBe(500);
   });
 });
