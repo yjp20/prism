@@ -34,7 +34,19 @@ function findResponseByStatusCode(
   responses: IHttpOperationResponse[],
   statusCode: string
 ): IHttpOperationResponse | undefined {
-  return responses.find(response => response.code.toLowerCase() === statusCode.toLowerCase());
+  const candidate = responses.find(
+    response => response.code.toLowerCase() === statusCode.toLowerCase()
+  );
+  if (candidate) {
+    return candidate;
+  }
+
+  const defaultResponse = responses.find(response => response.code === 'default');
+  if (defaultResponse) {
+    return Object.assign({}, defaultResponse, { code: statusCode });
+  }
+
+  return undefined;
 }
 
 const helpers = {
@@ -165,7 +177,10 @@ const helpers = {
           httpContent
         );
       } else {
-        throw new Error('Requested content type is not defined in the schema');
+        return {
+          code,
+          mediaType: 'text/plain',
+        };
       }
     }
     // user did not provide mediaType

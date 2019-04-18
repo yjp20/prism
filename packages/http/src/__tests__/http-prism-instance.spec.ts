@@ -18,6 +18,18 @@ describe('Http Prism Instance function tests', () => {
     });
   });
 
+  test('keeps the instances separate', async () => {
+    const second_prism = createInstance({ mock: true }, {});
+    await second_prism.load({
+      path: relative(
+        process.cwd(),
+        resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')
+      ),
+    });
+
+    expect(prism.resources).toStrictEqual(second_prism.resources);
+  });
+
   test('given incorrect route should throw error', () => {
     return expect(
       prism.process({
@@ -129,7 +141,7 @@ describe('Http Prism Instance function tests', () => {
       path: relative(process.cwd(), resolve(__dirname, 'fixtures', 'petstore.oas2.yaml')),
     });
 
-    expect(prism.resources).toHaveLength(5);
+    expect(prism.resources).toHaveLength(3);
   });
 
   test('returns stringified static example when one defined in spec', async () => {

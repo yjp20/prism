@@ -438,13 +438,13 @@ describe('NegotiatorHelpers', () => {
           headers: [],
         };
 
-        expect(() =>
+        expect(
           helpers.negotiateOptionsBySpecificResponse(
             httpOperation,
             desiredOptions,
             httpResponseSchema
           )
-        ).toThrow('Requested content type is not defined in the schema');
+        ).toHaveProperty('mediaType', 'text/plain');
       });
     });
 
