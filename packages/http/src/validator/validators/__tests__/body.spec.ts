@@ -25,7 +25,7 @@ describe('HttpBodyValidator', () => {
         expect(
           httpBodyValidator.validate('test', [
             { mediaType: 'application/not-exists-son', examples: [], encodings: [] },
-          ])
+          ]),
         ).toEqual([]);
         expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
@@ -37,8 +37,8 @@ describe('HttpBodyValidator', () => {
           httpBodyValidator.validate(
             'test',
             [{ mediaType: 'application/not-exists-son', examples: [], encodings: [] }],
-            'application/json'
-          )
+            'application/json',
+          ),
         ).toEqual([]);
         expect(validatorRegistry.get).not.toHaveBeenCalled();
       });
@@ -53,8 +53,8 @@ describe('HttpBodyValidator', () => {
             httpBodyValidator.validate(
               'test',
               [{ mediaType: 'application/json', schema: {}, examples: [], encodings: [] }],
-              'application/json'
-            )
+              'application/json',
+            ),
           ).toEqual([]);
 
           expect(validatorRegistryGetSpy).toHaveBeenCalledWith('application/json');
@@ -86,8 +86,8 @@ describe('HttpBodyValidator', () => {
             httpBodyValidator.validate(
               'test',
               [{ mediaType: 'application/json', schema: mockSchema, examples: [], encodings: [] }],
-              'application/json'
-            )
+              'application/json',
+            ),
           ).toMatchSnapshot();
 
           expect(validatorRegistry.get).toHaveBeenCalledTimes(1);

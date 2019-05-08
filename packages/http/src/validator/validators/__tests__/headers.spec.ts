@@ -31,7 +31,7 @@ describe('HttpHeadersValidator', () => {
             expect(
               httpHeadersValidator.validate({}, [
                 { name: 'aHeader', style: HttpParamStyles.Simple, required: true, contents: [] },
-              ])
+              ]),
             ).toMatchSnapshot();
           });
         });
@@ -48,11 +48,9 @@ describe('HttpHeadersValidator', () => {
                   {
                     name: 'x-test-header',
                     style: HttpParamStyles.Simple,
-                    contents: [
-                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
-                    ],
+                    contents: [{ mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] }],
                   },
-                ])
+                ]),
               ).toEqual([]);
 
               expect(validateAgainstSchemaModule.validateAgainstSchema).not.toHaveBeenCalled();
@@ -67,11 +65,9 @@ describe('HttpHeadersValidator', () => {
                     {
                       name: 'x-test-header',
                       style: HttpParamStyles.Simple,
-                      contents: [
-                        { mediaType: '*', schema: { type: 'string' }, examples: [], encodings: [] },
-                      ],
+                      contents: [{ mediaType: '*', schema: { type: 'string' }, examples: [], encodings: [] }],
                     },
-                  ])
+                  ]),
                 ).toEqual([]);
 
                 expect(validateAgainstSchemaModule.validateAgainstSchema).toHaveBeenCalled();
@@ -95,13 +91,11 @@ describe('HttpHeadersValidator', () => {
                   {
                     name: 'x-test-header',
                     style: HttpParamStyles.Simple,
-                    contents: [
-                      { mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] },
-                    ],
+                    contents: [{ mediaType: '*', schema: { type: 'number' }, examples: [], encodings: [] }],
                   },
                 ],
-                'application/testson'
-              )
+                'application/testson',
+              ),
             ).toEqual([]);
 
             expect(registry.get).not.toHaveBeenCalled();
@@ -119,7 +113,7 @@ describe('HttpHeadersValidator', () => {
                   style: HttpParamStyles.Simple,
                   contents: [],
                 },
-              ])
+              ]),
             ).toMatchSnapshot();
           });
         });

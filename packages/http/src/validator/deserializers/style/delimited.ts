@@ -6,18 +6,13 @@ import { IHttpQueryParamStyleDeserializer } from '../types';
 export class DelimitedStyleDeserializer implements IHttpQueryParamStyleDeserializer {
   constructor(
     private readonly separator: string,
-    private readonly styleName: HttpParamStyles.PipeDelimited | HttpParamStyles.SpaceDelimited
+    private readonly styleName: HttpParamStyles.PipeDelimited | HttpParamStyles.SpaceDelimited,
   ) {}
   public supports(style: HttpParamStyles) {
     return style === this.styleName;
   }
 
-  public deserialize(
-    name: string,
-    parameters: IHttpNameValues,
-    schema: ISchema,
-    explode?: boolean
-  ) {
+  public deserialize(name: string, parameters: IHttpNameValues, schema: ISchema, explode?: boolean) {
     const { type } = schema;
     const values = parameters[name];
 

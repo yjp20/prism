@@ -16,9 +16,7 @@ describe('HttpValidator', () => {
   describe('validateInput()', () => {
     describe('all validations are turned on', () => {
       it('returns validation errors for whole request structure', async () => {
-        expect(
-          await validator.validateInput({ resource: httpOperations[2], input: BAD_INPUT })
-        ).toMatchSnapshot();
+        expect(await validator.validateInput({ resource: httpOperations[2], input: BAD_INPUT })).toMatchSnapshot();
       });
     });
 
@@ -32,7 +30,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { request: { headers: true, query: false, body: false } },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -47,7 +45,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { request: { headers: false, query: true, body: false } },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -62,7 +60,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { request: { headers: false, query: false, body: true } },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -77,7 +75,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { request: false },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -90,7 +88,7 @@ describe('HttpValidator', () => {
           await validator.validateOutput({
             resource: httpOperations[1],
             output: BAD_OUTPUT,
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -105,7 +103,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { response: { headers: true, body: false } },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -120,7 +118,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { response: { headers: false, body: true } },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });
@@ -135,7 +133,7 @@ describe('HttpValidator', () => {
               mock: false,
               validate: { response: false },
             },
-          })
+          }),
         ).toMatchSnapshot();
       });
     });

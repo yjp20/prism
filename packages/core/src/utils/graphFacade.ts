@@ -30,7 +30,7 @@ export class GraphFacade {
       createOas2Plugin(),
       createOas3Plugin(),
       createOas2HttpPlugin(),
-      createOas3HttpPlugin()
+      createOas3HttpPlugin(),
     );
     this.fsBackend = createFileSystemBackend(graphite, fs);
   }
@@ -59,10 +59,7 @@ export class GraphFacade {
     await this.graphite.scheduler.drain();
   }
 
-  public async createRawNode(
-    raw: string,
-    { type, language }: Pick<ISourceNode, 'type' | 'language'>
-  ) {
+  public async createRawNode(raw: string, { type, language }: Pick<ISourceNode, 'type' | 'language'>) {
     this.graphite.graph.addNode({
       category: NodeCategory.Source,
       type,

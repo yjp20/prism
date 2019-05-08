@@ -29,7 +29,7 @@ describe('JSONSchemaExampleGenerator', () => {
 
     it('fails when media type is unknown', () => {
       return expect(
-        jsonSchemaExampleGenerator.generate({}, 'non-existing/media-type')
+        jsonSchemaExampleGenerator.generate({}, 'non-existing/media-type'),
       ).rejects.toThrowErrorMatchingSnapshot();
     });
 
@@ -44,9 +44,7 @@ describe('JSONSchemaExampleGenerator', () => {
 
       Object.defineProperty(schema.properties, 'name', { writable: false });
 
-      return expect(
-        jsonSchemaExampleGenerator.generate(schema, 'application/json')
-      ).resolves.toBeTruthy();
+      return expect(jsonSchemaExampleGenerator.generate(schema, 'application/json')).resolves.toBeTruthy();
     });
   });
 });

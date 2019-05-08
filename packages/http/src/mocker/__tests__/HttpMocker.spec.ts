@@ -80,7 +80,7 @@ describe('HttpMocker', () => {
       return expect(
         httpMocker.mock({
           input: mockInput,
-        })
+        }),
       ).rejects.toThrowErrorMatchingSnapshot();
     });
 
@@ -88,7 +88,7 @@ describe('HttpMocker', () => {
       return expect(
         httpMocker.mock({
           resource: mockResource,
-        })
+        }),
       ).rejects.toThrowErrorMatchingSnapshot();
     });
 
@@ -102,7 +102,7 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: mockInput,
-          })
+          }),
         ).resolves.toHaveProperty('body', undefined);
       });
 
@@ -117,7 +117,7 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: mockInput,
-          })
+          }),
         ).resolves.toMatchSnapshot();
       });
 
@@ -134,18 +134,16 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: mockInput,
-          })
+          }),
         ).resolves.toMatchSnapshot();
       });
 
       it('defaults to empty mock configuration when called with boolean mock value', async () => {
-        const spy = jest
-          .spyOn(helpers, 'negotiateOptionsForValidRequest')
-          .mockImplementation(() => ({
-            code: '202',
-            mediaType: 'test',
-            example: mockResource.responses![0].contents![0].examples![0],
-          }));
+        const spy = jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockImplementation(() => ({
+          code: '202',
+          mediaType: 'test',
+          example: mockResource.responses![0].contents![0].examples![0],
+        }));
 
         await httpMocker.mock({
           resource: mockResource,
@@ -169,7 +167,7 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: Object.assign({}, mockInput, { validations: { input: [{}] } }),
-          })
+          }),
         ).resolves.toMatchSnapshot();
       });
     });
@@ -189,7 +187,7 @@ describe('HttpMocker', () => {
           httpMocker.mock({
             resource: mockResource,
             input: mockInput,
-          })
+          }),
         ).resolves.toMatchSnapshot();
       });
     });

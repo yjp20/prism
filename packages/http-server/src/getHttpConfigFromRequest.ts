@@ -1,13 +1,9 @@
-import {
-  PartialPrismConfig,
-  PartialPrismConfigFactory,
-  resolveConfig,
-} from '@stoplight/prism-core';
+import { PartialPrismConfig, PartialPrismConfigFactory, resolveConfig } from '@stoplight/prism-core';
 import { IHttpConfig, IHttpRequest } from '@stoplight/prism-http';
 
 export const getHttpConfigFromRequest: PartialPrismConfigFactory<IHttpConfig, IHttpRequest> = (
   req: IHttpRequest,
-  defaultConfig?: PartialPrismConfig<IHttpConfig, IHttpRequest>
+  defaultConfig?: PartialPrismConfig<IHttpConfig, IHttpRequest>,
 ) => {
   // For some reason this fixed the code coverage.
   let config: Partial<IHttpConfig> = {};

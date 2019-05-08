@@ -1,5 +1,5 @@
 import { IPrism, IPrismComponents, IPrismConfig } from '@stoplight/prism-core';
-import { IHttpOperation } from '@stoplight/types';
+import { IHttpOperation, Omit } from '@stoplight/types';
 
 export type TPrismHttpInstance<LoaderInput> = IPrism<
   IHttpOperation,
@@ -14,15 +14,7 @@ export type TPrismHttpComponents<LoaderInput> = Partial<
 >;
 
 // TODO: should be complete | and in the @stoplight/types repo
-export type IHttpMethod =
-  | 'get'
-  | 'put'
-  | 'post'
-  | 'delete'
-  | 'options'
-  | 'head'
-  | 'patch'
-  | 'trace'; // ... etc
+export type IHttpMethod = 'get' | 'put' | 'post' | 'delete' | 'options' | 'head' | 'patch' | 'trace'; // ... etc
 
 export interface IHttpOperationConfig {
   readonly mediaType?: string;
@@ -82,4 +74,27 @@ export interface IHttpResponse {
   statusCode: number;
   headers?: IHttpNameValue;
   body?: any;
+}
+
+export type ProblemJson = {
+  name: string;
+  title: string;
+  status: number;
+  detail: string;
+};
+
+export class ProblemJsonError extends Error {
+  public static fromTemplate(template: Omit<ProblemJson, 'detail'>, detail?: string): ProblemJsonError {
+    return new ProblemJsonError(
+      `https://stoplight.io/prism/errors#${template.name}`,
+      template.title,
+      template.status,
+      detail || '',
+    );
+  }
+
+  constructor(readonly name: string, readonly message: string, readonly status: number, readonly detail: string) {
+    super(message);
+    Error.captureStackTrace(this, ProblemJsonError);
+  }
 }

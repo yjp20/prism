@@ -13,6 +13,8 @@ import {
   IHttpOperationConfig,
   IHttpRequest,
   IHttpResponse,
+  ProblemJson,
+  ProblemJsonError,
   TPrismHttpComponents,
   TPrismHttpInstance,
 } from './types';
@@ -20,7 +22,7 @@ import { validator } from './validator';
 
 const createInstance = <LoaderInput>(
   config?: PartialPrismConfig<IHttpConfig, IHttpRequest>,
-  overrides?: TPrismHttpComponents<LoaderInput>
+  overrides?: TPrismHttpComponents<LoaderInput>,
 ) => {
   return factory<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig, LoaderInput>(
     { mock: true },
@@ -30,7 +32,7 @@ const createInstance = <LoaderInput>(
       forwarder,
       validator,
       mocker: new HttpMocker(new JSONSchemaExampleGenerator()),
-    }
+    },
   )(config, overrides);
 };
 
@@ -45,4 +47,6 @@ export {
   TPrismHttpInstance,
   IHttpOperationConfig,
   TPrismHttpComponents,
+  ProblemJsonError,
+  ProblemJson,
 };

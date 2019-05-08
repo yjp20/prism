@@ -2,8 +2,9 @@ import { IPrism } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types/http-spec';
 import { omit } from 'lodash';
 import { relative, resolve } from 'path';
-import { createInstance, IHttpConfig, IHttpRequest, IHttpResponse } from '../';
+import { createInstance, IHttpConfig, IHttpRequest, IHttpResponse, ProblemJsonError } from '../';
 import { forwarder } from '../forwarder';
+import { UNPROCESSABLE_ENTITY } from '../mocker/errors';
 import { NO_PATH_MATCHED_ERROR } from '../router/errors';
 
 describe('Http Prism Instance function tests', () => {
@@ -12,20 +13,14 @@ describe('Http Prism Instance function tests', () => {
   beforeAll(async () => {
     prism = createInstance({ mock: true }, {});
     await prism.load({
-      path: relative(
-        process.cwd(),
-        resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')
-      ),
+      path: relative(process.cwd(), resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')),
     });
   });
 
   test('keeps the instances separate', async () => {
     const second_prism = createInstance({ mock: true }, {});
     await second_prism.load({
-      path: relative(
-        process.cwd(),
-        resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')
-      ),
+      path: relative(process.cwd(), resolve(__dirname, 'fixtures', 'no-refs-petstore-minimal.oas2.json')),
     });
 
     expect(prism.resources).toStrictEqual(second_prism.resources);
@@ -38,8 +33,8 @@ describe('Http Prism Instance function tests', () => {
         url: {
           path: '/invalid-route',
         },
-      })
-    ).rejects.toThrowError(NO_PATH_MATCHED_ERROR);
+      }),
+    ).rejects.toThrowError(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR));
   });
 
   test('given correct route should return correct response', async () => {
@@ -63,14 +58,15 @@ describe('Http Prism Instance function tests', () => {
     expect(omit(response, 'output.body')).toMatchSnapshot();
   });
 
-  test('given route with invalid param should return a validation error', async () => {
-    const response = await prism.process({
-      method: 'get',
-      url: {
-        path: '/pet/findByStatus',
-      },
-    });
-    expect(response).toMatchSnapshot();
+  test('given route with invalid param should return a validation error', () => {
+    return expect(
+      prism.process({
+        method: 'get',
+        url: {
+          path: '/pet/findByStatus',
+        },
+      }),
+    ).rejects.toThrowError(ProblemJsonError.fromTemplate(UNPROCESSABLE_ENTITY));
   });
 
   test('should support collection format multi', async () => {

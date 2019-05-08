@@ -2,13 +2,13 @@ import { IMocker, IMockerOpts } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 
 import * as caseless from 'caseless';
-import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
+import { IHttpConfig, IHttpRequest, IHttpResponse, ProblemJsonError } from '../types';
+import { UNPROCESSABLE_ENTITY } from './errors';
 import { IExampleGenerator } from './generator/IExampleGenerator';
 import helpers from './negotiator/NegotiatorHelpers';
 
-export class HttpMocker
-  implements IMocker<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
-  constructor(private _exampleGenerator: IExampleGenerator<any>) {}
+export class HttpMocker implements IMocker<IHttpOperation, IHttpRequest, IHttpConfig, IHttpResponse> {
+  constructor(private _exampleGenerator: IExampleGenerator) {}
 
   public async mock({
     resource,
@@ -38,16 +38,10 @@ export class HttpMocker
       try {
         negotiationResult = helpers.negotiateOptionsForInvalidRequest(resource.responses);
       } catch (error) {
-        return {
-          statusCode: 400,
-          headers: {
-            'Content-type': 'text/plain',
-          },
-          body: `ERROR: Your request is not valid.
-We cannot generate a sensible response because your '400'
-response has neither example nor schema or is not defined.
-Here is the original validation result instead: ${JSON.stringify(input.validations.input)}`,
-        };
+        throw ProblemJsonError.fromTemplate(
+          UNPROCESSABLE_ENTITY,
+          `Your request body is not valid: ${JSON.stringify(input.validations.input)}`,
+        );
       }
     } else {
       negotiationResult = helpers.negotiateOptionsForValidRequest(resource, mockConfig);
@@ -60,10 +54,7 @@ Here is the original validation result instead: ${JSON.stringify(input.validatio
     if (example && 'value' in example && example.value !== undefined) {
       body = typeof example.value === 'string' ? example.value : JSON.stringify(example.value);
     } else if (negotiationResult.schema) {
-      body = await this._exampleGenerator.generate(
-        negotiationResult.schema,
-        negotiationResult.mediaType
-      );
+      body = await this._exampleGenerator.generate(negotiationResult.schema, negotiationResult.mediaType);
     }
 
     return {

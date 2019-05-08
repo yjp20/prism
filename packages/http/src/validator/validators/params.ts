@@ -7,12 +7,11 @@ import { resolveContent } from '../utils/http';
 import { IHttpValidator } from './types';
 import { validateAgainstSchema } from './utils';
 
-export class HttpParamsValidator<Target, Spec extends IHttpParam>
-  implements IHttpValidator<Target, Spec> {
+export class HttpParamsValidator<Target, Spec extends IHttpParam> implements IHttpValidator<Target, Spec> {
   constructor(
     private _registry: IHttpParamDeserializerRegistry<Target>,
     private _prefix: string,
-    private _style: HttpParamStyles
+    private _style: HttpParamStyles,
   ) {}
 
   public validate(target: Target, specs: Spec[], mediaType?: string): IPrismDiagnostic[] {
@@ -45,8 +44,8 @@ export class HttpParamsValidator<Target, Spec extends IHttpParam>
             validateAgainstSchema(
               deserializer.deserialize(spec.name, target, content.schema, spec.explode || false),
               content.schema,
-              prefix
-            )
+              prefix,
+            ),
           );
         }
       }

@@ -10,33 +10,24 @@ function findExampleByKey(httpContent: IHttpContent, exampleKey: string) {
   return httpContent.examples && httpContent.examples.find(example => example.key === exampleKey);
 }
 
-function findHttpContentByMediaType(
-  response: IHttpOperationResponse,
-  mediaType: string
-): IHttpContent | undefined {
+function findHttpContentByMediaType(response: IHttpOperationResponse, mediaType: string): IHttpContent | undefined {
   return response.contents.find(content => content.mediaType === mediaType);
 }
 
-function findLowest2xx(
-  httpResponses: IHttpOperationResponse[]
-): IHttpOperationResponse | undefined {
+function findLowest2xx(httpResponses: IHttpOperationResponse[]): IHttpOperationResponse | undefined {
   const generic2xxResponse = findResponseByStatusCode(httpResponses, '2XX');
   const sorted2xxResponses = httpResponses
     .filter(response => response.code.match(/2\d\d/))
-    .sort(
-      (a: IHttpOperationResponse, b: IHttpOperationResponse) => Number(a.code) - Number(b.code)
-    );
+    .sort((a: IHttpOperationResponse, b: IHttpOperationResponse) => Number(a.code) - Number(b.code));
 
   return sorted2xxResponses[0] || generic2xxResponse;
 }
 
 function findResponseByStatusCode(
   responses: IHttpOperationResponse[],
-  statusCode: string
+  statusCode: string,
 ): IHttpOperationResponse | undefined {
-  const candidate = responses.find(
-    response => response.code.toLowerCase() === statusCode.toLowerCase()
-  );
+  const candidate = responses.find(response => response.code.toLowerCase() === statusCode.toLowerCase());
   if (candidate) {
     return candidate;
   }
@@ -60,7 +51,7 @@ const helpers = {
       readonly dynamic?: boolean;
       readonly exampleKey?: string;
     },
-    httpContent: IHttpContent
+    httpContent: IHttpContent,
   ): IHttpNegotiationResult {
     const { mediaType } = httpContent;
 
@@ -75,9 +66,7 @@ const helpers = {
           example,
         };
       } else {
-        throw new Error(
-          `Response for contentType: ${mediaType} and exampleKey: ${exampleKey} does not exist.`
-        );
+        throw new Error(`Response for contentType: ${mediaType} and exampleKey: ${exampleKey} does not exist.`);
       }
     } else if (dynamic === true) {
       if (httpContent.schema) {
@@ -87,9 +76,7 @@ const helpers = {
           schema: httpContent.schema,
         };
       } else {
-        throw new Error(
-          `Tried to force a dynamic response for: ${mediaType} but schema is not defined.`
-        );
+        throw new Error(`Tried to force a dynamic response for: ${mediaType} but schema is not defined.`);
       }
     } else {
       // try to find a static example first
@@ -122,7 +109,7 @@ const helpers = {
       readonly dynamic?: boolean;
       readonly exampleKey?: string;
     },
-    response: IHttpOperationResponse
+    response: IHttpOperationResponse,
   ): IHttpNegotiationResult {
     const { code, dynamic, exampleKey } = partialOptions;
     const mediaType = 'application/json';
@@ -135,7 +122,7 @@ const helpers = {
           dynamic,
           exampleKey,
         },
-        httpContent
+        httpContent,
       );
     } else {
       // no httpContent found, returning empty body
@@ -158,7 +145,7 @@ const helpers = {
       readonly exampleKey?: string;
       readonly dynamic?: boolean;
     },
-    response: IHttpOperationResponse
+    response: IHttpOperationResponse,
   ): IHttpNegotiationResult {
     const { code } = response;
     const { mediaType, dynamic, exampleKey } = desiredOptions;
@@ -174,7 +161,7 @@ const helpers = {
             dynamic,
             exampleKey,
           },
-          httpContent
+          httpContent,
         );
       } else {
         return {
@@ -192,7 +179,7 @@ const helpers = {
         dynamic,
         exampleKey,
       },
-      response
+      response,
     );
   },
 
@@ -203,15 +190,11 @@ const helpers = {
       readonly code?: string;
       readonly exampleKey?: string;
       readonly dynamic?: boolean;
-    }
+    },
   ): IHttpNegotiationResult {
     const lowest2xxResponse = findLowest2xx(httpOperation.responses);
     if (lowest2xxResponse) {
-      return helpers.negotiateOptionsBySpecificResponse(
-        httpOperation,
-        desiredOptions,
-        lowest2xxResponse
-      );
+      return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, lowest2xxResponse);
     }
     throw new Error('No 2** response defined, cannot mock');
   },
@@ -224,18 +207,14 @@ const helpers = {
       readonly exampleKey?: string;
       readonly dynamic?: boolean;
     },
-    code: string
+    code: string,
   ): IHttpNegotiationResult {
     // find response by provided status code
     const responseByForcedStatusCode = findResponseByStatusCode(httpOperation.responses, code);
     if (responseByForcedStatusCode) {
       try {
         // try to negotiate
-        return helpers.negotiateOptionsBySpecificResponse(
-          httpOperation,
-          desiredOptions,
-          responseByForcedStatusCode
-        );
+        return helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, responseByForcedStatusCode);
       } catch (error) {
         // if negotiations fail try a default code
         try {
@@ -256,7 +235,7 @@ const helpers = {
       readonly code?: string;
       readonly exampleKey?: string;
       readonly dynamic?: boolean;
-    }
+    },
   ): IHttpNegotiationResult {
     const { code } = desiredOptions;
     if (code) {
@@ -265,9 +244,7 @@ const helpers = {
     return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
   },
 
-  negotiateOptionsForInvalidRequest(
-    httpResponses: IHttpOperationResponse[]
-  ): IHttpNegotiationResult {
+  negotiateOptionsForInvalidRequest(httpResponses: IHttpOperationResponse[]): IHttpNegotiationResult {
     // currently only try to find a 400 response, but we may want to support other cases in the future
     const code = '400';
     const response = findResponseByStatusCode(httpResponses, code);
@@ -276,9 +253,7 @@ const helpers = {
       throw new Error('No 400 response defined');
     }
     // find first response with any static examples
-    const responseWithExamples = response.contents.find(
-      content => !!content.examples && content.examples.length !== 0
-    );
+    const responseWithExamples = response.contents.find(content => !!content.examples && content.examples.length !== 0);
     // find first response with a schema
     const responseWithSchema = response.contents.find(content => !!content.schema);
 
@@ -295,9 +270,7 @@ const helpers = {
         schema: responseWithSchema.schema,
       };
     } else {
-      throw new Error(
-        'Request invalid but mock data corrupted. Neither schema nor example defined for 400 response.'
-      );
+      throw new Error('Request invalid but mock data corrupted. Neither schema nor example defined for 400 response.');
     }
   },
 };

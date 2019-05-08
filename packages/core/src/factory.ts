@@ -3,18 +3,20 @@ import { IPrism, IPrismComponents, IPrismConfig, IPrismDiagnostic } from './type
 
 export function factory<Resource, Input, Output, Config, LoadOpts>(
   defaultConfig: PrismConfig<Config, Input>,
-  defaultComponents: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+  defaultComponents: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>,
 ): (
   customConfig?: PartialPrismConfig<Config, Input>,
-  customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+  customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>,
 ) => IPrism<Resource, Input, Output, Config, LoadOpts> {
   const prism = (
     customConfig?: PartialPrismConfig<Config, Input>,
-    customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>
+    customComponents?: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>>,
   ) => {
-    const components: Partial<
-      IPrismComponents<Resource, Input, Output, Config, LoadOpts>
-    > = Object.assign({}, defaultComponents, customComponents);
+    const components: Partial<IPrismComponents<Resource, Input, Output, Config, LoadOpts>> = Object.assign(
+      {},
+      defaultComponents,
+      customComponents,
+    );
 
     // our loaded resources (HttpOperation objects, etc)
     let resources: Resource[] = [];
@@ -39,10 +41,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
         // find the correct resource
         let resource: Resource | undefined;
         if (components.router) {
-          resource = components.router.route(
-            { resources, input, config: configObj },
-            defaultComponents.router
-          );
+          resource = components.router.route({ resources, input, config: configObj }, defaultComponents.router);
         }
 
         // validate input
@@ -54,7 +53,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
               input,
               config: configObj,
             },
-            defaultComponents.validator
+            defaultComponents.validator,
           );
         }
 
@@ -68,7 +67,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
               input: { validations: { input: inputValidations }, data: input },
               config: configObj,
             },
-            defaultComponents.mocker
+            defaultComponents.mocker,
           );
         } else if (components.forwarder) {
           // forward request and set output from response
@@ -78,7 +77,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
               input: { validations: { input: inputValidations }, data: input },
               config: configObj,
             },
-            defaultComponents.forwarder
+            defaultComponents.forwarder,
           );
         }
 
@@ -91,7 +90,7 @@ export function factory<Resource, Input, Output, Config, LoadOpts>(
               output,
               config: configObj,
             },
-            defaultComponents.validator
+            defaultComponents.validator,
           );
         }
 

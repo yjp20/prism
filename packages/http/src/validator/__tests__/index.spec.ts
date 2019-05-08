@@ -1,10 +1,4 @@
-import {
-  DiagnosticSeverity,
-  IHttpContent,
-  IHttpHeaderParam,
-  IHttpOperation,
-  IHttpQueryParam,
-} from '@stoplight/types';
+import { DiagnosticSeverity, IHttpContent, IHttpHeaderParam, IHttpOperation, IHttpQueryParam } from '@stoplight/types';
 
 import { IPrismDiagnostic } from '@stoplight/prism-core/src';
 import { IHttpNameValue, IHttpNameValues } from '../../types';
@@ -23,19 +17,9 @@ const mockError: IPrismDiagnostic = {
 
 describe('HttpValidator', () => {
   const httpBodyValidator = { validate: () => [mockError] } as IHttpValidator<any, IHttpContent>;
-  const httpHeadersValidator = { validate: () => [mockError] } as IHttpValidator<
-    IHttpNameValue,
-    IHttpHeaderParam
-  >;
-  const httpQueryValidator = { validate: () => [mockError] } as IHttpValidator<
-    IHttpNameValues,
-    IHttpQueryParam
-  >;
-  const httpValidator = new HttpValidator(
-    httpBodyValidator,
-    httpHeadersValidator,
-    httpQueryValidator
-  );
+  const httpHeadersValidator = { validate: () => [mockError] } as IHttpValidator<IHttpNameValue, IHttpHeaderParam>;
+  const httpQueryValidator = { validate: () => [mockError] } as IHttpValidator<IHttpNameValues, IHttpQueryParam>;
+  const httpValidator = new HttpValidator(httpBodyValidator, httpHeadersValidator, httpQueryValidator);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -66,11 +50,11 @@ describe('HttpValidator', () => {
                 security: [],
                 request: { headers: [], cookie: [], query: [], path: [] },
               },
-              extendResource
+              extendResource,
             ),
             input: { method: 'get', url: { path: '/' } },
             config: { mock: true, validate: { request: { body: true } } },
-          })
+          }),
         ).resolves.toEqual([mockError]);
 
         expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
@@ -93,7 +77,7 @@ describe('HttpValidator', () => {
             'validates body',
             test({
               request: { body: { contents: [] }, path: [], query: [], headers: [], cookie: [] },
-            })
+            }),
           );
         });
       });
@@ -117,11 +101,11 @@ describe('HttpValidator', () => {
                 security: [],
                 request: { path: [], query: [], cookie: [], headers: [] },
               },
-              extendResource
+              extendResource,
             ),
             input: { method: 'get', url: { path: '/' } },
             config: { mock: true, validate: { request: { headers: true } } },
-          })
+          }),
         ).resolves.toEqual([mockError]);
 
         expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
@@ -136,26 +120,17 @@ describe('HttpValidator', () => {
 
       describe('request is set', () => {
         describe('request.headers is not set', () => {
-          it(
-            'validates headers',
-            test({ request: { path: [], query: [], cookie: [], headers: [] } })
-          );
+          it('validates headers', test({ request: { path: [], query: [], cookie: [], headers: [] } }));
         });
 
         describe('request.headers is set', () => {
-          it(
-            'validates headers',
-            test({ request: { path: [], query: [], cookie: [], headers: [] } })
-          );
+          it('validates headers', test({ request: { path: [], query: [], cookie: [], headers: [] } }));
         });
       });
     });
 
     describe('query validation in enabled', () => {
-      const test = (
-        extendResource?: Partial<IHttpOperation>,
-        extendInput?: Partial<IHttpRequest>
-      ) => async () => {
+      const test = (extendResource?: Partial<IHttpOperation>, extendInput?: Partial<IHttpRequest>) => async () => {
         jest
           .spyOn(resolveValidationConfigModule, 'resolveRequestValidationConfig')
           .mockReturnValueOnce({ body: false, headers: false, hijack: false, query: true });
@@ -172,11 +147,11 @@ describe('HttpValidator', () => {
                 security: [],
                 request: { path: [], query: [], cookie: [], headers: [] },
               },
-              extendResource
+              extendResource,
             ),
             input: Object.assign({ method: 'get', url: { path: '/', query: {} } }, extendInput),
             config: { mock: true, validate: { request: { query: true } } },
-          })
+          }),
         ).resolves.toEqual([mockError]);
 
         expect(resolveValidationConfigModule.resolveRequestValidationConfig).toHaveBeenCalled();
@@ -191,17 +166,11 @@ describe('HttpValidator', () => {
 
       describe('request is set', () => {
         describe('request.query is not set', () => {
-          it(
-            'validates query',
-            test({ request: { path: [], query: [], cookie: [], headers: [] } })
-          );
+          it('validates query', test({ request: { path: [], query: [], cookie: [], headers: [] } }));
         });
 
         describe('request.query is set', () => {
-          it(
-            'validates query',
-            test({ request: { path: [], query: [], cookie: [], headers: [] } })
-          );
+          it('validates query', test({ request: { path: [], query: [], cookie: [], headers: [] } }));
         });
       });
 
@@ -226,7 +195,7 @@ describe('HttpValidator', () => {
               request: { path: [], query: [], cookie: [], headers: [] },
             },
             config: { mock: true, validate: { response: { body: true } } },
-          })
+          }),
         ).resolves.toEqual([]);
 
         expect(httpBodyValidator.validate).not.toHaveBeenCalled();
@@ -253,7 +222,7 @@ describe('HttpValidator', () => {
               },
               output: { statusCode: 200 },
               config: { mock: true, validate: { response: { body: true } } },
-            })
+            }),
           ).resolves.toEqual([mockError]);
 
           expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();
@@ -282,7 +251,7 @@ describe('HttpValidator', () => {
               },
               output: { statusCode: 200 },
               config: { mock: true, validate: { response: { headers: true } } },
-            })
+            }),
           ).resolves.toEqual([mockError]);
 
           expect(resolveValidationConfigModule.resolveResponseValidationConfig).toHaveBeenCalled();

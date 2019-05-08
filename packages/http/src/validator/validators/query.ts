@@ -9,15 +9,11 @@ export class HttpQueryValidator extends HttpParamsValidator<IHttpNameValues, IHt
   constructor(
     registry: IHttpParamDeserializerRegistry<IHttpNameValues>,
     prefix: string,
-    style: HttpParamStyles = HttpParamStyles.Form
+    style: HttpParamStyles = HttpParamStyles.Form,
   ) {
     super(registry, prefix, style);
   }
-  public validate(
-    target: IHttpNameValues,
-    specs: IHttpQueryParam[],
-    mediaType?: string
-  ): IPrismDiagnostic[] {
+  public validate(target: IHttpNameValues, specs: IHttpQueryParam[], mediaType?: string): IPrismDiagnostic[] {
     return super.validate(target, specs, mediaType);
   }
 }

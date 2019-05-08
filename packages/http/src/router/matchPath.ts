@@ -18,7 +18,7 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
   }
   if (!operationPath.startsWith('/')) {
     throw new Error(
-      `Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`
+      `Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`,
     );
   }
   const operationPathFragments = fragmentarize(operationPath);
@@ -43,8 +43,8 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
       return MatchType.NOMATCH;
     } else if (paramName !== null) {
       params.push({
-        name: paramName as string,
-        value: requestPathFragment as string,
+        name: paramName,
+        value: requestPathFragment,
       });
     }
   }

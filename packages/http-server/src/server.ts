@@ -1,14 +1,13 @@
 import { configMergerFactory } from '@stoplight/prism-core';
-import { createInstance, IHttpMethod, TPrismHttpInstance } from '@stoplight/prism-http';
+import { createInstance, IHttpMethod, ProblemJsonError, TPrismHttpInstance } from '@stoplight/prism-http';
 import * as fastify from 'fastify';
 import { IncomingMessage, Server, ServerResponse } from 'http';
-
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
 
 export const createServer = <LoaderInput>(
   loaderInput: LoaderInput,
-  opts: IPrismHttpServerOpts<LoaderInput>
+  opts: IPrismHttpServerOpts<LoaderInput>,
 ): IPrismHttpServer<LoaderInput> => {
   const server = fastify<Server, IncomingMessage, ServerResponse>();
   const { components = {}, config } = opts;
@@ -43,12 +42,9 @@ export const createServer = <LoaderInput>(
 };
 
 const replyHandler = <LoaderInput>(
-  prism: TPrismHttpInstance<LoaderInput>
+  prism: TPrismHttpInstance<LoaderInput>,
 ): fastify.RequestHandler<IncomingMessage, ServerResponse> => {
-  const handler = async (
-    request: fastify.FastifyRequest<IncomingMessage>,
-    reply: fastify.FastifyReply<ServerResponse>
-  ) => {
+  return async (request, reply) => {
     try {
       const {
         req: { method, url },
@@ -75,14 +71,26 @@ const replyHandler = <LoaderInput>(
           reply.headers(output.headers);
         }
 
-        reply.serializer((payload: unknown) => payload);
-        reply.send(output.body);
+        reply.serializer((payload: unknown) => payload).send(output.body);
       } else {
         reply.code(500).send('Unable to find any decent response for the current request.');
       }
     } catch (e) {
-      reply.code(500).send(e);
+      const status = 'status' in e ? e.status : 500;
+      reply
+        .type('application/problem+json')
+        .serializer((payload: unknown) => JSON.stringify(payload))
+        .code(status)
+        .send(
+          ProblemJsonError.fromTemplate(
+            {
+              name: e.name || 'UNKNOWN',
+              title: e.message,
+              status,
+            },
+            e.detail,
+          ),
+        );
     }
   };
-  return handler;
 };
