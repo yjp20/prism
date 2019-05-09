@@ -6,13 +6,13 @@ describe('graphFacade', () => {
 
   describe('createFilesystemNode()', () => {
     test('httpOperations should return filtered nodes', async () => {
-      await graphFacade.createFilesystemNode('packages/cli/src/samples/no-refs-petstore.oas2.json');
+      await graphFacade.createFilesystemNode('examples/petstore.oas2.json');
 
       expect(graphFacade.httpOperations).toMatchSnapshot();
     });
 
     test('handles spec given by absolute path', async () => {
-      const path = resolve('packages/cli/src/samples/no-refs-petstore.oas2.json');
+      const path = resolve('examples/petstore.oas2.json');
       expect(isAbsolute(path)).toBe(true);
 
       await graphFacade.createFilesystemNode(path);
