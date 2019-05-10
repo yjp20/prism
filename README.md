@@ -2,25 +2,24 @@
 
 <a href="https://codeclimate.com/github/stoplightio/prism/test_coverage"><img src="https://api.codeclimate.com/v1/badges/f5e363a7eb5b8f4e570f/test_coverage" /></a>
 
-Prism is a set of packages that relate to API specification mocking. One use case, spinning up a mock HTTP server which will response realistically to the requests you send it.
+Prism is a set of packages for API mocking with **OpenAPI Specification v2** (formerly known as Swagger Specification) and **OpenAPI Specification v3**.
 
-**Note: this branch refers to Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, point your browser to the [right branch][2.x]**
+For example, given an API specification:
 
-Being based on [Graphite], Prism supports any description format that Graphite supports:
+- You can spin up a mock HTTP server and respond realistically based on your requests
 
-- OpenAPI v3.0
-- OpenAPI v2.0 (formerly Swagger)
+The set of packages are made up of:
 
-Prims is a multi-package repository:
+- [`core`][core]: basic interfaces and abstraction for API descriptions
+- [`http`][http]: A Prism implementation to work with HTTP Requests
+- [`http-server`][http-server]: A _[Fastify]_ instance that uses Prism to validate/mock/respond and forward to http requests
+- [`cli`][cli]: A CLI to spin up servers locally easily
 
-- [`core:`][core] basic interfaces and abstraction for API descriptions
-- [`http:`][http] A Prism implementation to work with HTTP Requests
-- [`http-server:`][http-server] A _[Fastify]_ instance that uses Prism to validate/mock/respond and forward to http requests
-- [`cli:`][cli] A CLI to spin up servers locally easily
+Look at the relative repositories' READMEs for the specific documentation.
 
-Look at the relative repositories' README for the specific documentation.
+> Note: This branch refers to Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, point your browser to the [2.x branch][2.x]
 
-## Install
+## Installation
 
 Most of the users will probably want to use the CLI, which is a Node module, and can either be installed via NPM or Yarn…
 
@@ -36,7 +35,7 @@ yarn global add @stoplight/prism-cli
 
 ### CLI
 
-We'll present here only the main use cases. For a complete overview of the CLI, you can consult the relevant [documentation][cli-docs]
+We'll present here only the main use cases. For a complete overview of the CLI, you can consult the relevant [documentation][cli-docs].
 
 #### Mock server
 
@@ -110,12 +109,6 @@ Connection: keep-alive
 
 This error shows the request is missing a required property `name` from the HTTP request body.
 
-## FAQ
-
-Base paths are completely ignored by the Prism HTTP server, so they can be removed from the request.
-If you have a base path of `/api` and your path is defined as `hello`, then a request to
-`http://localhost:4010/hello` would work, but `http://localhost:4010/api/hello` will fail.
-
 ## What's next for Prism?
 
 - [ ] Server Validation
@@ -126,45 +119,22 @@ If you have a base path of `/api` and your path is defined as `hello`, then a re
 - [ ] Forwarding proxy with validation
 - [ ] Recording traffic to spec file
 - [ ] Data Persistence (turn Prism into a sandbox server)
-- [ ] Support files ending with `.yml` and extensionless files
+- [ ] Support files ending with `.yml` and extension-less files
 
-## Testing
+## FAQs
 
-Prism has an extensive test suite. To run it, just use the regular `test` script
-
-```bash
-yarn test
-# or
-npm test
-```
-
-## Debugging
-
-The best way to debug a Prism behaviour is probably to attach your debugger to the CLI and go from there. To make that happen:
-
-```bash
-cd packages/cli
-
-node --inspect-brk -r tsconfig-paths/register bin/run mock file.oas.yml
-```
-
-The application will wait for a debugger to be attached and break on the first line; from there, you can put your breakpoint here and there and help us debug the software!
+Base paths are completely ignored by the Prism HTTP server, so they can be removed from the request.
+If you have a base path of `/api` and your path is defined as `hello`, then a request to
+`http://localhost:4010/hello` would work, but `http://localhost:4010/api/hello` will fail.
 
 ## Contributing
 
-Please see [CONTRIBUTING] and [CODE_OF_CONDUCT] for details.
+If you are interested in contributing to Prism itself, check out our [contributing docs][contributing] and [code of conduct][code_of_conduct] to get started.
 
-### Common issues
-
-1. `jest --watch` throws ENOSPC error
-
-- [optional] Install `watchman` as per [documentation](https://facebook.github.io/watchman/docs/install.html#installing-from-source)
-- Modify `fs.inotify.max_user_watches` as per [issue resolution](https://github.com/facebook/jest/issues/3254)
-
-[CODE_OF_CONDUCT]: CODE_OF_CONDUCT.md
-[CONTRIBUTING]: CONTRIBUTING.md
-[Fastify]: https://www.fastify.io/
-[Graphite]: https://github.com/stoplightio/graphite
+[code_of_conduct]: CODE_OF_CONDUCT.md
+[contributing]: CONTRIBUTING.md
+[fastify]: https://www.fastify.io/
+[graphite]: https://github.com/stoplightio/graphite
 [download-release]: https://github.com/stoplightio/prism/releases/latest
 [rfc7807]: https://tools.ietf.org/html/rfc7807
 [core]: https://www.npmjs.com/package/@stoplight/prism-core
