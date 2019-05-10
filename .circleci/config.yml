@@ -59,7 +59,7 @@ jobs:
             - cli-binaries
       - run:
           name: Publish
-          command: yarn lerna publish from-package --github-release --yes --dist-tag alpha
+          command: yarn lerna publish from-git --github-release --yes --dist-tag alpha
   upload_artifacts:
     docker:
       - image: circleci/golang:1.8
@@ -88,7 +88,6 @@ workflows:
           requires:
             - build
       - upload_artifacts:
-          type: approval
           filters:
             branches:
               ignore: /.*/
