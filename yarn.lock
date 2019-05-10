@@ -4670,6 +4670,16 @@ jsonparse@^1.2.0:
     static-eval "2.0.0"
     underscore "1.7.0"
 
+"jsonpath@https://github.com/stoplightio/jsonpath#f1c0e9e634da2d45671b7639fa0a99afc807da17":
+  version "1.0.0"
+  uid f1c0e9e634da2d45671b7639fa0a99afc807da17
+  resolved "https://github.com/stoplightio/jsonpath#f1c0e9e634da2d45671b7639fa0a99afc807da17"
+  dependencies:
+    esprima "1.2.2"
+    jison "0.4.13"
+    static-eval "2.0.0"
+    underscore "1.7.0"
+
 jsprim@^1.2.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jsprim/-/jsprim-1.4.1.tgz#313e66bc1e5cc06e438bc1b7499c2e5c56acb6a2"
