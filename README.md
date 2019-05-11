@@ -129,9 +129,15 @@ This error shows the request is missing a required property `name` from the HTTP
 
 ## FAQs
 
+**Requests with base paths are failing. Why?**
+
 Base paths are completely ignored by the Prism HTTP server, so they can be removed from the request.
 If you have a base path of `/api` and your path is defined as `hello`, then a request to
 `http://localhost:4010/hello` would work, but `http://localhost:4010/api/hello` will fail.
+
+**How can I debug Prism?**
+
+Check out our [debugging section][debugging] in the [contribution docs][contributing].
 
 ## Contributing
 
@@ -139,6 +145,7 @@ If you are interested in contributing to Prism itself, check out our [contributi
 
 [code_of_conduct]: CODE_OF_CONDUCT.md
 [contributing]: CONTRIBUTING.md
+[debugging]: CONTRIBUTING.md#debugging
 [fastify]: https://www.fastify.io/
 [graphite]: https://github.com/stoplightio/graphite
 [download-release]: https://github.com/stoplightio/prism/releases/latest
