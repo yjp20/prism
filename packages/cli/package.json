@@ -54,7 +54,8 @@
   "scripts": {
     "prepack": "oclif-dev manifest",
     "version": "oclif-dev readme && git add README.md",
-    "cli": "node -r tsconfig-paths/register bin/run"
+    "cli": "node -r tsconfig-paths/register bin/run",
+    "cli:debug": "node --inspect-brk -r tsconfig-paths/register bin/run"
   },
   "types": "lib/index.d.ts"
 }

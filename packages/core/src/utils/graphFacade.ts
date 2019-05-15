@@ -60,12 +60,12 @@ export class GraphFacade {
     await this.graphite.scheduler.drain();
   }
 
-  public async createRawNode(raw: string, { type, language }: Pick<ISourceNode, 'type' | 'language'>) {
+  public async createRawNode(raw: string, { type, path }: Pick<ISourceNode, 'type' | 'path'>) {
     this.graphite.graph.addNode({
       category: NodeCategory.Source,
       type,
-      language,
-      path: '/',
+      language: filenameToLanguage(path),
+      path: '/' + path,
       data: { raw },
     });
 
