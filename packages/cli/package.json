@@ -13,8 +13,8 @@
     "@stoplight/prism-core": "^3.0.0-alpha.5",
     "@stoplight/prism-http-server": "^3.0.0-alpha.5",
     "signale": "^1.4.0",
-    "tslib": "^1.0.0",
-    "urijs": "^1.19.1"
+    "urijs": "^1.19.1",
+    "tslib": "^1.0.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.0.0",
