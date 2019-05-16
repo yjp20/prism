@@ -8,8 +8,7 @@ export class HttpLoader {
   constructor(private graphFacade: GraphFacade = new GraphFacade()) {}
 
   public async load(opts?: IHttpLoaderOpts): Promise<IHttpOperation[]> {
-    if (!opts) return [];
-    if (!opts.url) return [];
+    if (!opts || !opts.url) return [];
 
     const response = await axios({ url: opts.url, transformResponse: d => d });
 
