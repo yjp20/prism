@@ -1122,10 +1122,10 @@
   resolved "https://registry.yarnpkg.com/@stoplight/fast-safe-stringify/-/fast-safe-stringify-2.1.2.tgz#2811eff4989c3d4c5c9a3789f057e25358db0899"
   integrity sha512-ayw3qQ9KNn2K5q6ggrLclh+rdZsSLwYIUz3uAer1NzaCpalJLR4g32G845ylgq7Xy2AunMHnNfD3FC3s0rUcsA==
 
-"@stoplight/graphite@^6.3.1":
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/@stoplight/graphite/-/graphite-6.3.1.tgz#831dbb6eddf42c50d2ec2745c4f12731d744fbc7"
-  integrity sha512-wozhOsti6urYCL+mXxkkNeyzEcpdH5pbd3PRnr4i7/sRCe2Cg7kdwd/h9Z6qr1Yed8ZDqg6XP3VhQ0VSe6dXZA==
+"@stoplight/graphite@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/graphite/-/graphite-6.4.0.tgz#4bb96ae47325ae49ceb7a9129371f2c5da727025"
+  integrity sha512-16aVVNgkfwt8Z+hmQ/Keaqc93XPVK0XqiegJBXznwbg/MzxuSIlkJMrNjLFGW5WQ9QEgOnjC3HlcjB2uW9wTHA==
   dependencies:
     "@stoplight/json" "1.x.x"
     "@stoplight/json-ref-resolver" "1.x.x"
@@ -4736,7 +4736,6 @@ jsonparse@^1.2.0:
 
 "jsonpath@https://github.com/stoplightio/jsonpath.git#f1c0e9e634da2d45671b7639fa0a99afc807da17":
   version "1.0.0"
-  uid f1c0e9e634da2d45671b7639fa0a99afc807da17
   resolved "https://github.com/stoplightio/jsonpath.git#f1c0e9e634da2d45671b7639fa0a99afc807da17"
   dependencies:
     esprima "1.2.2"
