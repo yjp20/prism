@@ -20,7 +20,7 @@
     "@oclif/dev-cli": "^1.0.0",
     "@oclif/tslint": "^3.0.0",
     "@types/chai": "^4.0.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "^12.0.2",
     "@types/signale": "^1.2.1",
     "globby": "^9.0.0",
     "ts-node": "^8.0.0",
@@ -52,8 +52,8 @@
     "url": "https://github.com/stoplightio/prism.git"
   },
   "scripts": {
-    "prepack": "oclif-dev manifest",
-    "version": "oclif-dev readme && git add README.md",
+    "prepack": "node -r tsconfig-paths/register oclif-dev manifest",
+    "version": "node -r tsconfig-paths/register oclif-dev readme && git add README.md",
     "cli": "node -r tsconfig-paths/register bin/run",
     "cli:debug": "node --inspect-brk -r tsconfig-paths/register bin/run"
   },
