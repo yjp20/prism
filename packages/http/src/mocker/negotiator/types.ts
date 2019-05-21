@@ -1,5 +1,5 @@
-import { INodeExample, INodeExternalExample, ISchema } from '@stoplight/types';
 import { IHttpOperationConfig } from '@stoplight/prism-http';
+import { INodeExample, INodeExternalExample, ISchema } from '@stoplight/types';
 
 export interface IHttpNegotiationResult {
   code: string;
