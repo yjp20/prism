@@ -8,8 +8,10 @@ import {
 } from '@stoplight/types';
 import { Chance } from 'chance';
 
+import { ProblemJsonError } from '@stoplight/prism-http';
+import { NOT_ACCEPTABLE } from '../../errors';
 import helpers from '../NegotiatorHelpers';
-import { IHttpNegotiationResult } from '../types';
+import { IHttpNegotiationResult, NegotiationOptions } from '../types';
 
 const chance = new Chance();
 
@@ -265,6 +267,7 @@ describe('NegotiatorHelpers', () => {
       negotiateOptionsBySpecificResponseMock = jest.spyOn(helpers, 'negotiateOptionsBySpecificResponse');
       negotiateOptionsForDefaultCodeMock = jest.spyOn(helpers, 'negotiateOptionsForDefaultCode');
     });
+
     it('given response defined should try to negotiate by that response', () => {
       const code = chance.string();
       const fakeResponse = {
@@ -405,25 +408,29 @@ describe('NegotiatorHelpers', () => {
     describe('given forced mediaType', () => {
       it('and httpContent exists should negotiate that contents', () => {
         const desiredOptions = {
-          mediaType: chance.string(),
+          mediaTypes: [`${chance.string()}/${chance.string()}`],
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
+
         const contents: IMediaTypeContent = {
-          mediaType: desiredOptions.mediaType,
+          mediaType: desiredOptions.mediaTypes[0],
           examples: [],
           encodings: [],
         };
+
         const httpResponseSchema: IHttpOperationResponse = {
           code: chance.integer({ min: 100, max: 599 }).toString(),
           contents: [contents],
           headers: [],
         };
+
         const fakeOperationConfig: IHttpNegotiationResult = {
           code: '200',
-          mediaType: 'application/json',
+          mediaType: desiredOptions.mediaTypes[0],
           headers: [],
         };
+
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent').mockReturnValue(fakeOperationConfig);
         jest.spyOn(helpers, 'negotiateDefaultMediaType');
 
@@ -446,30 +453,88 @@ describe('NegotiatorHelpers', () => {
         expect(actualOperationConfig).toEqual(fakeOperationConfig);
       });
 
-      it('and httpContent not exist should negotiate default media type', () => {
-        const desiredOptions = {
-          mediaType: chance.string(),
+      describe('the resource has multiple contents', () => {
+        it('should negotiatiate the content according to the preference', () => {
+          const desiredOptions: NegotiationOptions = {
+            mediaTypes: ['application/json', 'application/xml'],
+            dynamic: false,
+          };
+
+          const contents: IMediaTypeContent[] = desiredOptions.mediaTypes!.reverse().map(mediaType => ({
+            mediaType,
+            encodings: [],
+            examples: [],
+          }));
+
+          const httpResponseSchema: IHttpOperationResponse = {
+            code: chance.integer({ min: 100, max: 599 }).toString(),
+            contents,
+            headers: [],
+          };
+
+          const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(
+            httpOperation,
+            desiredOptions,
+            httpResponseSchema,
+          );
+
+          expect(actualOperationConfig).toHaveProperty('mediaType', 'application/xml');
+        });
+
+        it('should negotiatiate the only content that is really avaiable', () => {
+          const desiredOptions: NegotiationOptions = {
+            mediaTypes: ['application/idonotexist', 'application/json'],
+            dynamic: false,
+          };
+
+          const content: IMediaTypeContent = {
+            mediaType: 'application/json',
+            encodings: [],
+            examples: [],
+          };
+
+          const httpResponseSchema: IHttpOperationResponse = {
+            code: chance.integer({ min: 100, max: 599 }).toString(),
+            contents: [content],
+            headers: [],
+          };
+
+          const actualOperationConfig = helpers.negotiateOptionsBySpecificResponse(
+            httpOperation,
+            desiredOptions,
+            httpResponseSchema,
+          );
+
+          expect(actualOperationConfig).toHaveProperty('mediaType', 'application/json');
+        });
+      });
+
+      it('and httpContent not exist should throw an error', () => {
+        const desiredOptions: NegotiationOptions = {
+          mediaTypes: [chance.string()],
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
+
         const httpResponseSchema: IHttpOperationResponse = {
           code: chance.integer({ min: 100, max: 599 }).toString(),
           contents: [],
           headers: [],
         };
 
-        expect(
+        expect(() =>
           helpers.negotiateOptionsBySpecificResponse(httpOperation, desiredOptions, httpResponseSchema),
-        ).toHaveProperty('mediaType', 'text/plain');
+        ).toThrowError(ProblemJsonError.fromTemplate(NOT_ACCEPTABLE));
       });
     });
 
     describe('given no mediaType', () => {
       it('should negotiate default media type', () => {
-        const desiredOptions = {
+        const desiredOptions: NegotiationOptions = {
           dynamic: chance.bool(),
           exampleKey: chance.string(),
         };
+
         const httpResponseSchema: IHttpOperationResponse = {
           code: chance.integer({ min: 100, max: 599 }).toString(),
           contents: [],
@@ -480,6 +545,7 @@ describe('NegotiatorHelpers', () => {
           mediaType: 'application/json',
           headers: [],
         };
+
         jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent');
         jest.spyOn(helpers, 'negotiateDefaultMediaType').mockReturnValue(fakeOperationConfig);
 
@@ -505,46 +571,51 @@ describe('NegotiatorHelpers', () => {
   });
 
   describe('negotiateDefaultMediaType()', () => {
-    it('given default contents exists should negotiate that', () => {
-      const code = chance.string();
-      const partialOptions = {
-        code,
-        dynamic: chance.bool(),
-        exampleKey: chance.string(),
-      };
+    describe('default content', () => {
+      it.each([['*/*', 'application/xml'], ['*/*', 'application/json'], ['application/json', 'application/xml']])(
+        'should return %s even when %s is avaiable',
+        (defaultMediaType, alternateMediaType) => {
+          const code = chance.string();
+          const partialOptions = {
+            code,
+            dynamic: chance.bool(),
+            exampleKey: chance.string(),
+          };
 
-      const contents: IMediaTypeContent = {
-        mediaType: 'application/json',
-        examples: [],
-        encodings: [],
-      };
+          const contents: IMediaTypeContent[] = [alternateMediaType, defaultMediaType].map(mediaType => ({
+            mediaType,
+            examples: [],
+            encodings: [],
+          }));
 
-      const response: IHttpOperationResponse = {
-        code,
-        contents: [contents],
-        headers: [],
-      };
+          const response: IHttpOperationResponse = {
+            code,
+            contents,
+            headers: [],
+          };
 
-      const fakeOperationConfig: IHttpNegotiationResult = {
-        code: '200',
-        mediaType: 'application/json',
-        headers: [],
-      };
+          const fakeOperationConfig: IHttpNegotiationResult = {
+            code: '200',
+            mediaType: defaultMediaType,
+            headers: [],
+          };
 
-      jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent').mockReturnValue(fakeOperationConfig);
+          jest.spyOn(helpers, 'negotiateByPartialOptionsAndHttpContent').mockReturnValue(fakeOperationConfig);
 
-      const actualOperationConfig = helpers.negotiateDefaultMediaType(partialOptions, response);
+          const actualOperationConfig = helpers.negotiateDefaultMediaType(partialOptions, response);
 
-      expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledTimes(1);
-      expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledWith(
-        {
-          code,
-          dynamic: partialOptions.dynamic,
-          exampleKey: partialOptions.exampleKey,
+          expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledTimes(1);
+          expect(helpers.negotiateByPartialOptionsAndHttpContent).toHaveBeenCalledWith(
+            {
+              code,
+              dynamic: partialOptions.dynamic,
+              exampleKey: partialOptions.exampleKey,
+            },
+            contents[1], // Check that the */* has been requested
+          );
+          expect(actualOperationConfig).toEqual(fakeOperationConfig);
         },
-        contents,
       );
-      expect(actualOperationConfig).toEqual(fakeOperationConfig);
     });
 
     it('when no default response return text/plain with empty body', () => {

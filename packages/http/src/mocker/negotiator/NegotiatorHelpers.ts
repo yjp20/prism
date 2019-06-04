@@ -1,5 +1,8 @@
+import { ProblemJsonError } from '@stoplight/prism-http';
 import { IHttpContent, IHttpOperation, IHttpOperationResponse, IMediaTypeContent, Omit } from '@stoplight/types';
-
+// @ts-ignore
+import * as accepts from 'accepts';
+import { NOT_ACCEPTABLE } from '../errors';
 import { IHttpNegotiationResult, NegotiatePartialOptions, NegotiationOptions } from './types';
 
 function findBestExample(httpContent: IHttpContent) {
@@ -10,11 +13,21 @@ function findExampleByKey(httpContent: IHttpContent, exampleKey: string) {
   return httpContent.examples && httpContent.examples.find(example => example.key === exampleKey);
 }
 
-function findHttpContentByMediaType(
+function findBestHttpContentByMediaType(
   response: IHttpOperationResponse,
-  mediaType: string,
+  mediaType: string[],
 ): IMediaTypeContent | undefined {
-  return response.contents.find(content => content.mediaType === mediaType);
+  return response.contents.find(content =>
+    accepts({
+      headers: {
+        accept: mediaType.join(','),
+      },
+    }).type(content.mediaType),
+  );
+}
+
+function findDefaultContentType(response: IHttpOperationResponse): IMediaTypeContent | undefined {
+  return response.contents.find(content => content.mediaType === '*/*');
 }
 
 function findLowest2xx(httpResponses: IHttpOperationResponse[]): IHttpOperationResponse | undefined {
@@ -102,8 +115,9 @@ const helpers = {
     response: IHttpOperationResponse,
   ): IHttpNegotiationResult {
     const { code, dynamic, exampleKey } = partialOptions;
-    const mediaType = 'application/json';
-    const httpContent = findHttpContentByMediaType(response, mediaType);
+    const httpContent =
+      findDefaultContentType(response) || findBestHttpContentByMediaType(response, ['application/json']);
+
     if (httpContent) {
       // a httpContent for default mediaType exists
       const contentNegotiationResult = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -138,11 +152,11 @@ const helpers = {
     response: IHttpOperationResponse,
   ): IHttpNegotiationResult {
     const { code, headers } = response;
-    const { mediaType, dynamic, exampleKey } = desiredOptions;
+    const { mediaTypes, dynamic, exampleKey } = desiredOptions;
 
-    if (mediaType) {
+    if (mediaTypes) {
       // a user provided mediaType
-      const httpContent = findHttpContentByMediaType(response, mediaType);
+      const httpContent = findBestHttpContentByMediaType(response, mediaTypes);
       if (httpContent) {
         // a httpContent for a provided mediaType exists
         const contentNegotiationResult = helpers.negotiateByPartialOptionsAndHttpContent(
@@ -158,11 +172,10 @@ const helpers = {
           ...contentNegotiationResult,
         };
       } else {
-        return {
-          code,
-          mediaType: 'text/plain',
-          headers,
-        };
+        throw ProblemJsonError.fromTemplate(
+          NOT_ACCEPTABLE,
+          `Could not find any content that satisfies ${mediaTypes.join(',')}`,
+        );
       }
     }
     // user did not provide mediaType

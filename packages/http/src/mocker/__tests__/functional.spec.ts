@@ -1,7 +1,9 @@
 import { ISchema } from '@stoplight/types';
 import * as Ajv from 'ajv';
 
+import { ProblemJsonError } from '@stoplight/prism-http';
 import { httpOperations, httpRequests } from '../../__tests__/fixtures';
+import { NOT_ACCEPTABLE } from '../errors';
 import { generate } from '../generator/JSONSchema';
 import { HttpMocker } from '../index';
 
@@ -17,7 +19,7 @@ describe('http mocker', () => {
           config: {
             mock: {
               dynamic: false,
-              mediaType: 'text/plain',
+              mediaTypes: ['text/plain'],
             },
           },
         });
@@ -25,7 +27,7 @@ describe('http mocker', () => {
         expect(response).toMatchSnapshot();
       });
 
-      test('and that content type does not exist should return empty body', () => {
+      test('and that content type does not exist should return an error', () => {
         return expect(
           mocker.mock({
             resource: httpOperations[0],
@@ -33,11 +35,11 @@ describe('http mocker', () => {
             config: {
               mock: {
                 dynamic: false,
-                mediaType: 'text/funky',
+                mediaTypes: ['text/funky'],
               },
             },
           }),
-        ).resolves.toMatchObject({ headers: { 'Content-type': 'text/plain' }, body: undefined });
+        ).rejects.toThrowError(ProblemJsonError.fromTemplate(NOT_ACCEPTABLE));
       });
     });
 
@@ -51,7 +53,7 @@ describe('http mocker', () => {
               dynamic: false,
               code: '201',
               exampleKey: 'second',
-              mediaType: 'application/xml',
+              mediaTypes: ['application/xml'],
             },
           },
         });
@@ -69,7 +71,7 @@ describe('http mocker', () => {
             mock: {
               dynamic: false,
               code: '201',
-              mediaType: 'application/xml',
+              mediaTypes: ['application/xml'],
             },
           },
         });
@@ -102,7 +104,7 @@ describe('http mocker', () => {
             mock: {
               dynamic: false,
               exampleKey: 'second',
-              mediaType: 'application/xml',
+              mediaTypes: ['application/xml'],
             },
           },
         });
@@ -179,7 +181,7 @@ describe('http mocker', () => {
           resource: httpOperations[1],
           input: Object.assign({}, httpRequests[0], {
             data: Object.assign({}, httpRequests[0].data, {
-              headers: { 'Content-type': 'application/xml' },
+              headers: { Accept: 'application/xml' },
             }),
           }),
         });
@@ -198,14 +200,11 @@ describe('http mocker', () => {
               resource: httpOperations[0],
               input: Object.assign({}, httpRequests[0], {
                 data: Object.assign({}, httpRequests[0].data, {
-                  headers: { 'Content-type': 'application/yaml' },
+                  headers: { Accept: 'application/yaml' },
                 }),
               }),
             }),
-          ).resolves.toMatchObject({
-            headers: { 'Content-type': 'text/plain' },
-            body: undefined,
-          });
+          ).rejects.toThrowError(ProblemJsonError.fromTemplate(NOT_ACCEPTABLE));
         });
       });
     });

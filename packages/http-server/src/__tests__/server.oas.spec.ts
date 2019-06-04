@@ -227,6 +227,69 @@ describe.each([['petstore.oas2.json'], ['petstore.oas3.json']])('server %s', fil
       expect(response.headers).toHaveProperty(headerName, expectedValues[headerName]);
     }
   });
+
+  describe('content negotiation', () => {
+    it('returns a valid response when multiple choices are given', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/pets/10',
+        headers: {
+          accept: 'idonotexist/something,application/json',
+        },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers).toHaveProperty('content-type', 'application/json');
+    });
+
+    it('respects the priority when multiple avaiable choices match', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/pets/10',
+        headers: {
+          accept: 'application/json,application/xml',
+        },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers).toHaveProperty('content-type', 'application/json');
+    });
+
+    it('returns 406 response when the requested media type is not offered', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/pets/10',
+        headers: {
+          accept: 'idonotexist/something',
+        },
+      });
+
+      expect(response.statusCode).toBe(406);
+    });
+
+    it('fallbacks to application/json in case the Accept header is not provided', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/store/inventory',
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers).toHaveProperty('content-type', 'application/json');
+    });
+
+    it('returns application/json even if the resources have the charset parameter', async () => {
+      const response = await server.fastify.inject({
+        method: 'GET',
+        url: '/user/user1',
+        headers: {
+          accept: 'application/json',
+        },
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
+    });
+  });
 });
 
 describe('oas2 specific tests', () => {
@@ -239,8 +302,6 @@ describe('oas2 specific tests', () => {
     const response = await server.fastify.inject({ method: 'GET', url: '/' });
 
     expect(response.statusCode).toBe(200);
-    expect(response.headers['content-type']).toEqual('text/plain');
-    expect(response.payload).toEqual('');
 
     await server.fastify.close();
   });
