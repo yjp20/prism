@@ -311,7 +311,6 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
 export const httpOutputs: IHttpResponse[] = [
   {
     statusCode: 200,
-    responseType: '',
   },
   {
     statusCode: 200,
@@ -319,6 +318,5 @@ export const httpOutputs: IHttpResponse[] = [
       'x-todos-publish': '2018-11-01T11:42:00.05Z',
     },
     body: '{"name":"Shopping","completed":false}',
-    responseType: '',
   },
 ];

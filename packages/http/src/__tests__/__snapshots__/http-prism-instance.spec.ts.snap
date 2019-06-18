@@ -19,7 +19,6 @@ Object {
     "headers": Object {
       "Content-type": "application/json",
     },
-    "responseType": "",
     "statusCode": 200,
   },
   "validations": Object {
