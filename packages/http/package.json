@@ -1,8 +1,8 @@
 {
   "name": "@stoplight/prism-http",
   "version": "3.0.0-beta.0",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Stoplight <support@stoplight.io>",
   "license": "Apache-2.0",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "https://github.com/stoplightio/prism.git"
   },
   "files": [
-    "/lib"
+    "/dist"
   ],
   "engines": {
     "node": ">=8"
@@ -26,7 +26,7 @@
     "fp-ts": "^1.18.2",
     "openapi-sampler": "^1.0.0-beta.14",
     "pino": "^5.12.6",
-    "tslib": "^1.9.0"
+    "tslib": "^1.10.0"
   },
   "publishConfig": {
     "access": "public"
