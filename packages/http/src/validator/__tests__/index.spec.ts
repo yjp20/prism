@@ -210,7 +210,7 @@ describe('HttpValidator', () => {
                 request: {},
                 responses: [{ code: '200' }],
               },
-              output: { statusCode: 200 },
+              output: { statusCode: 200, responseType: '' },
               config: { mock: { dynamic: false }, validate: { response: { body: true } } },
             }),
           ).resolves.toEqual([mockError]);

@@ -72,6 +72,7 @@ export class HttpMocker implements IMocker<IHttpOperation, IHttpRequest, IHttpCo
         'Content-type': negotiationResult.mediaType,
       },
       body: mockedBody,
+      responseType: '', // todo(Vincenzo): to be implemented
     };
   }
 }
