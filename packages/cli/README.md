@@ -6,14 +6,16 @@
 [![License](https://img.shields.io/npm/l/prism-cli.svg)](https://github.com/stoplightio/prism/blob/master/package.json)
 
 <!-- toc -->
-* [prism-cli](#prism-cli)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
+- [prism-cli](#prism-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+  <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @stoplight/prism-cli
 $ prism COMMAND
@@ -25,13 +27,15 @@ USAGE
   $ prism COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`prism help [COMMAND]`](#prism-help-command)
-* [`prism mock SPEC`](#prism-mock-spec)
+
+- [`prism help [COMMAND]`](#prism-help-command)
+- [`prism mock SPEC`](#prism-mock-spec)
 
 ## `prism help [COMMAND]`
 
@@ -69,6 +73,7 @@ OPTIONS
 ```
 
 _See code: [dist/commands/mock.ts](https://github.com/stoplightio/prism/blob/v3.0.0-beta.3/dist/commands/mock.ts)_
+
 <!-- commandsstop -->
 
 ## Running in production
