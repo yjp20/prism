@@ -1,12 +1,13 @@
 trigger:
+  tags:
+    include:
+    - '*'
   branches:
     include:
-      - master
-      - refs/tags/*
+    - master
 jobs:
   - job: test
     displayName: Test
-    condition: eq(variables['Build.SourceBranchName'], 'master')
     pool:
       vmImage: vs2017-win2016
     steps:
