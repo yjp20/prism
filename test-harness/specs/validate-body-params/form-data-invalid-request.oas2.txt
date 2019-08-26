@@ -1,5 +1,5 @@
 ====test====
-Given form data expected in request body 
+Given form data expected in request body
 but invalid data sent then return 422
 ====spec====
 swagger: '2.0'
