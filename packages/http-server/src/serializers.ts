@@ -1,7 +1,7 @@
 import { j2xParser } from 'fast-xml-parser';
 import typeIs = require('type-is');
 
-const xmlSerializer = new j2xParser({ attrNodeName: 'xml' });
+const xmlSerializer = new j2xParser({});
 
 export default [
   {
@@ -16,7 +16,7 @@ export default [
       test: (value: string) => !!typeIs.is(value, ['application/xml', 'application/*+xml']),
       toString: () => 'application/*+xml',
     },
-    serializer: (data: unknown) => (typeof data === 'string' ? data : xmlSerializer.parse(data)),
+    serializer: (data: unknown) => (typeof data === 'string' ? data : xmlSerializer.parse({ xml: data })),
   },
   {
     regex: /text\/plain/,
