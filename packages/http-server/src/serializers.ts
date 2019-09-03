@@ -1,8 +1,7 @@
-import { ProblemJsonError } from '@stoplight/prism-http';
 import { j2xParser } from 'fast-xml-parser';
 import typeIs = require('type-is');
 
-const xmlSerializer = new j2xParser({});
+const xmlSerializer = new j2xParser({ attrNodeName: 'xml' });
 
 export default [
   {
