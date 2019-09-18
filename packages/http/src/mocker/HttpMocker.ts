@@ -121,10 +121,12 @@ function assembleResponse(
 
         const response: IHttpResponse = {
           statusCode: parseInt(negotiationResult.code),
-          headers: {
-            ...mockedHeaders,
-            'Content-type': negotiationResult.mediaType,
-          },
+          headers: negotiationResult.mediaType
+            ? {
+                ...mockedHeaders,
+                'Content-type': negotiationResult.mediaType,
+              }
+            : mockedHeaders,
           body: mockedBody,
         };
 

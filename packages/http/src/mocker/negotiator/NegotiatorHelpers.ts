@@ -1,12 +1,11 @@
+import { ProblemJsonError } from '@stoplight/prism-core';
+import { IHttpOperation, IHttpOperationResponse, IMediaTypeContent } from '@stoplight/types';
 import * as Either from 'fp-ts/lib/Either';
 import * as Option from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as Reader from 'fp-ts/lib/Reader';
 import * as ReaderEither from 'fp-ts/lib/ReaderEither';
 import { Logger } from 'pino';
-
-import { ProblemJsonError } from '@stoplight/prism-core';
-import { IHttpOperation, IHttpOperationResponse, IMediaTypeContent } from '@stoplight/types';
 import withLogger from '../../withLogger';
 import { NOT_ACCEPTABLE, NOT_FOUND } from '../errors';
 import {
@@ -135,6 +134,15 @@ const helpers = {
     const { mediaTypes, dynamic, exampleKey } = desiredOptions;
 
     return withLogger(logger => {
+      if (_httpOperation.method === 'head') {
+        logger.info(`Responding with an empty body to a HEAD request.`);
+
+        return Either.right({
+          code: response.code,
+          headers: response.headers || [],
+        });
+      }
+
       if (mediaTypes) {
         // a user provided mediaType
         const httpContent = hasContents(response) ? findBestHttpContentByMediaType(response, mediaTypes) : Option.none;
