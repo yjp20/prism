@@ -1,3 +1,4 @@
+import { HttpParamStyles } from '@stoplight/types';
 import { JSONSchema } from '../../..';
 import { HttpBodyValidator } from '../body';
 
@@ -41,6 +42,68 @@ describe('HttpBodyValidator', () => {
             'test',
             [{ mediaType: 'application/json', schema: mockSchema, examples: [], encodings: [] }],
             'application/json',
+          ),
+        ).toMatchSnapshot();
+      });
+    });
+
+    describe('body is form-urlencoded with deep object style', () => {
+      it('returns no validation errors', () => {
+        expect(
+          httpBodyValidator.validate(
+            encodeURI('key[a]=str'),
+            [
+              {
+                mediaType: 'application/x-www-form-urlencoded',
+                encodings: [{ property: 'key', style: HttpParamStyles.DeepObject }],
+                schema: {
+                  type: 'object',
+                  properties: {
+                    key: {
+                      type: 'object',
+                      properties: { a: { type: 'string' } },
+                      required: ['a'],
+                    },
+                  },
+                  required: ['key'],
+                },
+              },
+            ],
+            'application/x-www-form-urlencoded',
+          ),
+        ).toEqual([]);
+      });
+    });
+
+    describe('body is form-urlencoded with deep object style and is not compatible with schema', () => {
+      it('returns validation errors', () => {
+        expect(
+          httpBodyValidator.validate(
+            encodeURI('key[a][ab]=str'),
+            [
+              {
+                mediaType: 'application/x-www-form-urlencoded',
+                encodings: [{ property: 'key', style: HttpParamStyles.DeepObject }],
+                schema: {
+                  type: 'object',
+                  properties: {
+                    key: {
+                      type: 'object',
+                      properties: {
+                        a: {
+                          type: 'object',
+                          properties: { aa: { type: 'string' } },
+                          required: ['aa'],
+                        },
+                      },
+                      required: ['a'],
+                    },
+                  },
+                  required: ['key'],
+                },
+              },
+            ],
+            'application/x-www-form-urlencoded',
           ),
         ).toMatchSnapshot();
       });
