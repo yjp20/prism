@@ -99,7 +99,6 @@ function negotiateResponse(
     return pipe(
       withLogger(logger => {
         warnings && warnings.forEach(warn => logger.warn({ name: 'VALIDATOR' }, warn.message));
-
         return logger.success(
           { name: 'VALIDATOR' },
           'The request passed the validation rules. Looking for the best response'
