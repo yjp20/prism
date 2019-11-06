@@ -3,16 +3,17 @@ import {
   PRE_PARAM_VALUE_TAG,
   POST_PARAM_VALUE_TAG,
   attachTagsToParamsValues,
-  transformPathParamsValues
+  transformPathParamsValues,
 } from '../colorizer';
 
 describe('colorizer', () => {
-
   describe('transformPathParamsValues()', () => {
     it('colorizes tagged values of query params', () => {
       const path = `/no_auth/pets/findByStatus?status=${PRE_PARAM_VALUE_TAG}sold,pending${POST_PARAM_VALUE_TAG}`;
 
-      expect(transformPathParamsValues(path, chalk.bold.blue)).toBe(`/no_auth/pets/findByStatus?status=${chalk.bold.blue('sold,pending')}`);
+      expect(transformPathParamsValues(path, chalk.bold.blue)).toBe(
+        `/no_auth/pets/findByStatus?status=${chalk.bold.blue('sold,pending')}`
+      );
     });
 
     it('colorizes tagged values of path params', () => {
@@ -23,30 +24,25 @@ describe('colorizer', () => {
   });
 
   describe('attachTagsToParamsValues()', () => {
-
     describe('adding tags', () => {
       it('tags multiple values', () => {
         const values = {
-          status: [
-            'available',
-            'pending',
-            'sold'
-          ]
+          status: ['available', 'pending', 'sold'],
         };
 
         expect(attachTagsToParamsValues(values)).toStrictEqual({
           status: [
             `${PRE_PARAM_VALUE_TAG}available${POST_PARAM_VALUE_TAG}`,
             `${PRE_PARAM_VALUE_TAG}pending${POST_PARAM_VALUE_TAG}`,
-            `${PRE_PARAM_VALUE_TAG}sold${POST_PARAM_VALUE_TAG}`
-          ]
+            `${PRE_PARAM_VALUE_TAG}sold${POST_PARAM_VALUE_TAG}`,
+          ],
         });
       });
 
       describe('tagging single values', () => {
         it('tags string values', () => {
           const valuesOfParams = {
-            name: 'dignissimos'
+            name: 'dignissimos',
           };
 
           expect(attachTagsToParamsValues(valuesOfParams)).toStrictEqual({
@@ -56,11 +52,11 @@ describe('colorizer', () => {
 
         it('tags numeric values', () => {
           const valuesOfParams = {
-            petId: 170
+            petId: 170,
           };
 
           expect(attachTagsToParamsValues(valuesOfParams)).toStrictEqual({
-            petId: `${PRE_PARAM_VALUE_TAG}170${POST_PARAM_VALUE_TAG}`
+            petId: `${PRE_PARAM_VALUE_TAG}170${POST_PARAM_VALUE_TAG}`,
           });
         });
       });
@@ -71,6 +67,5 @@ describe('colorizer', () => {
 
       expect(attachTagsToParamsValues(values)).toStrictEqual({});
     });
-
   });
 });

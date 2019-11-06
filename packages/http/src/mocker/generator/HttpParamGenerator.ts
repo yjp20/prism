@@ -1,4 +1,4 @@
-import { IHttpParam, INodeExample, INodeExternalExample } from '@stoplight/types';
+import { IHttpContent, IHttpParam, INodeExample, INodeExternalExample } from '@stoplight/types';
 import * as Option from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { JSONSchema } from '../../types';
@@ -51,7 +51,7 @@ function pickStaticExample(
   );
 }
 
-export function generate(param: IHttpParam): Option.Option<unknown> {
+export function generate(param: IHttpParam | IHttpContent): Option.Option<unknown> {
   return pipe(
     Option.fromNullable(param.examples),
     pickStaticExample,

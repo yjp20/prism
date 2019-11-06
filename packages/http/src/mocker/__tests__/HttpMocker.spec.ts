@@ -6,7 +6,12 @@ import mock from '../../mocker';
 import * as JSONSchemaGenerator from '../../mocker/generator/JSONSchema';
 import { IHttpRequest, JSONSchema } from '../../types';
 import helpers from '../negotiator/NegotiatorHelpers';
-import { assertRight } from '@stoplight/prism-core/src/utils/__tests__/utils';
+import { assertRight } from '@stoplight/prism-core/src/__tests__/utils';
+import { runCallback } from '../callback/callbacks';
+
+jest.mock('../callback/callbacks', () => ({
+  runCallback: jest.fn(() => () => () => undefined),
+}));
 
 const logger = createLogger('TEST', { enabled: false });
 
@@ -90,7 +95,7 @@ describe('mocker', () => {
             mediaType: 'test',
             bodyExample: mockResource.responses[0].contents![0].examples![0],
             headers: [],
-          }),
+          })
         );
 
         const mockResult = mock({
@@ -109,7 +114,7 @@ describe('mocker', () => {
             mediaType: 'test',
             schema: mockResource.responses[0].contents![0].schema,
             headers: [],
-          }),
+          })
         );
 
         const response = mock({
@@ -123,6 +128,54 @@ describe('mocker', () => {
             name: expect.any(String),
             surname: expect.any(String),
           });
+        });
+      });
+
+      it('runs defined callbacks', () => {
+        const callbacksMockResource: IHttpOperation = {
+          ...mockResource,
+          callbacks: [
+            {
+              callbackName: 'c1',
+              method: 'get',
+              path: 'http://example.com/notify',
+              id: '1',
+              responses: [{ code: '200', contents: [{ mediaType: 'application/json' }] }],
+            },
+            {
+              callbackName: 'c2',
+              method: 'get',
+              path: 'http://example.com/notify2',
+              id: '2',
+              responses: [{ code: '200', contents: [{ mediaType: 'application/json' }] }],
+            },
+          ],
+        };
+        jest.spyOn(helpers, 'negotiateOptionsForValidRequest').mockReturnValue(
+          right({
+            code: '202',
+            mediaType: 'test',
+            schema: callbacksMockResource.responses[0].contents![0].schema,
+            headers: [],
+          })
+        );
+
+        const response = mock({
+          config: { dynamic: true },
+          resource: callbacksMockResource,
+          input: mockInput,
+        })(logger);
+
+        assertRight(response, result => {
+          expect(runCallback).toHaveBeenCalledTimes(2);
+          expect(runCallback).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({ callback: expect.objectContaining({ callbackName: 'c1' }) })
+          );
+          expect(runCallback).toHaveBeenNthCalledWith(
+            2,
+            expect.objectContaining({ callback: expect.objectContaining({ callbackName: 'c2' }) })
+          );
         });
       });
     });
@@ -168,7 +221,7 @@ describe('mocker', () => {
             bodyExample: mockResource.responses[0].contents![0].examples![1],
             headers: [],
             schema: { type: 'string' },
-          }),
+          })
         );
 
         jest.spyOn(JSONSchemaGenerator, 'generate').mockReturnValue('example value chelsea');
@@ -208,7 +261,7 @@ describe('mocker', () => {
             expect(JSONSchemaGenerator.generateStatic).not.toHaveBeenCalled();
 
             const allExamples = flatMap(mockResource.responses, res =>
-              flatMap(res.contents, content => content.examples || []),
+              flatMap(res.contents, content => content.examples || [])
             ).map(x => {
               if ('value' in x) return x.value;
             });
@@ -234,7 +287,7 @@ describe('mocker', () => {
 
             it('should return the selected example', () => {
               const selectedExample = flatMap(mockResource.responses, res =>
-                flatMap(res.contents, content => content.examples || []),
+                flatMap(res.contents, content => content.examples || [])
               ).find(ex => ex.key === 'test key');
 
               expect(selectedExample).toBeDefined();
@@ -313,7 +366,7 @@ describe('mocker', () => {
 
               it('prefers the default', () =>
                 assertRight(eitherResponseWithDefault, responseWithDefault =>
-                  expect(responseWithDefault.body).toHaveProperty('middlename', 'JJ'),
+                  expect(responseWithDefault.body).toHaveProperty('middlename', 'JJ')
                 ));
             });
 
@@ -327,7 +380,7 @@ describe('mocker', () => {
 
               it('prefers the first example', () =>
                 assertRight(eitherResponseWithMultipleExamples, responseWithMultipleExamples =>
-                  expect(responseWithMultipleExamples.body).toHaveProperty('middlename', 'WW'),
+                  expect(responseWithMultipleExamples.body).toHaveProperty('middlename', 'WW')
                 ));
             });
 
@@ -341,7 +394,7 @@ describe('mocker', () => {
 
               it('fallbacks to string', () =>
                 assertRight(eitherResponseWithNoExamples, responseWithNoExamples =>
-                  expect(responseWithNoExamples.body).toHaveProperty('middlename', 'string'),
+                  expect(responseWithNoExamples.body).toHaveProperty('middlename', 'string')
                 ));
             });
           });

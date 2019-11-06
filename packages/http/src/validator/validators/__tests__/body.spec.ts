@@ -1,7 +1,7 @@
 import { HttpParamStyles } from '@stoplight/types';
 import { JSONSchema } from '../../..';
 import { HttpBodyValidator } from '../body';
-import { assertRight, assertLeft } from '@stoplight/prism-core/src/utils/__tests__/utils';
+import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 
 describe('HttpBodyValidator', () => {
   const httpBodyValidator = new HttpBodyValidator('body');
@@ -16,9 +16,8 @@ describe('HttpBodyValidator', () => {
     describe('request media type is not provided', () => {
       it('returns no validation errors', () => {
         assertRight(
-          httpBodyValidator.validate('test', [
-            { mediaType: 'application/not-exists-son', examples: [], encodings: [] },
-          ]));
+          httpBodyValidator.validate('test', [{ mediaType: 'application/not-exists-son', examples: [], encodings: [] }])
+        );
       });
     });
 
@@ -28,8 +27,9 @@ describe('HttpBodyValidator', () => {
           httpBodyValidator.validate(
             'test',
             [{ mediaType: 'application/not-exists-son', examples: [], encodings: [] }],
-            'application/json',
-          ));
+            'application/json'
+          )
+        );
       });
     });
 
@@ -40,8 +40,10 @@ describe('HttpBodyValidator', () => {
           httpBodyValidator.validate(
             'test',
             [{ mediaType: 'application/json', schema: mockSchema, examples: [], encodings: [] }],
-            'application/json',
-          ), error => expect(error).toContainEqual(expect.objectContaining({ code: "type", message: "should be number" })));
+            'application/json'
+          ),
+          error => expect(error).toContainEqual(expect.objectContaining({ code: 'type', message: 'should be number' }))
+        );
       });
     });
 
@@ -67,8 +69,9 @@ describe('HttpBodyValidator', () => {
                 },
               },
             ],
-            'application/x-www-form-urlencoded',
-          ));
+            'application/x-www-form-urlencoded'
+          )
+        );
       });
     });
 
@@ -100,10 +103,16 @@ describe('HttpBodyValidator', () => {
                 },
               },
             ],
-            'application/x-www-form-urlencoded',
-          ), error => expect(error).toContainEqual(expect.objectContaining({
-            code: 'required', message: 'should have required property \'aa\''
-          })))
+            'application/x-www-form-urlencoded'
+          ),
+          error =>
+            expect(error).toContainEqual(
+              expect.objectContaining({
+                code: 'required',
+                message: "should have required property 'aa'",
+              })
+            )
+        );
       });
     });
   });

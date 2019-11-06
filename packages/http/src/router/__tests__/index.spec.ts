@@ -1,4 +1,4 @@
-import { assertLeft, assertRight } from '@stoplight/prism-core/src/utils/__tests__/utils';
+import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 import { HttpMethod, IHttpOperation, IServer } from '@stoplight/types';
 import { Chance } from 'chance';
 import { isRight } from 'fp-ts/lib/Either';
@@ -44,7 +44,7 @@ describe('http router', () => {
             },
           },
         }),
-        error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_CONFIGURATION_PROVIDED_ERROR)),
+        error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_CONFIGURATION_PROVIDED_ERROR))
       );
     });
 
@@ -60,7 +60,7 @@ describe('http router', () => {
             },
           },
         }),
-        error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_RESOURCE_PROVIDED_ERROR)),
+        error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_RESOURCE_PROVIDED_ERROR))
       );
     });
 
@@ -80,8 +80,8 @@ describe('http router', () => {
                   path,
                 },
               },
-            }),
-          ),
+            })
+          )
         ).toBeTruthy();
       });
 
@@ -106,7 +106,7 @@ describe('http router', () => {
               },
             },
           }),
-          error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR)),
+          error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR))
         );
       });
 
@@ -134,7 +134,7 @@ describe('http router', () => {
                 },
               },
             }),
-            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR)),
+            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR))
           );
         });
 
@@ -157,7 +157,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -179,7 +179,7 @@ describe('http router', () => {
                 },
               },
             }),
-            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_MATCHED_ERROR)),
+            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_MATCHED_ERROR))
           );
         });
 
@@ -208,7 +208,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -237,7 +237,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -262,7 +262,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -287,7 +287,7 @@ describe('http router', () => {
                 },
               },
             }),
-            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR)),
+            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_PATH_MATCHED_ERROR))
           );
         });
 
@@ -309,7 +309,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(resourceWithConcretePath),
+            resource => expect(resource).toBe(resourceWithConcretePath)
           );
         });
 
@@ -331,7 +331,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(firstResource),
+            resource => expect(resource).toBe(firstResource)
           );
         });
 
@@ -358,7 +358,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(resourceWithConcreteMatch),
+            resource => expect(resource).toBe(resourceWithConcreteMatch)
           );
         });
 
@@ -380,7 +380,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(resourceWithMatchingPath),
+            resource => expect(resource).toBe(resourceWithMatchingPath)
           );
         });
 
@@ -400,7 +400,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -419,7 +419,7 @@ describe('http router', () => {
                 },
               },
             }),
-            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_MATCHED_ERROR)),
+            error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_SERVER_MATCHED_ERROR))
           );
         });
 
@@ -439,7 +439,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
 
@@ -457,7 +457,7 @@ describe('http router', () => {
                 },
               },
             }),
-            resource => expect(resource).toBe(expectedResource),
+            resource => expect(resource).toBe(expectedResource)
           );
         });
       });
@@ -478,7 +478,7 @@ describe('http router', () => {
               },
             },
           }),
-          error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_METHOD_MATCHED_ERROR)),
+          error => expect(error).toEqual(ProblemJsonError.fromTemplate(NO_METHOD_MATCHED_ERROR))
         );
       });
     });

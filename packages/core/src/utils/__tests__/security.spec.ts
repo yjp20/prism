@@ -1,6 +1,6 @@
 import { DiagnosticSeverity } from '@stoplight/types';
 import { validateSecurity } from '../security';
-import { assertRight, assertLeft } from '@stoplight/prism-core/src/utils/__tests__/utils';
+import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 
 describe('validateSecurity', () => {
   const token = new Buffer('test:test').toString('base64');
@@ -11,10 +11,12 @@ describe('validateSecurity', () => {
 
   it('fails with a message explaining the issue', () => {
     assertLeft(validateSecurity({}, { security: [[{}]] }), obj =>
-      expect(obj).toStrictEqual([{
-        message: 'We currently do not support this type of security scheme.',
-        severity: DiagnosticSeverity.Warning,
-      }]),
+      expect(obj).toStrictEqual([
+        {
+          message: 'We currently do not support this type of security scheme.',
+          severity: DiagnosticSeverity.Warning,
+        },
+      ])
     );
   });
 
@@ -27,22 +29,26 @@ describe('validateSecurity', () => {
 
     it('fails with an invalid credentials error', () => {
       assertLeft(validateSecurity({ headers: { authorization: 'Basic abc123' } }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
 
     it('fails with an invalid security scheme error', () => {
       assertLeft(validateSecurity({ headers: { authorization: 'Bearer abc123' } }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          tags: ['Basic realm="*"'],
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            tags: ['Basic realm="*"'],
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
   });
@@ -54,8 +60,8 @@ describe('validateSecurity', () => {
       assertRight(
         validateSecurity(
           { headers: { authorization: 'Digest username="", realm="", nonce="", uri="", response=""' } },
-          { security: securityScheme },
-        ),
+          { security: securityScheme }
+        )
       );
     });
 
@@ -63,11 +69,13 @@ describe('validateSecurity', () => {
       assertLeft(
         validateSecurity({ headers: { authorization: 'Digest username=""' } }, { security: securityScheme }),
         res =>
-          expect(res).toStrictEqual([{
-            code: 401,
-            message: 'Invalid security scheme used',
-            severity: DiagnosticSeverity.Error,
-          }]),
+          expect(res).toStrictEqual([
+            {
+              code: 401,
+              message: 'Invalid security scheme used',
+              severity: DiagnosticSeverity.Error,
+            },
+          ])
       );
     });
   });
@@ -81,23 +89,27 @@ describe('validateSecurity', () => {
 
     it('fails with an invalid security scheme error', () => {
       assertLeft(validateSecurity({ headers: { authorization: 'Digest abc123' } }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          tags: ['Bearer'],
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            tags: ['Bearer'],
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
 
     it('fails with an invalid security scheme error', () => {
       assertLeft(validateSecurity({ tags: [] }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          tags: ['Bearer'],
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            tags: ['Bearer'],
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
   });
@@ -111,12 +123,14 @@ describe('validateSecurity', () => {
 
     it('fails with an invalid security scheme error', () => {
       assertLeft(validateSecurity({ headers: { authorization: 'Digest abc123' } }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          tags: ['OAuth2'],
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            tags: ['OAuth2'],
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
   });
@@ -130,12 +144,14 @@ describe('validateSecurity', () => {
 
     it('fails with an invalid security scheme error', () => {
       assertLeft(validateSecurity({ headers: { authorization: 'Digest abc123' } }, { security: securityScheme }), res =>
-        expect(res).toStrictEqual([{
-          code: 401,
-          tags: ['OpenID'],
-          message: 'Invalid security scheme used',
-          severity: DiagnosticSeverity.Error,
-        }]),
+        expect(res).toStrictEqual([
+          {
+            code: 401,
+            tags: ['OpenID'],
+            message: 'Invalid security scheme used',
+            severity: DiagnosticSeverity.Error,
+          },
+        ])
       );
     });
   });
@@ -148,15 +164,17 @@ describe('validateSecurity', () => {
             { headers: {} },
             {
               security: [[{ scheme: 'basic', type: 'http' }, { in: 'header', type: 'apiKey', name: 'x-api-key' }]],
-            },
+            }
           ),
           res =>
-            expect(res).toStrictEqual([{
-              code: 401,
-              tags: ['Basic realm="*"'],
-              message: 'Invalid security scheme used',
-              severity: DiagnosticSeverity.Error,
-            }]),
+            expect(res).toStrictEqual([
+              {
+                code: 401,
+                tags: ['Basic realm="*"'],
+                message: 'Invalid security scheme used',
+                severity: DiagnosticSeverity.Error,
+              },
+            ])
         );
       });
     });
@@ -170,12 +188,14 @@ describe('validateSecurity', () => {
 
       it('fails with an invalid security scheme error', () => {
         assertLeft(validateSecurity({ headers: {} }, { security: securityScheme }), res =>
-          expect(res).toStrictEqual([{
-            code: 401,
-            tags: [],
-            message: 'Invalid security scheme used',
-            severity: DiagnosticSeverity.Error,
-          }]),
+          expect(res).toStrictEqual([
+            {
+              code: 401,
+              tags: [],
+              message: 'Invalid security scheme used',
+              severity: DiagnosticSeverity.Error,
+            },
+          ])
         );
       });
     });
@@ -189,12 +209,14 @@ describe('validateSecurity', () => {
 
       it('fails with an invalid security scheme error', () => {
         assertLeft(validateSecurity({}, { security: securityScheme }), res =>
-          expect(res).toStrictEqual([{
-            code: 401,
-            tags: [],
-            message: 'Invalid security scheme used',
-            severity: DiagnosticSeverity.Error,
-          }]),
+          expect(res).toStrictEqual([
+            {
+              code: 401,
+              tags: [],
+              message: 'Invalid security scheme used',
+              severity: DiagnosticSeverity.Error,
+            },
+          ])
         );
       });
     });
@@ -208,12 +230,14 @@ describe('validateSecurity', () => {
 
       it('fails with an invalid security scheme error', () => {
         assertLeft(validateSecurity({}, { security: securityScheme }), res =>
-          expect(res).toStrictEqual([{
-            code: 401,
-            tags: [],
-            message: 'Invalid security scheme used',
-            severity: DiagnosticSeverity.Error,
-          }]),
+          expect(res).toStrictEqual([
+            {
+              code: 401,
+              tags: [],
+              message: 'Invalid security scheme used',
+              severity: DiagnosticSeverity.Error,
+            },
+          ])
         );
       });
     });
@@ -228,15 +252,17 @@ describe('validateSecurity', () => {
           {},
           {
             security: securityScheme,
-          },
+          }
         ),
         res =>
-          expect(res).toStrictEqual([{
-            code: 401,
-            message: 'Invalid security scheme used',
-            severity: DiagnosticSeverity.Error,
-            tags: ['Bearer', 'Basic realm="*"'],
-          }]),
+          expect(res).toStrictEqual([
+            {
+              code: 401,
+              message: 'Invalid security scheme used',
+              severity: DiagnosticSeverity.Error,
+              tags: ['Bearer', 'Basic realm="*"'],
+            },
+          ])
       );
     });
 
@@ -246,8 +272,8 @@ describe('validateSecurity', () => {
           { headers: { authorization: 'Bearer abc123' } },
           {
             security: securityScheme,
-          },
-        ),
+          }
+        )
       );
     });
 
@@ -257,8 +283,8 @@ describe('validateSecurity', () => {
           { headers: { authorization: `Basic ${token}` } },
           {
             security: securityScheme,
-          },
-        ),
+          }
+        )
       );
     });
   });
@@ -280,15 +306,17 @@ describe('validateSecurity', () => {
               { headers: { 'x-api-key': 'abc123' } },
               {
                 security: securityScheme,
-              },
+              }
             ),
             res =>
-              expect(res).toStrictEqual([{
-                code: 401,
-                message: 'Invalid security scheme used',
-                severity: DiagnosticSeverity.Error,
-                tags: ['OAuth2']
-              }])
+              expect(res).toStrictEqual([
+                {
+                  code: 401,
+                  message: 'Invalid security scheme used',
+                  severity: DiagnosticSeverity.Error,
+                  tags: ['OAuth2'],
+                },
+              ])
           );
         });
 
@@ -298,8 +326,8 @@ describe('validateSecurity', () => {
               { headers: { 'x-api-key': 'abc123', authorization: 'Bearer abc123' } },
               {
                 security: securityScheme,
-              },
-            ),
+              }
+            )
           );
         });
       });
@@ -313,15 +341,17 @@ describe('validateSecurity', () => {
               { headers: { 'x-api-key': 'abc123' } },
               {
                 security: securityScheme,
-              },
+              }
             ),
             res =>
-              expect(res).toStrictEqual([{
-                code: 401,
-                message: 'Invalid security scheme used',
-                severity: DiagnosticSeverity.Error,
-                tags: ['OpenID'],
-              }]),
+              expect(res).toStrictEqual([
+                {
+                  code: 401,
+                  message: 'Invalid security scheme used',
+                  severity: DiagnosticSeverity.Error,
+                  tags: ['OpenID'],
+                },
+              ])
           );
         });
 
@@ -331,8 +361,8 @@ describe('validateSecurity', () => {
               { headers: { 'x-api-key': 'abc123', authorization: 'Bearer abc123' } },
               {
                 security: securityScheme,
-              },
-            ),
+              }
+            )
           );
         });
       });
@@ -356,15 +386,17 @@ describe('validateSecurity', () => {
             { headers: { 'x-api-key': 'abc123' } },
             {
               security: securityScheme,
-            },
+            }
           ),
           res =>
-            expect(res).toStrictEqual([{
-              code: 401,
-              message: 'Invalid security scheme used',
-              severity: DiagnosticSeverity.Error,
-              tags: [],
-            }]),
+            expect(res).toStrictEqual([
+              {
+                code: 401,
+                message: 'Invalid security scheme used',
+                severity: DiagnosticSeverity.Error,
+                tags: [],
+              },
+            ])
         );
       });
 
@@ -374,8 +406,8 @@ describe('validateSecurity', () => {
             { headers: { 'x-api-key': 'abc123' }, url: { query: { apiKey: 'abc123' } } },
             {
               security: securityScheme,
-            },
-          ),
+            }
+          )
         );
       });
     });

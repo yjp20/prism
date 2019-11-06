@@ -3,7 +3,7 @@ import { DiagnosticSeverity, Segment } from '@stoplight/types';
 import { getSemigroup } from 'fp-ts/lib/NonEmptyArray';
 import { getValidation } from 'fp-ts/lib/Either';
 import { option } from 'fp-ts/lib/Option';
-import { sequenceT } from 'fp-ts/lib/Apply'
+import { sequenceT } from 'fp-ts/lib/Apply';
 import * as Ajv from 'ajv';
 import { JSONSchema } from '../../';
 // @ts-ignore
@@ -41,4 +41,4 @@ export const validateAgainstSchema = (value: any, schema: JSONSchema, prefix?: s
 };
 
 export const sequenceValidation = sequenceT(getValidation(getSemigroup<IPrismDiagnostic>()));
-export const sequenceOption = sequenceT(option)
+export const sequenceOption = sequenceT(option);

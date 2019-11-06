@@ -10,7 +10,7 @@ import {
   validateInput,
   validateOutput,
 } from '../index';
-import { assertRight, assertLeft } from '@stoplight/prism-core/src/utils/__tests__/utils';
+import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 
 const validate = (
   resourceExtension?: Partial<IHttpOperation>,
@@ -242,7 +242,7 @@ describe('HttpValidator', () => {
             error =>
               expect(error).toEqual([
                 {
-                  message: 'The received media type does not match the one specified in the document',
+                  message: 'The received media type "application/xml" does not match the one specified in the document',
                   severity: DiagnosticSeverity.Error,
                 },
               ])
