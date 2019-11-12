@@ -1,12 +1,13 @@
 import withLogger from '../withLogger';
-import { DiagnosticSeverity } from '@stoplight/types';
+import { Dictionary, DiagnosticSeverity } from '@stoplight/types';
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { Logger } from 'pino';
-import { BodyInit, Headers } from 'node-fetch';
-import { Dictionary } from '@stoplight/types/dist';
+import { BodyInit, Headers, RequestInit } from 'node-fetch';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as Option from 'fp-ts/lib/Option';
 import chalk from 'chalk';
+
+import { IHttpResponse } from '../types';
 
 export const violationLogger = withLogger(logger => {
   return (violation: IPrismDiagnostic) => {
@@ -38,4 +39,50 @@ export function logHeaders({ logger, prefix = '', headers }: { logger: Logger, p
 
 export function logBody({ logger, prefix = '', body }: { logger: Logger, prefix: string, body: BodyInit | unknown }) {
   logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`);
+}
+
+export function logRequest({ logger, url, prefix = '', request: { headers, method, body } }: { logger: Logger, prefix: string, url: string, request: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
+  logger.info(`${prefix}Making ${method} request to ${url}...`);
+
+  pipe(
+    Option.fromNullable(headers),
+    Option.map(headers => logHeaders({
+      logger,
+      prefix,
+      headers,
+    })),
+  );
+
+  pipe(
+    Option.fromNullable(body),
+    Option.map(body => logBody({
+      logger,
+      prefix,
+      body,
+    })),
+  );
+}
+
+export function logResponse({ logger, prefix = '', response }: { logger: Logger, prefix: string, response: IHttpResponse }) {
+  logger.info(`${prefix}Request finished`);
+
+  logger.debug(`${prefix}${chalk.grey('Status:')} ${response.statusCode}`);
+
+  pipe(
+    Option.fromNullable(response.headers),
+    Option.map(headers => logHeaders({
+      logger,
+      prefix,
+      headers,
+    })),
+  );
+
+  pipe(
+    Option.fromNullable(response.body),
+    Option.map(body => logBody({
+      logger,
+      prefix,
+      body,
+    })),
+  );
 }
