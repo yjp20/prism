@@ -76,7 +76,7 @@ function runCallbacks({
       Option.map(callbacks =>
         pipe(
           callbacks,
-          map(callback => runCallback({ callback, request, response })(logger)())
+          map(callback => runCallback({ callback, request, response })(logger.child({ name: 'CALLBACK' }))())
         )
       )
     )

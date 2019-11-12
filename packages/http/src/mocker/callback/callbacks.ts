@@ -1,7 +1,8 @@
 import { IHttpCallbackOperation, IHttpOperationRequest } from '@stoplight/types';
 import { resolveRuntimeExpressions } from '../../utils/runtimeExpression';
 import { IHttpRequest, IHttpResponse } from '../../types';
-import fetch from 'node-fetch';
+import fetch, { BodyInit, HeadersInit, RequestInit } from 'node-fetch';
+import chalk from 'chalk';
 import * as Option from 'fp-ts/lib/Option';
 import * as Either from 'fp-ts/lib/Either';
 import { map, reduce } from 'fp-ts/lib/Array';
@@ -29,30 +30,71 @@ export function runCallback({
     const { url, requestData } = assembleRequest({ resource: callback, request, response });
     const logViolation = violationLogger(logger);
 
-    logger.info({ name: 'CALLBACK' }, `${callback.callbackName}: Making request to ${url}...`);
+    logRequest({ logger, callbackName: callback.callbackName, url, requestData });
 
     return pipe(
       TaskEither.tryCatch(() => fetch(url, requestData), Either.toError),
       TaskEither.chain(parseResponse),
+      TaskEither.map(logResponse({ logger, callbackName: callback.callbackName })),
       TaskEither.mapLeft(error =>
-        logger.error({ name: 'CALLBACK' }, `${callback.callbackName}: Request failed: ${error.message}`)
+        logger.error(`${chalk.blueBright(callback.callbackName + ':')} Request failed: ${error.message}`)
       ),
-      TaskEither.chain(element => {
-        logger.info({ name: 'CALLBACK' }, `${callback.callbackName}: Request finished`);
-
-        return pipe(
-          validateOutput({ resource: callback, element }),
-          Either.mapLeft(violations => {
-            pipe(
-              violations,
-              map(logViolation)
-            );
-          }),
-          TaskEither.fromEither
-        );
-      })
+      TaskEither.chain(element => pipe(
+        validateOutput({ resource: callback, element }),
+        Either.mapLeft(violations => {
+          pipe(
+            violations,
+            map(logViolation)
+          );
+        }),
+        TaskEither.fromEither
+      ))
     );
   });
+}
+
+function logRequest({ logger, url, callbackName, requestData: { headers, method, body } }: { logger: Logger, callbackName: string, url: string, requestData: Omit<RequestInit, 'url'> }) {
+  logger.info(`${chalk.blueBright(callbackName + ':')} Making ${method} request to ${url}...`);
+
+  pipe(
+    Option.fromNullable(headers),
+    Option.map(headers => {
+      logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('> Headers:')}`);
+      Object.entries(headers).forEach(([ name, value ]) => logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('>')}\t${name}: ${value}`));
+    }),
+  );
+
+  pipe(
+    Option.fromNullable(body),
+    Option.map(body => {
+      logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('> Body:')} ${body}`);
+    }),
+  );
+}
+
+function logResponse({ logger, callbackName }: { logger: Logger, callbackName: string }) {
+  return (response: IHttpResponse) => {
+    logger.info(`${chalk.blueBright(callbackName + ':')} Request finished`);
+
+    logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('< Status:')} ${response.statusCode}`);
+
+    pipe(
+      Option.fromNullable(response.headers),
+      Option.map(headers => {
+        logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('< Headers:')}`);
+        Object.entries(headers).forEach(([name, value]) => logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('<')}\t${name}: ${value}`));
+      }),
+    );
+
+    pipe(
+      Option.fromNullable(response.body),
+      Option.map(body => {
+        logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('< Body:')} ${body}`);
+      }),
+    );
+
+    return response;
+  };
 }
 
 function assembleRequest({
