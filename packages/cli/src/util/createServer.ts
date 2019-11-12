@@ -129,6 +129,7 @@ type CreateBaseServerOptions = {
   document: string;
   multiprocess: boolean;
   errors: boolean;
+  verbose: boolean;
 };
 
 export interface CreateProxyServerOptions extends CreateBaseServerOptions {
