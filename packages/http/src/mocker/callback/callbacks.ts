@@ -1,7 +1,7 @@
 import { IHttpCallbackOperation, IHttpOperationRequest } from '@stoplight/types';
 import { resolveRuntimeExpressions } from '../../utils/runtimeExpression';
 import { IHttpRequest, IHttpResponse } from '../../types';
-import fetch, { BodyInit, HeadersInit, RequestInit } from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import chalk from 'chalk';
 import * as Option from 'fp-ts/lib/Option';
 import * as Either from 'fp-ts/lib/Either';
@@ -16,6 +16,7 @@ import { parseResponse } from '../../utils/parseResponse';
 import withLogger from '../../withLogger';
 import { violationLogger } from '../../utils/logger';
 import { Logger } from 'pino';
+import { logHeaders, logBody } from '../../utils/logger';
 
 export function runCallback({
   callback,
@@ -58,17 +59,20 @@ function logRequest({ logger, url, callbackName, requestData: { headers, method,
 
   pipe(
     Option.fromNullable(headers),
-    Option.map(headers => {
-      logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('> Headers:')}`);
-      Object.entries(headers).forEach(([ name, value ]) => logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('>')}\t${name}: ${value}`));
-    }),
+    Option.map(headers => logHeaders({
+      logger,
+      prefix: `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`,
+      headers,
+    })),
   );
 
   pipe(
     Option.fromNullable(body),
-    Option.map(body => {
-      logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('> Body:')} ${body}`);
-    }),
+    Option.map(body => logBody({
+      logger,
+      prefix: `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`,
+      body,
+    })),
   );
 }
 
@@ -80,17 +84,20 @@ function logResponse({ logger, callbackName }: { logger: Logger, callbackName: s
 
     pipe(
       Option.fromNullable(response.headers),
-      Option.map(headers => {
-        logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('< Headers:')}`);
-        Object.entries(headers).forEach(([name, value]) => logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('<')}\t${name}: ${value}`));
-      }),
+      Option.map(headers => logHeaders({
+        logger,
+        prefix: `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`,
+        headers,
+      })),
     );
 
     pipe(
       Option.fromNullable(response.body),
-      Option.map(body => {
-        logger.debug(`${chalk.blueBright(callbackName + ':')} ${chalk.grey('< Body:')} ${body}`);
-      }),
+      Option.map(body => logBody({
+        logger,
+        prefix: `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`,
+        body,
+      })),
     );
 
     return response;
