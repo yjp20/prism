@@ -7,7 +7,7 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import * as Option from 'fp-ts/lib/Option';
 import chalk from 'chalk';
 
-import { IHttpResponse } from '../types';
+import { IHttpNameValue, IHttpResponse } from '../types';
 
 export const violationLogger = withLogger(logger => {
   return (violation: IPrismDiagnostic) => {
@@ -41,8 +41,8 @@ export function logBody({ logger, prefix = '', body }: { logger: Logger, prefix:
   logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`);
 }
 
-export function logRequest({ logger, url, prefix = '', request: { headers, method, body } }: { logger: Logger, prefix: string, url: string, request: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
-  logger.info(`${prefix}Making ${method} request to ${url}...`);
+export function logRequest({ logger, url, prefix = '', request: { headers, method, body } }: { logger: Logger, prefix?: string, url: string, request: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
+  logger.info(`${prefix}"${method}" request to ${url}`);
 
   pipe(
     Option.fromNullable(headers),
@@ -63,8 +63,9 @@ export function logRequest({ logger, url, prefix = '', request: { headers, metho
   );
 }
 
-export function logResponse({ logger, prefix = '', response }: { logger: Logger, prefix: string, response: IHttpResponse }) {
-  logger.info(`${prefix}Request finished`);
+export function logResponse(
+  { logger, prefix = '', response }: { logger: Logger, prefix?: string, response: { statusCode: number, headers?: IHttpNameValue | Headers, body?: unknown } }) {
+  logger.info(`${prefix}Received response`);
 
   logger.debug(`${prefix}${chalk.grey('Status:')} ${response.statusCode}`);
 

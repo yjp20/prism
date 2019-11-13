@@ -4,6 +4,7 @@ import { ReaderEither } from 'fp-ts/lib/ReaderEither';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Logger } from 'pino';
 import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { ReaderTaskEither } from 'fp-ts/lib/ReaderTaskEither';
 export type IPrismDiagnostic = Omit<IDiagnostic, 'range' | 'path'> & { path?: string[] };
 
 export interface IPrism<Resource, Input, Output, Config extends IPrismConfig> {
@@ -31,7 +32,7 @@ export type IPrismComponents<Resource, Input, Output, Config extends IPrismConfi
   route: (opts: { resources: Resource[]; input: Input }) => Either<Error, Resource>;
   validateInput: ValidatorFn<Resource, Input>;
   validateOutput: ValidatorFn<Resource, Output>;
-  forward: (input: Input, baseUrl: string) => TaskEither<Error, Output>;
+  forward: (input: Input, baseUrl: string) => ReaderTaskEither<Logger, Error, Output>;
   mock: (opts: {
     resource: Resource;
     input: IPrismInput<Input>;
