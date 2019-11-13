@@ -36,6 +36,8 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
             'user-agent': `Prism/${prismVersion}`,
           }),
           method: input.method,
+          // todo: add real type guard
+          body: typeof input.body === 'string' ? input.body : JSON.stringify(input.body),
         };
 
         logRequest({
