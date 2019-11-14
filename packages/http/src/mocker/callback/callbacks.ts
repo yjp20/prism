@@ -35,7 +35,7 @@ export function runCallback({
     return pipe(
       TaskEither.tryCatch(() => fetch(url, requestData), Either.toError),
       TaskEither.chain(parseResponse),
-      TaskEither.map(logCallbackResponse({ logger, callbackName: callback.callbackName })),
+      TaskEither.map(callbackResponseLogger({ logger, callbackName: callback.callbackName })),
       TaskEither.mapLeft(error =>
         logger.error(`${chalk.blueBright(callback.callbackName + ':')} Request failed: ${error.message}`)
       ),
@@ -55,17 +55,16 @@ export function runCallback({
 
 function logCallbackRequest({ logger, url, callbackName, requestData }: { logger: Logger, callbackName: string, url: string, requestData: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
   const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`;
-  logRequest({ logger, url, request: requestData, prefix });
+  logger.info(`${prefix}Executing "${requestData.method}" request to ${url}...`);
+  logRequest({ logger, request: requestData, prefix });
 }
 
-function logCallbackResponse({ logger, callbackName }: { logger: Logger, callbackName: string }) {
-  return (response: IHttpResponse) => {
-    logResponse({
-      logger,
-      prefix: `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`,
-      response,
-    });
+function callbackResponseLogger({ logger, callbackName }: { logger: Logger, callbackName: string }) {
+  const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`;
 
+  return (response: IHttpResponse) => {
+    logger.info(`${prefix}Received callback response`);
+    logResponse({ logger, prefix, response });
     return response;
   };
 }

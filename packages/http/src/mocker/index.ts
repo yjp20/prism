@@ -25,6 +25,7 @@ import { generate, generateStatic } from './generator/JSONSchema';
 import helpers from './negotiator/NegotiatorHelpers';
 import { IHttpNegotiationResult } from './negotiator/types';
 import { runCallback } from './callback/callbacks';
+import { logRequest } from '../utils/logger';
 
 const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockHttpConfig>['mock'] = ({
   resource,
@@ -35,6 +36,8 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockH
 
   return pipe(
     withLogger(logger => {
+      // logRequest({ request: input.data, url: '', logger });
+
       // setting default values
       const acceptMediaType = input.data.headers && caseless(input.data.headers).get('accept');
       if (!config.mediaTypes && acceptMediaType) {

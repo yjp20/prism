@@ -1,6 +1,6 @@
 import { IPrismComponents } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
-import fetch from 'node-fetch';
+import fetch, { RequestInit, Response } from 'node-fetch';
 import { toError } from 'fp-ts/lib/Either';
 import * as TaskEither from 'fp-ts/lib/TaskEither';
 import * as ReaderTaskEither from 'fp-ts/lib/ReaderTaskEither';
@@ -40,26 +40,37 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
           body: typeof input.body === 'string' ? input.body : JSON.stringify(input.body),
         };
 
-        logRequest({
-          logger,
-          url,
-          request: requestInit,
-          prefix: `${chalk.grey('> ')}`,
-        });
+        logForwardRequest({ logger, url, request: requestInit });
 
         return fetch(url, requestInit);
       }, toError),
-      TaskEither.map(response => {
-        const { status: statusCode, ...rest } = response;
-        logResponse({
-          logger,
-          response: { statusCode, ...rest },
-          prefix: `${chalk.grey('< ')}`,
-        });
-        return response;
-      }),
+      TaskEither.map(forwardResponseLogger(logger)),
       TaskEither.chain(parseResponse)
     )
   );
 
 export default forward;
+
+function logForwardRequest({ logger, url, request }: { logger: Logger, url: string, request: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
+  const prefix = `${chalk.grey('> ')}`;
+  logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
+  logRequest({ logger, request, prefix });
+}
+
+function forwardResponseLogger(logger: Logger) {
+  return (response: Response) => {
+    const prefix = chalk.grey('< ');
+
+    logger.info(`${prefix}Received forward response`);
+
+    const { status: statusCode, ...rest } = response;
+
+    logResponse({
+      logger,
+      response: { statusCode, ...rest },
+      prefix,
+    });
+
+    return response;
+  }
+}
