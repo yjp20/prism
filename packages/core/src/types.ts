@@ -31,6 +31,7 @@ export type IPrismProxyConfig = IPrismConfig & {
 export type IPrismComponents<Resource, Input, Output, Config extends IPrismConfig> = {
   route: (opts: { resources: Resource[]; input: Input }) => Either<Error, Resource>;
   validateInput: ValidatorFn<Resource, Input>;
+  validateSecurity: ValidatorFn<Resource, Input>;
   validateOutput: ValidatorFn<Resource, Output>;
   forward: (input: Input, baseUrl: string) => ReaderTaskEither<Logger, Error, Output>;
   mock: (opts: {
