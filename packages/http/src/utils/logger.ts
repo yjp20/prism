@@ -53,7 +53,10 @@ export function logBody({ logger, prefix = '', body }: { logger: Logger; prefix:
   pipe(
     serializeBody(body),
     Option.fromEither,
-    Option.fold(() => undefined, body => logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`)),
+    Option.fold(
+      () => undefined,
+      body => logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`)
+    )
   );
 }
 
