@@ -25,10 +25,7 @@ describe('serializeBody()', () => {
       const body = { x: {} };
       body.x = { y: body };
 
-      assertLeft(
-        serializeBody(body),
-        error => expect(error.message).toEqual('Converting circular structure to JSON'),
-      );
+      assertLeft(serializeBody(body));
     })
   });
 
