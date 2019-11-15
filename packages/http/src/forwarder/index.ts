@@ -1,7 +1,7 @@
 import { IPrismComponents } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
-import fetch, { RequestInit, Response } from 'node-fetch';
-import { toError } from 'fp-ts/lib/Either';
+import fetch, { Response } from 'node-fetch';
+import * as Either from 'fp-ts/lib/Either';
 import * as TaskEither from 'fp-ts/lib/TaskEither';
 import * as ReaderTaskEither from 'fp-ts/lib/ReaderTaskEither';
 import { defaults, omit } from 'lodash';
@@ -23,27 +23,31 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 ): ReaderTaskEither.ReaderTaskEither<Logger, Error, IHttpResponse> =>
   withLogger(logger =>
     pipe(
-      TaskEither.tryCatch(async () => {
-        const partialUrl = parse(baseUrl);
-        const url = format({
-          ...partialUrl,
-          pathname: posix.join(partialUrl.pathname || '', input.url.path),
-          query: input.url.query,
-        });
-        const requestInit = {
-          headers: defaults(omit(input.headers, ['host', 'accept']), {
-            accept: 'application/json, text/plain, */*',
-            'user-agent': `Prism/${prismVersion}`,
-          }),
-          method: input.method,
-          // todo: add real type guard
-          body: typeof input.body === 'string' ? input.body : JSON.stringify(input.body),
-        };
+      TaskEither.fromEither(serializeBody(input.body)),
+      TaskEither.chain(body =>
+        TaskEither.tryCatch(async () => {
+          const partialUrl = parse(baseUrl);
+          const url = format({
+            ...partialUrl,
+            pathname: posix.join(partialUrl.pathname || '', input.url.path),
+            query: input.url.query,
+          });
 
-        logForwardRequest({ logger, url, request: requestInit });
+          logForwardRequest({ logger, url, request: input });
 
-        return fetch(url, requestInit);
-      }, toError),
+          return fetch(
+            url,
+            {
+              body,
+              method: input.method,
+              headers: defaults(omit(input.headers, ['host', 'accept']), {
+                accept: 'application/json, text/plain, */*',
+                'user-agent': `Prism/${prismVersion}`,
+              }),
+            }
+          );
+        }, Either.toError)
+      ),
       TaskEither.map(forwardResponseLogger(logger)),
       TaskEither.chain(parseResponse)
     )
@@ -51,7 +55,7 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 
 export default forward;
 
-function logForwardRequest({ logger, url, request }: { logger: Logger, url: string, request: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
+function logForwardRequest({ logger, url, request }: { logger: Logger, url: string, request: IHttpRequest }) {
   const prefix = `${chalk.grey('> ')}`;
   logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
   logRequest({ logger, request, prefix });
@@ -73,4 +77,14 @@ function forwardResponseLogger(logger: Logger) {
 
     return response;
   }
+}
+
+function serializeBody(body: unknown) {
+  if (typeof body === 'string') {
+    return Either.right(body);
+  }
+
+  if (body) return Either.stringifyJSON(body, Either.toError);
+
+  return Either.right(undefined);
 }
