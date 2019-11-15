@@ -47,7 +47,11 @@ async function createSingleProcessPrism(options: CreateBaseServerOptions) {
   signale.await({ prefix: chalk.bgWhiteBright.black('[CLI]'), message: 'Starting Prism…' });
 
   const logStream = new PassThrough();
-  const logInstance = createLogger('CLI', { ...cliSpecificLoggerOptions, level: options.verbose ? 'debug' : 'info' }, logStream);
+  const logInstance = createLogger(
+    'CLI',
+    { ...cliSpecificLoggerOptions, level: options.verbose ? 'debug' : 'info' },
+    logStream
+  );
   pipeOutputToSignale(logStream);
 
   try {

@@ -4,7 +4,7 @@ import fetch, { Response } from 'node-fetch';
 import * as Either from 'fp-ts/lib/Either';
 import * as TaskEither from 'fp-ts/lib/TaskEither';
 import * as ReaderTaskEither from 'fp-ts/lib/ReaderTaskEither';
-import { defaults, omit } from 'lodash';
+import { defaults, omit, pick } from 'lodash';
 import { format, parse } from 'url';
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { posix } from 'path';
@@ -14,6 +14,7 @@ import { logRequest, logResponse } from '../utils/logger';
 import { Logger } from 'pino';
 import chalk from 'chalk';
 import withLogger from '../withLogger';
+import { serializeBody } from '../utils/serializeBody';
 
 const { version: prismVersion } = require('../../package.json');
 
@@ -35,17 +36,14 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 
           logForwardRequest({ logger, url, request: input });
 
-          return fetch(
-            url,
-            {
-              body,
-              method: input.method,
-              headers: defaults(omit(input.headers, ['host', 'accept']), {
-                accept: 'application/json, text/plain, */*',
-                'user-agent': `Prism/${prismVersion}`,
-              }),
-            }
-          );
+          return fetch(url, {
+            body,
+            method: input.method,
+            headers: defaults(omit(input.headers, ['host', 'accept']), {
+              accept: 'application/json, text/plain, */*',
+              'user-agent': `Prism/${prismVersion}`,
+            }),
+          });
         }, Either.toError)
       ),
       TaskEither.map(forwardResponseLogger(logger)),
@@ -55,10 +53,10 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 
 export default forward;
 
-function logForwardRequest({ logger, url, request }: { logger: Logger, url: string, request: IHttpRequest }) {
+function logForwardRequest({ logger, url, request }: { logger: Logger; url: string; request: IHttpRequest }) {
   const prefix = `${chalk.grey('> ')}`;
   logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
-  logRequest({ logger, request, prefix });
+  logRequest({ logger, prefix, ...pick(request, 'body', 'headers') });
 }
 
 function forwardResponseLogger(logger: Logger) {
@@ -76,15 +74,5 @@ function forwardResponseLogger(logger: Logger) {
     });
 
     return response;
-  }
-}
-
-function serializeBody(body: unknown) {
-  if (typeof body === 'string') {
-    return Either.right(body);
-  }
-
-  if (body) return Either.stringifyJSON(body, Either.toError);
-
-  return Either.right(undefined);
+  };
 }

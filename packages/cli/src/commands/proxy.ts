@@ -36,7 +36,7 @@ const proxyCommand: CommandModule = {
       'multiprocess',
       'upstream',
       'errors',
-      'verbose',
+      'verbose'
     );
 
     const createPrism = options.multiprocess ? createMultiProcessPrism : createSingleProcessPrism;

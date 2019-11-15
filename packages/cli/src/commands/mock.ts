@@ -32,7 +32,7 @@ const mockCommand: CommandModule = {
       'document',
       'multiprocess',
       'errors',
-      'verbose',
+      'verbose'
     );
 
     const createPrism = options.multiprocess ? createMultiProcessPrism : createSingleProcessPrism;

@@ -7,7 +7,8 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import * as Option from 'fp-ts/lib/Option';
 import chalk from 'chalk';
 
-import { IHttpNameValue, IHttpResponse } from '../types';
+import { IHttpNameValue, IHttpRequest, IHttpResponse } from '../types';
+import { serializeBody } from './serializeBody';
 
 export const violationLogger = withLogger(logger => {
   return (violation: IPrismDiagnostic) => {
@@ -23,7 +24,15 @@ export const violationLogger = withLogger(logger => {
   };
 });
 
-export function logHeaders({ logger, prefix = '', headers }: { logger: Logger, prefix: string, headers: Headers | Dictionary<string> | string[][] }) {
+export function logHeaders({
+  logger,
+  prefix = '',
+  headers,
+}: {
+  logger: Logger;
+  prefix: string;
+  headers: Headers | Dictionary<string> | string[][];
+}) {
   pipe(
     pipe(
       headers,
@@ -32,55 +41,87 @@ export function logHeaders({ logger, prefix = '', headers }: { logger: Logger, p
     Option.alt(() => Option.some(Object.entries(headers) as string[][])),
     Option.map(headers => {
       logger.debug(`${prefix}${chalk.grey('Headers:')}`);
-      headers.forEach(([ name, value ]) => logger.debug(`${prefix}\t${name}: ${value}`));
-    }),
+      headers.forEach(([name, value]) => logger.debug(`${prefix}\t${name}: ${value}`));
+    })
   );
 }
 
-export function logBody({ logger, prefix = '', body }: { logger: Logger, prefix: string, body: BodyInit | unknown }) {
-  logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`);
+export function logBody({
+  logger,
+  prefix = '',
+  body,
+}: {
+  logger: Logger;
+  prefix: string;
+  body: RequestInit['body'] | IHttpRequest['body'];
+}) {
+  logger.debug(`${prefix}${chalk.grey('Body:')} ${serializeBody(body)}`);
 }
 
-export function logRequest({ logger, prefix = '', request: { headers, body } }: { logger: Logger, prefix?: string, request: Pick<RequestInit, 'headers' | 'body'> }) {
+export function logRequest({
+  logger,
+  prefix = '',
+  headers,
+  body,
+}: {
+  logger: Logger;
+  prefix?: string;
+  body?: RequestInit['body'] | IHttpRequest['body'];
+  headers?: RequestInit['headers'] | IHttpRequest['headers'];
+}) {
   pipe(
     Option.fromNullable(headers),
-    Option.map(headers => logHeaders({
-      logger,
-      prefix,
-      headers,
-    })),
+    Option.map(headers =>
+      logHeaders({
+        logger,
+        prefix,
+        headers,
+      })
+    )
   );
 
   pipe(
     Option.fromNullable(body),
-    Option.map(body => logBody({
-      logger,
-      prefix,
-      body,
-    })),
+    Option.map(body =>
+      logBody({
+        logger,
+        prefix,
+        body,
+      })
+    )
   );
 }
 
-export function logResponse(
-  { logger, prefix = '', response }: { logger: Logger, prefix?: string, response: { statusCode: number, headers?: IHttpNameValue | Headers, body?: unknown } }) {
-
+export function logResponse({
+  logger,
+  prefix = '',
+  response,
+}: {
+  logger: Logger;
+  prefix?: string;
+  response: { statusCode: number; headers?: IHttpNameValue | Headers; body?: unknown };
+}) {
   logger.debug(`${prefix}${chalk.grey('Status:')} ${response.statusCode}`);
 
   pipe(
     Option.fromNullable(response.headers),
-    Option.map(headers => logHeaders({
-      logger,
-      prefix,
-      headers,
-    })),
+    Option.map(headers =>
+      logHeaders({
+        logger,
+        prefix,
+        headers,
+      })
+    )
   );
 
   pipe(
     Option.fromNullable(response.body),
-    Option.map(body => logBody({
-      logger,
-      prefix,
-      body,
-    })),
+    Option.map(body =>
+      logBody({
+        logger,
+        prefix,
+        body,
+      })
+    )
   );
 }
