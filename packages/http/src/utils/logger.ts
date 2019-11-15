@@ -33,7 +33,7 @@ export function logHeaders({
   headers,
 }: {
   logger: Logger;
-  prefix: string;
+  prefix?: string;
   headers: HeadersInput;
 }) {
   pipe(
@@ -49,7 +49,7 @@ export function logHeaders({
   );
 }
 
-export function logBody({ logger, prefix = '', body }: { logger: Logger; prefix: string; body: BodyInput }) {
+export function logBody({ logger, prefix = '', body }: { logger: Logger; prefix?: string; body: BodyInput }) {
   pipe(
     serializeBody(body),
     Option.fromEither,
