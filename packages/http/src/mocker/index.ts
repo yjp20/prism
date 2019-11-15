@@ -1,6 +1,5 @@
 import { IPrismComponents, IPrismInput } from '@stoplight/prism-core';
 import { DiagnosticSeverity, Dictionary, IHttpHeaderParam, IHttpOperation, INodeExample } from '@stoplight/types';
-
 import * as caseless from 'caseless';
 import * as Either from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
@@ -8,7 +7,7 @@ import * as Reader from 'fp-ts/lib/Reader';
 import * as Option from 'fp-ts/lib/Option';
 import * as ReaderEither from 'fp-ts/lib/ReaderEither';
 import { map } from 'fp-ts/lib/Array';
-import { isEmpty, isObject, keyBy, mapValues, groupBy } from 'lodash';
+import { isEmpty, isObject, keyBy, mapValues, groupBy, pick } from 'lodash';
 import { Logger } from 'pino';
 import {
   ContentExample,
@@ -19,13 +18,15 @@ import {
   PayloadGenerator,
   ProblemJsonError,
 } from '../types';
+import chalk from 'chalk';
+
 import withLogger from '../withLogger';
 import { UNAUTHORIZED, UNPROCESSABLE_ENTITY } from './errors';
 import { generate, generateStatic } from './generator/JSONSchema';
 import helpers from './negotiator/NegotiatorHelpers';
 import { IHttpNegotiationResult } from './negotiator/types';
 import { runCallback } from './callback/callbacks';
-import { logRequest } from '../utils/logger';
+import { logRequest, logResponse } from '../utils/logger';
 
 const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockHttpConfig>['mock'] = ({
   resource,
@@ -36,7 +37,7 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockH
 
   return pipe(
     withLogger(logger => {
-      // logRequest({ request: input.data, url: '', logger });
+      logRequest({ logger, prefix: `${chalk.grey('< ')}`, ...pick(input.data, 'body', 'headers') });
 
       // setting default values
       const acceptMediaType = input.data.headers && caseless(input.data.headers).get('accept');
@@ -56,6 +57,7 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockH
       withLogger(logger =>
         pipe(
           response,
+          Either.map(mockResponseLogger(logger)),
           Either.map(response => runCallbacks({ resource, request: input.data, response })(logger)),
           Either.chain(() => response)
         )
@@ -63,6 +65,18 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockH
     )
   );
 };
+
+function mockResponseLogger(logger: Logger) {
+  return (response: IHttpResponse) => {
+    logResponse({
+      logger,
+      prefix: chalk.grey('> '),
+      ...pick(response, 'statusCode', 'body', 'headers'),
+    });
+
+    return response;
+  };
+}
 
 function runCallbacks({
   resource,

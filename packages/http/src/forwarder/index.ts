@@ -65,11 +65,12 @@ function forwardResponseLogger(logger: Logger) {
 
     logger.info(`${prefix}Received forward response`);
 
-    const { status: statusCode, ...rest } = response;
+    const { status: statusCode } = response;
 
     logResponse({
       logger,
-      response: { statusCode, ...rest },
+      statusCode,
+      ...pick(response, 'body', 'headers'),
       prefix,
     });
 
