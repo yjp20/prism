@@ -67,10 +67,14 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockH
 };
 
 function mockResponseLogger(logger: Logger) {
+  const prefix = chalk.grey('> ');
+
   return (response: IHttpResponse) => {
+    logger.info(`${prefix}Responding with "${response.statusCode}"`);
+
     logResponse({
       logger,
-      prefix: chalk.grey('> '),
+      prefix,
       ...pick(response, 'statusCode', 'body', 'headers'),
     });
 

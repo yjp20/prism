@@ -1,7 +1,6 @@
 import { IHttpCallbackOperation, IHttpOperationRequest } from '@stoplight/types';
-import { resolveRuntimeExpressions } from '../../utils/runtimeExpression';
-import { IHttpRequest, IHttpResponse } from '../../types';
 import fetch, { RequestInit } from 'node-fetch';
+import { Logger } from 'pino';
 import chalk from 'chalk';
 import * as Option from 'fp-ts/lib/Option';
 import * as Either from 'fp-ts/lib/Either';
@@ -10,12 +9,15 @@ import * as TaskEither from 'fp-ts/lib/TaskEither';
 import * as ReaderTaskEither from 'fp-ts/lib/ReaderTaskEither';
 import { head } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { pick } from 'lodash';
+
+import { resolveRuntimeExpressions } from '../../utils/runtimeExpression';
+import { IHttpRequest, IHttpResponse } from '../../types';
 import { generate as generateHttpParam } from '../generator/HttpParamGenerator';
 import { validateOutput } from '../../validator';
 import { parseResponse } from '../../utils/parseResponse';
 import withLogger from '../../withLogger';
 import { logRequest, logResponse, violationLogger } from '../../utils/logger';
-import { Logger } from 'pino';
 
 export function runCallback({
   callback,
@@ -56,7 +58,7 @@ export function runCallback({
 function logCallbackRequest({ logger, url, callbackName, requestData }: { logger: Logger, callbackName: string, url: string, requestData: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
   const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`;
   logger.info(`${prefix}Executing "${requestData.method}" request to ${url}...`);
-  logRequest({ logger, request: requestData, prefix });
+  logRequest({ logger, prefix, ...pick(requestData, 'body', 'headers') });
 }
 
 function callbackResponseLogger({ logger, callbackName }: { logger: Logger, callbackName: string }) {
@@ -64,7 +66,7 @@ function callbackResponseLogger({ logger, callbackName }: { logger: Logger, call
 
   return (response: IHttpResponse) => {
     logger.info(`${prefix}Received callback response`);
-    logResponse({ logger, prefix, response });
+    logResponse({ logger, prefix, ...pick(response, 'body', 'headers', 'statusCode') });
     return response;
   };
 }
