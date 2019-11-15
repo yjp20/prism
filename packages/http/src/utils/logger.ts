@@ -2,12 +2,12 @@ import withLogger from '../withLogger';
 import { Dictionary, DiagnosticSeverity } from '@stoplight/types';
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { Logger } from 'pino';
-import { BodyInit, Headers, RequestInit } from 'node-fetch';
+import { RequestInit, Response } from 'node-fetch';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as Option from 'fp-ts/lib/Option';
 import chalk from 'chalk';
 
-import { IHttpNameValue, IHttpRequest, IHttpResponse } from '../types';
+import { IHttpRequest, IHttpResponse } from '../types';
 import { serializeBody } from './serializeBody';
 
 export const violationLogger = withLogger(logger => {
@@ -24,6 +24,9 @@ export const violationLogger = withLogger(logger => {
   };
 });
 
+type HeadersInput = RequestInit['headers'] | Response['headers'] | IHttpRequest['headers'] | IHttpResponse['headers'];
+type BodyInput = RequestInit['body'] | Response['body'] | IHttpRequest['body'] | IHttpResponse['body'];
+
 export function logHeaders({
   logger,
   prefix = '',
@@ -31,14 +34,14 @@ export function logHeaders({
 }: {
   logger: Logger;
   prefix: string;
-  headers: Headers | Dictionary<string> | string[][];
+  headers: HeadersInput;
 }) {
   pipe(
     pipe(
       headers,
-      Option.fromPredicate(headers => Array.isArray(headers))
-    ) as Option.Option<string[][]>,
-    Option.alt(() => Option.some(Object.entries(headers) as string[][])),
+      Option.fromPredicate((headers): headers is [string, string][] => Array.isArray(headers))
+    ),
+    Option.alt(() => Option.some(Object.entries(headers as Dictionary<string>))),
     Option.map(headers => {
       logger.debug(`${prefix}${chalk.grey('Headers:')}`);
       headers.forEach(([name, value]) => logger.debug(`${prefix}\t${name}: ${value}`));
@@ -46,15 +49,7 @@ export function logHeaders({
   );
 }
 
-export function logBody({
-  logger,
-  prefix = '',
-  body,
-}: {
-  logger: Logger;
-  prefix: string;
-  body: RequestInit['body'] | IHttpRequest['body'];
-}) {
+export function logBody({ logger, prefix = '', body }: { logger: Logger; prefix: string; body: BodyInput }) {
   logger.debug(`${prefix}${chalk.grey('Body:')} ${serializeBody(body)}`);
 }
 
@@ -66,8 +61,8 @@ export function logRequest({
 }: {
   logger: Logger;
   prefix?: string;
-  body?: RequestInit['body'] | IHttpRequest['body'];
-  headers?: RequestInit['headers'] | IHttpRequest['headers'];
+  body?: BodyInput;
+  headers?: HeadersInput;
 }) {
   pipe(
     Option.fromNullable(headers),
@@ -95,27 +90,25 @@ export function logRequest({
 export function logResponse({
   logger,
   prefix = '',
-  response,
+  statusCode,
+  headers,
+  body,
 }: {
   logger: Logger;
   prefix?: string;
-  response: { statusCode: number; headers?: IHttpNameValue | Headers; body?: unknown };
+  statusCode: number;
+  headers?: HeadersInput;
+  body?: BodyInput;
 }) {
-  logger.debug(`${prefix}${chalk.grey('Status:')} ${response.statusCode}`);
+  logger.debug(`${prefix}${chalk.grey('Status:')} ${statusCode}`);
 
   pipe(
-    Option.fromNullable(response.headers),
-    Option.map(headers =>
-      logHeaders({
-        logger,
-        prefix,
-        headers,
-      })
-    )
+    Option.fromNullable(headers),
+    Option.map(headers => logHeaders({ logger, prefix, headers }))
   );
 
   pipe(
-    Option.fromNullable(response.body),
+    Option.fromNullable(body),
     Option.map(body =>
       logBody({
         logger,
