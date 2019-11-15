@@ -57,7 +57,7 @@ export function runCallback({
 
 function logCallbackRequest({ logger, url, callbackName, requestData }: { logger: Logger, callbackName: string, url: string, requestData: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
   const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`;
-  logger.info(`${prefix}Executing "${requestData.method}" request to ${url}...`);
+  logger.info(`${prefix}Executing "${requestData.method}" callback to ${url}...`);
   logRequest({ logger, prefix, ...pick(requestData, 'body', 'headers') });
 }
 

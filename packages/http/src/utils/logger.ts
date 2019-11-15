@@ -50,7 +50,11 @@ export function logHeaders({
 }
 
 export function logBody({ logger, prefix = '', body }: { logger: Logger; prefix: string; body: BodyInput }) {
-  logger.debug(`${prefix}${chalk.grey('Body:')} ${serializeBody(body)}`);
+  pipe(
+    serializeBody(body),
+    Option.fromEither,
+    Option.fold(() => undefined, body => logger.debug(`${prefix}${chalk.grey('Body:')} ${body}`)),
+  );
 }
 
 export function logRequest({

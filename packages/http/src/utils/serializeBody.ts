@@ -1,6 +1,6 @@
 import * as Either from 'fp-ts/lib/Either';
 
-export function serializeBody(body: unknown) {
+export function serializeBody(body: unknown): Either.Either<Error, string | undefined> {
   if (typeof body === 'string') {
     return Either.right(body);
   }
