@@ -49,7 +49,7 @@ describe('harness', () => {
       prismMockProcessHandle = spawn(path.join(__dirname, '../cli-binaries/prism-cli'), serverArgs);
 
       prismMockProcessHandle.stdout.pipe(split2()).on('data', (line: string) => {
-        if (line.includes('Prism is listening')) {
+        if (line.includes('Server listening at')) {
           const clientCommandHandle = spawnSync(command, args, {
             shell: true,
             encoding: 'utf8',
