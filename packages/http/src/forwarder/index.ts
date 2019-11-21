@@ -6,13 +6,14 @@ import * as TaskEither from 'fp-ts/lib/TaskEither';
 import * as ReaderTaskEither from 'fp-ts/lib/ReaderTaskEither';
 import { defaults, omit, pick } from 'lodash';
 import { format, parse } from 'url';
-import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
-import { posix } from 'path';
-import { parseResponse } from '../utils/parseResponse';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { logRequest, logResponse } from '../utils/logger';
-import { Logger } from 'pino';
 import chalk from 'chalk';
+import { posix } from 'path';
+import { Logger } from 'pino';
+
+import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
+import { parseResponse } from '../utils/parseResponse';
+import { logRequest, logResponse } from '../utils/logger';
 import withLogger from '../withLogger';
 import { serializeBody } from '../utils/serializeBody';
 

@@ -1,10 +1,10 @@
 import { IDiagnostic } from '@stoplight/types';
 import { Either } from 'fp-ts/lib/Either';
 import { ReaderEither } from 'fp-ts/lib/ReaderEither';
+import { ReaderTaskEither } from 'fp-ts/lib/ReaderTaskEither';
 import { TaskEither } from 'fp-ts/lib/TaskEither';
 import { Logger } from 'pino';
 import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
-import { ReaderTaskEither } from 'fp-ts/lib/ReaderTaskEither';
 export type IPrismDiagnostic = Omit<IDiagnostic, 'range' | 'path'> & { path?: string[] };
 
 export interface IPrism<Resource, Input, Output, Config extends IPrismConfig> {
@@ -16,6 +16,7 @@ export interface IPrismConfig {
   checkSecurity: boolean;
   validateRequest: boolean;
   validateResponse: boolean;
+  errors: boolean;
 }
 
 export type ValidatorFn<Resource, T> = (opts: {
