@@ -99,6 +99,10 @@ function runCallbacks({
   );
 }
 
+/*
+  This function should not be here at all, but unfortunately due to some limitations of the Monad we're using (Either)
+  we cannot carry parsed informations in case of an error — which is what we do need instead.
+*/
 function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) {
   const mediaType = caseless(request.headers || {}).get('content-type');
   if (!mediaType) return request;
