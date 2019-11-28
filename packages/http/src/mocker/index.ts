@@ -115,7 +115,7 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
   const encodedUriParams = splitUriParams(request.body as string);
 
   if (specs.length < 1) {
-    return { ...request, body: encodedUriParams };
+    return Object.assign(request, { body: encodedUriParams });
   }
 
   const content = pipe(
@@ -127,12 +127,11 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 
   const encodings = get(content, 'encodings', []);
 
-  if (!content.schema) return { ...request, body: encodedUriParams };
+  if (!content.schema) return Object.assign(request, { body: encodedUriParams });
 
-  return {
-    ...request,
+  return Object.assign(request, {
     body: deserializeFormBody(content.schema, encodings, decodeUriEntities(encodedUriParams)),
-  };
+  });
 }
 
 function handleInputValidation(input: IPrismInput<IHttpRequest>, resource: IHttpOperation) {
