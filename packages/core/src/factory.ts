@@ -1,7 +1,6 @@
 import * as Either from 'fp-ts/lib/Either';
-import * as Option from 'fp-ts/lib/Option';
-import { pipe } from 'fp-ts/lib/pipeable';
 import * as TaskEither from 'fp-ts/lib/TaskEither';
+import { pipe } from 'fp-ts/lib/pipeable';
 import { defaults } from 'lodash';
 import { IPrism, IPrismComponents, IPrismConfig, IPrismDiagnostic, IPrismProxyConfig, IPrismOutput } from './types';
 import { sequenceT } from 'fp-ts/lib/Apply';
@@ -12,6 +11,21 @@ const sequenceValidation = sequenceT(Either.getValidation(getSemigroup<IPrismDia
 
 function isProxyConfig(p: IPrismConfig): p is IPrismProxyConfig {
   return !p.mock;
+}
+
+function createWarningOutput<Output>(output: Output): IPrismOutput<Output> {
+  return {
+    output,
+    validations: {
+      input: [
+        {
+          message: 'Selected route not found',
+          severity: DiagnosticSeverity.Warning,
+        },
+      ],
+      output: [],
+    },
+  };
 }
 
 export function factory<Resource, Input, Output, Config extends IPrismConfig>(
@@ -77,20 +91,7 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
             if (!config.errors && isProxyConfig(config)) {
               return pipe(
                 components.forward(input, config.upstream.href)(components.logger.child({ name: 'PROXY' })),
-                TaskEither.map<Output, IPrismOutput<Output>>(output => ({
-                  input,
-                  output,
-                  validations: {
-                    input: [
-                      {
-                        message:
-                          "The selected route hasn't been found and the errors is set false. Prism has proxied the request to the upstream server but no validation will happen",
-                        severity: DiagnosticSeverity.Warning,
-                      },
-                    ],
-                    output: [],
-                  },
-                }))
+                TaskEither.map(createWarningOutput)
               );
             } else return TaskEither.left(error);
           },
@@ -101,13 +102,12 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
               TaskEither.map(({ output, resource, validations: inputValidations }) => {
                 const outputValidations = config.validateResponse
                   ? pipe(
-                      Option.fromEither(Either.swap(components.validateOutput({ resource, element: output }))),
-                      Option.getOrElse<IPrismDiagnostic[]>(() => [])
+                      Either.swap(components.validateOutput({ resource, element: output })),
+                      Either.getOrElse<Output, IPrismDiagnostic[]>(() => [])
                     )
                   : [];
 
                 return {
-                  input,
                   output,
                   validations: {
                     input: inputValidations,
