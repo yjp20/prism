@@ -28,7 +28,7 @@ const createClientFromResource = partial(createClientFrom, getHttpOperationsFrom
 const createClientFromString = partial(createClientFrom, getHttpOperations);
 
 function createClientFromOperations(resources: IHttpOperation[], defaultConfig: IClientConfig): PrismHttp {
-  const lg = { ...logger, child: () => lg, success: logger.info };
+  const lg = { ...logger, child: () => lg, success: logger.info, trace: logger.info };
 
   const obj = createInstance(defaultConfig, { logger: lg });
 

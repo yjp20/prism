@@ -3,7 +3,6 @@ import {
   DiagnosticSeverity,
   IHttpOperation,
   IHttpOperationResponse,
-  IHttpOperationRequest,
   IMediaTypeContent,
   IHttpOperationRequestBody,
 } from '@stoplight/types';
