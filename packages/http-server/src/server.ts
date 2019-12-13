@@ -72,16 +72,17 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
       TaskEither.chain(response => {
         const { output } = response;
 
-        const inputOutputValidationErrors = response.validations.output
-          .map(createErrorObjectWithPrefix('response'))
-          .concat(response.validations.input.map(createErrorObjectWithPrefix('request')));
+        const inputValidationErrors = response.validations.input.map(createErrorObjectWithPrefix('request'));
+        const outputValidationErrors = response.validations.output.map(createErrorObjectWithPrefix('response'));
+        const inputOutputValidationErrors = inputValidationErrors.concat(outputValidationErrors);
 
         if (inputOutputValidationErrors.length > 0) {
           reply.header('sl-violations', JSON.stringify(inputOutputValidationErrors));
 
-          const errorViolations = inputOutputValidationErrors.filter(
+          const errorViolations = outputValidationErrors.filter(
             v => v.severity === DiagnosticSeverity[DiagnosticSeverity.Error]
           );
+
           if (opts.errors && errorViolations.length > 0) {
             return TaskEither.left(
               ProblemJsonError.fromTemplate(

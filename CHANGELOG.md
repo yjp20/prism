@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 3.2.2 (2019-12-13)
+
 ## Fixed
 
-Correctly handle the possibility of a body/headers generation failure [#875](https://github.com/stoplightio/prism/pull/875)
+- Correctly handle the possibility of a body/headers generation failure [#875](https://github.com/stoplightio/prism/pull/875)
+- Input validation errors should not trigger a `500` status code when the `--errors` flag is set to true [#892](https://github.com/stoplightio/prism/pull/892)
 
 # 3.2.1 (2019-11-21)
 
