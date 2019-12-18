@@ -9,7 +9,8 @@ import * as Ajv from 'ajv';
 import { JSONSchema } from '../../';
 import * as AjvOAI from 'ajv-oai';
 
-const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto', coerceTypes: false });
+const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
+const ajvCoerce = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto', coerceTypes: true });
 
 export const convertAjvErrors = (
   errors: NonEmptyArray<Ajv.ErrorObject>,
@@ -32,9 +33,9 @@ export const convertAjvErrors = (
     })
   );
 
-export const validateAgainstSchema = (value: unknown, schema: JSONSchema, prefix?: string) =>
+export const validateAgainstSchema = (value: unknown, schema: JSONSchema, coerce: boolean, prefix?: string) =>
   pipe(
-    O.tryCatch(() => ajv.compile(schema)),
+    O.tryCatch(() => (coerce ? ajv : ajvCoerce).compile(schema)),
     O.chain(validateFn =>
       pipe(
         O.tryCatch(() => validateFn(value)),

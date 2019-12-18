@@ -57,7 +57,7 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
         );
         return { parameterValues, schema };
       }),
-      O.chain(({ parameterValues, schema }) => validateAgainstSchema(parameterValues, schema, prefix)),
+      O.chain(({ parameterValues, schema }) => validateAgainstSchema(parameterValues, schema, true, prefix)),
       O.map(schemaDiagnostic => schemaDiagnostic.concat(deprecatedWarnings)),
       O.chain(fromArray),
       O.alt(() => fromArray(deprecatedWarnings)),

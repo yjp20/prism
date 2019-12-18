@@ -73,7 +73,7 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
     E.map(decodedUriEntities => deserializeFormBody(schema, encodings, decodedUriEntities)),
     E.chain(deserialised =>
       pipe(
-        validateAgainstSchema(deserialised, schema),
+        validateAgainstSchema(deserialised, schema, true),
         E.fromOption(() => deserialised),
         E.swap
       )
@@ -108,7 +108,7 @@ export class HttpBodyValidator implements IHttpValidator<any, IMediaTypeContent>
             O.fold(
               () =>
                 pipe(
-                  validateAgainstSchema(target, schema),
+                  validateAgainstSchema(target, schema, false),
                   E.fromOption(() => target),
                   E.swap
                 ),
