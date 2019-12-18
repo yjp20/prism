@@ -79,4 +79,21 @@ describe('validateAgainstSchema()', () => {
       );
     });
   });
+
+  describe('with coercing', () => {
+    it('will not return error for convertible values', () => {
+      assertNone(
+        validateAgainstSchema({ test: 10 }, { type: 'object', properties: { test: { type: 'string' } } }, true)
+      );
+    });
+  });
+
+  describe('with no coercing', () => {
+    it('will return error for convertible values', () => {
+      assertSome(
+        validateAgainstSchema({ test: 10 }, { type: 'object', properties: { test: { type: 'string' } } }, false),
+        error => expect(error).toContainEqual(expect.objectContaining({ message: 'should be string' }))
+      );
+    });
+  });
 });
