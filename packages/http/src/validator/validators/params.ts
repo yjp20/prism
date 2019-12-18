@@ -30,33 +30,34 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
         severity: DiagnosticSeverity.Warning,
       }));
 
-    const schema = createJsonSchemaFromParams(specs);
-
-    const parameterValues = pickBy(
-      mapValues(
-        keyBy(specs, s => s.name.toLowerCase()),
-        el => {
-          const resolvedStyle = el.style || style;
-          const deserializer = registry.get(resolvedStyle);
-          if (deserializer)
-            return deserializer.deserialize(
-              el.name.toLowerCase(),
-              // This is bad, but unfortunately for the way the parameter validators are done there's
-              // no better way at them moment. I hope to fix this in a following PR where we will revisit
-              // the validators a bit
-              // @ts-ignore
-              mapKeys(target, (_value, key) => key.toLowerCase()),
-              schema.properties && (schema.properties[el.name] as JSONSchema4),
-              el.explode || false
-            );
-
-          return undefined;
-        }
-      )
-    );
-
     return pipe(
-      validateAgainstSchema(parameterValues, schema, prefix),
+      createJsonSchemaFromParams(specs),
+      O.map(schema => {
+        const parameterValues = pickBy(
+          mapValues(
+            keyBy(specs, s => s.name.toLowerCase()),
+            el => {
+              const resolvedStyle = el.style || style;
+              const deserializer = registry.get(resolvedStyle);
+              if (deserializer)
+                return deserializer.deserialize(
+                  el.name.toLowerCase(),
+                  // This is bad, but unfortunately for the way the parameter validators are done there's
+                  // no better way at them moment. I hope to fix this in a following PR where we will revisit
+                  // the validators a bit
+                  // @ts-ignore
+                  mapKeys(target, (_value, key) => key.toLowerCase()),
+                  schema.properties && (schema.properties[el.name] as JSONSchema4),
+                  el.explode || false
+                );
+
+              return undefined;
+            }
+          )
+        );
+        return { parameterValues, schema };
+      }),
+      O.chain(({ parameterValues, schema }) => validateAgainstSchema(parameterValues, schema, prefix)),
       O.map(schemaDiagnostic => schemaDiagnostic.concat(deprecatedWarnings)),
       O.chain(fromArray),
       O.alt(() => fromArray(deprecatedWarnings)),
@@ -66,15 +67,18 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
   }
 }
 
-function createJsonSchemaFromParams(params: IHttpParam[]): JSONSchema {
-  return {
-    type: 'object',
-    properties: pickBy(
-      mapValues(
-        keyBy(params, p => p.name.toLowerCase()),
-        'schema'
-      )
-    ) as JSONSchema4,
-    required: compact(params.map(m => (m.required ? m.name.toLowerCase() : undefined))),
-  };
+function createJsonSchemaFromParams(params: IHttpParam[]): O.Option<JSONSchema> {
+  return pipe(
+    fromArray(params),
+    O.map(params => ({
+      type: 'object',
+      properties: pickBy(
+        mapValues(
+          keyBy(params, p => p.name.toLowerCase()),
+          'schema'
+        )
+      ) as JSONSchema4,
+      required: compact(params.map(m => (m.required ? m.name.toLowerCase() : undefined))),
+    }))
+  );
 }
