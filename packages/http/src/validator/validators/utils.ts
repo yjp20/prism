@@ -9,7 +9,7 @@ import * as Ajv from 'ajv';
 import { JSONSchema } from '../../';
 import * as AjvOAI from 'ajv-oai';
 
-const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
+const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto', coerceTypes: false });
 
 export const convertAjvErrors = (
   errors: NonEmptyArray<Ajv.ErrorObject>,
@@ -35,10 +35,12 @@ export const convertAjvErrors = (
 export const validateAgainstSchema = (value: unknown, schema: JSONSchema, prefix?: string) =>
   pipe(
     O.tryCatch(() => ajv.compile(schema)),
-    O.mapNullable(validate => {
-      validate(value);
-      return validate.errors;
-    }),
+    O.chain(validateFn =>
+      pipe(
+        O.tryCatch(() => validateFn(value)),
+        O.mapNullable(() => validateFn.errors)
+      )
+    ),
     O.chain(fromArray),
     O.map(errors => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix))
   );
