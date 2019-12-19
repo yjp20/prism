@@ -44,7 +44,7 @@ describe('validateAgainstSchema()', () => {
 
   describe('has no validation errors', () => {
     it('returns no validation errors', () => {
-      assertNone(validateAgainstSchema('test', { type: 'string' }, 'pfx'));
+      assertNone(validateAgainstSchema('test', { type: 'string' }, true, 'pfx'));
       expect(convertAjvErrorsModule.convertAjvErrors).not.toHaveBeenCalled();
     });
   });
@@ -60,7 +60,7 @@ describe('validateAgainstSchema()', () => {
           summary: 'should be number',
         },
       ]);
-      assertSome(validateAgainstSchema('test', { type: 'number' }, 'pfx'), error =>
+      assertSome(validateAgainstSchema('test', { type: 'number' }, true, 'pfx'), error =>
         expect(error).toContainEqual(expect.objectContaining({ message: 'should be number' }))
       );
 
@@ -76,6 +76,23 @@ describe('validateAgainstSchema()', () => {
         ],
         DiagnosticSeverity.Error,
         'pfx'
+      );
+    });
+  });
+
+  describe('with coercing', () => {
+    it('will not return error for convertible values', () => {
+      assertNone(
+        validateAgainstSchema({ test: 10 }, { type: 'object', properties: { test: { type: 'string' } } }, true)
+      );
+    });
+  });
+
+  describe('with no coercing', () => {
+    it('will return error for convertible values', () => {
+      assertSome(
+        validateAgainstSchema({ test: 10 }, { type: 'object', properties: { test: { type: 'string' } } }, false),
+        error => expect(error).toContainEqual(expect.objectContaining({ message: 'should be string' }))
       );
     });
   });
