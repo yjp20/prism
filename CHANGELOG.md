@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 3.2.3 (2019-12-19)
+
 ## Fixed
 
 - Prism will not coerce JSON Payloads anymore during the schema validation [#905](https://github.com/stoplightio/prism/pull/905)
