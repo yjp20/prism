@@ -1,4 +1,5 @@
 import { MatchType } from './types';
+import * as E from 'fp-ts/lib/Either';
 
 function fragmentarize(path: string): string[] {
   return path.split('/').slice(1);
@@ -9,16 +10,10 @@ function getTemplateParamName(pathFragment: string) {
   return match && match[1];
 }
 
-/**
- * @returns `true` if matched concrete, `false` if not matched, `path param values` if matched templated
- */
-export function matchPath(requestPath: string, operationPath: string): MatchType {
-  if (!requestPath.startsWith('/')) {
-    throw new Error(`The request path '${requestPath}' must start with a slash.`);
-  }
+export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
   if (!operationPath.startsWith('/')) {
-    throw new Error(
-      `Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`
+    return E.left(
+      new Error(`Given request path '${requestPath}' the operation path '${operationPath}' must start with a slash.`)
     );
   }
   const operationPathFragments = fragmentarize(operationPath);
@@ -28,7 +23,7 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
     operationPathFragments.length < requestPathFragments.length ||
     operationPathFragments.length > requestPathFragments.length
   ) {
-    return MatchType.NOMATCH;
+    return E.right(MatchType.NOMATCH);
   }
 
   const params = [];
@@ -40,7 +35,7 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
 
     if (paramName === null && operationPathFragment !== requestPathFragment) {
       // if concrete fragment and fragments are different return false
-      return MatchType.NOMATCH;
+      return E.right(MatchType.NOMATCH);
     } else if (paramName !== null) {
       params.push({
         name: paramName,
@@ -49,5 +44,5 @@ export function matchPath(requestPath: string, operationPath: string): MatchType
     }
   }
 
-  return params.length ? MatchType.TEMPLATED : MatchType.CONCRETE;
+  return E.right(params.length ? MatchType.TEMPLATED : MatchType.CONCRETE);
 }
