@@ -11,6 +11,7 @@ import { posix } from 'path';
 import { Logger } from 'pino';
 import { IHttpConfig, IHttpRequest, IHttpResponse } from '../types';
 import { parseResponse } from '../utils/parseResponse';
+import { hopByHopHeaders } from './resources';
 
 const { version: prismVersion } = require('../../package.json');
 
@@ -41,12 +42,13 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
         });
       }, E.toError)
     ),
-    TE.chain(parseResponse)
+    TE.chain(parseResponse),
+    TE.map(stripHopByHopHeaders)
   );
 
 export default forward;
 
-function serializeBody(body: unknown) {
+function serializeBody(body: unknown): E.Either<Error, string | undefined> {
   if (typeof body === 'string') {
     return E.right(body);
   }
@@ -55,3 +57,8 @@ function serializeBody(body: unknown) {
 
   return E.right(undefined);
 }
+
+const stripHopByHopHeaders = (response: IHttpResponse): IHttpResponse => {
+  response.headers = omit(response.headers, hopByHopHeaders);
+  return response;
+};

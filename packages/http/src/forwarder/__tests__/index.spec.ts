@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
 import forward from '../index';
 import { assertResolvesRight, assertResolvesLeft } from '@stoplight/prism-core/src/__tests__/utils';
-import { mapValues } from 'lodash';
+import { keyBy, mapValues } from 'lodash';
+import { hopByHopHeaders } from '../resources';
 
 jest.mock('node-fetch');
 
@@ -94,6 +95,23 @@ describe('forward', () => {
             expect.objectContaining({ method: 'post', body: 'some body' })
           );
         }
+      );
+    });
+  });
+
+  describe('when upstream return hop-by-hop headers', () => {
+    it('forwarder strips them all', () => {
+      const headers = mapValues(keyBy(hopByHopHeaders), () => 'n/a');
+
+      ((fetch as unknown) as jest.Mock).mockReturnValue({
+        headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
+        text: jest.fn().mockResolvedValue(''),
+      });
+
+      return assertResolvesRight(forward({ method: 'get', url: { path: '/test' } }, 'http://example.com')(logger), r =>
+        hopByHopHeaders.forEach(hopHeader => {
+          expect(r.headers?.[hopHeader]).toBeUndefined();
+        })
       );
     });
   });
