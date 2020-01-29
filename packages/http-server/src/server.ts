@@ -150,6 +150,7 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
           res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || '*');
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           res.setHeader('Access-Control-Allow-Methods', 'GET,DELETE,HEAD,PATCH,POST,PUT');
+          res.setHeader('Vary', 'origin');
           send(res, 204);
         }
       ),
