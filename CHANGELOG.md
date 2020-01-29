@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+## Fixed
+
+- Correctly set `vary` and `access-control-request-headers` headers for preflight CORS requests
+
 # 3.2.4 (2020-01-28)
 
 ## Changed
