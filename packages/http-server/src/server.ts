@@ -154,7 +154,13 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
           send(res, 204);
         }
       ),
-      Router.otherwise(handler)
+      Router.otherwise((req, res, options) => {
+        if (opts.cors) {
+          res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
+          res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || '*');
+        }
+        return handler(req, res, options);
+      })
     )
   );
 
