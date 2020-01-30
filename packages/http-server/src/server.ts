@@ -31,9 +31,9 @@ function addressInfoToString(address: AddressInfo | string | null) {
 function parseRequestBody(request: IncomingMessage) {
   // if no body provided then return null instead of empty string
   if (
-    request.headers['content-type'] === undefined
-    && request.headers['transfer-encoding'] === undefined
-    && (request.headers['content-length'] === '0' || request.headers['content-length'] === undefined)
+    request.headers['content-type'] === undefined &&
+    request.headers['transfer-encoding'] === undefined &&
+    (request.headers['content-length'] === '0' || request.headers['content-length'] === undefined)
   ) {
     return Promise.resolve(null);
   }
@@ -49,11 +49,7 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
   const { components, config } = opts;
 
   const handler: MicriHandler = async (request, reply) => {
-    const {
-      url,
-      method,
-      headers,
-    } = request;
+    const { url, method, headers } = request;
 
     const body = await parseRequestBody(request);
 
@@ -118,8 +114,7 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
 
         return TE.fromIOEither(() =>
           E.tryCatch(() => {
-            if (output.headers)
-              Object.entries(output.headers).forEach(([name, value]) => reply.setHeader(name, value));
+            if (output.headers) Object.entries(output.headers).forEach(([name, value]) => reply.setHeader(name, value));
 
             send(
               reply,
@@ -136,11 +131,7 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
           if (e.additional && e.additional.headers)
             Object.entries(e.additional.headers).forEach(([name, value]) => reply.setHeader(name, value));
 
-          send(
-            reply,
-            e.status || 500,
-            JSON.stringify(ProblemJsonError.fromPlainError(e))
-          );
+          send(reply, e.status || 500, JSON.stringify(ProblemJsonError.fromPlainError(e)));
         } else {
           reply.end();
         }
@@ -155,13 +146,22 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
       Router.on.options(
         () => opts.cors,
         (req: IncomingMessage, res: ServerResponse) => {
-          res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*' as string);
+          res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
+          res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || '*');
           res.setHeader('Access-Control-Allow-Credentials', 'true');
           res.setHeader('Access-Control-Allow-Methods', 'GET,DELETE,HEAD,PATCH,POST,PUT');
+          res.setHeader('Vary', 'origin');
+          res.setHeader('Content-Length', '0');
           send(res, 204);
-        },
+        }
       ),
-      Router.otherwise(handler)
+      Router.otherwise((req, res, options) => {
+        if (opts.cors) {
+          res.setHeader('Access-Control-Allow-Origin', req.headers['origin'] || '*');
+          res.setHeader('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || '*');
+        }
+        return handler(req, res, options);
+      })
     )
   );
 
@@ -177,16 +177,19 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
     },
 
     close() {
-      return new Promise((resolve, reject) => server.close((error) => {
-        if (error) {
-          reject(error);
-        }
+      return new Promise((resolve, reject) =>
+        server.close(error => {
+          if (error) {
+            reject(error);
+          }
 
-        resolve();
-      }));
+          resolve();
+        })
+      );
     },
 
-    listen: (port: number, ...args: any[]) => new Promise(resolve => server.listen(port, ...args, () => resolve(addressInfoToString(server.address())))),
+    listen: (port: number, ...args: any[]) =>
+      new Promise(resolve => server.listen(port, ...args, () => resolve(addressInfoToString(server.address())))),
   };
 };
 
