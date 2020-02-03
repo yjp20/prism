@@ -81,7 +81,6 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
     cors: options.cors,
     config,
     components: { logger: logInstance.child({ name: 'HTTP SERVER' }) },
-    errors: options.errors,
   });
 
   const address = await server.listen(options.port, options.host);
