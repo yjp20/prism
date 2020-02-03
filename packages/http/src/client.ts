@@ -1,7 +1,5 @@
 import { IPrismOutput, createLogger } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
-// @ts-ignore
-import * as logger from 'abstract-logging';
 import { defaults, partial } from 'lodash';
 import { parse as parseQueryString } from 'querystring';
 import { parse as parseUrl } from 'url';
