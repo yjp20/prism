@@ -1,4 +1,4 @@
-import { IPrismOutput } from '@stoplight/prism-core';
+import { IPrismOutput, createLogger } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 // @ts-ignore
 import * as logger from 'abstract-logging';
@@ -12,6 +12,9 @@ import { fold } from 'fp-ts/lib/TaskEither';
 import * as Task from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
 
+const logger = createLogger('Prism-Internal');
+logger.success = logger.info;
+
 interface IClientConfig extends IHttpConfig {
   baseUrl?: string;
 }
@@ -23,12 +26,6 @@ function createClientFrom(
 ): Promise<PrismHttp> {
   return getResource(document).then(resources => createClientFromOperations(resources, defaultConfig));
 }
-
-Object.defineProperties(logger, {
-  child: { get: () => () => logger },
-  success: { get: () => logger.info },
-  trace: { get: () => logger.info },
-});
 
 const createClientFromResource = partial(createClientFrom, getHttpOperationsFromResource);
 const createClientFromString = partial(createClientFrom, getHttpOperations);
