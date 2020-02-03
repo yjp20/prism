@@ -1,4 +1,4 @@
-import { IPrismOutput, createLogger } from '@stoplight/prism-core';
+import { IPrismOutput } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 import { defaults, partial } from 'lodash';
 import { parse as parseQueryString } from 'querystring';
@@ -9,8 +9,9 @@ import { IHttpConfig, IHttpRequest, IHttpResponse, IHttpUrl } from './types';
 import { fold } from 'fp-ts/lib/TaskEither';
 import * as Task from 'fp-ts/lib/Task';
 import { pipe } from 'fp-ts/lib/pipeable';
+import * as pino from 'pino';
 
-const logger = createLogger('Prism-Internal');
+const logger = pino();
 logger.success = logger.info;
 
 interface IClientConfig extends IHttpConfig {
