@@ -1,23 +1,34 @@
-import { INodeVariable, IServer } from '@stoplight/types';
+import * as E from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/lib/pipeable';
+
+import { INodeVariable, IServer, Dictionary } from '@stoplight/types';
 import { MatchType } from './types';
 
 const variableRegexp = /{(.*?)}/g;
 
-export function matchBaseUrl(server: IServer, baseUrl: string): MatchType {
-  const templateMatchResult = matchRequestUrlToTemplateUrl(baseUrl, server.url, server.variables);
-
-  if (!templateMatchResult) {
-    return MatchType.NOMATCH;
-  }
-
-  return templateMatchResult.length > 1 ? MatchType.TEMPLATED : MatchType.CONCRETE;
+export function matchBaseUrl(server: IServer, baseUrl: string): E.Either<Error, MatchType> {
+  return pipe(
+    convertTemplateToRegExp(server.url, server.variables),
+    E.map(regex => regex.exec(baseUrl)),
+    E.map(matches => (matches ? (matches.length > 1 ? MatchType.TEMPLATED : MatchType.CONCRETE) : MatchType.NOMATCH))
+  );
 }
 
-export function convertTemplateToRegExp(urlTemplate: string, variables?: { [name: string]: INodeVariable }) {
-  const regexp = !variables
-    ? urlTemplate
-    : urlTemplate.replace(variableRegexp, (_match, variableName) => {
-        const variable = variables[variableName];
+export function convertTemplateToRegExp(
+  urlTemplate: string,
+  variables?: Dictionary<INodeVariable>
+): E.Either<Error, RegExp> {
+  return pipe(
+    variables ? replaceString(variables, urlTemplate) : E.right(urlTemplate),
+    E.map(regexString => new RegExp(`^${regexString}$`))
+  );
+
+  function replaceString(vars: Dictionary<INodeVariable>, input: string): E.Either<Error, string> {
+    return E.tryCatch(() => replaceStringUnsafe(input), E.toError);
+
+    function replaceStringUnsafe(input: string): string {
+      return input.replace(variableRegexp, (_match, variableName) => {
+        const variable = vars[variableName];
         if (!variable) {
           throw new Error(`Variable '${variableName}' is not defined, cannot parse input.`);
         }
@@ -27,11 +38,6 @@ export function convertTemplateToRegExp(urlTemplate: string, variables?: { [name
         }
         return `(${enums && enums.length ? enums.join('|') : '.*?'})`;
       });
-
-  return new RegExp(`^${regexp}$`);
-}
-
-function matchRequestUrlToTemplateUrl(requestUrl: string, templateUrl: string, variables?: any) {
-  const regexp = convertTemplateToRegExp(templateUrl, variables);
-  return regexp.exec(requestUrl);
+    }
+  }
 }

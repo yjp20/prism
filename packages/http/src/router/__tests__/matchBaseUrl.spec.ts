@@ -1,5 +1,6 @@
 import { convertTemplateToRegExp, matchBaseUrl } from '../matchBaseUrl';
 import { MatchType } from '../types';
+import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 
 describe('matchServer.ts', () => {
   describe('matchServer()', () => {
@@ -8,21 +9,27 @@ describe('matchServer.ts', () => {
         {
           url: 'http://www.example.com/',
         },
-        'http://www.example.com/',
+        'http://www.example.com/'
       );
 
-      expect(serverMatch).toEqual(MatchType.CONCRETE);
+      assertRight(serverMatch, result => expect(result).toBe(MatchType.CONCRETE));
     });
 
     test('concrete server url does not match request url', () => {
-      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example.com/')).toEqual(MatchType.NOMATCH);
+      assertRight(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example.com/'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
+      );
 
-      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example')).toEqual(MatchType.NOMATCH);
+      assertRight(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.example'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
+      );
 
-      expect(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.google.com/')).toEqual(MatchType.NOMATCH);
+      assertRight(matchBaseUrl({ url: 'http://www.example.com' }, 'http://www.google.com/'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
+      );
 
-      expect(matchBaseUrl({ url: 'http://www.example.com:8081/v1' }, 'http://www.example.com/v1')).toEqual(
-        MatchType.NOMATCH,
+      assertRight(matchBaseUrl({ url: 'http://www.example.com:8081/v1' }, 'http://www.example.com/v1'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
       );
     });
 
@@ -37,17 +44,22 @@ describe('matchServer.ts', () => {
         },
       };
 
-      expect(matchBaseUrl(serverConfig, 'http://www.example.com')).toEqual(MatchType.TEMPLATED);
-
-      expect(matchBaseUrl(serverConfig, 'http://www.example.com:8080')).toEqual(MatchType.TEMPLATED);
-
-      expect(matchBaseUrl(serverConfig, 'http://www.example.com:808')).toEqual(MatchType.NOMATCH);
-
-      expect(matchBaseUrl(serverConfig, 'http://www.example.com:80801')).toEqual(MatchType.NOMATCH);
+      assertRight(matchBaseUrl(serverConfig, 'http://www.example.com'), result =>
+        expect(result).toBe(MatchType.TEMPLATED)
+      );
+      assertRight(matchBaseUrl(serverConfig, 'http://www.example.com:8080'), result =>
+        expect(result).toBe(MatchType.TEMPLATED)
+      );
+      assertRight(matchBaseUrl(serverConfig, 'http://www.example.com:808'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
+      );
+      assertRight(matchBaseUrl(serverConfig, 'http://www.example.com:80801'), result =>
+        expect(result).toBe(MatchType.NOMATCH)
+      );
     });
 
     test('server url with templated wildcard host to match request url', () => {
-      expect(
+      assertRight(
         matchBaseUrl(
           {
             url: 'http://{host}/v1',
@@ -55,9 +67,10 @@ describe('matchServer.ts', () => {
               host: { default: 'www.example.com' },
             },
           },
-          'http://stoplight.io/v1',
+          'http://stoplight.io/v1'
         ),
-      ).toEqual(MatchType.TEMPLATED);
+        result => expect(result).toBe(MatchType.TEMPLATED)
+      );
     });
 
     test('server url with templated enum host to match request url', () => {
@@ -71,11 +84,13 @@ describe('matchServer.ts', () => {
         },
       };
 
-      expect(matchBaseUrl(serverConfig, 'http://stoplight.io/v1')).toEqual(MatchType.TEMPLATED);
-
-      expect(matchBaseUrl(serverConfig, 'http://google.io/v1')).toEqual(MatchType.TEMPLATED);
-
-      expect(matchBaseUrl(serverConfig, 'http://bummers.io/v1')).toEqual(MatchType.NOMATCH);
+      assertRight(matchBaseUrl(serverConfig, 'http://stoplight.io/v1'), result =>
+        expect(result).toBe(MatchType.TEMPLATED)
+      );
+      assertRight(matchBaseUrl(serverConfig, 'http://google.io/v1'), result =>
+        expect(result).toBe(MatchType.TEMPLATED)
+      );
+      assertRight(matchBaseUrl(serverConfig, 'http://bummers.io/v1'), result => expect(result).toBe(MatchType.NOMATCH));
     });
 
     describe('a complex server template should match request url', () => {
@@ -102,11 +117,11 @@ describe('matchServer.ts', () => {
       };
 
       function toMatchTemplate(requestBaseUrl: string) {
-        expect(matchBaseUrl(serverConfig, requestBaseUrl)).toEqual(MatchType.TEMPLATED);
+        assertRight(matchBaseUrl(serverConfig, requestBaseUrl), result => expect(result).toBe(MatchType.TEMPLATED));
       }
 
       function notToMatchTemplate(requestBaseUrl: string) {
-        expect(matchBaseUrl(serverConfig, requestBaseUrl)).toEqual(MatchType.NOMATCH);
+        assertRight(matchBaseUrl(serverConfig, requestBaseUrl), result => expect(result).toBe(MatchType.NOMATCH));
       }
 
       test('should match variants of enums', () => {
@@ -136,7 +151,7 @@ describe('matchServer.ts', () => {
   describe('convertTemplateToRegExp()', () => {
     test('given no variables should resolve to the original string', () => {
       const regexp = convertTemplateToRegExp('{a}');
-      expect(regexp).toEqual(/^{a}$/);
+      assertRight(regexp, result => expect(result).toEqual(/^{a}$/));
     });
 
     test('given no a variable with enums should alternate these enums', () => {
@@ -146,7 +161,7 @@ describe('matchServer.ts', () => {
           enum: ['y', 'z'],
         },
       });
-      expect(regexp).toEqual(/^(y|z)$/);
+      assertRight(regexp, result => expect(result).toEqual(/^(y|z)$/));
     });
 
     test('single variable should resolve a single group regexp', () => {
@@ -156,17 +171,18 @@ describe('matchServer.ts', () => {
         },
       });
 
-      expect(regexp).toEqual(/^(.*?)$/);
+      assertRight(regexp, result => expect(result).toEqual(/^(.*?)$/));
     });
 
-    test('given single variable and no matching variable should throw', () => {
-      expect(() =>
+    test('given single variable and no matching variable should return Left', () => {
+      assertLeft(
         convertTemplateToRegExp('{a}', {
           b: {
             default: 'vb',
           },
         }),
-      ).toThrow(`Variable 'a' is not defined, cannot parse input.`);
+        e => expect(e).toHaveProperty('message', `Variable 'a' is not defined, cannot parse input.`)
+      );
     });
 
     test('given two variables should return multi group', () => {
@@ -180,7 +196,7 @@ describe('matchServer.ts', () => {
         },
       });
 
-      expect(regexp).toEqual(/^(.*?)(vb2)$/);
+      assertRight(regexp, result => expect(result).toEqual(/^(.*?)(vb2)$/));
     });
 
     test('given a URL should return a pattern', () => {
@@ -198,7 +214,7 @@ describe('matchServer.ts', () => {
         },
       });
 
-      expect(regexp).toEqual(/^(https|http):\/\/www.example.com:(.*?)\/(v1|v2)$/);
+      assertRight(regexp, result => expect(result).toEqual(/^(https|http):\/\/www.example.com:(.*?)\/(v1|v2)$/));
     });
 
     test('given a similar enums should put longer ones first', () => {
@@ -209,7 +225,7 @@ describe('matchServer.ts', () => {
         },
       });
 
-      expect(regexp).toEqual(/^(http:\/\/example.com:8080|http:\/\/example.com)$/);
+      assertRight(regexp, result => expect(result).toEqual(/^(http:\/\/example.com:8080|http:\/\/example.com)$/));
     });
   });
 });
