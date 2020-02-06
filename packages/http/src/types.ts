@@ -92,7 +92,6 @@ export class ProblemJsonError extends Error {
     readonly additional?: Dictionary<unknown>
   ) {
     super(message);
-    Error.captureStackTrace(this, ProblemJsonError);
   }
 }
 
