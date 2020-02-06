@@ -1,9 +1,7 @@
-import { ProblemJsonError } from '@stoplight/prism-core';
-import { IHttpOperation, IHttpOperationResponse, IMediaTypeContent } from '@stoplight/types';
-import { IHttpHeaderParam } from '@stoplight/types';
+import { IHttpOperation, IHttpOperationResponse, IMediaTypeContent, IHttpHeaderParam } from '@stoplight/types';
 import * as E from 'fp-ts/lib/Either';
 import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
-import { isEmpty, findIndex } from 'fp-ts/lib/Array';
+import { findIndex } from 'fp-ts/lib/Array';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as R from 'fp-ts/lib/Reader';
@@ -24,6 +22,7 @@ import {
   hasContents,
 } from './InternalHelpers';
 import { IHttpNegotiationResult, NegotiatePartialOptions, NegotiationOptions } from './types';
+import { ProblemJsonError } from '../../types';
 
 const outputNoContentFoundMessage = (contentTypes: string[]) => `Unable to find content for ${contentTypes}`;
 

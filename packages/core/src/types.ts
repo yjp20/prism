@@ -52,36 +52,3 @@ export interface IPrismOutput<O> {
     output: IPrismDiagnostic[];
   };
 }
-
-export type ProblemJson = {
-  type: string;
-  title: string;
-  status: number;
-  detail: string;
-};
-
-export class ProblemJsonError extends Error {
-  public static fromTemplate(template: Omit<ProblemJson, 'detail'>, detail?: string): ProblemJsonError {
-    const error = new ProblemJsonError(
-      `https://stoplight.io/prism/errors#${template.type}`,
-      template.title,
-      template.status,
-      detail || ''
-    );
-
-    return error;
-  }
-
-  public static fromPlainError(error: Error & { detail?: string; status?: number }): ProblemJson {
-    return {
-      type: error.name && error.name !== 'Error' ? error.name : 'https://stoplight.io/prism/errors#UNKNOWN',
-      title: error.message,
-      status: error.status || 500,
-      detail: error.detail || '',
-    };
-  }
-
-  constructor(readonly name: string, readonly message: string, readonly status: number, readonly detail: string) {
-    super(message);
-  }
-}
