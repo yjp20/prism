@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 3.2.7 (2020-02-06)
+
+## Fixed
+
+- Removed double definition of the `ProblemJsonError` [#965](https://github.com/stoplightio/prism/pull/965)
+
 # 3.2.6 (2020-02-03)
 
 ## Fixed

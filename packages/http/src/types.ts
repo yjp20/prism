@@ -52,7 +52,7 @@ export type ProblemJson = {
   type: string;
   title: string;
   status: number;
-  detail: unknown;
+  detail: string;
 };
 
 export class ProblemJsonError extends Error {
@@ -68,7 +68,6 @@ export class ProblemJsonError extends Error {
       detail || '',
       additional
     );
-    Error.captureStackTrace(error, ProblemJsonError);
 
     return error;
   }
