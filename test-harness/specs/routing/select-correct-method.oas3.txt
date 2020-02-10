@@ -1,0 +1,45 @@
+====test====
+When multiple actions are mapped to a single endpoint, selects the correct response based on the incomming HTTP method
+====spec====
+openapi: 3.0.0
+info:
+  title: bug
+  version: '1.0'
+paths:
+  /test:
+    post:
+      summary: Create a user
+      operationId: dal.users.create_and_get
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response-for-post:
+                    type: string
+    get:
+      summary: List all users
+      operationId: dal.users.get_all
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response-for-get:
+                    type: string
+    parameters: []
+
+====server====
+mock -p 4010 ${document}
+====command====
+curl -i -X GET http://localhost:4010/test
+====expect====
+HTTP/1.1 200 OK
+content-type: application/json
+
+{"response-for-get":"string"}
