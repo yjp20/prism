@@ -2,17 +2,11 @@
 When multiple actions are mapped to a single endpoint, selects the correct response based on the incomming HTTP method
 ====spec====
 openapi: 3.0.0
-info:
-  title: bug
-  version: '1.0'
 paths:
   /test:
     post:
-      summary: Create a user
-      operationId: dal.users.create_and_get
       responses:
         '200':
-          description: User created successfully
           content:
             application/json:
               schema:
@@ -21,8 +15,6 @@ paths:
                   response-for-post:
                     type: string
     get:
-      summary: List all users
-      operationId: dal.users.get_all
       responses:
         '200':
           content:
@@ -32,8 +24,6 @@ paths:
                 properties:
                   response-for-get:
                     type: string
-    parameters: []
-
 ====server====
 mock -p 4010 ${document}
 ====command====
