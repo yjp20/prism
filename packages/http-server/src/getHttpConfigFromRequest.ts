@@ -1,26 +1,37 @@
-import { IHttpOperationConfig, IHttpRequest } from '@stoplight/prism-http';
+import { IHttpOperationConfig, IHttpRequest, ProblemJsonError, UNPROCESSABLE_ENTITY } from '@stoplight/prism-http';
+import { pipe } from 'fp-ts/lib/pipeable';
+import * as E from 'fp-ts/lib/Either';
+import * as t from 'io-ts';
+import { failure } from 'io-ts/lib/PathReporter';
+import { BooleanFromString } from 'io-ts-types/lib/BooleanFromString';
+//@ts-ignore
+import * as parsePreferHeader from 'parse-prefer-header';
 
-export const getHttpConfigFromRequest = (req: IHttpRequest): Partial<IHttpOperationConfig> => {
-  const httpOperationConfig: Partial<IHttpOperationConfig> = {};
-  const query = req.url.query;
+const PreferencesDecoder = t.union([
+  t.undefined,
+  t.partial(
+    {
+      code: t.string,
+      dynamic: t.string.pipe(BooleanFromString),
+      example: t.string,
+    },
+    'Preferences'
+  ),
+]);
 
-  if (!query) {
-    return {};
-  }
+type RequestPreferences = Partial<Omit<IHttpOperationConfig, 'mediaType'>>;
 
-  const { __code, __dynamic, __example } = query;
+export const getHttpConfigFromRequest = (req: IHttpRequest): E.Either<Error, RequestPreferences> => {
+  const preferences =
+    req.headers && req.headers['prefer']
+      ? parsePreferHeader(req.headers['prefer'])
+      : { code: req.url.query?.__code, dynamic: req.url.query?.__dynamic, example: req.url.query?.__example };
 
-  if (__code) {
-    httpOperationConfig.code = typeof __code === 'string' ? __code : __code[0];
-  }
-
-  if (__dynamic) {
-    httpOperationConfig.dynamic = __dynamic === 'true';
-  }
-
-  if (__example) {
-    httpOperationConfig.exampleKey = typeof __example === 'string' ? __example : __example[0];
-  }
-
-  return httpOperationConfig;
+  return pipe(
+    PreferencesDecoder.decode(preferences),
+    E.bimap(
+      err => ProblemJsonError.fromTemplate(UNPROCESSABLE_ENTITY, failure(err).join('; ')),
+      parsed => ({ code: parsed?.code, exampleKey: parsed?.example, dynamic: parsed?.dynamic })
+    )
+  );
 };
