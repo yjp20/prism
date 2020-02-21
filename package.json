@@ -69,12 +69,10 @@
   },
   "lint-staged": {
     "**/packages/**/*.ts": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.{json,md}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "husky": {
