@@ -239,7 +239,7 @@ describe.each([['petstore.no-auth.oas2.yaml', 'petstore.no-auth.oas3.yaml']])('s
         it(`when the server is not valid for this exact operation then return error`, async () => {
           const response = await makeRequest('/store/inventory?__server=https://petstore.swagger.io/v2');
           expect(response.status).toBe(404);
-          expect(response.text()).resolves.toEqual(
+          await expect(response.text()).resolves.toEqual(
             '{"type":"https://stoplight.io/prism/errors#NO_SERVER_MATCHED_ERROR","title":"Route not resolved, no server matched","status":404,"detail":"The server url https://petstore.swagger.io/v2 hasn\'t been matched with any of the provided servers"}'
           );
         });
@@ -247,7 +247,7 @@ describe.each([['petstore.no-auth.oas2.yaml', 'petstore.no-auth.oas3.yaml']])('s
         it(`when the server is invalid return error`, async () => {
           const response = await makeRequest('/store/inventory?__server=https://notvalid.com');
           expect(response.status).toBe(404);
-          expect(response.text()).resolves.toEqual(
+          await expect(response.text()).resolves.toEqual(
             '{"type":"https://stoplight.io/prism/errors#NO_SERVER_MATCHED_ERROR","title":"Route not resolved, no server matched","status":404,"detail":"The server url https://notvalid.com hasn\'t been matched with any of the provided servers"}'
           );
         });
