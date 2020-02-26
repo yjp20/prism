@@ -1,0 +1,45 @@
+====test====
+When I send a request to an operation
+And in the path I specify ?_code=some-code (ie ?__code=200)
+And the operation has such status code response defined
+Then I get back a response with a status code of 200
+====spec====
+{
+  "info": {
+    "_postman_id": "37c4cd69-28e5-48aa-8386-a4ec010216e4"
+  },
+  "item": [
+    {
+      "id": "3b4f5a70-2a8f-46ba-a04b-a6f80621ad3f",
+      "request": {
+        "url": {
+          "path": ["todos"],
+          "host": ["/"]
+        },
+        "method": "GET"
+      },
+      "response": [
+        {
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "\"ok\""
+        }
+      ]
+    }
+  ]
+}
+====server====
+mock -p 4010 ${document}
+====command====
+curl -i http://localhost:4010/todos?__code=200
+====expect====
+HTTP/1.1 200 OK
+content-type: application/json
+Connection: keep-alive
+
+"ok"
