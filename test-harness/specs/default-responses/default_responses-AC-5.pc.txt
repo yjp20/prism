@@ -13,8 +13,7 @@ Then I get back a response with a status code of 200
       "id": "3b4f5a70-2a8f-46ba-a04b-a6f80621ad3f",
       "request": {
         "url": {
-          "path": ["todos"],
-          "host": ["/"]
+          "path": ["todos"]
         },
         "method": "GET"
       },

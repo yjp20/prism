@@ -11,8 +11,7 @@ Prism is able to respond with an empty response when authorization fails.
       "description": "abc",
       "request": {
         "url": {
-          "path": ["users"],
-          "host": ["/"]
+          "path": ["users"]
         },
         "auth": {
           "type": "basic"

@@ -17,8 +17,7 @@ Then I should get a response with dynamically generated JSON as payload
       "id": "3b4f5a70-2a8f-46ba-a04b-a6f80621ad3f",
       "request": {
         "url": {
-          "path": ["todos"],
-          "host": ["/"]
+          "path": ["todos"]
         },
         "method": "GET"
       },

@@ -16,8 +16,7 @@ And this response should have 200 status code
       "name": "Get Raw Honey",
       "request": {
         "url": {
-          "path": ["honey"],
-          "host": ["/"],
+          "path": ["honey"]
         },
         "method": "GET"
       },

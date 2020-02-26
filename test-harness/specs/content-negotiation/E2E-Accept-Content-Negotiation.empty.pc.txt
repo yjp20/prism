@@ -13,8 +13,7 @@ if nothing is found
       "name": "Get Raw Honey",
       "request": {
         "url": {
-          "path": ["path"],
-          "host": ["/"],
+          "path": ["path"]
         },
         "method": "GET"
       },

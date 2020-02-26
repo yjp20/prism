@@ -10,8 +10,7 @@ Responding with an XML — with the example forwarded directly from the example
       "id": "3b4f5a70-2a8f-46ba-a04b-a6f80621ad3f",
       "request": {
         "url": {
-          "path": ["pets"],
-          "host": ["/"]
+          "path": ["pets"]
         },
         "method": "GET"
       },
