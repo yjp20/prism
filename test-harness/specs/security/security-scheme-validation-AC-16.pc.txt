@@ -1,5 +1,5 @@
 ====test====
-Adding a required header of "Authorization: Bearer <<BEARER_TOKEN>>" results in granted access.
+Supplying a header for Basic Authentication (when Bearer was needed) results in denied access.
 ====spec====
 {
   "info": {
@@ -43,8 +43,8 @@ Adding a required header of "Authorization: Bearer <<BEARER_TOKEN>>" results in 
 ====server====
 mock -p 4010 ${document}
 ====command====
-curl -i http://localhost:4010/todos -H "Authorization: Bearer abc123"
+curl -i http://localhost:4010/todos -H "Authorization: Basic dGVzdDp0ZXN0"
 ====expect====
-HTTP/1.1 200 OK
+HTTP/1.1 401 Unauthorized
 
-"test"
+{"type":"https://stoplight.io/prism/errors#UNAUTHORIZED","title":"Invalid security scheme used","status":401,"detail":"","headers":{"WWW-Authenticate":"Bearer"}}

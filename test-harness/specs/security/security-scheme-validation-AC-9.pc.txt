@@ -6,14 +6,14 @@ Adding a required header of "Authorization: Bearer <<BEARER_TOKEN>>" results in 
     "_postman_id": "37c4cd69-28e5-48aa-8386-a4ec010216e4"
   },
   "auth": {
-    "type": "oauth2",
-    "oauth2": [
+    "type": "bearer",
+    "bearer": [
       {
-        "key": "addTokenTo",
-        "value": "header",
+        "key": "token",
+        "value": "TestToken",
         "type": "string"
       }
-    ],
+    ]
   },
   "item": [
     {

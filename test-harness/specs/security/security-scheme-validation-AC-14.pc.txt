@@ -1,19 +1,24 @@
 ====test====
-Adding a required header of "Authorization: Bearer <<BEARER_TOKEN>>" results in granted access.
+Access to a resource is denied when *X-API-Key* required header is not provided.
 ====spec====
 {
   "info": {
     "_postman_id": "37c4cd69-28e5-48aa-8386-a4ec010216e4"
   },
   "auth": {
-    "type": "oauth2",
-    "oauth2": [
+    "type": "apikey",
+    "apikey": [
       {
-        "key": "addTokenTo",
+        "key": "in",
         "value": "header",
         "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "X-API-Key",
+        "type": "string"
       }
-    ],
+    ]
   },
   "item": [
     {
@@ -43,8 +48,8 @@ Adding a required header of "Authorization: Bearer <<BEARER_TOKEN>>" results in 
 ====server====
 mock -p 4010 ${document}
 ====command====
-curl -i http://localhost:4010/todos -H "Authorization: Bearer abc123"
+curl -i http://localhost:4010/todos
 ====expect====
-HTTP/1.1 200 OK
+HTTP/1.1 401 Unauthorized
 
-"test"
+{"type":"https://stoplight.io/prism/errors#UNAUTHORIZED","title":"Invalid security scheme used","status":401,"detail":""}
