@@ -71,7 +71,7 @@ describe('getHttpOperations()', () => {
 
     describe('Postman Collection document is provided', () => {
       it('detects it properly', async () => {
-        await expect(getHttpOperations(JSON.stringify({ info: { _postman_id: '5' } }))).resolves.toBeTruthy();
+        await expect(getHttpOperations(JSON.stringify({ item: [] }))).resolves.toBeTruthy();
       });
     });
 

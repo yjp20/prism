@@ -60,5 +60,5 @@ function isOpenAPI3(document: unknown): document is OpenAPIObject {
 }
 
 function isPostmanCollection(document: unknown): document is CollectionDefinition {
-  return get(document, 'info._postman_id');
+  return Array.isArray(get(document, 'item'));
 }
