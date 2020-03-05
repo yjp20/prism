@@ -1527,7 +1527,7 @@
     "@types/pino-std-serializers" "*"
     "@types/sonic-boom" "*"
 
-"@types/postman-collection@^3.0.3":
+"@types/postman-collection@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@types/postman-collection/-/postman-collection-3.5.0.tgz#474b1217563b2fcae918616e82c1796f27873845"
   integrity sha512-sSHSaMHBBj7odnDhJn/XL+pcUU9t985ANDLtPBAlEjWE25SmRS3pN8k1UJzIxc+nhZ/kqG44pysmvAFjlIOLhg==
