@@ -2,7 +2,7 @@
 When I send a request to an operation
 And in the path I specify ?__code=404
 And the operation has no 404 status code response defined
-And the operation has 400 status code defined, but no schema or example defined in the response
+And the operation has only the 400 status code defined
 Then I get back a 404 response with an error code
 ====spec====
 {

@@ -9,14 +9,14 @@ paths:
   /todos:
     get:
       responses:
-        202:
-          content:
-            application/json:
-              example: ok
         204:
           description: test1
         210:
           description: test2
+        202:
+          content:
+            application/json:
+              example: ok
 ====server====
 mock -p 4010 ${document}
 ====command====

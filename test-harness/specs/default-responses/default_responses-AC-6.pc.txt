@@ -19,6 +19,14 @@ Then I get back the lowest 2xx response (e.g. if 204 and 210 are defined, return
       },
       "response": [
         {
+          "description": "test1",
+          "code": 204
+        },
+        {
+          "description": "test2",
+          "code": 210
+        },
+        {
           "code": 202,
           "header": [
             {
@@ -27,14 +35,6 @@ Then I get back the lowest 2xx response (e.g. if 204 and 210 are defined, return
             }
           ],
           "body": "\"ok\""
-        },
-        {
-          "description": "test1",
-          "code": 204
-        },
-        {
-          "description": "test2",
-          "code": 210
         }
       ]
     }

@@ -27,6 +27,16 @@ Then I get back a response with a status code of 200
             }
           ],
           "body": "\"ok\""
+        },
+        {
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "\"even more ok\""
         }
       ]
     }
@@ -35,9 +45,9 @@ Then I get back a response with a status code of 200
 ====server====
 mock -p 4010 ${document}
 ====command====
-curl -i http://localhost:4010/todos?__code=200
+curl -i http://localhost:4010/todos?__code=201
 ====expect====
-HTTP/1.1 200 OK
+HTTP/1.1 201 OK
 content-type: application/json
 
-"ok"
+"even more ok"
