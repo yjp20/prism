@@ -66,8 +66,8 @@ describe('Http Client .request', () => {
     });
 
     describe('baseUrl not set', () => {
-      it('ignores server validation and returns 200', async () => {
-        await assertResolvesRight(
+      it('ignores server validation and returns 200', () => {
+        return assertResolvesRight(
           prism.request(
             {
               method: 'get',
@@ -86,8 +86,8 @@ describe('Http Client .request', () => {
     });
 
     describe('valid baseUrl set', () => {
-      it('validates server and returns 200', async () => {
-        await assertResolvesRight(
+      it('validates server and returns 200', () => {
+        return assertResolvesRight(
           prism.request(
             {
               method: 'get',
@@ -107,8 +107,8 @@ describe('Http Client .request', () => {
     });
 
     describe('invalid host of baseUrl set', () => {
-      it('resolves with an error', async () => {
-        await assertResolvesLeft(
+      it('resolves with an error', () => {
+        return assertResolvesLeft(
           prism.request(
             {
               method: 'get',
@@ -125,8 +125,8 @@ describe('Http Client .request', () => {
     });
 
     describe('invalid host and basePath of baseUrl set', () => {
-      it('resolves with an error', async () => {
-        await assertResolvesLeft(
+      it('resolves with an error', () => {
+        return assertResolvesLeft(
           prism.request(
             {
               method: 'get',
@@ -251,8 +251,8 @@ describe('Http Client .request', () => {
     });
 
     describe('when requesting GET /pet/findByStatus', () => {
-      it('with valid query params returns generated body', async () => {
-        await assertResolvesRight(
+      it('with valid query params returns generated body', () => {
+        return assertResolvesRight(
           prism.request(
             {
               method: 'get',
@@ -272,8 +272,8 @@ describe('Http Client .request', () => {
         );
       });
 
-      it('w/o required params throws a validation error', async () => {
-        await assertResolvesLeft(
+      it('w/o required params throws a validation error', () => {
+        return assertResolvesLeft(
           prism.request(
             {
               method: 'get',
@@ -287,8 +287,8 @@ describe('Http Client .request', () => {
         );
       });
 
-      it('with valid body param then returns no validation issues', async () => {
-        await assertResolvesRight(
+      it('with valid body param then returns no validation issues', () => {
+        return assertResolvesRight(
           prism.request(
             {
               method: 'get',
@@ -317,8 +317,8 @@ describe('Http Client .request', () => {
   });
 
   describe('headers validation', () => {
-    it('validates the headers even if casing does not match', async () => {
-      await assertResolvesRight(
+    it('validates the headers even if casing does not match', () => {
+      return assertResolvesRight(
         prism.request(
           {
             method: 'get',
@@ -335,8 +335,8 @@ describe('Http Client .request', () => {
       );
     });
 
-    it('returns an error if the the header is missing', async () => {
-      await assertResolvesLeft(
+    it('returns an error if the the header is missing', () => {
+      return assertResolvesLeft(
         prism.request(
           {
             method: 'get',
@@ -361,7 +361,7 @@ describe('Http Client .request', () => {
     );
     resources = await getHttpOperationsFromResource(staticExamplesOas2Path);
 
-    assertResolvesRight(
+    return assertResolvesRight(
       prism.request(
         {
           method: 'get',
@@ -405,7 +405,7 @@ describe('proxy server', () => {
       );
 
       const resources = await getHttpOperationsFromResource(petStoreOas2Path);
-      await assertResolvesRight(prism.request({ method: 'get', url: { path: '/pets' } }, resources), response => {
+      return assertResolvesRight(prism.request({ method: 'get', url: { path: '/pets' } }, resources), response => {
         expect(response.output.statusCode).toBe(200);
         expect(response.output.body).toBe('<html><h1>Hello</h1>');
       });
