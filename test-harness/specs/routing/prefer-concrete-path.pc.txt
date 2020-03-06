@@ -21,10 +21,10 @@ When a path has multiple matches it selects the concrete first
           "header": [
             {
               "key": "Content-Type",
-              "value": "application/json"
+              "value": "text/plain"
             }
           ],
-          "body": "\"string\""
+          "body": "string"
         }
       ]
     },

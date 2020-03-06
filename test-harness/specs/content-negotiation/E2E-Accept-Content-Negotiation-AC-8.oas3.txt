@@ -1,6 +1,5 @@
 ====test====
 When I send a request to an operation with Accept header containing */*
-And this operation does not produce a response with content-type of */*
 Then I should get back a response with the first content-type from the list
 ====spec====
 openapi: 3.0.2

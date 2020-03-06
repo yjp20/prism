@@ -50,7 +50,7 @@ Not providing required credentials returns the schema generated response for 401
   ]
 }
 ====server====
-mock -p 4010 ${document}
+mock -d -p 4010 ${document}
 ====command====
 curl -i http://localhost:4010/todos
 ====expect====
