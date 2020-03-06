@@ -27,6 +27,5 @@ curl -i http://localhost:4010/todos
 ====expect====
 HTTP/1.1 202 Accepted
 content-type: text/plain
-Connection: keep-alive
 
 ok

@@ -24,6 +24,5 @@ curl -i http://localhost:4010/todos -H "accept: application/vnd.api+json"
 ====expect====
 HTTP/1.1 200 OK
 content-type: application/vnd.api+json
-Connection: keep-alive
 
 "vendor"
