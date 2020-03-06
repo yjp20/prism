@@ -1,6 +1,6 @@
 ====test====
 When I send a request to an operation with Accept header containing text/plain, application/json
-And this operation can produce a response with content-type of text/plain
+And this operation can produce a response with content-type of text/plain and application/json
 Then I should get back a response with content-type of text/plain
 And this response should have 200 status code
 ====spec====

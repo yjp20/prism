@@ -25,6 +25,17 @@ Sending multiple values in Accept header selects the first one matched.
             }
           ],
           "body": "\"string\""
+        },
+        {
+          "description": "OK, the email is available",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "1"
         }
       ]
     }
