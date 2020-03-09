@@ -30,10 +30,6 @@ Events are linked to the Postman hosted platform, and so Prism is going to skip 
 
 **Warning:** these scripts/event handlers could potentially modify variable values, with the consequence of changing the way the subsequent requests would work.
 
-### Request Body
-
-Postman Collections support saving GraphQL queries as well as regular HTTP. Prism has no GraphQL support at the moment, so that section is going to be skipped.
-
 ### JSON Schema Generation
 
 OpenAPI 2 and 3 are schema driven, while Postman Collections are examples driven.
