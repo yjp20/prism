@@ -1,6 +1,40 @@
 # Postman Collections support
 
-Prism offers a _limited_ support for Postman Collection. The basic workflow of using Prism (both from the CLI and deployed in a Docker container) are fundamentally the same
+Prism offers a _limited_ support for Postman Collection. The basic workflow of using Prism (both from the CLI and deployed in a Docker container) are fundamentally the same:
+
+```bash
+prism mock https://raw.githubusercontent.com/postmanlabs/postman-collection/develop/examples/collection-v2.json
+
+info      GET        http://127.0.0.1:4010/status/200
+info      POST       http://127.0.0.1:4010/post
+info      PUT        http://127.0.0.1:4010/status/201
+info      GET        http://127.0.0.1:4010/post
+info      GET        http://127.0.0.1:4010/status/400/
+info      GET        http://127.0.0.1:4010/path/to/document
+start     Prism is listening on http://127.0.0.1:4010
+```
+
+…and then use the trusty curl to try out the server:
+
+```bash
+curl -s -D "/dev/stderr" http://127.0.0.1:4010/status/200
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: *
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: *
+Content-type: application/json
+authorization: Hawk id="dh37fgj492je", ts="1448549987", nonce="eOJZCd", mac="O2TFlvAlMvKVSKOzc6XkfU6+5285k5p3m5dAjxumo2k="
+set-cookie: null
+Content-Length: 15
+Date: Mon, 09 Mar 2020 19:19:31 GMT
+Connection: keep-alive
+
+"response body"%
+```
+
+For a complete CLI overview, please see the [CLI page](../getting-started/03-cli.md)
 
 ## Known limitations
 
