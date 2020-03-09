@@ -14,7 +14,7 @@ Postman supports a few authentication schemes which OpenAPI does not, such as Ha
 
 Events are linked to the Postman hosted platform, and so Prism is going to skip this section entirely.
 
-For this reason, if some of these event handlers have scripts that modify a global/local variable used in some of the request/response pair, Prism won't be aware of these changes.
+For this reason, if some of these event handlers have scripts that modify a local variable (globals one are ignored by Prism since they are not tracked in the Postman Application and not the singular Postman Collection) used in some of the request/response pair, Prism won't be aware of these changes.
 
 ### JSON Schema Generation
 
