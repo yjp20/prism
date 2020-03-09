@@ -8,21 +8,7 @@ There are some known limitations that it's important to keep in mind:
 
 ### Authentication
 
-Postman collections support more authentication methods than OpenAPI 2 and 3, although some of these are a specialisation of another method included in their support; this is mostly to drive the UI of their application.
-
-In case the authentication method does not have a corresponding element in the OpenAPI specification, it can ultimately be expressed as a header. In such a case, Prism will "downgrade" according to the following table:
-
-| Postman Collection | Transformation         |
-| ------------------ | ---------------------- |
-| apikey             | apikey                 |
-| bearer             | http + bearer scheme   |
-| digest             | http + digest scheme   |
-| oauth1             | http + bearer scheme   |
-| oauth2             | http + bearer scheme   |
-| awk                | Hardcoded header value |
-| aws                | Hardcoded header value |
-| akamai             | Hardcoded header value |
-| ntlm               | Hardcoded header value |
+Postman supports a few authentication schemes which OpenAPI does not, such as Hawk and AWS. In this case Prism will do a simplified version of security validation, and just check you've got the right headers populated.
 
 ### Events
 
