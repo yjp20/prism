@@ -1,6 +1,6 @@
 # Postman Collections support
 
-Prism offers a _limited_ support for Postman Collection. The basic workflow of using Prism (both from the CLI and deployed in a Docker container) are fundamentally the same:
+Prism offers a _limited_ support for Postman Collection. The basic workflow of using Prism (both from the CLI and deployed in a Docker container) are fundamentally the same
 
 ## Known limitations
 
@@ -64,8 +64,3 @@ Although the result seems good:
 ### Operations Merging
 
 Postman Collections allows to define the same response multiple times, as long they differ for the returned response type, payload, examples. Prism will try to merge all these definitions in a single operation and then selecting the appropriate example based on its internal negotiator.
-
-## Reference documents
-
-- [Postman schema](https://schema.getpostman.com/collection/json/v2.1.0/draft-07/docs/index.html)
-- [Postman Collection SDK](https://www.postmanlabs.com/postman-collection/)
