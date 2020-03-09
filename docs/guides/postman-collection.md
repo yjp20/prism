@@ -28,7 +28,7 @@ In case the authentication method does not have a corresponding element in the O
 
 Events are linked to the Postman hosted platform, and so Prism is going to skip this section entirely.
 
-**Warning:** these scripts/event handlers could potentially modify variable values, with the consequence of changing the way the subsequent requests would work.
+For this reason, if some of these event handlers have scripts that modify a global/local variable used in some of the request/response pair, Prism won't be aware of these changes.
 
 ### JSON Schema Generation
 
