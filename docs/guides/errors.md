@@ -226,7 +226,7 @@ paths:
 
 ### NO_SUCCESS_RESPONSE_DEFINED
 
-**Message: No 2** response defined, cannot mock\*\*
+**Message: No response in the range 200-299 defined**
 **Returned Status Code: `500`**
 **Explanation:** This error occurs when the current request has matched a corresponding HTTP Operation and has passed all the validations, but there's no successful response (200-299) that could be returned.
 
