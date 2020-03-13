@@ -239,17 +239,7 @@ paths:
     get:
       responses:
         300:
-          content:
-            text/plain:
-              schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    example: Clark
-                  surname:
-                    type: string
-                    example: Kent
+          description: 'Desc'
 ```
 
 `curl -X POST http://localhost:4010/ -A 'Accept: text/plain'`
