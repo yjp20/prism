@@ -20,7 +20,7 @@ export const NOT_FOUND: Omit<ProblemJson, 'detail'> = {
 
 export const NO_SUCCESS_RESPONSE_DEFINED: Omit<ProblemJson, 'detail'> = {
   type: 'NO_SUCCESS_RESPONSE_DEFINED',
-  title: 'No 2** response defined, cannot mock',
+  title: 'No response in the range 200-299 defined',
   status: 500,
 };
 
