@@ -9,16 +9,17 @@ import {
 import { DiagnosticSeverity, HttpMethod, IHttpOperation, Dictionary } from '@stoplight/types';
 import { IncomingMessage, ServerResponse, IncomingHttpHeaders } from 'http';
 import { AddressInfo } from 'net';
+import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
+import { IPrismDiagnostic } from '@stoplight/prism-core';
+import { MicriHandler } from 'micri';
 import micri, { Router, json, send, text } from 'micri';
 import * as typeIs from 'type-is';
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { serialize } from './serialize';
-import { IPrismHttpServer, IPrismHttpServerOpts } from './types';
-import { IPrismDiagnostic } from '@stoplight/prism-core';
+import { merge } from 'lodash';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as TE from 'fp-ts/lib/TaskEither';
 import * as E from 'fp-ts/lib/Either';
-import { MicriHandler } from 'micri';
 
 function searchParamsToNameValues(searchParams: URLSearchParams): IHttpNameValues {
   const params = {};
@@ -83,7 +84,7 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
         ? TE.right(false)
         : pipe(
             getHttpConfigFromRequest(input),
-            E.map(operationSpecificConfig => Object.assign(opts.config.mock, operationSpecificConfig)),
+            E.map(operationSpecificConfig => merge(opts.config.mock, operationSpecificConfig)),
             TE.fromEither
           );
 
