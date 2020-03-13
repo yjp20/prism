@@ -224,7 +224,7 @@ paths:
 
 `curl -X POST http://localhost:4010/ -A 'Accept: text/plain'`
 
-### NO_RESPONSE_DEFINED
+### NO_SUCCESS_RESPONSE_DEFINED
 
 **Message: No 2** response defined, cannot mock\*\*
 **Returned Status Code: `500`**
