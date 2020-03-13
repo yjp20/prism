@@ -18,6 +18,12 @@ export const NOT_FOUND: Omit<ProblemJson, 'detail'> = {
   status: 404,
 };
 
+export const NO_RESPONSE_DEFINED: Omit<ProblemJson, 'detail'> = {
+  type: 'NO_RESPONSE_DEFINED',
+  title: 'No 2** response defined, cannot mock',
+  status: 500,
+};
+
 export const UNAUTHORIZED: Omit<ProblemJson, 'detail'> = {
   type: 'UNAUTHORIZED',
   title: 'Invalid security scheme used',
