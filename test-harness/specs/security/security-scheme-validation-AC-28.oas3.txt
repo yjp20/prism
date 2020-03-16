@@ -36,4 +36,4 @@ curl -i http://localhost:4010/ping --header 'Authorization: Basic MTpk'
 ====expect====
 HTTP/1.1 200 OK
 
-"ack!"
+ack!
