@@ -81,7 +81,7 @@ const validateInput: ValidatorFn<IHttpOperation, IHttpRequest> = ({ resource, el
   );
 };
 
-const findResponseByStatus = (responses: NonEmptyArray<IHttpOperationResponse>, statusCode: number) =>
+const findResponseByStatus = (responses: IHttpOperationResponse[], statusCode: number) =>
   pipe(
     findOperationResponse(responses, statusCode),
     E.fromOption<IPrismDiagnostic>(() => ({
