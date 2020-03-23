@@ -1,4 +1,8 @@
-import { transformOas2Operations, transformOas3Operations, transformPostmanCollectionOperations } from '@stoplight/http-spec';
+import {
+  transformOas2Operations,
+  transformOas3Operations,
+  transformPostmanCollectionOperations,
+} from '@stoplight/http-spec';
 import { resolveFile, resolveHttp } from '@stoplight/json-ref-readers';
 import { Resolver } from '@stoplight/json-ref-resolver';
 import { IHttpOperation } from '@stoplight/types';
