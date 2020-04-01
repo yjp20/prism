@@ -83,10 +83,10 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
       opts.config.mock === false
         ? TE.right(false)
         : pipe(
-          getHttpConfigFromRequest(input),
-          E.map(operationSpecificConfig => merge(opts.config.mock, operationSpecificConfig)),
-          TE.fromEither
-        );
+            getHttpConfigFromRequest(input),
+            E.map(operationSpecificConfig => merge(opts.config.mock, operationSpecificConfig)),
+            TE.fromEither
+          );
 
     pipe(
       mockConfig,
