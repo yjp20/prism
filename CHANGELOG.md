@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 3.3.3 (2020-04-02)
+
 ## Fixed
 
 - All the dependencies used by the various Prism packages have been explicitily declared avoiding some resolutions problems in case you are using Prism programmatically [#1072](https://github.com/stoplightio/prism/pull/1072)
