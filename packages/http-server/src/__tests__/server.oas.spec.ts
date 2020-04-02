@@ -111,7 +111,7 @@ describe('Prefer header overrides', () => {
       });
     });
 
-    describe('and I send a request with Prefer header to false', () => {
+    describe('and I send a request with Prefer header selecting a specific example', () => {
       describe('and then I send a second request with no prefer header', () => {
         let payload: unknown;
         let secondPayload: unknown;
