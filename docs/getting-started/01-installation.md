@@ -1,6 +1,6 @@
 # Installation
 
-For many, the easiest way to install Prism is as a node module. 
+For many, the easiest way to install Prism is as a node module.
 
 ```bash
 npm install -g @stoplight/prism-cli
@@ -17,6 +17,7 @@ curl -L https://raw.githack.com/stoplightio/prism/master/install | sh
 ```
 
 <!-- theme: info -->
+
 > The binaries do _not_ auto-update, so you will need to run it again to install new versions.
 
 ## Docker
@@ -37,6 +38,6 @@ If you want to start the proxy server, you can run a command like this:
 
 ```bash
 docker run --init --rm -it -d --name myprism -p 4010:4010 -v $(pwd):/tmp -P stoplight/prism:3 proxy -h 0.0.0.0 "/tmp/file.yml" http://host.docker.internal:8080 --errors
-``` 
+```
 
 Now everything is installed, let's look at some of the [concepts](./02-concepts.md).
