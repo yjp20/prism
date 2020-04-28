@@ -90,8 +90,5 @@ prism_3:
 To make the new node accessible from the proxy, please also adjust `nginx.conf`:
 
 ```
-location /app_3 {
-  rewrite ^/app_3/(.*) /$1 break;
-  proxy_pass http://prism_3:4010/;
-}
+reverse_proxy /app_3/* prism_3:4010
 ```
