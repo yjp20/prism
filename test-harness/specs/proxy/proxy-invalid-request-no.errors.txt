@@ -1,5 +1,5 @@
 ====test====
-Sending a valid request through the proxy server returns correctly gets forwarded
+Sending an invalid request through the proxy server without the --errors flag forwards the request to the upstream server
 ====spec====
 swagger: "2.0"
 paths:
@@ -16,8 +16,8 @@ paths:
         201:
           description: OK
 ====server====
-proxy -p 4010 ${document} http://httpbin --errors
+proxy -p 4010 ${document} http://httpbin
 ====command====
-curl -i http://localhost:4010/status/201 -H "X-Company-Auth: 10"
+curl -i http://localhost:4010/status/201
 ====expect====
 HTTP/1.1 201 Created
