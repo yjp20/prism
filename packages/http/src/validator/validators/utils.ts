@@ -34,15 +34,23 @@ export const convertAjvErrors = (
     })
   );
 
-export const validateAgainstSchema = (value: unknown, schema: JSONSchema, coerce: boolean, prefix?: string) =>
-  Do(O.option)
+export const validateAgainstSchema = (
+  value: unknown,
+  schema: JSONSchema,
+  coerce: boolean,
+  prefix?: string
+): O.Option<NonEmptyArray<IPrismDiagnostic>> => {
+  const ajvInstance = coerce ? ajv : ajvNoCoerce;
+
+  return Do(O.option)
     .bind(
       'validateFn',
-      O.tryCatch(() => (coerce ? ajv : ajvNoCoerce).compile(schema))
+      O.tryCatch(() => ajvInstance.compile(schema))
     )
     .doL(({ validateFn }) => O.tryCatch(() => validateFn(value)))
     .bindL('errors', ({ validateFn }) => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray)))
     .return(({ errors }) => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix));
+};
 
 export const sequenceOption = sequenceT(O.option);
 export const sequenceValidation = sequenceT(getValidation(getSemigroup<IPrismDiagnostic>()));
