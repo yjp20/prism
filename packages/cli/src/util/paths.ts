@@ -75,7 +75,7 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
   );
 }
 
-function generateParamValues(specs: IHttpParam[]) {
+function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return specs.reduce(
     (valuesOrError: E.Either<Error, Dictionary<unknown, string>>, spec) =>
       pipe(
