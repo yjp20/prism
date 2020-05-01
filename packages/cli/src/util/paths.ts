@@ -19,8 +19,10 @@ import { Do } from 'fp-ts-contrib/lib/Do';
 import { get, identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
+import { sequenceS } from 'fp-ts/lib/Apply';
 
 const sequenceEither = A.array.sequence(E.either);
+const sequenceSEither = sequenceS(E.either);
 const DoEither = Do(E.either);
 
 export function createExamplePath(
@@ -90,9 +92,10 @@ function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<un
 function generateTemplateAndValuesForPathParams(operation: IHttpOperation) {
   const specs = get(operation, 'request.path', []);
 
-  return DoEither.bind('values', generateParamValues(specs))
-    .bind('template', createPathUriTemplate(operation.path, specs))
-    .done();
+  return sequenceSEither({
+    values: generateParamValues(specs),
+    template: createPathUriTemplate(operation.path, specs),
+  });
 }
 
 function generateTemplateAndValuesForQueryParams(template: string, operation: IHttpOperation) {
