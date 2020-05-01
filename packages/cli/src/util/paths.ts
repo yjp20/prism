@@ -16,7 +16,6 @@ import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { Do } from 'fp-ts-contrib/lib/Do';
 import { get, identity } from 'lodash';
-// @ts-ignore
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
 
