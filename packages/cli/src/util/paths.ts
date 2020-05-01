@@ -14,6 +14,7 @@ import {
 } from '@stoplight/types';
 import * as E from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { Do } from 'fp-ts-contrib/lib/Do';
 import { get, identity } from 'lodash';
 // @ts-ignore
 import { URI } from 'uri-template-lite';
@@ -23,18 +24,12 @@ export function createExamplePath(
   operation: IHttpOperation,
   transformValues: ValuesTransformer = identity
 ): E.Either<Error, string> {
-  return pipe(
-    generateTemplateAndValuesForPathParams(operation),
-    E.chain(({ template: pathTemplate, values: pathValues }) =>
-      pipe(
-        generateTemplateAndValuesForQueryParams(pathTemplate, operation),
-        E.map(({ template: queryTemplate, values: queryValues }) => {
-          return { template: queryTemplate, values: { ...pathValues, ...queryValues } };
-        })
-      )
-    ),
-    E.map(({ template, values }) => URI.expand(template, transformValues(values)))
-  );
+  return Do(E.either)
+    .bind('pathData', generateTemplateAndValuesForPathParams(operation))
+    .bindL('queryData', ({ pathData }) => generateTemplateAndValuesForQueryParams(pathData.template, operation))
+    .return(({ pathData, queryData }) =>
+      URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values }))
+    );
 }
 
 function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
@@ -103,15 +98,10 @@ function generateParamValues(specs: IHttpParam[]) {
 function generateTemplateAndValuesForPathParams(operation: IHttpOperation) {
   const specs = get(operation, 'request.path', []);
 
-  return pipe(
-    generateParamValues(specs),
-    E.chain(values =>
-      pipe(
-        createPathUriTemplate(operation.path, specs),
-        E.map(template => ({ template, values }))
-      )
-    )
-  );
+  return Do(E.either)
+    .bind('values', generateParamValues(specs))
+    .bind('template', createPathUriTemplate(operation.path, specs))
+    .done();
 }
 
 function generateTemplateAndValuesForQueryParams(template: string, operation: IHttpOperation) {
