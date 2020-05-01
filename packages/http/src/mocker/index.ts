@@ -17,6 +17,7 @@ import * as R from 'fp-ts/lib/Reader';
 import * as O from 'fp-ts/lib/Option';
 import * as RE from 'fp-ts/lib/ReaderEither';
 import { map } from 'fp-ts/lib/Array';
+import { Do } from 'fp-ts-contrib/lib/Do';
 import { isNumber, isString, keyBy, mapValues, groupBy, get } from 'lodash';
 import { Logger } from 'pino';
 import * as typeIs from 'type-is';
@@ -217,31 +218,26 @@ function assembleResponse(
   payloadGenerator: PayloadGenerator
 ): R.Reader<Logger, E.Either<Error, IHttpResponse>> {
   return logger =>
-    pipe(
-      result,
-      E.chain(negotiationResult =>
-        pipe(
-          eitherSequence(
-            computeBody(negotiationResult, payloadGenerator),
-            computeMockedHeaders(negotiationResult.headers || [], payloadGenerator)
-          ),
-          E.map(([mockedBody, mockedHeaders]) => {
-            const response: IHttpResponse = {
-              statusCode: parseInt(negotiationResult.code),
-              headers: {
-                ...mockedHeaders,
-                ...(negotiationResult.mediaType && { 'Content-type': negotiationResult.mediaType }),
-              },
-              body: mockedBody,
-            };
+    Do(E.either)
+      .bind('negotiationResult', result)
+      .sequenceSL(({ negotiationResult }) => ({
+        mockedBody: computeBody(negotiationResult, payloadGenerator),
+        mockedHeaders: computeMockedHeaders(negotiationResult.headers || [], payloadGenerator),
+      }))
+      .return(context => {
+        const response: IHttpResponse = {
+          statusCode: parseInt(context.negotiationResult.code),
+          headers: {
+            ...context.mockedHeaders,
+            ...(context.negotiationResult.mediaType && { 'Content-type': context.negotiationResult.mediaType }),
+          },
+          body: context.mockedBody,
+        };
 
-            logger.success(`Responding with the requested status code ${response.statusCode}`);
+        logger.success(`Responding with the requested status code ${response.statusCode}`);
 
-            return response;
-          })
-        )
-      )
-    );
+        return response;
+      });
 }
 
 function isINodeExample(nodeExample: ContentExample | undefined): nodeExample is INodeExample {
