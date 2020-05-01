@@ -106,21 +106,19 @@ function generateTemplateAndValuesForQueryParams(template: string, operation: IH
 
 function createPathUriTemplate(inputPath: string, specs: IHttpPathParam[]): E.Either<Error, string> {
   // defaults for query: style=Simple exploded=false
-  return specs
-    .filter(spec => spec.required !== false)
-    .reduce(
-      (pathOrError: E.Either<Error, string>, spec) =>
-        pipe(
-          pathOrError,
-          E.chain(path =>
-            pipe(
-              createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
-              E.map(template => path.replace(`{${spec.name}}`, template))
-            )
+  return pipe(
+    sequenceEither(
+      specs
+        .filter(spec => spec.required !== false)
+        .map(spec =>
+          pipe(
+            createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
+            E.map(param => ({ param, name: spec.name }))
           )
-        ),
-      E.right(inputPath)
-    );
+        )
+    ),
+    E.map(values => values.reduce((acc, current) => acc.replace(`{${current.name}}`, current.param), inputPath))
+  );
 }
 
 function createParamUriTemplate(name: string, style: HttpParamStyles, explode: boolean) {
