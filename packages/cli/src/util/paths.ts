@@ -84,7 +84,7 @@ function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<un
       specs.map(spec =>
         Do(E.either)
           .bind('value', generateParamValue(spec))
-          .return(({ value }) => [spec, value])
+          .return(({ value }) => [spec.name, value])
       )
     ),
     E.map(fromPairs)
