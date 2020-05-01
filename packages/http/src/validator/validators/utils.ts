@@ -6,21 +6,17 @@ import * as O from 'fp-ts/lib/Option';
 import { Do } from 'fp-ts-contrib/lib/Do';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { sequenceT } from 'fp-ts/lib/Apply';
-import * as Ajv from 'ajv';
+import type { ErrorObject } from 'ajv';
 import { JSONSchema } from '../../';
 import * as AjvOAI from 'ajv-oai';
 
 const ajv = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto' });
 const ajvNoCoerce = new AjvOAI({ allErrors: true, messages: true, schemaId: 'auto', coerceTypes: false });
 
-export const convertAjvErrors = (
-  errors: NonEmptyArray<Ajv.ErrorObject>,
-  severity: DiagnosticSeverity,
-  prefix?: string
-) =>
+export const convertAjvErrors = (errors: NonEmptyArray<ErrorObject>, severity: DiagnosticSeverity, prefix?: string) =>
   pipe(
     errors,
-    map<Ajv.ErrorObject, IPrismDiagnostic>(error => {
+    map<ErrorObject, IPrismDiagnostic>(error => {
       const allowedParameters = 'allowedValues' in error.params ? `: ${error.params.allowedValues.join(', ')}` : '';
       const errorPath = error.dataPath.split('.').slice(1);
       const path = prefix ? [prefix, ...errorPath] : errorPath;
