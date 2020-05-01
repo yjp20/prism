@@ -4,17 +4,20 @@ import { IHttpRequest, IHttpResponse } from '../../types';
 import fetch from 'node-fetch';
 import * as O from 'fp-ts/lib/Option';
 import * as E from 'fp-ts/lib/Either';
-import { map, reduce } from 'fp-ts/lib/Array';
+import * as A from 'fp-ts/lib/Array';
 import { Do } from 'fp-ts-contrib/lib/Do';
 import * as TE from 'fp-ts/lib/TaskEither';
 import * as RTE from 'fp-ts/lib/ReaderTaskEither';
 import { head } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { fromPairs } from 'lodash';
 import { generate as generateHttpParam } from '../generator/HttpParamGenerator';
 import { validateOutput } from '../../validator';
 import { parseResponse } from '../../utils/parseResponse';
 import { violationLogger } from '../../utils/logger';
 import { Logger } from 'pino';
+
+const sequenceOption = A.array.sequence(O.option);
 
 export function runCallback({
   callback,
@@ -43,7 +46,7 @@ export function runCallback({
         return pipe(
           validateOutput({ resource: callback, element }),
           E.mapLeft(violations => {
-            pipe(violations, map(logViolation));
+            pipe(violations, A.map(logViolation));
           }),
           TE.fromEither
         );
@@ -97,18 +100,12 @@ function assembleHeaders(request?: IHttpOperationRequest, bodyMediaType?: string
   return pipe(
     O.fromNullable(request),
     O.mapNullable(request => request.headers),
-    O.map(params =>
-      pipe(
-        params,
-        reduce({}, (headers, param) =>
-          pipe(
-            param,
-            generateHttpParam,
-            O.fold(
-              () => headers,
-              value => ({ ...headers, [param.name]: value })
-            )
-          )
+    O.chain(params =>
+      sequenceOption(
+        params.map(param =>
+          Do(O.option)
+            .bind('value', generateHttpParam(param))
+            .return(({ value }) => [param.name, value])
         )
       )
     ),

@@ -80,7 +80,7 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
-    sequenceEither<Error, unknown[]>(
+    sequenceEither(
       specs.map(spec =>
         Do(E.either)
           .bind('value', generateParamValue(spec))
