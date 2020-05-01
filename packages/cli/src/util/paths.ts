@@ -21,7 +21,7 @@ import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
 import { sequenceS } from 'fp-ts/lib/Apply';
 
-const sequenceEither = A.array.sequence(E.either);
+const traverseEither = A.array.traverse(E.either);
 const sequenceSEither = sequenceS(E.either);
 const DoEither = Do(E.either);
 
@@ -82,8 +82,8 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
-    sequenceEither(
-      specs.map(spec => DoEither.bind('value', generateParamValue(spec)).return(({ value }) => [spec.name, value]))
+    traverseEither(specs, spec =>
+      DoEither.bind('value', generateParamValue(spec)).return(({ value }) => [spec.name, value])
     ),
     E.map(fromPairs)
   );
@@ -110,14 +110,12 @@ function generateTemplateAndValuesForQueryParams(template: string, operation: IH
 function createPathUriTemplate(inputPath: string, specs: IHttpPathParam[]): E.Either<Error, string> {
   // defaults for query: style=Simple exploded=false
   return pipe(
-    sequenceEither(
-      specs
-        .filter(spec => spec.required !== false)
-        .map(spec =>
-          pipe(
-            createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
-            E.map(param => ({ param, name: spec.name }))
-          )
+    traverseEither(
+      specs.filter(spec => spec.required !== false),
+      spec =>
+        pipe(
+          createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
+          E.map(param => ({ param, name: spec.name }))
         )
     ),
     E.map(values => values.reduce((acc, current) => acc.replace(`{${current.name}}`, current.param), inputPath))
