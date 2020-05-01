@@ -13,11 +13,14 @@ import {
   IHttpQueryParam,
 } from '@stoplight/types';
 import * as E from 'fp-ts/lib/Either';
+import * as A from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { Do } from 'fp-ts-contrib/lib/Do';
-import { get, identity } from 'lodash';
+import { get, identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
+
+const sequenceEither = A.array.sequence(E.either);
 
 export function createExamplePath(
   operation: IHttpOperation,
@@ -76,21 +79,15 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 }
 
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
-  return specs.reduce(
-    (valuesOrError: E.Either<Error, Dictionary<unknown, string>>, spec) =>
-      pipe(
-        valuesOrError,
-        E.chain(values =>
-          pipe(
-            generateParamValue(spec),
-            E.map(value => ({
-              ...values,
-              [spec.name]: value,
-            }))
-          )
-        )
-      ),
-    E.right({})
+  return pipe(
+    sequenceEither<Error, unknown[]>(
+      specs.map(spec =>
+        Do(E.either)
+          .bind('value', generateParamValue(spec))
+          .return(({ value }) => [spec, value])
+      )
+    ),
+    E.map(fromPairs)
   );
 }
 
