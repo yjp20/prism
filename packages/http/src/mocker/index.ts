@@ -42,11 +42,9 @@ import {
   findContentByMediaTypeOrFirst,
   splitUriParams,
 } from '../validator/validators/body';
-import { sequenceT } from 'fp-ts/lib/Apply';
 import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
 
 const eitherRecordSequence = Record.sequence(E.either);
-const eitherSequence = sequenceT(E.either);
 
 const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockHttpConfig>['mock'] = ({
   resource,

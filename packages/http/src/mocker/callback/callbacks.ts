@@ -16,7 +16,7 @@ import { parseResponse } from '../../utils/parseResponse';
 import { violationLogger } from '../../utils/logger';
 import { Logger } from 'pino';
 
-const sequenceOption = A.array.sequence(O.option);
+const traverseOption = A.array.traverse(O.option);
 const DoOption = Do(O.option);
 
 export function runCallback({
@@ -100,8 +100,8 @@ function assembleHeaders(request?: IHttpOperationRequest, bodyMediaType?: string
     O.fromNullable(request),
     O.mapNullable(request => request.headers),
     O.chain(params =>
-      sequenceOption(
-        params.map(param => DoOption.bind('value', generateHttpParam(param)).return(({ value }) => [param.name, value]))
+      traverseOption(params, param =>
+        DoOption.bind('value', generateHttpParam(param)).return(({ value }) => [param.name, value])
       )
     ),
     O.reduce(
