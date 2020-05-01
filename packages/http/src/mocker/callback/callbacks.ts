@@ -10,7 +10,6 @@ import * as TE from 'fp-ts/lib/TaskEither';
 import * as RTE from 'fp-ts/lib/ReaderTaskEither';
 import { head } from 'fp-ts/lib/Array';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { fromPairs } from 'lodash';
 import { generate as generateHttpParam } from '../generator/HttpParamGenerator';
 import { validateOutput } from '../../validator';
 import { parseResponse } from '../../utils/parseResponse';
@@ -18,6 +17,7 @@ import { violationLogger } from '../../utils/logger';
 import { Logger } from 'pino';
 
 const sequenceOption = A.array.sequence(O.option);
+const DoOption = Do(O.option);
 
 export function runCallback({
   callback,
@@ -81,8 +81,7 @@ function assembleBody(request?: IHttpOperationRequest): O.Option<{ body: string;
     O.mapNullable(request => request.body),
     O.mapNullable(body => body.contents),
     O.chain(contents =>
-      Do(O.option)
-        .bind('param', head(contents))
+      DoOption.bind('param', head(contents))
         .bindL('body', ({ param }) => generateHttpParam(param))
         .done()
     ),
@@ -102,11 +101,7 @@ function assembleHeaders(request?: IHttpOperationRequest, bodyMediaType?: string
     O.mapNullable(request => request.headers),
     O.chain(params =>
       sequenceOption(
-        params.map(param =>
-          Do(O.option)
-            .bind('value', generateHttpParam(param))
-            .return(({ value }) => [param.name, value])
-        )
+        params.map(param => DoOption.bind('value', generateHttpParam(param)).return(({ value }) => [param.name, value]))
       )
     ),
     O.reduce(

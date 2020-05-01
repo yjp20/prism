@@ -21,13 +21,13 @@ import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
 
 const sequenceEither = A.array.sequence(E.either);
+const DoEither = Do(E.either);
 
 export function createExamplePath(
   operation: IHttpOperation,
   transformValues: ValuesTransformer = identity
 ): E.Either<Error, string> {
-  return Do(E.either)
-    .bind('pathData', generateTemplateAndValuesForPathParams(operation))
+  return DoEither.bind('pathData', generateTemplateAndValuesForPathParams(operation))
     .bindL('queryData', ({ pathData }) => generateTemplateAndValuesForQueryParams(pathData.template, operation))
     .return(({ pathData, queryData }) =>
       URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values }))
@@ -81,11 +81,7 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
     sequenceEither(
-      specs.map(spec =>
-        Do(E.either)
-          .bind('value', generateParamValue(spec))
-          .return(({ value }) => [spec.name, value])
-      )
+      specs.map(spec => DoEither.bind('value', generateParamValue(spec)).return(({ value }) => [spec.name, value]))
     ),
     E.map(fromPairs)
   );
@@ -94,8 +90,7 @@ function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<un
 function generateTemplateAndValuesForPathParams(operation: IHttpOperation) {
   const specs = get(operation, 'request.path', []);
 
-  return Do(E.either)
-    .bind('values', generateParamValues(specs))
+  return DoEither.bind('values', generateParamValues(specs))
     .bind('template', createPathUriTemplate(operation.path, specs))
     .done();
 }

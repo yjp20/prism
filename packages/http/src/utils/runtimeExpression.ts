@@ -6,6 +6,8 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import { get as _get } from 'lodash';
 import { pointerToPath } from '@stoplight/json';
 
+const DoOption = Do(O.option);
+
 export function resolveRuntimeExpressions(input: string, request: IHttpRequest, response: IHttpResponse) {
   // replace runtime expression placeholders (eg. {$method}) with the resolved values
   return input.replace(/{(.+?)}/g, (_, expr) =>
@@ -72,8 +74,7 @@ export function resolveRuntimeExpression(
   }
 
   function tryRequestQuery() {
-    return Do(O.option)
-      .do(isPart(1, 'query'))
+    return DoOption.do(isPart(1, 'query'))
       .bind('query', O.fromNullable(request.url.query))
       .bind('part', lookup(2, parts))
       .return(({ part, query }) => query[part]);
@@ -108,8 +109,7 @@ export function resolveRuntimeExpression(
 
   function readBody(body: unknown) {
     return pipe(
-      Do(O.option)
-        .bind('body', O.fromNullable(body))
+      DoOption.bind('body', O.fromNullable(body))
         .bind(
           'path',
           pipe(
