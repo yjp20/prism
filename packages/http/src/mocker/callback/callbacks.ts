@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import * as O from 'fp-ts/lib/Option';
 import * as E from 'fp-ts/lib/Either';
 import { map, reduce } from 'fp-ts/lib/Array';
+import { Do } from 'fp-ts-contrib/lib/Do';
 import * as TE from 'fp-ts/lib/TaskEither';
 import * as RTE from 'fp-ts/lib/ReaderTaskEither';
 import { head } from 'fp-ts/lib/Array';
@@ -76,15 +77,13 @@ function assembleBody(request?: IHttpOperationRequest): O.Option<{ body: string;
     O.fromNullable(request),
     O.mapNullable(request => request.body),
     O.mapNullable(body => body.contents),
-    O.chain(head),
-    O.chain(param =>
-      pipe(
-        param,
-        generateHttpParam,
-        O.map(body => ({ body, mediaType: param.mediaType }))
-      )
+    O.chain(contents =>
+      Do(O.option)
+        .bind('param', head(contents))
+        .bindL('body', ({ param }) => generateHttpParam(param))
+        .done()
     ),
-    O.chain(({ body, mediaType }) =>
+    O.chain(({ body, param: { mediaType } }) =>
       pipe(
         E.stringifyJSON(body, () => undefined),
         E.map(body => ({ body, mediaType })),
