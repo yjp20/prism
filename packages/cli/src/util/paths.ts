@@ -83,7 +83,10 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
     traverseEither(specs, spec =>
-      DoEither.bind('value', generateParamValue(spec)).return(({ value }) => [spec.name, value])
+      pipe(
+        generateParamValue(spec),
+        E.map(value => [spec.name, value])
+      )
     ),
     E.map(fromPairs)
   );
