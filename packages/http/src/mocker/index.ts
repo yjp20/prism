@@ -17,6 +17,7 @@ import * as R from 'fp-ts/lib/Reader';
 import * as O from 'fp-ts/lib/Option';
 import * as RE from 'fp-ts/lib/ReaderEither';
 import { map } from 'fp-ts/lib/Array';
+import { Do } from 'fp-ts-contrib/lib/Do';
 import { isNumber, isString, keyBy, mapValues, groupBy, get } from 'lodash';
 import { Logger } from 'pino';
 import * as typeIs from 'type-is';
@@ -41,11 +42,9 @@ import {
   findContentByMediaTypeOrFirst,
   splitUriParams,
 } from '../validator/validators/body';
-import { sequenceT } from 'fp-ts/lib/Apply';
 import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
 
 const eitherRecordSequence = Record.sequence(E.either);
-const eitherSequence = sequenceT(E.either);
 
 const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IMockHttpConfig>['mock'] = ({
   resource,
@@ -217,31 +216,28 @@ function assembleResponse(
   payloadGenerator: PayloadGenerator
 ): R.Reader<Logger, E.Either<Error, IHttpResponse>> {
   return logger =>
-    pipe(
-      result,
-      E.chain(negotiationResult =>
-        pipe(
-          eitherSequence(
-            computeBody(negotiationResult, payloadGenerator),
-            computeMockedHeaders(negotiationResult.headers || [], payloadGenerator)
-          ),
-          E.map(([mockedBody, mockedHeaders]) => {
-            const response: IHttpResponse = {
-              statusCode: parseInt(negotiationResult.code),
-              headers: {
-                ...mockedHeaders,
-                ...(negotiationResult.mediaType && { 'Content-type': negotiationResult.mediaType }),
-              },
-              body: mockedBody,
-            };
+    Do(E.either)
+      .bind('negotiationResult', result)
+      .sequenceSL(({ negotiationResult }) => ({
+        mockedBody: computeBody(negotiationResult, payloadGenerator),
+        mockedHeaders: computeMockedHeaders(negotiationResult.headers || [], payloadGenerator),
+      }))
+      .return(negotiationResult => {
+        const response: IHttpResponse = {
+          statusCode: parseInt(negotiationResult.negotiationResult.code),
+          headers: {
+            ...negotiationResult.mockedHeaders,
+            ...(negotiationResult.negotiationResult.mediaType && {
+              'Content-type': negotiationResult.negotiationResult.mediaType,
+            }),
+          },
+          body: negotiationResult.mockedBody,
+        };
 
-            logger.success(`Responding with the requested status code ${response.statusCode}`);
+        logger.success(`Responding with the requested status code ${response.statusCode}`);
 
-            return response;
-          })
-        )
-      )
-    );
+        return response;
+      });
 }
 
 function isINodeExample(nodeExample: ContentExample | undefined): nodeExample is INodeExample {
