@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 3.3.4 (2020-05-04)
+
 ## Fixed
 
 - The mock diagram has been updated to include the security validations [#1141](https://github.com/stoplightio/prism/pull/1141)
