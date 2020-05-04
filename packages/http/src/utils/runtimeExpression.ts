@@ -74,10 +74,13 @@ export function resolveRuntimeExpression(
   }
 
   function tryRequestQuery() {
-    return DoOption.do(isPart(1, 'query'))
-      .bind('query', O.fromNullable(request.url.query))
-      .bind('part', lookup(2, parts))
-      .return(({ part, query }) => query[part]);
+    return pipe(
+      DoOption.do(isPart(1, 'query'))
+        .bind('query', O.fromNullable(request.url.query))
+        .bind('part', lookup(2, parts))
+        .done(),
+      O.chain(({ part, query }) => O.fromNullable(query[part]))
+    );
   }
 
   function tryRequestBody() {

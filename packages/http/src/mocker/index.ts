@@ -222,14 +222,16 @@ function assembleResponse(
         mockedBody: computeBody(negotiationResult, payloadGenerator),
         mockedHeaders: computeMockedHeaders(negotiationResult.headers || [], payloadGenerator),
       }))
-      .return(context => {
+      .return(negotiationResult => {
         const response: IHttpResponse = {
-          statusCode: parseInt(context.negotiationResult.code),
+          statusCode: parseInt(negotiationResult.negotiationResult.code),
           headers: {
-            ...context.mockedHeaders,
-            ...(context.negotiationResult.mediaType && { 'Content-type': context.negotiationResult.mediaType }),
+            ...negotiationResult.mockedHeaders,
+            ...(negotiationResult.negotiationResult.mediaType && {
+              'Content-type': negotiationResult.negotiationResult.mediaType,
+            }),
           },
-          body: context.mockedBody,
+          body: negotiationResult.mockedBody,
         };
 
         logger.success(`Responding with the requested status code ${response.statusCode}`);

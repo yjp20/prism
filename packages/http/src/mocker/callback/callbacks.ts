@@ -81,11 +81,11 @@ function assembleBody(request?: IHttpOperationRequest): O.Option<{ body: string;
     O.mapNullable(request => request.body),
     O.mapNullable(body => body.contents),
     O.chain(contents =>
-      DoOption.bind('param', head(contents))
-        .bindL('body', ({ param }) => generateHttpParam(param))
+      DoOption.bind('content', head(contents))
+        .bindL('body', ({ content }) => generateHttpParam(content))
         .done()
     ),
-    O.chain(({ body, param: { mediaType } }) =>
+    O.chain(({ body, content: { mediaType } }) =>
       pipe(
         E.stringifyJSON(body, () => undefined),
         E.map(body => ({ body, mediaType })),
