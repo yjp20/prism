@@ -1401,10 +1401,10 @@
   dependencies:
     type-detect "4.0.8"
 
-"@stoplight/http-spec@2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-2.11.0.tgz#27fc7a9bb67d809a240e39b4169da5cf87146424"
-  integrity sha512-UY0BvkRkAMhG825Ywy4n1mUU7V7DEpgxGA6KprV7juwVM42Mvn22HiFdXLzl1hnb+soIobIyAUItACe8sbhYBA==
+"@stoplight/http-spec@^2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-2.12.0.tgz#6477ad72bfc109d1903d20c9759b3d27d4e95e64"
+  integrity sha512-5nfQTvJPfbSkieWWwY0Qbe3C6VeO83T4mALs7m7gNb8C/gf2Jtm5yZDoVibzATCRWiok2Kvix+urlLY8JGzV0w==
   dependencies:
     "@openapi-contrib/openapi-schema-to-json-schema" "^3.0"
     "@stoplight/json" "^3.5.1"
@@ -1443,7 +1443,7 @@
     tslib "^1.10.0"
     urijs "~1.19.1"
 
-"@stoplight/json@^3.1.2", "@stoplight/json@^3.5.1":
+"@stoplight/json@^3.1.2", "@stoplight/json@^3.5.1", "@stoplight/json@^3.7.1":
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.7.1.tgz#3855478ed3e0baaee6a7627948957ce537e481ad"
   integrity sha512-5VUVZxO7Jg+yoyEPa+ymD+fz5Pij96Nv3ei8FpzkzJwZLqY0ycAe8pBTz1mMf9QDUB+7HZZnCrWGCqGtDLYZZA==

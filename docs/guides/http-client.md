@@ -2,39 +2,11 @@
 
 Prism includes a fully-featured HTTP Client that you can use to seamlessly perform requests to both a real server and a mocked document. The client is modeled after Axios so it may feel familiar.
 
-### Create from a filename or http resource
+### Create From Manual HTTP Operations
 
 ```ts
-const client = await createClientFromResource('examples/petstore.oas2.yaml', {
-  mock: true,
-  validateRequest: true,
-  validateResponse: true,
-});
-```
+const createClientFromOperations = require('@stoplight/prism-http/dist/client');
 
-### Create from OpenAPI string
-
-```ts
-const descriptionDoc = `
-openapi: 3.0.2
-paths:
-  /hello:
-    get:
-      responses:
-        200:
-          description: hello
-`;
-
-const client = await createClientFromString(descriptionDoc, {
-  mock: true,
-  validateRequest: true,
-  validateResponse: true,
-});
-```
-
-### Create From Manual Http Operations
-
-```ts
 const client = createClientFromOperations(
   [
     {
@@ -46,6 +18,28 @@ const client = createClientFromOperations(
   ],
   { mock: true, validateRequest: true, validateResponse: true }
 );
+```
+
+To create the required operations array you can use two utility functions defined in the `@stoplight/prism-cli` package:
+
+### Create from file or HTTP resource
+
+```ts
+const { getHttpOperationsFromSpec, getHttpOperationsFromResource } = require('@stoplight/prism-cli/dist/operations');
+
+const operations = await getHttpOperationsFromResource('examples/petstore.oas2.yaml');
+
+const descriptionDoc = `
+openapi: 3.0.2
+paths:
+  /hello:
+    get:
+      responses:
+        200:
+          description: hello
+`;
+
+const operations = await getHttpOperationsFromSpec(descriptionDoc);
 ```
 
 ---

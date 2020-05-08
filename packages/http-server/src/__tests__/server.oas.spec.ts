@@ -1,5 +1,6 @@
 import { createLogger } from '@stoplight/prism-core';
-import { getHttpOperationsFromResource, IHttpConfig } from '@stoplight/prism-http';
+import { getHttpOperationsFromResource } from '@stoplight/prism-cli/src/operations';
+import { IHttpConfig } from '@stoplight/prism-http';
 import { resolve } from 'path';
 import { merge } from 'lodash';
 import fetch, { RequestInit } from 'node-fetch';
