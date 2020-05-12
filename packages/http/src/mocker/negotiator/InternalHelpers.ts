@@ -1,8 +1,11 @@
 import { IHttpContent, IHttpOperationResponse, IMediaTypeContent } from '@stoplight/types';
 // @ts-ignore
 import * as accepts from 'accepts';
+import * as contentType from 'content-type';
+import * as O from 'fp-ts/lib/Option';
 import { filter, findFirst, head, sort } from 'fp-ts/lib/Array';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { pick } from 'lodash';
+import { NonEmptyArray, fromArray } from 'fp-ts/lib/NonEmptyArray';
 import { alt, map, Option } from 'fp-ts/lib/Option';
 import { ord, ordNumber } from 'fp-ts/lib/Ord';
 import { pipe } from 'fp-ts/lib/pipeable';
@@ -23,18 +26,29 @@ export function hasContents(v: IHttpOperationResponse): v is PickRequired<IHttpO
 }
 
 export function findBestHttpContentByMediaType(
-  response: PickRequired<IHttpOperationResponse, 'contents'>,
-  mediaType: string[]
+  contents: IMediaTypeContent[],
+  mediaTypes: string[]
 ): Option<IMediaTypeContent> {
-  const bestType = accepts({
-    headers: {
-      accept: mediaType.join(','),
-    },
-  }).type(response.contents.map(c => c.mediaType));
+  const bestType: string | false = accepts({ headers: { accept: mediaTypes.join(',') } }).type(
+    contents.map(c => c.mediaType)
+  );
 
   return pipe(
-    response.contents,
-    findFirst(content => content.mediaType === bestType)
+    bestType,
+    O.fromPredicate((bestType): bestType is string => !!bestType),
+    O.chain(bestType => findFirst<IMediaTypeContent>(content => content.mediaType === bestType)(contents)),
+    O.alt(() =>
+      // Since media type parameters are not standardised (apart from the quality value), we're going to try again ignoring them all but q.
+      pipe(
+        mediaTypes
+          .map(mt => contentType.parse(mt))
+          .filter(({ parameters }) => Object.keys(parameters).some(k => k !== 'q'))
+          .map(({ type, parameters }) => ({ type, parameters: pick(parameters, 'q') }))
+          .map(mt => contentType.format(mt)),
+        fromArray,
+        O.chain(mediaTypesWithNoParameters => findBestHttpContentByMediaType(contents, mediaTypesWithNoParameters))
+      )
+    )
   );
 }
 
