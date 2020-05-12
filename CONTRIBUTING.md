@@ -88,16 +88,21 @@ The application will wait for a debugger to be attached and break on the first l
 
 #### What is this `fp-ts` all about?
 
-`fp-ts` is the library containing functions and data structures that help Prism lean toward a functional style. It might be annoying to step into its functions; fortunately according to your IDE, you might be able to skip the code. In case you're using Visual Studio Code, you can use the `skipFiles` section of your `launch.json` file:
+`fp-ts` is the library containing functions and data structures that help Prism lean toward a functional style. It might be annoying to step into its functions; fortunately according to your IDE, you might be able to skip the code. In case you're using Visual Studio Code, you can use the `skipFiles` section of your `launch.json` file. You can cobble something like this:
 
 ```json
 {
   "configurations": [
     {
       "type": "node",
-      "request": "attach",
-      "name": "Launch Program",
-      "skipFiles": ["node_modules/fp-ts/*.js"]
+      "request": "launch",
+      "name": "Mock file",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["node_modules/fp-ts/*.js"],
+      "program": "${workspaceRoot}/packages/cli/src/index.ts",
+      "args": ["mock", "${input:oasFile}"],
+      "cwd": "${workspaceRoot}/packages/cli",
+      "runtimeArgs": ["-r", "ts-node/register/transpile-only", "-r", "tsconfig-paths/register"]
     }
   ]
 }

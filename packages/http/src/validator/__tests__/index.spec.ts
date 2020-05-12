@@ -1,5 +1,5 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
-import { DiagnosticSeverity, IHttpOperation, HttpParamStyles } from '@stoplight/types';
+import { DiagnosticSeverity, IHttpOperation, HttpParamStyles, IMediaTypeContent } from '@stoplight/types';
 import * as E from 'fp-ts/lib/Either';
 import { IHttpRequest } from '../../types';
 import * as validator from '../index';
@@ -279,6 +279,21 @@ describe('HttpValidator', () => {
             })
           );
         });
+      });
+    });
+  });
+});
+
+describe('validateMediaType()', () => {
+  describe('when available content type does not have parameters', () => {
+    const content: IMediaTypeContent = {
+      mediaType: 'application/vnd.archa.api+json',
+    };
+
+    describe('and the request media type matches, but has parameter', () => {
+      it('should pass the validation', () => {
+        const result = validator.validateMediaType([content], 'application/vnd.archa.api+json; version=1');
+        assertRight(result);
       });
     });
   });
