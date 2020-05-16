@@ -68,7 +68,7 @@
     "tsconfig-paths": "^3.8.0",
     "ttypescript": "^1.5.7",
     "type-is": "^1.6.18",
-    "typescript": "^3.6.4"
+    "typescript": "^3.9.2"
   },
   "lint-staged": {
     "**/packages/**/*.ts": [
