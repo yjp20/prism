@@ -5,6 +5,7 @@ import {
   IHttpOperationResponse,
   IMediaTypeContent,
   IHttpOperationRequestBody,
+  Dictionary,
 } from '@stoplight/types';
 import * as caseless from 'caseless';
 import * as contentType from 'content-type';
@@ -76,7 +77,14 @@ const validateInput: ValidatorFn<IHttpOperation, IHttpRequest> = ({ resource, el
           request.headers ? headersValidator.validate(element.headers || {}, request.headers) : E.right(undefined),
           request.query ? queryValidator.validate(element.url.query || {}, request.query) : E.right(undefined),
           request.path
-            ? pathValidator.validate(getPathParams(element.url.path, resource.path), request.path)
+            ? pathValidator.validate(
+                getPathParams(
+                  element.url.path,
+                  resource.path,
+                  request.path.map(param => param.name)
+                ),
+                request.path
+              )
             : E.right(undefined)
         )
     ),
@@ -143,8 +151,22 @@ const validateOutput: ValidatorFn<IHttpOperation, IHttpResponse> = ({ resource, 
   );
 };
 
-function getPathParams(path: string, template: string) {
-  return new URI.Template(template).match(path);
+function getPathParams(path: string, template: string, specParamNames: string[]): Dictionary<string> {
+  // replace "-" in template path and query params
+  const cleanedTemplate = template.replace(/(?<=\{.*)(?=.*\})(-)/g, '');
+
+  const pathParams = new URI.Template(cleanedTemplate).match(path);
+
+  // get pathParams back into real format (i.e put "-" back)
+  const finalPathParams = specParamNames.reduce((obj, specParamName) => {
+    const cleanedName = specParamName.replace(/-/g, '');
+    if (pathParams[cleanedName]) {
+      obj[specParamName] = pathParams[cleanedName];
+    }
+    return obj;
+  }, {});
+
+  return finalPathParams;
 }
 
 export { validateInput, validateOutput, validateSecurity };

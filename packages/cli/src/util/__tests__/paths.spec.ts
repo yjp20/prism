@@ -17,6 +17,21 @@ describe('createExamplePath()', () => {
       );
     });
 
+    it('generates simple style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path/{p-id}',
+          method: 'get',
+          request: {
+            path: [{ name: 'p-id', style: HttpParamStyles.Simple, examples: [{ key: 'foo', value: 'test' }] }],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path/test')
+      );
+    });
+
     it('generates label style', () => {
       assertRight(
         createExamplePath({
@@ -27,6 +42,21 @@ describe('createExamplePath()', () => {
           responses: [{ code: '200' }],
         }),
         r => expect(r).toEqual('/path/.test')
+      );
+    });
+
+    it('generates label style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path/{p-id}',
+          method: 'get',
+          request: {
+            path: [{ name: 'p-id', style: HttpParamStyles.Label, examples: [{ key: 'foo', value: 'test' }] }],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path/.test')
       );
     });
 
@@ -42,6 +72,21 @@ describe('createExamplePath()', () => {
         r => expect(r).toEqual('/path/;p=test')
       );
     });
+
+    it('generates matrix style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path/{p-a}',
+          method: 'get',
+          request: {
+            path: [{ name: 'p-a', style: HttpParamStyles.Matrix, examples: [{ key: 'foo', value: 'test' }] }],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path/;p-a=test')
+      );
+    });
   });
 
   describe('query parameters', () => {
@@ -55,6 +100,21 @@ describe('createExamplePath()', () => {
           responses: [{ code: '200' }],
         }),
         r => expect(r).toEqual('/path?p=test')
+      );
+    });
+
+    it('generates form style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path',
+          method: 'get',
+          request: {
+            query: [{ name: 'p-a', style: HttpParamStyles.Form, examples: [{ key: 'foo', value: 'test' }] }],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path?p-a=test')
       );
     });
 
@@ -79,6 +139,27 @@ describe('createExamplePath()', () => {
       );
     });
 
+    it('generates deepObject style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                name: 'p-id',
+                style: HttpParamStyles.DeepObject,
+                examples: [{ key: 'foo', value: { a: { aa: 1, ab: 2 } } }],
+              },
+            ],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path?p-id%5Ba%5D%5Baa%5D=1&p-id%5Ba%5D%5Bab%5D=2')
+      );
+    });
+
     it('generates pipeDelimited style', () => {
       assertRight(
         createExamplePath({
@@ -100,6 +181,27 @@ describe('createExamplePath()', () => {
       );
     });
 
+    it('generates pipeDelimited style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                name: 'p-id',
+                style: HttpParamStyles.PipeDelimited,
+                examples: [{ key: 'foo', value: [1, 2, 3] }],
+              },
+            ],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path?p-id=1%7C2%7C3')
+      );
+    });
+
     it('generates spaceDelimited style', () => {
       assertRight(
         createExamplePath({
@@ -118,6 +220,27 @@ describe('createExamplePath()', () => {
           responses: [{ code: '200' }],
         }),
         r => expect(r).toEqual('/path?p=1%202%203')
+      );
+    });
+
+    it('generates spaceDelimited style with hyphens', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path-path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                name: 'p-id',
+                style: HttpParamStyles.SpaceDelimited,
+                examples: [{ key: 'foo', value: [1, 2, 3] }],
+              },
+            ],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path-path?p-id=1%202%203')
       );
     });
 

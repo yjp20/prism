@@ -20,6 +20,7 @@ import { get, identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
 import { sequenceS } from 'fp-ts/lib/Apply';
+import * as URIJS from 'urijs';
 
 const traverseEither = A.array.traverse(E.either);
 const sequenceSEither = sequenceS(E.either);
@@ -31,9 +32,35 @@ export function createExamplePath(
 ): E.Either<Error, string> {
   return DoEither.bind('pathData', generateTemplateAndValuesForPathParams(operation))
     .bindL('queryData', ({ pathData }) => generateTemplateAndValuesForQueryParams(pathData.template, operation))
-    .return(({ pathData, queryData }) =>
-      URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values }))
-    );
+    .return(({ pathData, queryData }) => {
+      // replace "-" in template path and query params
+      const cleanedTemplate = queryData.template.replace(/(?<=\{.*)(?=.*\})(-)/g, '');
+      const realValues = transformValues({ ...pathData.values, ...queryData.values });
+      const cleanedValues = {};
+      for (const realValue in realValues) {
+        const cleanedValue = realValue.replace(/-/g, '');
+        cleanedValues[cleanedValue] = realValues[realValue];
+      }
+
+      const cleanedExpandedPath = URI.expand(cleanedTemplate, cleanedValues);
+      const uri = new URIJS(cleanedExpandedPath).escapeQuerySpace(false);
+
+      // add real path param names back
+      // only need to do for matrix style since that's only style names remain in paths
+      for (const realPathParam in pathData.values) {
+        const cleanedPathParam = realPathParam.replace(/-/g, '');
+        // matrix will have ; in front of it
+        uri.path(uri.path().replace(new RegExp(`;${cleanedPathParam}`, 'g'), `;${realPathParam}`));
+      }
+
+      // add real query param names back
+      for (const realQueryParam in queryData.values) {
+        const cleanedQueryParam = realQueryParam.replace(/-/g, '');
+        uri.query(uri.query().replace(new RegExp(cleanedQueryParam, 'g'), realQueryParam));
+      }
+
+      return uri.normalize().toString();
+    });
 }
 
 function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
