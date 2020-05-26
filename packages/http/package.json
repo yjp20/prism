@@ -39,7 +39,7 @@
     "pino": "^6.2.1",
     "tslib": "^1.10.0",
     "type-is": "^1.6.18",
-    "uri-template-lite": "^19.4.0"
+    "uri-template-lite": "^20.5.0"
   },
   "publishConfig": {
     "access": "public"
