@@ -8,15 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
-## Fixed
-
-- Since the media type parameters are not standardised (apart from the quality one), the negotiator will discard them during the matching process or simply treat them as strings/numbers without trying to guess anything more [#1159](https://github.com/stoplightio/prism/pull/1159)
-- Prism is now handling correctly hypens on both Path parameters and Query Parameters [#1189](https://github.com/stoplightio/prism/pull/1189), [#1992](https://github.com/stoplightio/prism/pull/1992)
-
 ## Changed
 
 - **BREAKING**: The `getHttpOperationsFromSpec` has been moved from the HTTP Package to the CLI package. If you're using Prism programmatically, this might require some code changes on your side. `getHttpOperationsFromResource` has been removed. [#1009](https://github.com/stoplightio/prism/pull/1009), [#1192](https://github.com/stoplightio/prism/pull/1192)
 - **BREAKING**: The `createClientFromOperations` is now exported as `export function` instead of exporting an object. If you're using Prism programmatically, this might require some code changes on your side [#1009](https://github.com/stoplightio/prism/pull/1009)
+
+# 3.3.5 (2020-05-26)
+
+## Fixed
+
+- Since the media type parameters are not standardised (apart from the quality one), the negotiator will discard them during the matching process or simply treat them as strings/numbers without trying to guess anything more [#1159](https://github.com/stoplightio/prism/pull/1159)
+- Prism is now handling correctly hypens on both Path parameters and Query Parameters [#1189](https://github.com/stoplightio/prism/pull/1189), [#1992](https://github.com/stoplightio/prism/pull/1992)
 
 # 3.3.4 (2020-05-04)
 
