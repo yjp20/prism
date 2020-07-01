@@ -2,7 +2,7 @@ import { DiagnosticSeverity, HttpParamStyles, IHttpParam } from '@stoplight/type
 import { compact, keyBy, mapKeys, mapValues, pickBy, upperFirst } from 'lodash';
 import * as E from 'fp-ts/lib/Either';
 import * as O from 'fp-ts/lib/Option';
-import { fromArray } from 'fp-ts/lib/NonEmptyArray';
+import * as NEA from 'fp-ts/lib/NonEmptyArray';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { JSONSchema4 } from 'json-schema';
 import { JSONSchema } from '../../';
@@ -31,8 +31,9 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
       }));
 
     return pipe(
-      createJsonSchemaFromParams(specs),
-      O.map(schema => {
+      NEA.fromArray(specs),
+      O.map(specs => {
+        const schema = createJsonSchemaFromParams(specs);
         const parameterValues = pickBy(
           mapValues(
             keyBy(specs, s => s.name.toLowerCase()),
@@ -47,7 +48,7 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
                   // the validators a bit
                   // @ts-ignore
                   mapKeys(target, (_value, key) => key.toLowerCase()),
-                  schema.properties && (schema.properties[el.name] as JSONSchema4),
+                  schema.properties && (schema.properties[el.name.toLowerCase()] as JSONSchema4),
                   el.explode || false
                 );
 
@@ -59,26 +60,23 @@ export class HttpParamsValidator<Target> implements IHttpValidator<Target, IHttp
       }),
       O.chain(({ parameterValues, schema }) => validateAgainstSchema(parameterValues, schema, true, prefix)),
       O.map(schemaDiagnostic => schemaDiagnostic.concat(deprecatedWarnings)),
-      O.chain(fromArray),
-      O.alt(() => fromArray(deprecatedWarnings)),
+      O.chain(NEA.fromArray),
+      O.alt(() => NEA.fromArray(deprecatedWarnings)),
       E.fromOption(() => target),
       E.swap
     );
   }
 }
 
-function createJsonSchemaFromParams(params: IHttpParam[]): O.Option<JSONSchema> {
-  return pipe(
-    fromArray(params),
-    O.map(params => ({
-      type: 'object',
-      properties: pickBy(
-        mapValues(
-          keyBy(params, p => p.name.toLowerCase()),
-          'schema'
-        )
-      ) as JSONSchema4,
-      required: compact(params.map(m => (m.required ? m.name.toLowerCase() : undefined))),
-    }))
-  );
+function createJsonSchemaFromParams(params: NEA.NonEmptyArray<IHttpParam>): JSONSchema {
+  return {
+    type: 'object',
+    properties: pickBy(
+      mapValues(
+        keyBy(params, p => p.name.toLocaleLowerCase()),
+        'schema'
+      )
+    ) as JSONSchema4,
+    required: compact(params.map(m => (m.required ? m.name.toLowerCase() : undefined))),
+  };
 }
