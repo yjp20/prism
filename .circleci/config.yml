@@ -7,7 +7,7 @@ executors:
     docker:
       - image: circleci/node:12
       - image: kennethreitz/httpbin
-        name: httpbin
+        name: httpbin.org
   macos:
     macos:
       xcode: 10.2.1
@@ -56,7 +56,7 @@ jobs:
                 command: brew install pipenv
                 environment:
                   HOMEBREW_NO_AUTO_UPDATE: 1
-            - run: sudo bash -c 'echo "0.0.0.0 httpbin" >> /etc/hosts'
+            - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
             - run: git clone https://github.com/postmanlabs/httpbin httpbin
             - run: cd httpbin && pip3 install --no-cache-dir -r <(pipenv lock -r) && pip3 install --no-cache-dir ./
             - run:
@@ -76,6 +76,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Set git identity
+          command: git config user.email "circle@circleci.com" && git config user.name "circleci"
+      - run:
           name: Install Dependencies
           command: yarn --frozen-lockfile
       - run:
@@ -84,7 +87,7 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run:
           name: Publish on the beta tag
-          command: yarn lerna publish $(npx semver --preid beta -i prerelease $(npm show @stoplight/prism-cli@beta version)) --no-push --no-git-tag-version --dist-tag beta -y
+          command: yarn lerna publish $(npx semver --preid beta -i prerelease $(npm show @stoplight/prism-cli@beta version)) --no-push --no-git-tag-version --dist-tag beta -y && git stash
       - run:
           name: Publish
           command: yarn lerna publish from-git --create-release=github --yes
