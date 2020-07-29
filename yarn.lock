@@ -1255,10 +1255,10 @@
   dependencies:
     type-detect "4.0.8"
 
-"@stoplight/http-spec@^3.0.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-3.1.2.tgz#4cc09ae6e77f6a4d6ec3145c14081684680702b4"
-  integrity sha512-pXHuaqT+jkqJY6n26OQjvGMOj0oJNVkrtluxvZRcJHTE4xnGtnf8KfvwHsAT1VipSg/fXCABwxRe8bIdlg/NBg==
+"@stoplight/http-spec@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-3.2.0.tgz#4c8d2672bcda87377f2bc98963da7aa41c007be4"
+  integrity sha512-UIJnis6cwAMzsoqVktsjoOwtKI4DSdPiRX1rr0ddUBC1T5uQ08UMP5VefP+xaq0yHuRhqf0XWcjdJAiRuwiDPQ==
   dependencies:
     "@openapi-contrib/openapi-schema-to-json-schema" "^3.0.2"
     "@stoplight/json" "^3.8.1"
