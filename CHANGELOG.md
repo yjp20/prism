@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Prism's Proxy feature will stop proactively requesting Compressed responses, following what is really in the OAS document [#1309](https://github.com/stoplightio/prism/pull/1309),[#1319](https://github.com/stoplightio/prism/pull/1319)
 
+## Changed
+
+- Prism is now stop to claim error for paths declared in the document that are not starting with a `/` [#1340](https://github.com/stoplightio/prism/pull/1340)
+
 # 3.3.6 (2020-07-08)
 
 ## Fixed
