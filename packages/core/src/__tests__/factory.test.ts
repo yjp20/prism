@@ -1,8 +1,8 @@
 // @ts-ignore
 import logger from 'abstract-logging';
-import * as E from 'fp-ts/lib/Either';
-import { asks } from 'fp-ts/lib/ReaderEither';
-import * as TE from 'fp-ts/lib/TaskEither';
+import * as E from 'fp-ts/Either';
+import { asks } from 'fp-ts/ReaderEither';
+import * as TE from 'fp-ts/TaskEither';
 import { Logger } from 'pino';
 import { factory, IPrismConfig } from '..';
 

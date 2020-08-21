@@ -9,12 +9,12 @@ import {
 } from '@stoplight/types';
 import * as caseless from 'caseless';
 import * as contentType from 'content-type';
-import { findFirst, isNonEmpty } from 'fp-ts/lib/Array';
-import * as O from 'fp-ts/lib/Option';
-import * as E from 'fp-ts/lib/Either';
+import { findFirst, isNonEmpty } from 'fp-ts/Array';
+import * as O from 'fp-ts/Option';
+import * as E from 'fp-ts/Either';
 import { doOption, sequenceValidation, sequenceOption } from '../combinators';
 import { is as typeIs } from 'type-is';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { pipe } from 'fp-ts/pipeable';
 import { inRange, isMatch } from 'lodash';
 import { validateSecurity } from './validators/security';
 import { URI } from 'uri-template-lite';
@@ -27,7 +27,7 @@ import {
 } from './deserializers';
 import { findOperationResponse } from './utils/spec';
 import { HttpBodyValidator, HttpHeadersValidator, HttpQueryValidator } from './validators';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 import { HttpPathValidator } from './validators/path';
 
 export const bodyValidator = new HttpBodyValidator('body');

@@ -1,6 +1,6 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { DiagnosticSeverity, IHttpOperation, HttpParamStyles, IMediaTypeContent } from '@stoplight/types';
-import * as E from 'fp-ts/lib/Either';
+import * as E from 'fp-ts/Either';
 import { IHttpRequest } from '../../types';
 import * as validator from '../index';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';

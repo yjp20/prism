@@ -1,16 +1,16 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { DiagnosticSeverity, Dictionary, IHttpEncoding, IMediaTypeContent } from '@stoplight/types';
-import * as Array from 'fp-ts/lib/Array';
-import * as E from 'fp-ts/lib/Either';
-import * as O from 'fp-ts/lib/Option';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as Array from 'fp-ts/Array';
+import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Option';
+import { pipe } from 'fp-ts/pipeable';
 import { get } from 'lodash';
 import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { IHttpValidator } from './types';
 import { validateAgainstSchema } from './utils';
 import { is as typeIs } from 'type-is';
-import * as NonEmptyArray from 'fp-ts/lib/NonEmptyArray';
+import * as NonEmptyArray from 'fp-ts/NonEmptyArray';
 
 export function deserializeFormBody(
   schema: JSONSchema,

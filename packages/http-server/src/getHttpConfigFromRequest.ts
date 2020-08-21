@@ -1,6 +1,6 @@
 import { IHttpOperationConfig, IHttpRequest, ProblemJsonError, UNPROCESSABLE_ENTITY } from '@stoplight/prism-http';
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as E from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/pipeable';
+import * as E from 'fp-ts/Either';
 import * as t from 'io-ts';
 import { failure } from 'io-ts/lib/PathReporter';
 import { BooleanFromString } from 'io-ts-types/lib/BooleanFromString';

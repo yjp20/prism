@@ -7,12 +7,12 @@ import {
   INodeExternalExample,
 } from '@stoplight/types';
 import { Chance } from 'chance';
-import * as E from 'fp-ts/lib/Either';
-import { left, right } from 'fp-ts/lib/ReaderEither';
+import * as E from 'fp-ts/Either';
+import { left, right } from 'fp-ts/ReaderEither';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 import helpers from '../NegotiatorHelpers';
 import { IHttpNegotiationResult, NegotiationOptions } from '../types';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 
 const chance = new Chance();
 const chanceOptions: Partial<Chance.StringOptions> = { length: 8, casing: 'lower', alpha: true, numeric: false };

@@ -1,8 +1,8 @@
 import { IPrismComponents } from '@stoplight/prism-core';
 import { IHttpOperation, IServer } from '@stoplight/types';
-import * as E from 'fp-ts/lib/Either';
-import * as A from 'fp-ts/lib/Array';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as E from 'fp-ts/Either';
+import * as A from 'fp-ts/Array';
+import { pipe } from 'fp-ts/pipeable';
 import { IHttpConfig, IHttpRequest, ProblemJsonError } from '../types';
 import {
   NO_METHOD_MATCHED_ERROR,

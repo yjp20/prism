@@ -3,7 +3,7 @@ import { query as registry } from '../../deserializers';
 import { HttpHeadersValidator } from '../headers';
 import * as validateAgainstSchemaModule from '../utils';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
 
 describe('HttpHeadersValidator', () => {
   const httpHeadersValidator = new HttpHeadersValidator(registry, 'header');

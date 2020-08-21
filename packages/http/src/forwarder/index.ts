@@ -1,11 +1,11 @@
 import { IPrismComponents, IPrismInput } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
 import fetch from 'node-fetch';
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as NEA from 'fp-ts/lib/NonEmptyArray';
-import * as E from 'fp-ts/lib/Either';
-import * as TE from 'fp-ts/lib/TaskEither';
-import * as RTE from 'fp-ts/lib/ReaderTaskEither';
+import { pipe } from 'fp-ts/pipeable';
+import * as NEA from 'fp-ts/NonEmptyArray';
+import * as E from 'fp-ts/Either';
+import * as TE from 'fp-ts/TaskEither';
+import * as RTE from 'fp-ts/ReaderTaskEither';
 import { defaults, omit } from 'lodash';
 import { format, parse } from 'url';
 import { posix } from 'path';

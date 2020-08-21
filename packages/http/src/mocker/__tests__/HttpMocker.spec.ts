@@ -1,7 +1,7 @@
 import { createLogger, IPrismInput } from '@stoplight/prism-core';
 import { IHttpOperation, INodeExample, DiagnosticSeverity } from '@stoplight/types';
-import { right } from 'fp-ts/lib/ReaderEither';
-import * as E from 'fp-ts/lib/Either';
+import { right } from 'fp-ts/ReaderEither';
+import * as E from 'fp-ts/Either';
 import { flatMap } from 'lodash';
 import mock from '../../mocker';
 import * as JSONSchemaGenerator from '../../mocker/generator/JSONSchema';

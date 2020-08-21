@@ -1,13 +1,13 @@
-import * as E from 'fp-ts/lib/Either';
-import * as A from 'fp-ts/lib/Array';
+import * as E from 'fp-ts/Either';
+import * as A from 'fp-ts/Array';
 import { compact } from 'lodash';
-import * as TE from 'fp-ts/lib/TaskEither';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as TE from 'fp-ts/TaskEither';
+import { pipe } from 'fp-ts/pipeable';
 import { defaults } from 'lodash';
 import { IPrism, IPrismComponents, IPrismConfig, IPrismDiagnostic, IPrismProxyConfig, IPrismOutput } from './types';
-import { getSemigroup, NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { getSemigroup, NonEmptyArray } from 'fp-ts/NonEmptyArray';
 import { DiagnosticSeverity } from '@stoplight/types';
-import { identity } from 'fp-ts/lib/function';
+import { identity } from 'fp-ts/function';
 
 const eitherSequence = A.array.sequence(E.getValidation(getSemigroup<IPrismDiagnostic>()));
 

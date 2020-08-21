@@ -1,8 +1,8 @@
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
 import { noop } from 'lodash';
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as E from 'fp-ts/lib/Either';
-import * as TE from 'fp-ts/lib/TaskEither';
+import { pipe } from 'fp-ts/pipeable';
+import * as E from 'fp-ts/Either';
+import * as TE from 'fp-ts/TaskEither';
 
 export function assertNone<A>(e: O.Option<A>): asserts e is O.None {
   pipe(

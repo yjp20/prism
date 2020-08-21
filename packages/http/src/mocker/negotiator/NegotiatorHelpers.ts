@@ -1,11 +1,11 @@
 import { IHttpOperation, IHttpOperationResponse, IMediaTypeContent, IHttpHeaderParam } from '@stoplight/types';
-import * as E from 'fp-ts/lib/Either';
-import { NonEmptyArray, fromArray } from 'fp-ts/lib/NonEmptyArray';
-import { findIndex } from 'fp-ts/lib/Array';
-import * as O from 'fp-ts/lib/Option';
-import * as R from 'fp-ts/lib/Reader';
-import * as RE from 'fp-ts/lib/ReaderEither';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as E from 'fp-ts/Either';
+import { NonEmptyArray, fromArray } from 'fp-ts/NonEmptyArray';
+import { findIndex } from 'fp-ts/Array';
+import * as O from 'fp-ts/Option';
+import * as R from 'fp-ts/Reader';
+import * as RE from 'fp-ts/ReaderEither';
+import { pipe } from 'fp-ts/pipeable';
 import { tail } from 'lodash';
 import { Logger } from 'pino';
 import withLogger from '../../withLogger';

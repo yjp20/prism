@@ -1,7 +1,7 @@
 import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 import { HttpMethod, IHttpOperation, IServer } from '@stoplight/types';
 import { Chance } from 'chance';
-import { isRight } from 'fp-ts/lib/Either';
+import { isRight } from 'fp-ts/Either';
 import { ProblemJsonError } from '../../';
 import {
   NO_METHOD_MATCHED_ERROR,

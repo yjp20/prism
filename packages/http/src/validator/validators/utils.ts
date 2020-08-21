@@ -1,9 +1,9 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { DiagnosticSeverity } from '@stoplight/types';
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
 import { Do } from 'fp-ts-contrib/lib/Do';
-import { pipe } from 'fp-ts/lib/pipeable';
-import { NonEmptyArray, fromArray, map } from 'fp-ts/lib/NonEmptyArray';
+import { pipe } from 'fp-ts/pipeable';
+import { NonEmptyArray, fromArray, map } from 'fp-ts/NonEmptyArray';
 import type { ErrorObject } from 'ajv';
 import { JSONSchema } from '../../';
 import * as AjvOAI from 'ajv-oai';

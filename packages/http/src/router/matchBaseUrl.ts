@@ -1,5 +1,5 @@
-import * as E from 'fp-ts/lib/Either';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as E from 'fp-ts/Either';
+import { pipe } from 'fp-ts/pipeable';
 
 import { INodeVariable, IServer, Dictionary } from '@stoplight/types';
 import { MatchType } from './types';

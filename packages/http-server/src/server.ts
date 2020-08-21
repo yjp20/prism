@@ -17,9 +17,9 @@ import * as typeIs from 'type-is';
 import { getHttpConfigFromRequest } from './getHttpConfigFromRequest';
 import { serialize } from './serialize';
 import { merge } from 'lodash/fp';
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as TE from 'fp-ts/lib/TaskEither';
-import * as E from 'fp-ts/lib/Either';
+import { pipe } from 'fp-ts/pipeable';
+import * as TE from 'fp-ts/TaskEither';
+import * as E from 'fp-ts/Either';
 
 function searchParamsToNameValues(searchParams: URLSearchParams): IHttpNameValues {
   const params = {};

@@ -1,5 +1,5 @@
 import { MatchType } from './types';
-import * as E from 'fp-ts/lib/Either';
+import * as E from 'fp-ts/Either';
 
 function fragmentarize(path: string): string[] {
   return path.split('/').slice(1);

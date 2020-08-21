@@ -4,7 +4,7 @@ import { httpDigest } from './digestAuth';
 import { bearer, oauth2, openIdConnect } from './bearer';
 import { HttpSecurityScheme, DiagnosticSeverity } from '@stoplight/types';
 import { ValidateSecurityFn } from './utils';
-import { Either, fromNullable } from 'fp-ts/lib/Either';
+import { Either, fromNullable } from 'fp-ts/Either';
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 
 const securitySchemeHandlers: {

@@ -9,14 +9,14 @@ import {
 } from '@stoplight/types';
 
 import * as caseless from 'caseless';
-import * as E from 'fp-ts/lib/Either';
-import * as Record from 'fp-ts/lib/Record';
-import { pipe } from 'fp-ts/lib/pipeable';
-import * as A from 'fp-ts/lib/Array';
-import * as R from 'fp-ts/lib/Reader';
-import * as O from 'fp-ts/lib/Option';
-import * as RE from 'fp-ts/lib/ReaderEither';
-import { map } from 'fp-ts/lib/Array';
+import * as E from 'fp-ts/Either';
+import * as Record from 'fp-ts/Record';
+import { pipe } from 'fp-ts/pipeable';
+import * as A from 'fp-ts/Array';
+import * as R from 'fp-ts/Reader';
+import * as O from 'fp-ts/Option';
+import * as RE from 'fp-ts/ReaderEither';
+import { map } from 'fp-ts/Array';
 import { Do } from 'fp-ts-contrib/lib/Do';
 import { isNumber, isString, keyBy, mapValues, groupBy, get, partial } from 'lodash';
 import { Logger } from 'pino';
@@ -43,7 +43,7 @@ import {
   findContentByMediaTypeOrFirst,
   splitUriParams,
 } from '../validator/validators/body';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 
 const eitherRecordSequence = Record.sequence(E.either);
 

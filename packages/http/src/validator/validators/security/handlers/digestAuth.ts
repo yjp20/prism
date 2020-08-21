@@ -1,4 +1,4 @@
-import { left } from 'fp-ts/lib/Either';
+import { left } from 'fp-ts/Either';
 import { get } from 'lodash';
 import { genRespForScheme, genUnauthorisedErr, isScheme } from './utils';
 import { IHttpRequest } from '../../../../types';
