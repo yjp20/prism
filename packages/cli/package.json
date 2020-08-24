@@ -46,5 +46,8 @@
     "cli": "node -r ts-node/register/transpile-only -r tsconfig-paths/register src/index.ts",
     "cli:debug": "node -r ts-node/register/transpile-only -r tsconfig-paths/register --inspect-brk src/index.ts"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "pkg": {
+    "scripts": "../../node_modules/fp-ts/**/package.json"
+  }
 }
