@@ -15,7 +15,7 @@ import { parseResponse } from '../utils/parseResponse';
 import { hopByHopHeaders } from './resources';
 import { createUnauthorisedResponse, createUnprocessableEntityResponse } from '../mocker';
 
-const { version: prismVersion } = require('../../package.json');
+import { version as prismVersion } from '../../package.json';
 
 const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig>['forward'] = (
   { data: input, validations }: IPrismInput<IHttpRequest>,

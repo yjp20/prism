@@ -18,7 +18,7 @@ const staticExamplesOas2Path = fixturePath('static-examples.oas2.json');
 const serverValidationOas2Path = fixturePath('server-validation.oas2.json');
 const serverValidationOas3Path = fixturePath('server-validation.oas3.json');
 
-const { version: prismVersion } = require('../../package.json');
+import { version as prismVersion } from '../../package.json';
 
 type Prism = IPrism<IHttpOperation, IHttpRequest, IHttpResponse, IHttpProxyConfig>;
 type NockResWithInterceptors = NockScope & { interceptors: Array<{ req: { headers: string[] } }> };

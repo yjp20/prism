@@ -27,7 +27,7 @@ export function convertTemplateToRegExp(
     return E.tryCatch(() => replaceStringUnsafe(input), E.toError);
 
     function replaceStringUnsafe(input: string): string {
-      return input.replace(variableRegexp, (_match, variableName) => {
+      return input.replace(variableRegexp, (_match: string, variableName: string) => {
         const variable = vars[variableName];
         if (!variable) {
           throw new Error(`Variable '${variableName}' is not defined, cannot parse input.`);
