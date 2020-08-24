@@ -4,7 +4,7 @@ export function serializeWithDeepObjectStyle(name: string, value: string | strin
   return serialize(name, [], value);
 }
 
-function serialize(name: string, path: string[], value: any): string {
+function serialize(name: string, path: string[], value: string | string[] | Dictionary<unknown>): string {
   if (typeof value === 'object') {
     return Object.keys(value)
       .map(key => serialize(name, [...path, isPositiveInteger(key) ? '' : key], value[key]))
