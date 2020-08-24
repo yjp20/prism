@@ -10,7 +10,7 @@
     "url": "https://github.com/stoplightio/prism.git"
   },
   "scripts": {
-    "lint": "eslint ./packages/**/*.ts",
+    "lint": "eslint ./packages/**/src/*.ts",
     "lint.fix": "yarn lint --fix",
     "build": "ttsc --build ./packages/tsconfig.build.json",
     "posttest": "yarn lint",

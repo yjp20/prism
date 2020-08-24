@@ -15,7 +15,7 @@ import { parseResponse } from '../utils/parseResponse';
 import { hopByHopHeaders } from './resources';
 import { createUnauthorisedResponse, createUnprocessableEntityResponse } from '../mocker';
 
-import { version as prismVersion } from '../../package.json';
+const { version: prismVersion } = require('../../package.json'); // eslint-disable-line
 
 const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig>['forward'] = (
   { data: input, validations }: IPrismInput<IHttpRequest>,
