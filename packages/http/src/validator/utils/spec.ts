@@ -1,6 +1,6 @@
 import { IHttpOperationResponse } from '@stoplight/types';
-import { head } from 'fp-ts/lib/Array';
-import { Option } from 'fp-ts/lib/Option';
+import { head } from 'fp-ts/Array';
+import { Option } from 'fp-ts/Option';
 
 export function findOperationResponse(
   responseSpecs: IHttpOperationResponse[],

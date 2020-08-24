@@ -5,9 +5,9 @@ import { parse as parseQueryString } from 'querystring';
 import { parse as parseUrl } from 'url';
 import { createInstance } from '.';
 import { IHttpConfig, IHttpRequest, IHttpResponse, IHttpUrl } from './types';
-import { fold } from 'fp-ts/lib/TaskEither';
-import * as Task from 'fp-ts/lib/Task';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { fold } from 'fp-ts/TaskEither';
+import * as Task from 'fp-ts/Task';
+import { pipe } from 'fp-ts/pipeable';
 import * as pino from 'pino';
 
 const logger = pino();

@@ -1,9 +1,9 @@
 import type { Response } from 'node-fetch';
 import { is as typeIs } from 'type-is';
-import * as E from 'fp-ts/lib/Either';
-import * as TE from 'fp-ts/lib/TaskEither';
+import * as E from 'fp-ts/Either';
+import * as TE from 'fp-ts/TaskEither';
 import { mapValues } from 'lodash';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { pipe } from 'fp-ts/pipeable';
 import { Dictionary } from '@stoplight/types';
 import { IHttpResponse } from '../types';
 

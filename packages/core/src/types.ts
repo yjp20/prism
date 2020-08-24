@@ -1,10 +1,10 @@
 import { IDiagnostic } from '@stoplight/types';
-import { Either } from 'fp-ts/lib/Either';
-import { ReaderEither } from 'fp-ts/lib/ReaderEither';
-import { ReaderTaskEither } from 'fp-ts/lib/ReaderTaskEither';
-import { TaskEither } from 'fp-ts/lib/TaskEither';
+import { Either } from 'fp-ts/Either';
+import { ReaderEither } from 'fp-ts/ReaderEither';
+import { ReaderTaskEither } from 'fp-ts/ReaderTaskEither';
+import { TaskEither } from 'fp-ts/TaskEither';
 import { Logger } from 'pino';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 export type IPrismDiagnostic = Omit<IDiagnostic, 'range' | 'path'> & { path?: string[] };
 
 export interface IPrism<Resource, Input, Output, Config extends IPrismConfig> {

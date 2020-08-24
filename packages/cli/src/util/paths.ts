@@ -12,9 +12,9 @@ import {
   IHttpPathParam,
   IHttpQueryParam,
 } from '@stoplight/types';
-import * as E from 'fp-ts/lib/Either';
+import * as E from 'fp-ts/Either';
 import { doEither, sequenceSEither, traverseEither } from '../combinators';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { pipe } from 'fp-ts/pipeable';
 import { get, identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';

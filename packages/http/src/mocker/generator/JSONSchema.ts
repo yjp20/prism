@@ -5,7 +5,7 @@ import { JSONSchema } from '../../types';
 // @ts-ignore
 import * as jsf from 'json-schema-faker';
 import * as sampler from 'openapi-sampler';
-import { Either, tryCatch, toError } from 'fp-ts/lib/Either';
+import { Either, tryCatch, toError } from 'fp-ts/Either';
 
 jsf.extend('faker', () => faker);
 

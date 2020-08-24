@@ -1,12 +1,12 @@
 import { IHttpOperation, HttpSecurityScheme } from '@stoplight/types';
-import * as E from 'fp-ts/lib/Either';
-import * as O from 'fp-ts/lib/Option';
-import { pipe } from 'fp-ts/lib/pipeable';
+import * as E from 'fp-ts/Either';
+import * as O from 'fp-ts/Option';
+import { pipe } from 'fp-ts/pipeable';
 import { flatten } from 'lodash';
 import { set } from 'lodash/fp';
 import { findSecurityHandler } from './handlers';
-import { NonEmptyArray, getSemigroup } from 'fp-ts/lib/NonEmptyArray';
-import { isNonEmpty, array } from 'fp-ts/lib/Array';
+import { NonEmptyArray, getSemigroup } from 'fp-ts/NonEmptyArray';
+import { isNonEmpty, array } from 'fp-ts/Array';
 import { IPrismDiagnostic, ValidatorFn } from '@stoplight/prism-core';
 import { IHttpRequest } from '../../../types';
 

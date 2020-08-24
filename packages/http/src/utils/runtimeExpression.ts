@@ -1,8 +1,8 @@
 import { IHttpRequest, IHttpResponse } from '../types';
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
 import { doOption } from '../combinators';
-import { lookup } from 'fp-ts/lib/Array';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { lookup } from 'fp-ts/Array';
+import { pipe } from 'fp-ts/pipeable';
 import { get as _get } from 'lodash';
 import { pointerToPath } from '@stoplight/json';
 

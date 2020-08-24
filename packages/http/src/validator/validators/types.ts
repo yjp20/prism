@@ -1,7 +1,7 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { JSONSchema } from '../../';
-import { Either } from 'fp-ts/lib/Either';
-import { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
+import { Either } from 'fp-ts/Either';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 
 export interface IHttpValidator<Target, Specs> {
   validate(target: Target, specs: Specs[], mediaType?: string): Either<NonEmptyArray<IPrismDiagnostic>, Target>;

@@ -3,7 +3,7 @@ import { path as registry } from '../../deserializers';
 import { HttpPathValidator } from '../path';
 import * as validateAgainstSchemaModule from '../utils';
 import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
 
 describe('HttpPathValidator', () => {
   const httpPathValidator = new HttpPathValidator(registry, 'path');
