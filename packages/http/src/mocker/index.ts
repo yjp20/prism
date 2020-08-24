@@ -29,7 +29,6 @@ import {
   IMockHttpConfig,
   PayloadGenerator,
   ProblemJsonError,
-  JSONSchema,
 } from '../types';
 import withLogger from '../withLogger';
 import { UNAUTHORIZED, UNPROCESSABLE_ENTITY } from './errors';
