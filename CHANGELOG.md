@@ -23,6 +23,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * **BREAKING**: Prism does **NOT** support Node 8 and 10 anymore; the miminal runtime is now 12
 * A significant number of dependencies has been upgraded
 
+# 3.3.7 (2020-07-24)
+
+## Fixed
+
+- Prism's Proxy feature will stop proactively requesting Compressed responses, following what is really in the OAS document [#1309](https://github.com/stoplightio/prism/pull/1309),[#1319](https://github.com/stoplightio/prism/pull/1319)
+
+## Changed
+
+- Prism is now stop to claim error for paths declared in the document that are not starting with a `/` [#1340](https://github.com/stoplightio/prism/pull/1340)
+
 # 3.3.6 (2020-07-08)
 
 ## Fixed
