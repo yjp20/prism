@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.0.0 (2020-08-25)
+
 ## Fixed
 
 - Prism will now refuse to start in case it will detect circular references. [#1270](https://github.com/stoplightio/prism/pull/1270)
@@ -18,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 * **BREAKING**: The `getHttpOperationsFromSpec` has been moved from the HTTP Package to the CLI package. If you're using Prism programmatically, this might require some code changes on your side. `getHttpOperationsFromResource` has been removed. [#1009](https://github.com/stoplightio/prism/pull/1009), [#1192](https://github.com/stoplightio/prism/pull/1192)
 * **BREAKING**: The `createClientFromOperations` is now exported as `export function` instead of exporting an object. If you're using Prism programmatically, this might require some code changes on your side [#1009](https://github.com/stoplightio/prism/pull/1009)
+* **BREAKING**: Prism does **NOT** support Node 8 and 10 anymore; the miminal runtime is now 12
+* A significant number of dependencies has been upgraded
 
 # 3.3.7 (2020-07-24)
 
