@@ -292,7 +292,7 @@ describe('body params validation', () => {
           });
 
           expect(response.status).toBe(422);
-          expect(response.json()).resolves.toMatchObject({
+          return expect(response.json()).resolves.toMatchObject({
             validation: [{ code: 'required', message: "should have required property 'id'", severity: 'Error' }],
           });
         });
@@ -313,7 +313,7 @@ describe('body params validation', () => {
         test('returns 422 & error message', async () => {
           const response = await makeRequest('/json-body-required', { method: 'POST' });
           expect(response.status).toBe(422);
-          expect(response.json()).resolves.toMatchObject({
+          return expect(response.json()).resolves.toMatchObject({
             validation: [{ code: 'required', message: 'Body parameter is required', severity: 'Error' }],
           });
         });
@@ -329,7 +329,7 @@ describe('body params validation', () => {
             });
 
             expect(response.status).toBe(422);
-            expect(response.json()).resolves.toMatchObject({
+            return expect(response.json()).resolves.toMatchObject({
               validation: [
                 {
                   code: 'type',
@@ -351,7 +351,7 @@ describe('body params validation', () => {
             });
 
             expect(response.status).toBe(422);
-            expect(response.json()).resolves.toMatchObject({
+            return expect(response.json()).resolves.toMatchObject({
               validation: [
                 {
                   code: 'enum',
@@ -436,7 +436,7 @@ describe('body params validation', () => {
         });
 
         expect(response.status).toBe(422);
-        expect(response.json()).resolves.toMatchObject({
+        return expect(response.json()).resolves.toMatchObject({
           type: 'https://stoplight.io/prism/errors#UNPROCESSABLE_ENTITY',
           validation: [
             {
@@ -468,7 +468,7 @@ describe('body params validation', () => {
         });
 
         expect(response.status).toBe(422);
-        expect(response.json()).resolves.toMatchObject({
+        return expect(response.json()).resolves.toMatchObject({
           type: 'https://stoplight.io/prism/errors#UNPROCESSABLE_ENTITY',
           validation: [
             {

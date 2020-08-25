@@ -7,7 +7,7 @@ export interface IHttpParamDeserializerRegistry<Parameters, S = HttpParamStyles>
 
 export interface IHttpParamStyleDeserializer<Parameters, S = HttpParamStyles> {
   supports: (style: S) => boolean;
-  deserialize: (name: string, parameters: Parameters, schema?: JSONSchema, explode?: boolean) => any;
+  deserialize: (name: string, parameters: Parameters, schema?: JSONSchema, explode?: boolean) => unknown;
 }
 
 export type IHttpHeaderParamStyleDeserializer = IHttpParamStyleDeserializer<IHttpNameValue>;

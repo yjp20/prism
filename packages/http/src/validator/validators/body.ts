@@ -82,7 +82,7 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
-export class HttpBodyValidator implements IHttpValidator<any, IMediaTypeContent> {
+export class HttpBodyValidator implements IHttpValidator<unknown, IMediaTypeContent> {
   constructor(private prefix: string) {}
 
   public validate(target: unknown, specs: IMediaTypeContent[], mediaType?: string) {

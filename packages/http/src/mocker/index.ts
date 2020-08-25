@@ -29,7 +29,6 @@ import {
   IMockHttpConfig,
   PayloadGenerator,
   ProblemJsonError,
-  JSONSchema,
 } from '../types';
 import withLogger from '../withLogger';
 import { UNAUTHORIZED, UNPROCESSABLE_ENTITY } from './errors';
@@ -147,7 +146,7 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 export function createInvalidInputResponse(
   failedValidations: NonEmptyArray<IPrismDiagnostic>,
   responses: IHttpOperationResponse[]
-) {
+): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
 
   return pipe(
@@ -165,14 +164,14 @@ export function createInvalidInputResponse(
   );
 }
 
-export const createUnauthorisedResponse = (tags?: string[]) =>
+export const createUnauthorisedResponse = (tags?: string[]): ProblemJsonError =>
   ProblemJsonError.fromTemplate(
     UNAUTHORIZED,
     'Your request does not fullfil the security requirements and no HTTP unauthorized response was found in the spec, so Prism is generating this error for you.',
     tags && tags.length ? { headers: { 'WWW-Authenticate': tags.join(',') } } : undefined
   );
 
-export const createUnprocessableEntityResponse = (validations: NonEmptyArray<IPrismDiagnostic>) =>
+export const createUnprocessableEntityResponse = (validations: NonEmptyArray<IPrismDiagnostic>): ProblemJsonError =>
   ProblemJsonError.fromTemplate(
     UNPROCESSABLE_ENTITY,
     'Your request is not valid and no HTTP validation response was found in the spec, so Prism is generating this error for you.',

@@ -15,7 +15,7 @@ import {
 import * as E from 'fp-ts/Either';
 import { doEither, sequenceSEither, traverseEither } from '../combinators';
 import { pipe } from 'fp-ts/pipeable';
-import { get, identity, fromPairs } from 'lodash';
+import { identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { ValuesTransformer } from './colorizer';
 
@@ -88,7 +88,7 @@ function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<un
 }
 
 function generateTemplateAndValuesForPathParams(operation: IHttpOperation) {
-  const specs = get(operation, 'request.path', []);
+  const specs = operation.request?.path || [];
 
   return sequenceSEither({
     values: generateParamValues(specs),
@@ -97,7 +97,7 @@ function generateTemplateAndValuesForPathParams(operation: IHttpOperation) {
 }
 
 function generateTemplateAndValuesForQueryParams(template: string, operation: IHttpOperation) {
-  const specs = get(operation, 'request.query', []);
+  const specs = operation.request?.query || [];
 
   return pipe(
     generateParamValues(specs),

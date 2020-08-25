@@ -2,7 +2,7 @@ import { Chance } from 'chance';
 import { matchPath } from '../matchPath';
 import { MatchType } from '../types';
 import { randomPath } from './utils';
-import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
+import { assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 
 const chance = new Chance();
 

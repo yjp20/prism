@@ -1,5 +1,5 @@
 import { createLogger } from '@stoplight/prism-core';
-import { IHttpConfig, IHttpProxyConfig } from '@stoplight/prism-http';
+import { IHttpConfig, IHttpProxyConfig, IHttpRequest } from '@stoplight/prism-http';
 import { createServer as createHttpServer } from '@stoplight/prism-http-server';
 import * as chalk from 'chalk';
 import * as cluster from 'cluster';
@@ -14,6 +14,8 @@ import { createExamplePath } from './paths';
 import { attachTagsToParamsValues, transformPathParamsValues } from './colorizer';
 import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
+
+type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
 signale.config({ displayTimestamp: true });
 
@@ -41,7 +43,7 @@ const createMultiProcessPrism: CreatePrism = async options => {
   } else {
     const logInstance = createLogger('CLI', cliSpecificLoggerOptions);
 
-    return createPrismServerWithLogger(options, logInstance).catch(e => {
+    return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
       logInstance.fatal(e.message);
       cluster.worker.kill();
       throw e;
@@ -56,7 +58,7 @@ const createSingleProcessPrism: CreatePrism = options => {
   const logInstance = createLogger('CLI', cliSpecificLoggerOptions, logStream);
   pipeOutputToSignale(logStream);
 
-  return createPrismServerWithLogger(options, logInstance).catch(e => {
+  return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
     logInstance.fatal(e.message);
     throw e;
   });
@@ -104,7 +106,7 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
 }
 
 function pipeOutputToSignale(stream: Readable) {
-  function constructPrefix(logLine: LogDescriptor): string {
+  function constructPrefix(logLine: PrismLogDescriptor): string {
     const logOptions = LOG_COLOR_MAP[logLine.name];
     const prefix = '    '
       .repeat(logOptions.index + (logLine.offset || 0))
@@ -115,7 +117,7 @@ function pipeOutputToSignale(stream: Readable) {
       : prefix;
   }
 
-  stream.pipe(split(JSON.parse)).on('data', (logLine: LogDescriptor) => {
+  stream.pipe(split(JSON.parse)).on('data', (logLine: PrismLogDescriptor) => {
     signale[logLine.level]({ prefix: constructPrefix(logLine), message: logLine.msg });
   });
 }

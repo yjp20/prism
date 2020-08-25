@@ -17,7 +17,7 @@ const proxyCommand: CommandModule = {
         description: 'URL to a target server.',
         type: 'string',
       })
-      .coerce('upstream', value => {
+      .coerce('upstream', (value: string) => {
         try {
           return new URL(value);
         } catch (e) {
