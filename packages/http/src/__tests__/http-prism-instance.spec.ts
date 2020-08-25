@@ -18,7 +18,7 @@ const staticExamplesOas2Path = fixturePath('static-examples.oas2.json');
 const serverValidationOas2Path = fixturePath('server-validation.oas2.json');
 const serverValidationOas3Path = fixturePath('server-validation.oas3.json');
 
-const { version: prismVersion } = require('../../package.json');
+const { version: prismVersion } = require('../../package.json'); // eslint-disable-line
 
 type Prism = IPrism<IHttpOperation, IHttpRequest, IHttpResponse, IHttpProxyConfig>;
 type NockResWithInterceptors = NockScope & { interceptors: Array<{ req: { headers: string[] } }> };

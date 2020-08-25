@@ -10,7 +10,7 @@ export function assertNone<A>(e: O.Option<A>): asserts e is O.None {
     O.fold(
       () => ({}),
       a => {
-        throw new Error('None expected, got a Some: ' + a);
+        throw new Error(`None expected, got a Some: ${a}`);
       }
     )
   );
@@ -29,7 +29,7 @@ export function assertRight<L, A>(e: E.Either<L, A>, onRight: (a: A) => void = n
   pipe(
     e,
     E.fold(l => {
-      throw new Error('Right expected, got a Left: ' + l);
+      throw new Error(`Right expected, got a Left: ${l}`);
     }, onRight)
   );
 }
@@ -38,7 +38,7 @@ export function assertLeft<L, A>(e: E.Either<L, A>, onLeft: (a: L) => void = noo
   pipe(
     e,
     E.fold(onLeft, a => {
-      throw new Error('Left expected, got a Right: ' + a);
+      throw new Error(`Left expected, got a Right: ${a}`);
     })
   );
 }
