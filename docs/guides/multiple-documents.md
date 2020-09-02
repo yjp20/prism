@@ -19,12 +19,12 @@ services:
       - prism_1
       - prism_2
   prism_1:
-    image: stoplight/prism:3
+    image: stoplight/prism:4
     command: >
       mock -p 4010 --host 0.0.0.0
       https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v2.0/yaml/petstore.yaml
   prism_2:
-    image: stoplight/prism:3
+    image: stoplight/prism:4
     command: >
       mock -p 4010 --host 0.0.0.0
       https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
@@ -35,8 +35,15 @@ And the corresponding `Caddyfile` file:
 ```
 http://localhost
 
-reverse_proxy /app_1/* prism_1:4010
-reverse_proxy /app_2/* prism_2:4010
+route /app_1/* {
+	uri strip_prefix /app_1
+	reverse_proxy prism_1:4010
+}
+
+route /app_2/* {
+	uri strip_prefix /app_2
+	reverse_proxy prism_2:4010
+}
 ```
 
 This configuration will allow access to the first Prism instance on `localhost:8080/app_1` and the second instance on `localhost:8080/app_2` endpoint.
@@ -78,7 +85,7 @@ Under `services`, you can add:
 
 ```yaml
 prism_3:
-  image: stoplight/prism:3
+  image: stoplight/prism:4
   command: >
     mock -p 4010 --host 0.0.0.0
     https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
