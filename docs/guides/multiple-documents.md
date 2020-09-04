@@ -94,5 +94,9 @@ prism_3:
 To make the new node accessible from the proxy, please also adjust `Caddyfile`:
 
 ```
-reverse_proxy /app_3/* prism_3:4010
+route /app_3/* {
+	uri strip_prefix /app_3
+	reverse_proxy prism_3:4010
+}
+
 ```
