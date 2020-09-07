@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.0.1 (2020-09-07)
+
+## Fixed
+
+- Fixed a type issue in the HTTP Client that would let you pass incorrect parameters [#1391](https://github.com/stoplightio/prism/pull/1391)
+
 # 4.0.0 (2020-08-25)
 
 ## Fixed
