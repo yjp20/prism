@@ -1,4 +1,4 @@
-import { IPrism, IPrismComponents, IPrismConfig } from '@stoplight/prism-core';
+import { IPrism, IPrismComponents, IPrismConfig, IPrismProxyConfig } from '@stoplight/prism-core';
 import { Dictionary, HttpMethod, IHttpOperation, INodeExample, INodeExternalExample } from '@stoplight/types';
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from 'json-schema';
 import { Either } from 'fp-ts/Either';
@@ -14,14 +14,11 @@ export interface IHttpOperationConfig {
   dynamic: boolean;
 }
 
-export interface IHttpConfig extends IPrismConfig {
+export type IHttpConfig = IPrismConfig & {
   mock: false | IHttpOperationConfig;
-}
+};
 
-export interface IHttpProxyConfig extends IHttpConfig {
-  mock: false;
-  upstream: URL;
-}
+export type IHttpProxyConfig = IPrismProxyConfig;
 
 export type IMockHttpConfig = IHttpConfig & { mock: IHttpOperationConfig };
 

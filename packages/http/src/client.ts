@@ -13,9 +13,9 @@ import * as pino from 'pino';
 const logger = pino();
 logger.success = logger.info;
 
-interface IClientConfig extends IHttpConfig {
+type IClientConfig = IHttpConfig & {
   baseUrl?: string;
-}
+};
 
 export function createClientFromOperations(resources: IHttpOperation[], defaultConfig: IClientConfig): PrismHttp {
   const obj = createInstance(defaultConfig, { logger });
