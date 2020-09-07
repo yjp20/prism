@@ -39,7 +39,7 @@ describe('validation', () => {
           errors: true,
           validateRequest: false,
           validateResponse: false,
-          mock: true,
+          mock: {},
         };
 
         obj[fieldType] = true;

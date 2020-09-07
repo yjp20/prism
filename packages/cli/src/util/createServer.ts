@@ -1,5 +1,5 @@
 import { createLogger } from '@stoplight/prism-core';
-import { IHttpConfig, IHttpProxyConfig, IHttpRequest } from '@stoplight/prism-http';
+import { IHttpConfig, IHttpRequest } from '@stoplight/prism-http';
 import { createServer as createHttpServer } from '@stoplight/prism-http-server';
 import * as chalk from 'chalk';
 import * as cluster from 'cluster';
@@ -78,7 +78,7 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
     errors: false,
   };
 
-  const config: IHttpProxyConfig | IHttpConfig = isProxyServerOptions(options)
+  const config: IHttpConfig = isProxyServerOptions(options)
     ? { ...shared, mock: false, upstream: options.upstream, errors: options.errors }
     : { ...shared, mock: { dynamic: options.dynamic }, errors: options.errors };
 

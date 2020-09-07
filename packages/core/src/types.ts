@@ -11,20 +11,25 @@ export interface IPrism<Resource, Input, Output, Config extends IPrismConfig> {
   request: (input: Input, resources: Resource[], config?: Config) => TaskEither<Error, IPrismOutput<Output>>;
 }
 
-export interface IPrismConfig {
-  mock: false | unknown;
+export type ValidatorFn<R, E> = (opts: { resource: R; element: E }) => Either<NonEmptyArray<IPrismDiagnostic>, E>;
+
+type IPrismBaseConfig = {
   checkSecurity: boolean;
   validateRequest: boolean;
   validateResponse: boolean;
   errors: boolean;
-}
+};
 
-export type ValidatorFn<R, E> = (opts: { resource: R; element: E }) => Either<NonEmptyArray<IPrismDiagnostic>, E>;
+export type IPrismMockConfig = IPrismBaseConfig & {
+  mock: object;
+};
 
-export type IPrismProxyConfig = IPrismConfig & {
+export type IPrismProxyConfig = IPrismBaseConfig & {
   mock: false;
   upstream: URL;
 };
+
+export type IPrismConfig = IPrismMockConfig | IPrismProxyConfig;
 
 export type IPrismComponents<Resource, Input, Output, Config extends IPrismConfig> = {
   route: (opts: { resources: Resource[]; input: Input }) => Either<Error, Resource>;
