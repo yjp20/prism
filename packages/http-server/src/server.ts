@@ -79,18 +79,18 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
 
     components.logger.info({ input }, 'Request received');
 
-    const mockConfig: TE.TaskEither<Error, IHttpConfig['mock']> =
-      opts.config.mock === false
-        ? TE.right(false)
+    const requestConfig: TE.TaskEither<Error, IHttpConfig> =
+      config.mock === false
+        ? TE.right(config)
         : pipe(
             getHttpConfigFromRequest(input),
-            E.map(operationSpecificConfig => merge(opts.config.mock, operationSpecificConfig)),
+            E.map(operationSpecificConfig => ({ ...config, mock: merge(config.mock, operationSpecificConfig) })),
             TE.fromEither
           );
 
     pipe(
-      mockConfig,
-      TE.chain(mockConfig => prism.request(input, operations, { ...opts.config, mock: mockConfig })),
+      requestConfig,
+      TE.chain(requestConfig => prism.request(input, operations, requestConfig)),
       TE.chain(response => {
         const { output } = response;
 
