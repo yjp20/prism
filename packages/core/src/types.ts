@@ -5,6 +5,7 @@ import { ReaderTaskEither } from 'fp-ts/ReaderTaskEither';
 import { TaskEither } from 'fp-ts/TaskEither';
 import { Logger } from 'pino';
 import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
+
 export type IPrismDiagnostic = Omit<IDiagnostic, 'range' | 'path'> & { path?: string[] };
 
 export interface IPrism<Resource, Input, Output, Config extends IPrismConfig> {
