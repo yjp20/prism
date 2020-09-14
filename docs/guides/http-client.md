@@ -43,7 +43,7 @@ const operations = await getHttpOperationsFromSpec(descriptionDoc);
 ### Create Client from Manual HTTP Operations
 
 ```ts
-const createClientFromOperations = require('@stoplight/prism-http/dist/client');
+const { createClientFromOperations } = require('@stoplight/prism-http/dist/client');
 const { URL } = require('url');
 
 const client = createClientFromOperations(
