@@ -1,7 +1,6 @@
 import { IPrismDiagnostic } from '@stoplight/prism-core';
 import { DiagnosticSeverity } from '@stoplight/types';
 import * as O from 'fp-ts/Option';
-import { Do } from 'fp-ts-contrib/lib/Do';
 import { pipe } from 'fp-ts/pipeable';
 import { NonEmptyArray, fromArray, map } from 'fp-ts/NonEmptyArray';
 import type { ErrorObject } from 'ajv';
@@ -33,15 +32,10 @@ export const validateAgainstSchema = (
   schema: JSONSchema,
   coerce: boolean,
   prefix?: string
-): O.Option<NonEmptyArray<IPrismDiagnostic>> => {
-  const ajvInstance = coerce ? ajv : ajvNoCoerce;
-
-  return Do(O.option)
-    .bind(
-      'validateFn',
-      O.tryCatch(() => ajvInstance.compile(schema))
-    )
-    .doL(({ validateFn }) => O.tryCatch(() => validateFn(value)))
-    .bindL('errors', ({ validateFn }) => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray)))
-    .return(({ errors }) => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix));
-};
+): O.Option<NonEmptyArray<IPrismDiagnostic>> =>
+  pipe(
+    O.tryCatch(() => (coerce ? ajv : ajvNoCoerce).compile(schema)),
+    O.chainFirst(validateFn => O.tryCatch(() => validateFn(value))),
+    O.chain(validateFn => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray))),
+    O.map(errors => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix))
+  );
