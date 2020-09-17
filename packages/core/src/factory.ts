@@ -97,8 +97,8 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
       const config: Config = defaults(c, defaultConfig);
 
       return pipe(
-        TE.fromEither(components.route({ resources, input })),
-        TE.fold(
+        components.route({ resources, input }),
+        E.fold(
           error => {
             if (!config.errors && isProxyConfig(config)) {
               return pipe(
