@@ -20,6 +20,9 @@
     "build.binary": "npx pkg --output ./cli-binaries/prism-cli ./packages/cli/",
     "test.harness": "jest -c ./jest.harness.config.js"
   },
+  "resolutions": {
+    "typescript": "4.0.3"
+  },
   "devDependencies": {
     "@stoplight/types": "^11.4.1",
     "@types/caseless": "^0.12.2",
@@ -67,7 +70,7 @@
     "tsconfig-paths": "^3.8.0",
     "ttypescript": "^1.5.12",
     "type-is": "^1.6.18",
-    "typescript": "^3.9.2"
+    "typescript": "^4.0.3"
   },
   "lint-staged": {
     "**/packages/**/*.ts": [
