@@ -1,16 +1,15 @@
 import { HttpParamStyles, DiagnosticSeverity } from '@stoplight/types';
-import { query as registry } from '../../deserializers';
+import { header } from '../../deserializers';
 import { HttpHeadersValidator } from '../headers';
 import * as validateAgainstSchemaModule from '../utils';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 import * as O from 'fp-ts/Option';
 
 describe('HttpHeadersValidator', () => {
-  const httpHeadersValidator = new HttpHeadersValidator(registry, 'header');
+  const httpHeadersValidator = new HttpHeadersValidator(header, 'header');
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(registry, 'get');
     jest.spyOn(validateAgainstSchemaModule, 'validateAgainstSchema');
   });
 
@@ -35,24 +34,6 @@ describe('HttpHeadersValidator', () => {
 
       describe('header is present', () => {
         describe('schema is present', () => {
-          describe('deserializer not available', () => {
-            it('omits schema validation', () => {
-              jest.spyOn(registry, 'get').mockReturnValueOnce(undefined);
-
-              assertRight(
-                httpHeadersValidator.validate({ 'x-test-header': 'abc' }, [
-                  {
-                    name: 'x-test-header',
-                    style: HttpParamStyles.Simple,
-                    schema: { type: 'number' },
-                  },
-                ])
-              );
-
-              expect(validateAgainstSchemaModule.validateAgainstSchema).toReturnWith(O.none);
-            });
-          });
-
           describe('deserializer is available', () => {
             describe('header is valid', () => {
               it('validates positively against schema', () => {
