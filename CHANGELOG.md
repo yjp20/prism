@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.1.0 (2020-09-25)
+
 ## Changed
 
 - When running in proxy mode and an upstream server responds with `501`, Prism will now "remock" the request and provide a meaningful response. This is a fancy way to say "if the upstream server has not yet implemented an operation, it will mock" [#1426](https://github.com/stoplightio/prism/pull/1426)
