@@ -64,7 +64,7 @@ export function resolveRuntimeExpression(
       O.chain(part =>
         pipe(
           O.fromNullable(request.headers),
-          O.mapNullable(headers => headers[part])
+          O.chainNullableK(headers => headers[part])
         )
       )
     );
@@ -93,7 +93,7 @@ export function resolveRuntimeExpression(
       O.chain(part =>
         pipe(
           O.fromNullable(response.headers),
-          O.mapNullable(headers => headers[part])
+          O.chainNullableK(headers => headers[part])
         )
       )
     );

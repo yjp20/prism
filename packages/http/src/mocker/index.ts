@@ -116,8 +116,8 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 
   const specs = pipe(
     O.fromNullable(resource.request),
-    O.mapNullable(request => request.body),
-    O.mapNullable(body => body.contents),
+    O.chainNullableK(request => request.body),
+    O.chainNullableK(body => body.contents),
     O.getOrElse(() => [] as IMediaTypeContent[])
   );
 
