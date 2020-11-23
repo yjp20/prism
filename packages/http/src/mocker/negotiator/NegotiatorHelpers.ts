@@ -9,7 +9,7 @@ import { pipe } from 'fp-ts/pipeable';
 import { tail } from 'lodash';
 import { Logger } from 'pino';
 import withLogger from '../../withLogger';
-import { NOT_ACCEPTABLE, NOT_FOUND, NO_SUCCESS_RESPONSE_DEFINED } from '../errors';
+import { NOT_ACCEPTABLE, NOT_FOUND, NO_RESPONSE_DEFINED } from '../errors';
 import {
   contentHasExamples,
   createResponseFromDefault,
@@ -19,6 +19,7 @@ import {
   findExampleByKey,
   findLowest2xx,
   findResponseByStatusCode,
+  findFirstResponse,
 } from './InternalHelpers';
 import { IHttpNegotiationResult, NegotiatePartialOptions, NegotiationOptions } from './types';
 import { JSONSchema, ProblemJsonError } from '../../types';
@@ -59,8 +60,6 @@ const helpers = {
         E.map(schema => ({ code, mediaType, schema }))
       );
     } else {
-      // try to find a static example first
-
       return E.right(
         pipe(
           findFirstExample(httpContent),
@@ -192,16 +191,15 @@ const helpers = {
     };
   },
 
-  negotiateOptionsForDefaultCode(
+  negotiateOptionsForUnspecifiedCode(
     httpOperation: IHttpOperation,
     desiredOptions: NegotiationOptions
   ): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
     return pipe(
       findLowest2xx(httpOperation.responses),
-      RE.fromOption(() => ProblemJsonError.fromTemplate(NO_SUCCESS_RESPONSE_DEFINED)),
-      RE.chain(lowest2xxResponse =>
-        helpers.negotiateOptionsBySpecificResponse(httpOperation.method, desiredOptions, lowest2xxResponse)
-      )
+      O.alt(() => findFirstResponse(httpOperation.responses)),
+      RE.fromOption(() => ProblemJsonError.fromTemplate(NO_RESPONSE_DEFINED)),
+      RE.chain(response => helpers.negotiateOptionsBySpecificResponse(httpOperation.method, desiredOptions, response))
     );
   },
 
@@ -232,7 +230,7 @@ const helpers = {
               helpers.negotiateOptionsBySpecificResponse(httpOperation.method, desiredOptions, response),
               RE.orElse(() =>
                 pipe(
-                  helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions),
+                  helpers.negotiateOptionsForUnspecifiedCode(httpOperation, desiredOptions),
                   RE.mapLeft(error => new Error(`${error}. We tried default response, but we got ${error}`))
                 )
               )
@@ -251,7 +249,7 @@ const helpers = {
     if (code) {
       return helpers.negotiateOptionsBySpecificCode(httpOperation, desiredOptions, code);
     }
-    return helpers.negotiateOptionsForDefaultCode(httpOperation, desiredOptions);
+    return helpers.negotiateOptionsForUnspecifiedCode(httpOperation, desiredOptions);
   },
 
   findResponse(
