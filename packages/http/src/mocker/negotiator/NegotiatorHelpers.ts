@@ -206,7 +206,7 @@ const helpers = {
   negotiateOptionsBySpecificCode(
     httpOperation: IHttpOperation,
     desiredOptions: NegotiationOptions,
-    code: string
+    code: number
   ): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
     // find response by provided status code
     return pipe(
@@ -254,7 +254,7 @@ const helpers = {
 
   findResponse(
     httpResponses: IHttpOperationResponse[],
-    statusCodes: NonEmptyArray<string>
+    statusCodes: NonEmptyArray<number>
   ): R.Reader<Logger, O.Option<IHttpOperationResponse>> {
     const [first, ...others] = statusCodes;
 
@@ -296,7 +296,7 @@ const helpers = {
 
   negotiateOptionsForInvalidRequest(
     httpResponses: IHttpOperationResponse[],
-    statusCodes: NonEmptyArray<string>
+    statusCodes: NonEmptyArray<number>
   ): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
     return pipe(
       helpers.findResponse(httpResponses, statusCodes),

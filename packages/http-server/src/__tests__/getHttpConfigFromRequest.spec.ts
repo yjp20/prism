@@ -1,5 +1,5 @@
 import { getHttpConfigFromRequest } from '../getHttpConfigFromRequest';
-import { assertRight } from '@stoplight/prism-core/src/__tests__/utils';
+import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 
 describe('getHttpConfigFromRequest()', () => {
   describe('given no default config', () => {
@@ -21,7 +21,16 @@ describe('getHttpConfigFromRequest()', () => {
 
       test('extracts code', () => {
         return assertRight(getHttpConfigFromRequest({ url: { path: '/', query: { __code: '202' } } }), parsed =>
-          expect(parsed).toHaveProperty('code', '202')
+          expect(parsed).toHaveProperty('code', 202)
+        );
+      });
+
+      test('validates code is a number', () => {
+        return assertLeft(
+          getHttpConfigFromRequest({
+            url: { path: '/', query: { __code: 'default' } },
+          }),
+          error => expect(error.name).toEqual('https://stoplight.io/prism/errors#UNPROCESSABLE_ENTITY')
         );
       });
 
@@ -41,7 +50,17 @@ describe('getHttpConfigFromRequest()', () => {
     describe('headers', () => {
       test('extracts code', () => {
         return assertRight(getHttpConfigFromRequest({ url: { path: '/' }, headers: { prefer: 'code=202' } }), parsed =>
-          expect(parsed).toHaveProperty('code', '202')
+          expect(parsed).toHaveProperty('code', 202)
+        );
+      });
+
+      test('validates code is a number', () => {
+        return assertLeft(
+          getHttpConfigFromRequest({
+            url: { path: '/' },
+            headers: { prefer: 'code=default' },
+          }),
+          error => expect(error.name).toEqual('https://stoplight.io/prism/errors#UNPROCESSABLE_ENTITY')
         );
       });
 

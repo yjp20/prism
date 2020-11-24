@@ -83,7 +83,7 @@ describe('NegotiatorHelpers', () => {
           ])
           .instance();
 
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(logger);
+        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
         const expectedConfig: IHttpNegotiationResult = {
           code: actualCode,
           mediaType: actualMediaType,
@@ -106,9 +106,7 @@ describe('NegotiatorHelpers', () => {
             ])
             .instance();
 
-          const actualResponse = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(
-            logger
-          );
+          const actualResponse = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
 
           assertPayloadlessResponse(actualResponse);
         });
@@ -136,9 +134,7 @@ describe('NegotiatorHelpers', () => {
             ])
             .instance();
 
-          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(
-            logger
-          );
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
           const expectedConfig: IHttpNegotiationResult = {
             code: actualCode,
             mediaType: actualMediaType,
@@ -171,7 +167,7 @@ describe('NegotiatorHelpers', () => {
             ])
             .instance();
 
-          const negotiationResult = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(
+          const negotiationResult = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(
             logger
           );
 
@@ -201,7 +197,7 @@ describe('NegotiatorHelpers', () => {
           ])
           .instance();
 
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(logger);
+        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
         assertRight(actualConfig, c => expect(c).toHaveProperty('code', '400'));
       });
 
@@ -225,12 +221,12 @@ describe('NegotiatorHelpers', () => {
           ])
           .instance();
 
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(logger);
-        assertRight(actualConfig, config => expect(config).toHaveProperty('code', '422'));
+        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
+        assertRight(actualConfig, config => expect(config).toHaveProperty('code', 422));
       });
 
       test('should return an error', () => {
-        assertLeft(helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, ['422', '400'])(logger), error =>
+        assertLeft(helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger), error =>
           expect(error).toHaveProperty('message', 'No 422, 400, or default responses defined')
         );
       });
@@ -240,12 +236,12 @@ describe('NegotiatorHelpers', () => {
   describe('negotiateOptionsForValidRequest()', () => {
     it('given status code enforced should negotiate a specific code', () => {
       const options = {
-        code: '200',
+        code: 200,
         dynamic: false,
       };
 
       const expectedResult = {
-        code: options.code,
+        code: options.code.toString(),
         mediaType: 'application/json',
         headers: [],
       };
@@ -302,15 +298,15 @@ describe('NegotiatorHelpers', () => {
     });
 
     it('given response defined should try to negotiate by that response', () => {
-      const code = faker.random.word();
+      const code = faker.random.number();
       const fakeResponse = {
-        code,
+        code: code.toString(),
         contents: [],
         headers: [],
       };
       const desiredOptions = { dynamic: false };
       const fakeOperationConfig: IHttpNegotiationResult = {
-        code,
+        code: code.toString(),
         headers: [],
         mediaType: '',
       };
@@ -333,13 +329,13 @@ describe('NegotiatorHelpers', () => {
     });
 
     it('given response defined should fallback to default code on error', () => {
-      const code = faker.random.word();
+      const code = faker.random.number();
       const fakeResponse = {
-        code,
+        code: code.toString(),
       };
       const desiredOptions = { dynamic: false };
       const fakeOperationConfig: IHttpNegotiationResult = {
-        code,
+        code: code.toString(),
         mediaType: '',
         headers: [],
       };
@@ -364,7 +360,7 @@ describe('NegotiatorHelpers', () => {
     });
 
     it('given response not defined should fallback to default code', () => {
-      const code = faker.random.word();
+      const code = faker.random.number();
       const desiredOptions = { dynamic: false };
       httpOperation = anHttpOperation(httpOperation).instance();
 
