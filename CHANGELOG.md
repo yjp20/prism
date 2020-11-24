@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.1.1 (2020-11-24)
+
 ## Fixed
 
 - Multiple HTTP Headers coming from a proxied response are now [correctly aggreagated using a `,`](https://tools.ietf.org/html/rfc2616#section-4.2) instead of a space. [#1489](https://github.com/stoplightio/prism/pull/1489)
@@ -15,7 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Prism will now consider the first response in the document in case of the absence of a 2XX response, instead of requiring at least a successful response. [#1531](https://github.com/stoplightio/prism/pull/1531)
 
 ## Changed
-- Prism will now validate that the requested code (either through prefer code header or __code query param) is a number. [#1542](https://github.com/stoplightio/prism/pull/1542)
+
+- Prism will now validate that the requested code (either through prefer code header or \_\_code query param) is a number. [#1542](https://github.com/stoplightio/prism/pull/1542)
 
 # 4.1.0 (2020-09-25)
 
