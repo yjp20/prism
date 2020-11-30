@@ -1,9 +1,9 @@
 import { DiagnosticSeverity } from '@stoplight/types';
 import * as convertAjvErrorsModule from '../utils';
 import { convertAjvErrors, validateAgainstSchema } from '../utils';
-import { ErrorObject } from 'ajv';
+import type { ErrorObject } from 'ajv';
 import { assertSome, assertNone } from '@stoplight/prism-core/src/__tests__/utils';
-import { JSONSchema } from '@stoplight/prism-http';
+import type { JSONSchema7 } from 'json-schema';
 
 describe('convertAjvErrors()', () => {
   const errorObjectFixture: ErrorObject = {
@@ -81,15 +81,16 @@ describe('validateAgainstSchema()', () => {
     });
 
     it('properly returns array based paths when meaningful', () => {
-      const numberSchema = {
+      const numberSchema: JSONSchema7 = {
         type: 'number',
       };
 
-      const rootArraySchema = {
+      const rootArraySchema: JSONSchema7 = {
         type: 'array',
         items: {
           type: 'object',
           required: ['id'],
+          additionalProperties: false,
           properties: {
             id: numberSchema,
             status: {
@@ -100,27 +101,79 @@ describe('validateAgainstSchema()', () => {
         },
       };
 
-      const nestedArraySchema = {
+      const nestedArraySchema: JSONSchema7 = {
         type: 'object',
         properties: {
           data: rootArraySchema,
         },
       };
 
-      assertSome(validateAgainstSchema('test', numberSchema as JSONSchema, true, 'pfx'), error => {
-        expect(error).toEqual([expect.objectContaining({ path: ['pfx'] })]);
+      const evenMoreNestedArraySchema: JSONSchema7 = {
+        type: 'object',
+        properties: {
+          value: nestedArraySchema,
+        },
+      };
+
+      assertSome(validateAgainstSchema('test', numberSchema, true, 'pfx'), error => {
+        expect(error).toEqual([expect.objectContaining({ path: ['pfx'], message: 'should be number' })]);
       });
 
-      const arr = [{ id: 11 }, { nope: false }];
+      const arr = [{ id: 11 }, { status: 'TODO' }];
 
-      assertSome(validateAgainstSchema(arr, rootArraySchema as JSONSchema, true, 'pfx'), error => {
-        expect(error).toEqual([expect.objectContaining({ path: ['pfx', '[1]'] })]);
+      assertSome(validateAgainstSchema(arr, rootArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([
+          expect.objectContaining({ path: ['pfx', '[1]'], message: "should have required property 'id'" }),
+        ]);
       });
 
       const obj = { data: arr };
 
-      assertSome(validateAgainstSchema(obj, nestedArraySchema as JSONSchema, true, 'pfx'), error => {
-        expect(error).toEqual([expect.objectContaining({ path: ['pfx', 'data[1]'] })]);
+      assertSome(validateAgainstSchema(obj, nestedArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([
+          expect.objectContaining({ path: ['pfx', 'data[1]'], message: "should have required property 'id'" }),
+        ]);
+      });
+
+      const obj2 = { value: { data: arr } };
+
+      assertSome(validateAgainstSchema(obj2, evenMoreNestedArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([
+          expect.objectContaining({ path: ['pfx', 'value', 'data[1]'], message: "should have required property 'id'" }),
+        ]);
+      });
+
+      const arr2 = [{ id: [false] }];
+
+      assertSome(validateAgainstSchema(arr2, rootArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([expect.objectContaining({ path: ['pfx', '[0]', 'id'], message: 'should be number' })]);
+      });
+
+      const arr3 = [{ id: 11 }, { status: 'TODONT' }];
+
+      assertSome(validateAgainstSchema(arr3, rootArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([
+          expect.objectContaining({ path: ['pfx', '[1]'], message: "should have required property 'id'" }),
+          expect.objectContaining({
+            path: ['pfx', '[1]', 'status'],
+            message: 'should be equal to one of the allowed values: TODO, IN_PROGRESS, CANCELLED, DONE',
+          }),
+        ]);
+      });
+
+      const arr4 = [{ id: 11 }, { id: 12, nope: false, neither: true }];
+
+      assertSome(validateAgainstSchema(arr4, rootArraySchema, true, 'pfx'), error => {
+        expect(error).toEqual([
+          expect.objectContaining({
+            path: ['pfx', '[1]'],
+            message: "should NOT have additional properties; found 'nope'",
+          }),
+          expect.objectContaining({
+            path: ['pfx', '[1]'],
+            message: "should NOT have additional properties; found 'neither'",
+          }),
+        ]);
       });
     });
   });
