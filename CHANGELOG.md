@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.1.2 (2020-12-01)
+
+## Fixed
+
+- Yet another improvement for the returned path in Problem JSON payloads [#1548](https://github.com/stoplightio/prism/pull/1548)
+- Prism is now respecting `min/maxItems` properties in JSON Schemas [#1530](https://github.com/stoplightio/prism/pull/1530)
+
 # 4.1.1 (2020-11-24)
 
 ## Fixed
