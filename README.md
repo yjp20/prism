@@ -54,7 +54,7 @@ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 
 - [Documentation](https://meta.stoplight.io/docs/prism)
   - [Getting Started](https://meta.stoplight.io/docs/getting-started/01-installation.md)
-  - [Guides](https://meta.stoplight.io/docs/guides/01-mocking.md)
+  - [Guides](https://meta.stoplight.io/docs/prism/docs/guides/01-mocking.md)
 - [Community](https://github.com/stoplightio/prism/discussions)
 
 ## 🚧 Roadmap
@@ -68,7 +68,7 @@ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 
 ## ❓ FAQs
 
-**Cannot access mock server when using docker?**
+**Cannot access mock server when using Docker?**
 
 Prism uses localhost by default, which usually means 127.0.0.1. When using docker the mock server will
 be unreachable outside of the container unless you run the mock command with `-h 0.0.0.0`.
@@ -97,7 +97,7 @@ Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](htt
 
 ## 🏁 Help Others Utilize Prism 
 
-If you're using Prism for an interesting use case, create a pull request or [contact us]() for a case study. Spread the goodness 🎉
+If you're using Prism for an interesting use case, create a pull request or [contact us](mailto:growth@stoplight.io) for a case study. Spread the goodness 🎉
 
 ## 👏 Contributing
 
