@@ -99,8 +99,6 @@ If you're using Prism for an interesting use case, [contact us](mailto:growth@st
 
 If you are interested in contributing to Prism itself, check out our [contributing docs ⇗][contributing] and [code of conduct ⇗][code_of_conduct] to get started.
 
-This project is maintained by [Stoplight](https://stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme)
-
 ## 🎉 Thanks
 
 Prism is built on top of lots of excellent packages, and here are a few we'd like to say a special thanks to.
