@@ -46,7 +46,7 @@ prism mock https://raw.githack.com/OAI/OpenAPI-Specification/master/examples/v3.
 prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 ```
 
-## 📖 Documentation & Community
+## 📖 Documentation and Community
 
 - [Documentation](https://meta.stoplight.io/docs/prism)
   - [Getting Started](https://meta.stoplight.io/docs/getting-started/01-installation.md)
