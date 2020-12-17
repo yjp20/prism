@@ -1,20 +1,8 @@
-<div align="center">
-  <a href="https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme">
-    <img src="./examples/readme-header.svg" alt="Life-like mock servers from any API Specification Document.">
-	<br>
-  <br>
-  <a href="https://circleci.com/gh/stoplightio/prism">
-    <img src="https://img.shields.io/circleci/build/github/stoplightio/prism/master" alt="Build Status">
-  </a>
-  <a href="https://www.npmjs.com/package/@stoplight/prism-cli">
-    <img src="https://img.shields.io/npm/dw/@stoplight/prism-http?color=blue" alt="NPM Downloads">
-  </a>
-  <a href="https://offset.earth/stoplightinc">
-    <img src="https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen" alt="Buy us a Tree">
-  </a>
-	<br>
-  <br>
-</div>
+[![Prism is a set of packages for API mocking with OpenAPI v2 (formerly known as Swagger) and OpenAPI v3.](./examples/readme-header.svg)](https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme)
+
+[![CircleCI](https://img.shields.io/circleci/build/github/stoplightio/prism/master)](https://circleci.com/gh/stoplightio/prism)
+[![NPM Downloads](https://img.shields.io/npm/dw/@stoplight/prism-http?color=blue)](https://www.npmjs.com/package/@stoplight/prism-cli)
+[![Buy us a tree](https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen)](https://offset.earth/stoplightinc)
 
 - **Mock Servers**: Life-like mock servers from any API Specification Document.
 - **Validation Proxy**: Contract Testing for API Consumers and Developers.
@@ -24,7 +12,15 @@
 
 > Note: This branch refers to Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, look at the [`2.x` branch][2.x]
 
-## 🧰 Install and Use
+# Overview
+
+- [Installation and Usage](#-installation-and-Usage)
+- [Documentation and Community](#-documentation-and-community)
+- [Roadmap](#-roadmap)
+- [FAQs](#-faqs)
+- [Contributing](#-contributing) 
+
+## 🧰 Installation and Usage
 
 **Installation**
 ```bash
@@ -97,7 +93,7 @@ Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](htt
 
 ## 🏁 Help Others Utilize Prism 
 
-If you're using Prism for an interesting use case, create a pull request or [contact us](mailto:growth@stoplight.io) for a case study. Spread the goodness 🎉
+If you're using Prism for an interesting use case, [contact us](mailto:growth@stoplight.io) for a case study. We'll add it to a list here. Spread the goodness 🎉
 
 ## 👏 Contributing
 
@@ -132,18 +128,6 @@ Check these projects out!
 [2.x]: https://github.com/stoplightio/prism/tree/2.x
 [http-docs]: packages/http/README.md
 
-## 📜 License
-
-Prism is 100% free and open-source, under [Apache License 2.0](LICENSE).
-
 ## 🌲 Sponsor Prism by Planting a Tree
 
-<div align="center">
-  <a href="https://offset.earth/stoplightinc">
-    <img src="https://i.ibb.co/xfHsXgn/ecologi-social-good-graphic.png" alt="Buy us a tree">
-	<br>
-  <br>
-  <a href="https://offset.earth/stoplightinc">
-    <img src="https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen" alt="Buy us a Tree">
-  </a>
-</div>
+If you would like to thank us for creating prism, we ask that you [**buy the world a tree**](https://offset.earth/stoplightinc).
