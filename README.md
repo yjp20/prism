@@ -1,8 +1,10 @@
-[![Prism is a set of packages for API mocking with OpenAPI v2 (formerly known as Swagger) and OpenAPI v3.x](./examples/readme-header.svg)](https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme)
+[![Prism - API Mock Servers and Contract Testing](./examples/readme-header.svg)][mocking_landing_page]
 
-[![CircleCI](https://img.shields.io/circleci/build/github/stoplightio/prism/master)](https://circleci.com/gh/stoplightio/prism)
-[![NPM Downloads](https://img.shields.io/npm/dw/@stoplight/prism-http?color=blue)](https://www.npmjs.com/package/@stoplight/prism-cli)
-[![Buy us a tree](https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen)](https://offset.earth/stoplightinc)
+[![CircleCI][circle_ci_image]][circle_ci]
+[![NPM Downloads][circle_ci_image]][npm]
+[![Buy us a tree][ecologi_image]][ecologi]
+
+Prism is a set of packages for API mocking and contract testing with **OpenAPI v2** (formerly known as Swagger) and **OpenAPI v3.x**.
 
 - **Mock Servers**: Life-like mock servers from any API Specification Document.
 - **Validation Proxy**: Contract Testing for API Consumers and Developers.
@@ -23,6 +25,8 @@
 ## 🧰 Installation and Usage
 
 **Installation**
+
+*Prism requires NodeJS >= 12 to properly work.*
 ```bash
 npm install -g @stoplight/prism-cli
 
@@ -30,9 +34,9 @@ npm install -g @stoplight/prism-cli
 
 yarn global add @stoplight/prism-cli
 ```
-> Prism requires NodeJS >= 12 to properly work.
 
-For more installation options, see our [installation documentation](https://meta.stoplight.io/docs/prism/docs/getting-started/01-installation.md).
+
+For more installation options, see our [installation documentation](./docs/getting-started/01-installation.md).
 
 **Mocking**
 
@@ -49,9 +53,9 @@ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 ## 📖 Documentation and Community
 
 - [Documentation](https://meta.stoplight.io/docs/prism)
-  - [Getting Started](https://meta.stoplight.io/docs/getting-started/01-installation.md)
-  - [Guides](https://meta.stoplight.io/docs/prism/docs/guides/01-mocking.md)
-- [Community](https://github.com/stoplightio/prism/discussions)
+  - [Getting Started](./docs/getting-started/01-installation.md)
+  - [Guides](./docs/guides/01-mocking.md)
+- [Community](./prism/discussions)
 
 ## 🚧 Roadmap
 
@@ -125,7 +129,10 @@ Check these projects out!
 [cli-docs]: ./docs/getting-started/03-cli.md
 [2.x]: https://github.com/stoplightio/prism/tree/2.x
 [http-docs]: packages/http/README.md
-
-## 🌲 Sponsor Prism by Planting a Tree
-
-If you would like to thank us for creating prism, we ask that you [**buy the world a tree**](https://offset.earth/stoplightinc).
+[mocking_landing_page]: https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme
+[circle_ci]: https://circleci.com/gh/stoplightio/prism
+[circle_ci_image]: https://img.shields.io/circleci/build/github/stoplightio/prism/master
+[npm]: https://www.npmjs.com/package/@stoplight/prism-cli
+[npm_image]: https://img.shields.io/npm/dw/@stoplight/prism-http?color=blue
+[ecologi]: https://ecologi.com/stoplightinc
+[ecologi_image]: https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen
