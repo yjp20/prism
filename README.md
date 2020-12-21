@@ -55,7 +55,7 @@ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 - [Documentation](https://meta.stoplight.io/docs/prism)
   - [Getting Started](./docs/getting-started/01-installation.md)
   - [Guides](./docs/guides/01-mocking.md)
-- [Community](./prism/discussions)
+- [Community](https://github.com/stoplightio/prism/discussions)
 
 ## 🚧 Roadmap
 
