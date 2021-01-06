@@ -10,8 +10,8 @@ import { is as typeIs } from 'type-is';
 import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
-import { validateFn } from './types';
-import { stripReadOnly } from 'http/src/utils/jsonSchema';
+import { Context, validateFn } from './types';
+import { stripReadOnly, stripWriteOnly } from 'http/src/utils/jsonSchema';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -83,13 +83,21 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
-export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, mediaType) => {
+const schemaProcessorMap: Record<Context, (schema: JSONSchema) => O.Option<JSONSchema>> = {
+  input: stripReadOnly,
+  output: stripWriteOnly,
+  none: s => O.some(s),
+};
+
+export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, mediaType, context = 'none') => {
   const findContentByMediaType = pipe(
     O.Do,
     O.bind('mediaType', () => O.fromNullable(mediaType)),
     O.bind('contentResult', ({ mediaType }) => findContentByMediaTypeOrFirst(specs, mediaType)),
     O.alt(() => O.some({ contentResult: { content: specs[0] || {}, mediaType: 'random' } })),
-    O.bind('schema', ({ contentResult }) => pipe(O.fromNullable(contentResult.content.schema), O.chain(stripReadOnly)))
+    O.bind('schema', ({ contentResult }) =>
+      pipe(O.fromNullable(contentResult.content.schema), O.chain(schemaProcessorMap[context]))
+    )
   );
 
   return pipe(

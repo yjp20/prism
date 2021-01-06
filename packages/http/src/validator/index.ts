@@ -33,19 +33,19 @@ const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unkno
     )
   );
 
-const validateIfBodySpecIsProvided = (body: unknown, mediaType: string, contents?: IMediaTypeContent[]) =>
+const validateInputIfBodySpecIsProvided = (body: unknown, mediaType: string, contents?: IMediaTypeContent[]) =>
   pipe(
     sequenceOption(O.fromNullable(body), O.fromNullable(contents)),
     O.fold(
       () => E.right(body),
-      ([body, contents]) => validateBody(body, contents, mediaType)
+      ([body, contents]) => validateBody(body, contents, mediaType, 'input')
     )
   );
 
-const tryValidateBody = (requestBody: IHttpOperationRequestBody, body: unknown, mediaType: string) =>
+const tryValidateInputBody = (requestBody: IHttpOperationRequestBody, body: unknown, mediaType: string) =>
   pipe(
     checkBodyIsProvided(requestBody, body),
-    E.chain(() => validateIfBodySpecIsProvided(body, mediaType, requestBody.contents))
+    E.chain(() => validateInputIfBodySpecIsProvided(body, mediaType, requestBody.contents))
   );
 
 export const validateInput: ValidatorFn<IHttpOperation, IHttpRequest> = ({ resource, element }) => {
@@ -59,7 +59,7 @@ export const validateInput: ValidatorFn<IHttpOperation, IHttpRequest> = ({ resou
       e => E.right<NonEmptyArray<IPrismDiagnostic>, unknown>(e),
       request =>
         sequenceValidation(
-          request.body ? tryValidateBody(request.body, body, mediaType) : E.right(undefined),
+          request.body ? tryValidateInputBody(request.body, body, mediaType) : E.right(undefined),
           request.headers ? validateHeaders(element.headers || {}, request.headers) : E.right(undefined),
           request.query ? validateQuery(element.url.query || {}, request.query) : E.right(undefined),
           request.path ? validatePath(getPathParams(element.url.path, resource.path), request.path) : E.right(undefined)
@@ -120,7 +120,7 @@ export const validateOutput: ValidatorFn<IHttpOperation, IHttpResponse> = ({ res
             contents => validateMediaType(contents, mediaType)
           )
         ),
-        validateBody(element.body, response.contents || [], mediaType),
+        validateBody(element.body, response.contents || [], mediaType, 'output'),
         validateHeaders(element.headers || {}, response.headers || [])
       )
     ),
