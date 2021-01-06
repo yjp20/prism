@@ -9,39 +9,47 @@ type RequiredSchemaSubset = {
   required?: string[] | false;
 };
 
-export function stripReadOnly<S extends RequiredSchemaSubset>(inputSchema: S): O.Option<S> {
-  if (inputSchema.readOnly) {
-    return O.none;
-  }
+type SchemaFilterFunc = <S extends RequiredSchemaSubset>(schema: S) => O.Option<S>;
 
-  const strippedProperties = pipe(
-    O.fromNullable(inputSchema.properties),
-    O.map(
-      mapValues(val => {
-        return pipe(
-          O.some(val),
-          O.chain(val => (typeof val === 'boolean' ? O.none : stripReadOnly(val))),
-          O.toUndefined
-        );
-      })
-    )
-  );
+const buildSchemaFilter = (predicate: (schema: RequiredSchemaSubset) => boolean): SchemaFilterFunc => {
+  const filter = <S extends RequiredSchemaSubset>(inputSchema: S): O.Option<S> => {
+    if (!predicate(inputSchema)) {
+      return O.none;
+    }
 
-  const strippedPropertyKeys = pipe(
-    strippedProperties,
-    O.map(Object.keys),
-    O.getOrElse(() => [] as string[])
-  );
+    const strippedProperties = pipe(
+      O.fromNullable(inputSchema.properties),
+      O.map(
+        mapValues(val => {
+          return pipe(
+            O.some(val),
+            O.chain(val => (typeof val === 'boolean' ? O.none : filter(val))),
+            O.toUndefined
+          );
+        })
+      )
+    );
 
-  const requiredPropertyKeys = pipe(
-    O.fromNullable(inputSchema.required || null),
-    O.map(intersection(strippedPropertyKeys)),
-    O.toUndefined
-  );
+    const strippedPropertyKeys = pipe(
+      strippedProperties,
+      O.map(Object.keys),
+      O.getOrElse(() => [] as string[])
+    );
 
-  return O.some({
-    ...inputSchema,
-    properties: O.toUndefined(strippedProperties),
-    required: requiredPropertyKeys,
-  });
-}
+    const requiredPropertyKeys = pipe(
+      O.fromNullable(inputSchema.required || null),
+      O.map(intersection(strippedPropertyKeys)),
+      O.toUndefined
+    );
+
+    return O.some({
+      ...inputSchema,
+      properties: O.toUndefined(strippedProperties),
+      required: requiredPropertyKeys,
+    });
+  };
+
+  return filter;
+};
+
+export const stripReadOnly = buildSchemaFilter(schema => schema.readOnly !== true);
