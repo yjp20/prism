@@ -6,7 +6,7 @@ import * as sampler from 'openapi-sampler';
 import { Either, tryCatch, toError, right } from 'fp-ts/Either';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
-import { stripWriteOnly } from 'http/src/utils/jsonSchema';
+import { stripWriteOnly } from '../../utils/jsonSchema';
 
 jsf.extend('faker', () => faker);
 

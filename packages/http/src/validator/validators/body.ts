@@ -11,7 +11,7 @@ import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
 import { Context, validateFn } from './types';
-import { stripReadOnly, stripWriteOnly } from 'http/src/utils/jsonSchema';
+import { stripReadOnly, stripWriteOnly } from '../../utils/jsonSchema';
 
 export function deserializeFormBody(
   schema: JSONSchema,
