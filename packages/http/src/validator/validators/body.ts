@@ -11,6 +11,7 @@ import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
 import { validateFn } from './types';
+import { stripReadOnly } from 'http/src/utils/jsonSchema';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -88,7 +89,7 @@ export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, 
     O.bind('mediaType', () => O.fromNullable(mediaType)),
     O.bind('contentResult', ({ mediaType }) => findContentByMediaTypeOrFirst(specs, mediaType)),
     O.alt(() => O.some({ contentResult: { content: specs[0] || {}, mediaType: 'random' } })),
-    O.bind('schema', ({ contentResult }) => O.fromNullable(contentResult.content.schema))
+    O.bind('schema', ({ contentResult }) => pipe(O.fromNullable(contentResult.content.schema), O.chain(stripReadOnly)))
   );
 
   return pipe(
