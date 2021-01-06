@@ -193,7 +193,7 @@ describe('HttpValidator', () => {
             error => expect(error).toHaveLength(2)
           );
 
-          expect(validators.validateBody).toHaveBeenCalledWith(undefined, [], undefined);
+          expect(validators.validateBody).toHaveBeenCalledWith(undefined, [], undefined, 'output');
           expect(validators.validateHeaders).toHaveBeenCalled();
         });
       });
