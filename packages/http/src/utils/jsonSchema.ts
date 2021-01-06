@@ -1,10 +1,11 @@
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from 'json-schema';
 import * as O from 'fp-ts/lib/Option';
 import { pipe } from 'fp-ts/pipeable';
-import { mapValues, intersection } from 'lodash/fp';
+import { mapValues, intersection, pickBy } from 'lodash/fp';
 
 type RequiredSchemaSubset = {
   readOnly?: boolean;
+  writeOnly?: boolean;
   properties?: Record<string, JSONSchema6 | JSONSchema7 | JSONSchema4 | boolean>;
   required?: string[] | false;
 };
@@ -27,7 +28,8 @@ const buildSchemaFilter = (predicate: (schema: RequiredSchemaSubset) => boolean)
             O.toUndefined
           );
         })
-      )
+      ),
+      O.map(pickBy(val => val !== undefined))
     );
 
     const strippedPropertyKeys = pipe(
@@ -53,3 +55,4 @@ const buildSchemaFilter = (predicate: (schema: RequiredSchemaSubset) => boolean)
 };
 
 export const stripReadOnly = buildSchemaFilter(schema => schema.readOnly !== true);
+export const stripWriteOnly = buildSchemaFilter(schema => schema.writeOnly !== true);
