@@ -1292,13 +1292,6 @@
     once "^1.4.0"
     universal-user-agent "^4.0.0"
 
-"@openapi-contrib/openapi-schema-to-json-schema@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@openapi-contrib/openapi-schema-to-json-schema/-/openapi-schema-to-json-schema-3.0.4.tgz#a0e29445b9cd76331c473ab820e97b28ae828ebc"
-  integrity sha512-+1RBoJ+xjX8mIXxisTJVlN/r6DOh4kyszw3cLBSAxwKP7Ui42DjlxWgR2PnWxOOWtRCnQurRzlsvL1ce5FUrWg==
-  dependencies:
-    fast-deep-equal "^3.1.3"
-
 "@sinonjs/commons@^1.7.0":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.7.1.tgz#da5fd19a5f71177a53778073978873964f49acf1"
@@ -1313,13 +1306,12 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stoplight/http-spec@^3.2.4":
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-3.2.4.tgz#bfd99b77591d726ab2bd659659d56b0ca73ac5d3"
-  integrity sha512-a91QeJVoCdic7AJ8h879vhNzqFl2G+gDwej3oA4KMims/eDLaDbPrkaJ/QksRhvnw2EmZ/lJ43ykvoSa1M2Erg==
+"@stoplight/http-spec@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@stoplight/http-spec/-/http-spec-3.3.0.tgz#eddfbcf74cd140ad10b28960cedb37493fa39439"
+  integrity sha512-4FuZ/VarJAwHZdVIVNhGQ1Po675V/Iheu8CL/WQhlis4wojHfv4mnZvAYUJtL1txGJL+g2dG+NSkFKXAHztN9w==
   dependencies:
-    "@openapi-contrib/openapi-schema-to-json-schema" "^3.0.4"
-    "@stoplight/json" "^3.8.1"
+    "@stoplight/json" "^3.10.2"
     "@stoplight/types" "^11.9.0"
     "@types/swagger-schema-official" "~2.0.21"
     "@types/to-json-schema" "^0.2.0"
@@ -1332,7 +1324,7 @@
     type-is "^1.6.18"
     urijs "~1.19.2"
 
-"@stoplight/json@^3.10.3", "@stoplight/json@^3.8.1":
+"@stoplight/json@^3.10.2", "@stoplight/json@^3.10.3":
   version "3.10.3"
   resolved "https://registry.yarnpkg.com/@stoplight/json/-/json-3.10.3.tgz#1c0c5da0cc689c0fcd2a43166d9378e930530556"
   integrity sha512-4WV/8AhF555CHIRmvE7FAqzapeYeFRWDS1MSJkEcOiJIWel0eUhDzjSVzHgg89gMn/d838wRNsxr/nJkSmgNtg==
@@ -3617,7 +3609,7 @@ faker@4.1.0, faker@^4.1.0:
   resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
   integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
 
-fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
+fast-deep-equal@^3.1.1:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
