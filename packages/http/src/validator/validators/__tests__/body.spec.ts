@@ -38,6 +38,21 @@ describe('validate()', () => {
     });
   });
 
+  it('supports nullables', () => {
+    const mockSchema: JSONSchema = {
+      type: 'object',
+      properties: { id: { type: 'integer', nullable: true } },
+      required: ['id'],
+    };
+    assertRight(
+      validate(
+        { id: null },
+        [{ mediaType: 'application/json', schema: mockSchema, examples: [], encodings: [] }],
+        'application/json'
+      )
+    );
+  });
+
   describe('body is form-urlencoded with deep object style', () => {
     it('returns no validation errors', () => {
       assertRight(
