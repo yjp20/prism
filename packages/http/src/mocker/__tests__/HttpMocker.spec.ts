@@ -72,6 +72,26 @@ describe('mocker', () => {
             },
           ],
         },
+        {
+          code: '422',
+          headers: [],
+          contents: [
+            {
+              mediaType: 'application/json',
+              examples: [
+                {
+                  key: 'invalid_1',
+                  value: 'invalid input 1',
+                },
+                {
+                  key: 'invalid_2',
+                  value: 'invalid input 2',
+                },
+              ],
+              encodings: [],
+            },
+          ],
+        },
       ],
     };
 
@@ -293,6 +313,25 @@ describe('mocker', () => {
 
         expect(helpers.negotiateOptionsForValidRequest).not.toHaveBeenCalled();
         expect(helpers.negotiateOptionsForInvalidRequest).toHaveBeenCalled();
+      });
+
+      describe('with examples are defined and exampleKey is defined', () => {
+        const response = mock({
+          input: Object.assign({}, mockInput, { validations: [{ severity: DiagnosticSeverity.Error }] }),
+          resource: mockResource,
+          config: { dynamic: false, exampleKey: 'invalid_2' },
+        })(logger);
+
+        it('should return the selected example', () => {
+          const selectedExample = flatMap(mockResource.responses, res =>
+            flatMap(res.contents, content => content.examples || [])
+          ).find(ex => ex.key === 'invalid_2');
+
+          expect(selectedExample).toBeDefined();
+          assertRight(response, result => {
+            expect(result.body).toEqual((selectedExample as INodeExample).value);
+          });
+        });
       });
     });
 

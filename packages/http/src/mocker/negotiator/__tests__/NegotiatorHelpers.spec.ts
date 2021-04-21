@@ -63,35 +63,71 @@ describe('NegotiatorHelpers', () => {
       const actualMediaType = faker.system.mimeType();
       const actualExampleKey = faker.random.word();
 
-      test('and has static examples defined should return the first static example', () => {
-        httpOperation = anHttpOperation(httpOperation)
-          .withResponses([
-            {
-              code: actualCode,
-              headers: [],
-              contents: [
-                {
-                  mediaType: actualMediaType,
-                  examples: [
-                    { key: actualExampleKey, value: '', externalValue: '' },
-                    { key: faker.random.word(), value: '', externalValue: '' },
-                  ],
-                  encodings: [],
-                },
-              ],
-            },
-          ])
-          .instance();
+      describe('and has static examples defined', () => {
+        test('and exampleKey is defined should return an example matching example key', () => {
+          httpOperation = anHttpOperation(httpOperation)
+            .withResponses([
+              {
+                code: actualCode,
+                headers: [],
+                contents: [
+                  {
+                    mediaType: actualMediaType,
+                    examples: [
+                      { key: faker.random.word(), value: 'value 1', externalValue: '' },
+                      { key: 'preferredExample', value: 'value 2', externalValue: '' },
+                    ],
+                    encodings: [],
+                  },
+                ],
+              },
+            ])
+            .instance();
 
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
-        const expectedConfig: IHttpNegotiationResult = {
-          code: actualCode,
-          mediaType: actualMediaType,
-          bodyExample: { key: actualExampleKey, value: '', externalValue: '' },
-          headers: [],
-        };
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(
+            httpOperation.responses,
+            [422, 400],
+            'preferredExample'
+          )(logger);
+          const expectedConfig: IHttpNegotiationResult = {
+            code: actualCode,
+            mediaType: actualMediaType,
+            bodyExample: { key: 'preferredExample', value: 'value 2', externalValue: '' },
+            headers: [],
+          };
 
-        assertRight(actualConfig, operationConfig => expect(operationConfig).toEqual(expectedConfig));
+          assertRight(actualConfig, operationConfig => expect(operationConfig).toEqual(expectedConfig));
+        });
+        test('should return the first static example', () => {
+          httpOperation = anHttpOperation(httpOperation)
+            .withResponses([
+              {
+                code: actualCode,
+                headers: [],
+                contents: [
+                  {
+                    mediaType: actualMediaType,
+                    examples: [
+                      { key: actualExampleKey, value: '', externalValue: '' },
+                      { key: faker.random.word(), value: '', externalValue: '' },
+                    ],
+                    encodings: [],
+                  },
+                ],
+              },
+            ])
+            .instance();
+
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
+          const expectedConfig: IHttpNegotiationResult = {
+            code: actualCode,
+            mediaType: actualMediaType,
+            bodyExample: { key: actualExampleKey, value: '', externalValue: '' },
+            headers: [],
+          };
+
+          assertRight(actualConfig, operationConfig => expect(operationConfig).toEqual(expectedConfig));
+        });
       });
 
       describe('and has no static contents', () => {
