@@ -334,11 +334,18 @@ const helpers = {
         O.fromNullable(exampleKey),
         O.fold(
           () => O.fromNullable(contentWithExamples.examples[0]), // if exampleKey is not specified use first example
-          exampleKey => findExampleByKey(contentWithExamples, exampleKey)
+          exampleKey =>
+            pipe(
+              findExampleByKey(contentWithExamples, exampleKey),
+              O.alt(() => {
+                logger.warn(`An example with key ${exampleKey} does not exist. The first example will be used.`);
+                return O.fromNullable(contentWithExamples.examples[0]);
+              })
+            )
         ),
         O.fold(
           () => {
-            throw new Error(`An example with the specified exampleKey does not exist for ${response.code} response.`);
+            throw new Error(`An example could not be found for ${response.code} response.`);
           },
           bodyExample =>
             E.right({
