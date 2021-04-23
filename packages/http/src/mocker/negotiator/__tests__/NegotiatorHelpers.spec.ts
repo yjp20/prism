@@ -72,6 +72,7 @@ describe('NegotiatorHelpers', () => {
               examples: [
                 { key: 'key_1', value: 'value_1', externalValue: 'ext_value_1' },
                 { key: 'key_2', value: 'value_2', externalValue: 'ext_value_2' },
+                { key: 'key_3', value: 'value_3', externalValue: 'ext_value_3' },
               ],
               encodings: [],
             },
@@ -100,7 +101,7 @@ describe('NegotiatorHelpers', () => {
             })
           );
         });
-        test('and exampleKey is defined but does not exist should return first example', () => {
+        test('and exampleKey is defined but does not exist should return 404 error', () => {
           httpOperation = anHttpOperation(httpOperation).withResponses([response]).instance();
 
           const actualConfig = helpers.negotiateOptionsForInvalidRequest(
@@ -109,10 +110,11 @@ describe('NegotiatorHelpers', () => {
             'undefined key'
           )(logger);
 
-          assertRight(actualConfig, operationConfig =>
-            expect(operationConfig).toEqual({
-              ...expectedResult,
-              bodyExample: { key: 'key_1', value: 'value_1', externalValue: 'ext_value_1' },
+          assertLeft(actualConfig, operationConfig =>
+            expect(operationConfig).toMatchObject({
+              name: 'https://stoplight.io/prism/errors#NOT_FOUND',
+              status: 404,
+              detail: `Response for contentType: ${actualMediaType} and exampleKey: undefined key does not exist.`,
             })
           );
         });

@@ -155,11 +155,14 @@ export function createInvalidInputResponse(
     R.chain(() =>
       pipe(
         helpers.negotiateOptionsForInvalidRequest(responses, securityValidation ? [401] : [422, 400], exampleKey),
-        RE.mapLeft(() =>
-          securityValidation
+        RE.mapLeft(error => {
+          if (error instanceof ProblemJsonError && error.status === 404) {
+            return error;
+          }
+          return securityValidation
             ? createUnauthorisedResponse(securityValidation.tags)
-            : createUnprocessableEntityResponse(failedValidations)
-        )
+            : createUnprocessableEntityResponse(failedValidations);
+        })
       )
     )
   );

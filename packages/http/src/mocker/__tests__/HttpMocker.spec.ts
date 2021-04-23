@@ -7,7 +7,7 @@ import mock from '../../mocker';
 import * as JSONSchemaGenerator from '../../mocker/generator/JSONSchema';
 import { IHttpRequest, JSONSchema } from '../../types';
 import helpers from '../negotiator/NegotiatorHelpers';
-import { assertRight } from '@stoplight/prism-core/src/__tests__/utils';
+import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 import { runCallback } from '../callback/callbacks';
 
 jest.mock('../callback/callbacks', () => ({
@@ -330,6 +330,29 @@ describe('mocker', () => {
           expect(selectedExample).toBeDefined();
           assertRight(response, result => {
             expect(result.body).toEqual((selectedExample as INodeExample).value);
+          });
+        });
+      });
+
+      describe('with examples are defined and incorrect exampleKey', () => {
+        const response = mock({
+          input: Object.assign({}, mockInput, { validations: [{ severity: DiagnosticSeverity.Error }] }),
+          resource: mockResource,
+          config: { dynamic: false, exampleKey: 'missingKey' },
+        })(logger);
+
+        it('should return 404 error', () => {
+          const selectedExample = flatMap(mockResource.responses, res =>
+            flatMap(res.contents, content => content.examples || [])
+          ).find(ex => ex.key === 'invalid_2');
+
+          expect(selectedExample).toBeDefined();
+          assertLeft(response, result => {
+            expect(result).toMatchObject({
+              detail: 'Response for contentType: application/json and exampleKey: missingKey does not exist.',
+              name: 'https://stoplight.io/prism/errors#NOT_FOUND',
+              status: 404,
+            });
           });
         });
       });

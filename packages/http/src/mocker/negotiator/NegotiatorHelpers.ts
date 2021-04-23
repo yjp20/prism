@@ -324,37 +324,49 @@ const helpers = {
       }
     };
 
+    /**
+     * If exampleKey is provided - we try to find a matching example.
+     * If exampleKey is not provided - the first example will be returned.
+     */
     const buildResponseByExamples = (
       response: IHttpOperationResponse,
       contentWithExamples: IWithExampleMediaContent,
-      logger: Logger
+      logger: Logger,
+      exampleKey?: string
     ) => {
       logger.success(`The response ${response.code} has an example. I'll keep going with this one`);
       return pipe(
         O.fromNullable(exampleKey),
         O.fold(
-          () => O.fromNullable(contentWithExamples.examples[0]), // if exampleKey is not specified use first example
+          () =>
+            pipe(
+              O.fromNullable(contentWithExamples.examples[0]), // if exampleKey is not specified use first example
+              E.fromOption(() =>
+                ProblemJsonError.fromTemplate(
+                  NOT_FOUND,
+                  `First example for contentType: ${contentWithExamples.mediaType} does not exist.`
+                )
+              )
+            ),
           exampleKey =>
             pipe(
               findExampleByKey(contentWithExamples, exampleKey),
-              O.alt(() => {
-                logger.warn(`An example with key ${exampleKey} does not exist. The first example will be used.`);
-                return O.fromNullable(contentWithExamples.examples[0]);
-              })
+              E.fromOption(() =>
+                ProblemJsonError.fromTemplate(
+                  NOT_FOUND,
+                  `Response for contentType: ${contentWithExamples.mediaType} and exampleKey: ${exampleKey} does not exist.`
+                )
+              )
             )
         ),
-        O.fold(
-          () => {
-            throw new Error(`An example could not be found for ${response.code} response.`);
-          },
-          bodyExample =>
-            E.right({
-              code: response.code,
-              mediaType: contentWithExamples.mediaType,
-              headers: response.headers || [],
-              bodyExample,
-            })
-        )
+        E.map(bodyExample => {
+          return {
+            code: response.code,
+            mediaType: contentWithExamples.mediaType,
+            headers: response.headers || [],
+            bodyExample,
+          };
+        })
       );
     };
 
@@ -369,7 +381,7 @@ const helpers = {
               O.fromNullable(response.contents && response.contents.find(contentHasExamples)),
               O.fold(
                 () => buildResponseBySchema(response, logger),
-                contentWithExamples => buildResponseByExamples(response, contentWithExamples, logger)
+                contentWithExamples => buildResponseByExamples(response, contentWithExamples, logger, exampleKey)
               )
             )
           )
