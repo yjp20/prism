@@ -20,6 +20,7 @@ import {
   findLowest2xx,
   findResponseByStatusCode,
   findFirstResponse,
+  IWithExampleMediaContent,
 } from './InternalHelpers';
 import { IHttpNegotiationResult, NegotiatePartialOptions, NegotiationOptions } from './types';
 import { JSONSchema, ProblemJsonError } from '../../types';
@@ -53,7 +54,7 @@ const helpers = {
         ),
         E.map(bodyExample => ({ code, mediaType, bodyExample }))
       );
-    } else if (dynamic === true) {
+    } else if (dynamic) {
       return pipe(
         httpContent.schema,
         E.fromNullable(new Error(`Tried to force a dynamic response for: ${mediaType} but schema is not defined.`)),
@@ -296,50 +297,94 @@ const helpers = {
 
   negotiateOptionsForInvalidRequest(
     httpResponses: IHttpOperationResponse[],
-    statusCodes: NonEmptyArray<number>
+    statusCodes: NonEmptyArray<number>,
+    exampleKey?: string
   ): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
+    const buildResponseBySchema = (response: IHttpOperationResponse, logger: Logger) => {
+      logger.debug(`Unable to find a content with an example defined for the response ${response.code}`);
+      // find first response with a schema
+      const responseWithSchema = response.contents && response.contents.find(content => !!content.schema);
+      if (responseWithSchema) {
+        logger.success(`The response ${response.code} has a schema. I'll keep going with this one`);
+        return E.right({
+          code: response.code,
+          mediaType: responseWithSchema.mediaType,
+          schema: responseWithSchema.schema,
+          headers: response.headers || [],
+        });
+      } else {
+        return pipe(
+          createEmptyResponse(response.code, response.headers || [], ['*/*']),
+          E.fromOption(() => {
+            logger.debug(`Unable to find a content with a schema defined for the response ${response.code}`);
+
+            return new Error(`Neither schema nor example defined for ${response.code} response.`);
+          })
+        );
+      }
+    };
+
+    /**
+     * If exampleKey is provided - we try to find a matching example.
+     * If exampleKey is not provided - the first example will be returned.
+     */
+    const buildResponseByExamples = (
+      response: IHttpOperationResponse,
+      contentWithExamples: IWithExampleMediaContent,
+      logger: Logger,
+      exampleKey?: string
+    ) => {
+      logger.success(`The response ${response.code} has an example. I'll keep going with this one`);
+      return pipe(
+        O.fromNullable(exampleKey),
+        O.fold(
+          () =>
+            pipe(
+              O.fromNullable(contentWithExamples.examples[0]), // if exampleKey is not specified use first example
+              E.fromOption(() =>
+                ProblemJsonError.fromTemplate(
+                  NOT_FOUND,
+                  `First example for contentType: ${contentWithExamples.mediaType} does not exist.`
+                )
+              )
+            ),
+          exampleKey =>
+            pipe(
+              findExampleByKey(contentWithExamples, exampleKey),
+              E.fromOption(() =>
+                ProblemJsonError.fromTemplate(
+                  NOT_FOUND,
+                  `Response for contentType: ${contentWithExamples.mediaType} and exampleKey: ${exampleKey} does not exist.`
+                )
+              )
+            )
+        ),
+        E.map(bodyExample => {
+          return {
+            code: response.code,
+            mediaType: contentWithExamples.mediaType,
+            headers: response.headers || [],
+            bodyExample,
+          };
+        })
+      );
+    };
+
     return pipe(
       helpers.findResponse(httpResponses, statusCodes),
       R.chain(foundResponse => logger =>
         pipe(
           foundResponse,
           E.fromOption(() => new Error('No 422, 400, or default responses defined')),
-          E.chain(response => {
-            // find first response with any static examples
-            const contentWithExamples = response.contents && response.contents.find(contentHasExamples);
-
-            if (contentWithExamples) {
-              logger.success(`The response ${response.code} has an example. I'll keep going with this one`);
-              return E.right({
-                code: response.code,
-                mediaType: contentWithExamples.mediaType,
-                bodyExample: contentWithExamples.examples[0],
-                headers: response.headers || [],
-              });
-            } else {
-              logger.debug(`Unable to find a content with an example defined for the response ${response.code}`);
-              // find first response with a schema
-              const responseWithSchema = response.contents && response.contents.find(content => !!content.schema);
-              if (responseWithSchema) {
-                logger.success(`The response ${response.code} has a schema. I'll keep going with this one`);
-                return E.right({
-                  code: response.code,
-                  mediaType: responseWithSchema.mediaType,
-                  schema: responseWithSchema.schema,
-                  headers: response.headers || [],
-                });
-              } else {
-                return pipe(
-                  createEmptyResponse(response.code, response.headers || [], ['*/*']),
-                  E.fromOption(() => {
-                    logger.debug(`Unable to find a content with a schema defined for the response ${response.code}`);
-
-                    return new Error(`Neither schema nor example defined for ${response.code} response.`);
-                  })
-                );
-              }
-            }
-          })
+          E.chain(response =>
+            pipe(
+              O.fromNullable(response.contents && response.contents.find(contentHasExamples)),
+              O.fold(
+                () => buildResponseBySchema(response, logger),
+                contentWithExamples => buildResponseByExamples(response, contentWithExamples, logger, exampleKey)
+              )
+            )
+          )
         )
       )
     );

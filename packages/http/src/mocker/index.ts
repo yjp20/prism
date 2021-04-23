@@ -1,11 +1,11 @@
-import { IPrismComponents, IPrismInput, IPrismDiagnostic } from '@stoplight/prism-core';
+import { IPrismComponents, IPrismDiagnostic, IPrismInput } from '@stoplight/prism-core';
 import {
   DiagnosticSeverity,
   IHttpHeaderParam,
   IHttpOperation,
-  INodeExample,
-  IMediaTypeContent,
   IHttpOperationResponse,
+  IMediaTypeContent,
+  INodeExample,
 } from '@stoplight/types';
 
 import * as caseless from 'caseless';
@@ -17,15 +17,15 @@ import { sequenceT } from 'fp-ts/Apply';
 import * as R from 'fp-ts/Reader';
 import * as O from 'fp-ts/Option';
 import * as RE from 'fp-ts/ReaderEither';
-import { isNumber, isString, keyBy, mapValues, groupBy, get, partial } from 'lodash';
+import { get, groupBy, isNumber, isString, keyBy, mapValues, partial } from 'lodash';
 import { Logger } from 'pino';
 import { is } from 'type-is';
 import {
   ContentExample,
+  IHttpMockConfig,
   IHttpOperationConfig,
   IHttpRequest,
   IHttpResponse,
-  IHttpMockConfig,
   PayloadGenerator,
   ProblemJsonError,
 } from '../types';
@@ -145,7 +145,8 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 
 export function createInvalidInputResponse(
   failedValidations: NonEmptyArray<IPrismDiagnostic>,
-  responses: IHttpOperationResponse[]
+  responses: IHttpOperationResponse[],
+  exampleKey?: string
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
 
@@ -153,12 +154,15 @@ export function createInvalidInputResponse(
     withLogger(logger => logger.warn({ name: 'VALIDATOR' }, 'Request did not pass the validation rules')),
     R.chain(() =>
       pipe(
-        helpers.negotiateOptionsForInvalidRequest(responses, securityValidation ? [401] : [422, 400]),
-        RE.mapLeft(() =>
-          securityValidation
+        helpers.negotiateOptionsForInvalidRequest(responses, securityValidation ? [401] : [422, 400], exampleKey),
+        RE.mapLeft(error => {
+          if (error instanceof ProblemJsonError && error.status === 404) {
+            return error;
+          }
+          return securityValidation
             ? createUnauthorisedResponse(securityValidation.tags)
-            : createUnprocessableEntityResponse(failedValidations)
-        )
+            : createUnprocessableEntityResponse(failedValidations);
+        })
       )
     )
   );
@@ -196,7 +200,7 @@ function negotiateResponse(
   );
 
   if (errors && A.isNonEmpty(input.validations)) {
-    return createInvalidInputResponse(input.validations, resource.responses);
+    return createInvalidInputResponse(input.validations, resource.responses, mockConfig.exampleKey);
   } else {
     return pipe(
       withLogger(logger => {

@@ -61,37 +61,75 @@ describe('NegotiatorHelpers', () => {
     describe('and 422 response exists', () => {
       const actualCode = '422';
       const actualMediaType = faker.system.mimeType();
-      const actualExampleKey = faker.random.word();
 
-      test('and has static examples defined should return the first static example', () => {
-        httpOperation = anHttpOperation(httpOperation)
-          .withResponses([
+      describe('and has static examples defined', () => {
+        const response = {
+          code: actualCode,
+          headers: [],
+          contents: [
             {
-              code: actualCode,
-              headers: [],
-              contents: [
-                {
-                  mediaType: actualMediaType,
-                  examples: [
-                    { key: actualExampleKey, value: '', externalValue: '' },
-                    { key: faker.random.word(), value: '', externalValue: '' },
-                  ],
-                  encodings: [],
-                },
+              mediaType: actualMediaType,
+              examples: [
+                { key: 'key_1', value: 'value_1', externalValue: 'ext_value_1' },
+                { key: 'key_2', value: 'value_2', externalValue: 'ext_value_2' },
+                { key: 'key_3', value: 'value_3', externalValue: 'ext_value_3' },
               ],
+              encodings: [],
             },
-          ])
-          .instance();
-
-        const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
-        const expectedConfig: IHttpNegotiationResult = {
+          ],
+        };
+        const expectedResult: IHttpNegotiationResult = {
           code: actualCode,
           mediaType: actualMediaType,
-          bodyExample: { key: actualExampleKey, value: '', externalValue: '' },
+          bodyExample: undefined,
           headers: [],
         };
 
-        assertRight(actualConfig, operationConfig => expect(operationConfig).toEqual(expectedConfig));
+        test('and exampleKey is defined should return an example matching example key', () => {
+          httpOperation = anHttpOperation(httpOperation).withResponses([response]).instance();
+
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(
+            httpOperation.responses,
+            [422, 400],
+            'key_2'
+          )(logger);
+
+          assertRight(actualConfig, operationConfig =>
+            expect(operationConfig).toEqual({
+              ...expectedResult,
+              bodyExample: { key: 'key_2', value: 'value_2', externalValue: 'ext_value_2' },
+            })
+          );
+        });
+        test('and exampleKey is defined but does not exist should return 404 error', () => {
+          httpOperation = anHttpOperation(httpOperation).withResponses([response]).instance();
+
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(
+            httpOperation.responses,
+            [422, 400],
+            'undefined key'
+          )(logger);
+
+          assertLeft(actualConfig, operationConfig =>
+            expect(operationConfig).toMatchObject({
+              name: 'https://stoplight.io/prism/errors#NOT_FOUND',
+              status: 404,
+              detail: `Response for contentType: ${actualMediaType} and exampleKey: undefined key does not exist.`,
+            })
+          );
+        });
+        test('and exampleKey is not defined should return the first static example', () => {
+          httpOperation = anHttpOperation(httpOperation).withResponses([response]).instance();
+
+          const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
+
+          assertRight(actualConfig, operationConfig =>
+            expect(operationConfig).toEqual({
+              ...expectedResult,
+              bodyExample: { key: 'key_1', value: 'value_1', externalValue: 'ext_value_1' },
+            })
+          );
+        });
       });
 
       describe('and has no static contents', () => {
