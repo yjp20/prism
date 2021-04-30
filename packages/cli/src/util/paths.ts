@@ -28,7 +28,7 @@ export function createExamplePath(
     E.bind('pathData', () => generateTemplateAndValuesForPathParams(operation)),
     E.bind('queryData', ({ pathData }) => generateTemplateAndValuesForQueryParams(pathData.template, operation)),
     E.map(({ pathData, queryData }) =>
-      decodeURI(URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values })))
+      URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values }))
     )
   );
 }
