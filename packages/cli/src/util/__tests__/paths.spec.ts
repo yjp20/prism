@@ -273,6 +273,27 @@ describe('createExamplePath()', () => {
         e => expect(e.message).toEqual('Space delimited style is only applicable to array parameter')
       );
     });
+
+    it('encodes params with special characters', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                name: 'StartTime>',
+                style: HttpParamStyles.Form,
+                examples: [{ key: 'foo', value: '1985-10-25T03:33:00.613Z' }],
+              },
+            ],
+          },
+          responses: [{ code: '200' }],
+        }),
+        r => expect(r).toEqual('/path?StartTime%3E=1985-10-25T03%3A33%3A00.613Z')
+      );
+    });
   });
 
   describe('mixed parameters', () => {

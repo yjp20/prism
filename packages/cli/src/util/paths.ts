@@ -82,7 +82,7 @@ function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<un
     traverseEither(specs, spec =>
       pipe(
         generateParamValue(spec),
-        E.map(value => [spec.name, value])
+        E.map(value => [encodeURI(spec.name), value])
       )
     ),
     E.map(fromPairs)
@@ -141,7 +141,12 @@ function createParamUriTemplate(name: string, style: HttpParamStyles, explode: b
 
 function createQueryUriTemplate(path: string, specs: IHttpQueryParam[]) {
   // defaults for query: style=Form exploded=false
-  const formSpecs = specs.filter(spec => (spec.style || HttpParamStyles.Form) === HttpParamStyles.Form);
+  const formSpecs = specs
+    .filter(spec => (spec.style || HttpParamStyles.Form) === HttpParamStyles.Form)
+    .map(spec => {
+      spec.name = encodeURI(spec.name);
+      return spec;
+    });
 
   const formExplodedParams = formSpecs
     .filter(spec => spec.required !== false)
