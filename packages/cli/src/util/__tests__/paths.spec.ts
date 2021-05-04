@@ -274,7 +274,7 @@ describe('createExamplePath()', () => {
       );
     });
 
-    it('generates when params have special characters', () => {
+    it('encodes params with special characters', () => {
       assertRight(
         createExamplePath({
           id: '123',
