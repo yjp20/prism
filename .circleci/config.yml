@@ -10,7 +10,7 @@ executors:
         name: httpbin.org
   macos:
     macos:
-      xcode: 11.3.0
+      xcode: 10.2.1
 
 orbs:
   stoplight: stoplight/cli@0.0.3
@@ -53,7 +53,7 @@ jobs:
           condition: <<parameters.install_manually>>
           steps:
             - run:
-                command: brew install pipenv
+                command: pip3 install pipenv
                 environment:
                   HOMEBREW_NO_AUTO_UPDATE: 1
             - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
