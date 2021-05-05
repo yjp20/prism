@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.2.2 (2021-05-04)
+
+## Fixed
+
+- encodeURI param names to avoid performance issues on startup [#1816](https://github.com/stoplightio/prism/pull/1816)
+
 # 4.2.1 (2021-04-28)
 
 ## Changed
