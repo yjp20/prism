@@ -54,8 +54,6 @@ jobs:
           steps:
             - run:
                 command: pip3 install pipenv
-                environment:
-                  HOMEBREW_NO_AUTO_UPDATE: 1
             - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
             - run: git clone https://github.com/postmanlabs/httpbin httpbin
             - run: cd httpbin && pip3 install --no-cache-dir -r <(pipenv lock -r) && pip3 install --no-cache-dir ./
