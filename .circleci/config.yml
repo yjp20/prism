@@ -53,7 +53,7 @@ jobs:
           condition: <<parameters.install_manually>>
           steps:
             - run:
-                command: brew install pipenv
+                command: brew install pipenv && brew link --overwrite python@2
                 environment:
                   HOMEBREW_NO_AUTO_UPDATE: 1
             - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
@@ -121,11 +121,11 @@ workflows:
           name: harness-macos
           executor: macos
           install_manually: true
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /.*/
+#          filters:
+#            branches:
+#              only: master
+#            tags:
+#              only: /.*/
       - harness:
           executor: docker-harness
           install_manually: false
