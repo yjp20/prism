@@ -10,7 +10,7 @@ executors:
         name: httpbin.org
   macos:
     macos:
-      xcode: 10.2.1
+      xcode: 11.3.0
 
 orbs:
   stoplight: stoplight/cli@0.0.3
@@ -52,7 +52,6 @@ jobs:
       - when:
           condition: <<parameters.install_manually>>
           steps:
-            - run: brew unlink python@2
             - run:
                 command: brew install pipenv
                 environment:
