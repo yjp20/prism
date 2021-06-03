@@ -27,7 +27,7 @@ export function matchPath(requestPath: string, operationPath: string): E.Either<
     return E.right(MatchType.NOMATCH);
   }
 
-  // a/b:c
+  // a/b:c = a/b:c
   const operationPathColonFragments = fragmentarizeWithColon(operationPath);
   const requestPathColonFragments = fragmentarizeWithColon(requestPath);
   if (
