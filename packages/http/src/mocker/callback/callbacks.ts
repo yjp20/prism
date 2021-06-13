@@ -7,6 +7,7 @@ import * as O from 'fp-ts/Option';
 import * as A from 'fp-ts/Array';
 import * as TE from 'fp-ts/TaskEither';
 import * as RTE from 'fp-ts/ReaderTaskEither';
+import * as JSON from 'fp-ts/json';
 import { traverseOption } from '../../combinators';
 import { head } from 'fp-ts/Array';
 import { pipe } from 'fp-ts/function';
@@ -77,7 +78,7 @@ function assembleBody(request?: IHttpOperationRequest): O.Option<{ body: string;
     O.bind('body', ({ content }) => generateHttpParam(content)),
     O.chain(({ body, content: { mediaType } }) =>
       pipe(
-        E.stringifyJSON(body, () => undefined),
+        JSON.stringify(body),
         E.map(body => ({ body, mediaType })),
         O.fromEither
       )
