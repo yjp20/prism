@@ -88,8 +88,8 @@ function assembleBody(request?: IHttpOperationRequest): O.Option<{ body: string;
 const assembleHeaders = (request?: IHttpOperationRequest, bodyMediaType?: string): O.Option<Dictionary<string>> =>
   pipe(
     O.fromNullable(request?.headers),
-    O.chain(params =>
-      traverseOption(params, param =>
+    O.chain(
+      traverseOption(param =>
         pipe(
           generateHttpParam(param),
           O.map(value => [param.name, value])

@@ -5,6 +5,6 @@ import { sequenceT } from 'fp-ts/Apply';
 import { getSemigroup } from 'fp-ts/NonEmptyArray';
 import { getValidation } from 'fp-ts/Either';
 
-export const traverseOption = A.array.traverse(O.option);
+export const traverseOption = A.traverse(O.option);
 export const sequenceOption = sequenceT(O.option);
 export const sequenceValidation = sequenceT(getValidation(getSemigroup<IPrismDiagnostic>()));
