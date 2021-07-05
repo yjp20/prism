@@ -42,4 +42,39 @@ describe('filterRequiredProperties', () => {
       });
     });
   });
+
+  it('strips nested properties', () => {
+    const schema: JSONSchema = {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        title: { type: 'string', readOnly: true },
+        author: {
+          type: 'object',
+          properties: {
+            userId: { type: 'string' },
+            username: { type: 'string', writeOnly: true },
+          },
+          required: ['userId', 'username'],
+        },
+      },
+      required: ['name', 'title', 'author'],
+    };
+
+    assertSome(stripWriteOnlyProperties(schema), schema => {
+      expect(schema.required).toEqual(['name', 'title', 'author']);
+      expect(schema.properties).toMatchObject({
+        name: expect.any(Object),
+        title: expect.any(Object),
+        author: expect.objectContaining({
+          properties: {
+            userId: {
+              type: 'string',
+            },
+          },
+          required: ['userId'],
+        }),
+      });
+    });
+  });
 });
