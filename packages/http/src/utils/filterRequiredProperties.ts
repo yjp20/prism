@@ -61,8 +61,11 @@ const buildSchemaFilter = <S extends RequiredSchemaSubset>(
       O.map(schema => Object.keys(schema.properties || {})),
       O.map(updatedProperties => {
         const originalPropertyNames = Object.keys(originalSchema.properties || {});
-        return originalPropertyNames.filter(name => updatedProperties.includes(name));
+        return originalPropertyNames.filter(name => !updatedProperties.includes(name));
       }),
+      O.map(removedProperties =>
+        (originalSchema.required as string[]).filter(name => !removedProperties.includes(name))
+      ),
       O.map(required => {
         return {
           ...updatedSchema,
