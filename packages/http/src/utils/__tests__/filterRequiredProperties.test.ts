@@ -16,7 +16,7 @@ describe('filterRequiredProperties', () => {
 
     assertSome(stripWriteOnlyProperties(schema), schema => {
       expect(schema.required).toEqual(['name', 'title']);
-      expect(schema.properties).toMatchObject({
+      expect(schema.properties).toEqual({
         name: expect.any(Object),
         title: expect.any(Object),
       });
@@ -36,14 +36,14 @@ describe('filterRequiredProperties', () => {
 
     assertSome(stripReadOnlyProperties(schema), schema => {
       expect(schema.required).toEqual(['name', 'description']);
-      expect(schema.properties).toMatchObject({
+      expect(schema.properties).toEqual({
         name: expect.any(Object),
         description: expect.any(Object),
       });
     });
   });
 
-  it('strips nested properties', () => {
+  it('strips nested writeOnly properties', () => {
     const schema: JSONSchema = {
       type: 'object',
       properties: {
@@ -63,7 +63,7 @@ describe('filterRequiredProperties', () => {
 
     assertSome(stripWriteOnlyProperties(schema), schema => {
       expect(schema.required).toEqual(['name', 'title', 'author']);
-      expect(schema.properties).toMatchObject({
+      expect(schema.properties).toEqual({
         name: expect.any(Object),
         title: expect.any(Object),
         author: expect.objectContaining({
