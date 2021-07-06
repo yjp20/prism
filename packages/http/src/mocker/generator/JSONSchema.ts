@@ -27,7 +27,9 @@ export function generate(bundle: unknown, source: JSONSchema): Either<Error, unk
   return pipe(
     stripWriteOnlyProperties(source),
     E.fromOption(() => Error('Cannot strip writeOnly properties')),
-    E.chain(() => tryCatch(() => jsf.generate({ ...cloneDeep(source), __bundled__: bundle }), toError))
+    E.chain(updatedSource =>
+      tryCatch(() => jsf.generate({ ...cloneDeep(updatedSource), __bundled__: bundle }), toError)
+    )
   );
 }
 
