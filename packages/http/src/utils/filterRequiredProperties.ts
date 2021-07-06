@@ -23,16 +23,20 @@ const buildSchemaFilter = <S extends RequiredSchemaSubset>(
       O.map(properties =>
         pipe(
           Object.keys(properties),
-          A.reduce({} as Properties, (filteredProperties: Properties, propertyName) =>
-            pipe(
-              properties[propertyName],
-              p => (typeof p === 'boolean' ? O.none : filter(p as S)),
-              O.map(v => ({ ...filteredProperties, [propertyName]: v } as Properties)),
-              O.fold(
-                () => filteredProperties,
-                v => v
-              )
-            )
+          A.reduce(
+            {} as Properties,
+            (filteredProperties: Properties, propertyName): Properties => {
+              return pipe(
+                properties[propertyName],
+                O.fromPredicate(p => typeof p !== 'boolean'),
+                O.chain(p => filter(p as S)),
+                O.map(v => ({ ...filteredProperties, [propertyName]: v } as Properties)),
+                O.fold(
+                  () => filteredProperties,
+                  v => v
+                )
+              );
+            }
           )
         )
       ),
