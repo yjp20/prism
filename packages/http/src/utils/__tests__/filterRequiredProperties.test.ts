@@ -77,4 +77,24 @@ describe('filterRequiredProperties', () => {
       });
     });
   });
+
+  it('strips writeOnly properties and leaves boolean properties', () => {
+    const schema: JSONSchema = {
+      type: 'object',
+      properties: {
+        name: true,
+        description: { type: 'string', writeOnly: true },
+        title: { type: 'string', readOnly: true },
+      },
+      required: ['name', 'description', 'title'],
+    };
+
+    assertSome(stripWriteOnlyProperties(schema), schema => {
+      expect(schema.required).toEqual(['name', 'title']);
+      expect(schema.properties).toEqual({
+        name: true,
+        title: { type: 'string', readOnly: true },
+      });
+    });
+  });
 });

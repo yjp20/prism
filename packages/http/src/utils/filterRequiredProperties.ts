@@ -28,7 +28,13 @@ const buildSchemaFilter = <S extends RequiredSchemaSubset>(
             (filteredProperties: Properties, propertyName): Properties => {
               return pipe(
                 properties[propertyName],
-                O.fromPredicate(p => typeof p !== 'boolean'),
+                O.fromPredicate(p => {
+                  if (typeof p === 'boolean') {
+                    filteredProperties[propertyName] = properties[propertyName];
+                    return false;
+                  }
+                  return true;
+                }),
                 O.chain(p => filter(p as S)),
                 O.map(v => ({ ...filteredProperties, [propertyName]: v } as Properties)),
                 O.fold(
