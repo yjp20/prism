@@ -97,4 +97,24 @@ describe('filterRequiredProperties', () => {
       });
     });
   });
+
+  it('removes required properties that have been filterer', () => {
+    const schema: JSONSchema = {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string', writeOnly: true },
+        priority: { type: 'number', default: 0 },
+      },
+      required: ['title', 'description'],
+    };
+
+    assertSome(stripWriteOnlyProperties(schema), schema => {
+      expect(schema.required).toEqual(['title']);
+      expect(schema.properties).toEqual({
+        title: { type: 'string' },
+        priority: { type: 'number', default: 0 },
+      });
+    });
+  });
 });
