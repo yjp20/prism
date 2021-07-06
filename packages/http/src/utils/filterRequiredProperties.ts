@@ -1,58 +1,83 @@
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from 'json-schema';
-import { mapValues, intersection, pickBy } from 'lodash/fp';
 import { pipe } from 'fp-ts/function';
-import * as O from 'fp-ts/lib/Option';
+import * as O from 'fp-ts/Option';
+import { Option } from 'fp-ts/Option';
+import * as A from 'fp-ts/Array';
+import { JSONSchema } from '../types';
+
+type Properties = Record<string, JSONSchema6 | JSONSchema7 | JSONSchema4 | boolean>;
 
 type RequiredSchemaSubset = {
   readOnly?: boolean;
   writeOnly?: boolean;
-  properties?: Record<string, JSONSchema6 | JSONSchema7 | JSONSchema4 | boolean>;
+  properties?: Properties;
   required?: string[] | false;
 };
 
-type SchemaFilterFunc = <S extends RequiredSchemaSubset>(schema: S) => O.Option<S>;
-
-const buildSchemaFilter = (predicate: (schema: RequiredSchemaSubset) => boolean): SchemaFilterFunc => {
-  const filter = <S extends RequiredSchemaSubset>(inputSchema: S): O.Option<S> => {
-    if (!predicate(inputSchema)) {
-      return O.none;
-    }
-
-    const strippedProperties = pipe(
-      O.fromNullable(inputSchema.properties),
-      O.map(
-        mapValues(val => {
-          return pipe(
-            O.some(val),
-            O.chain(val => (typeof val === 'boolean' ? O.none : filter(val))),
-            O.toUndefined
-          );
-        })
+const buildSchemaFilter = <S extends RequiredSchemaSubset>(
+  keepPropertyPredicate: (schema: S) => Option<S>
+): ((schema: S) => Option<S>) => {
+  function filterProperties(schema: S): Option<S> {
+    return pipe(
+      O.fromNullable(schema.properties),
+      O.map(properties =>
+        pipe(
+          Object.keys(properties),
+          A.reduce({} as Properties, (filteredProperties: Properties, propertyName) =>
+            pipe(
+              properties[propertyName],
+              p => (typeof p === 'boolean' ? O.none : filter(p as S)),
+              O.map(v => ({ ...filteredProperties, [propertyName]: v } as Properties)),
+              O.fold(
+                () => filteredProperties,
+                v => v
+              )
+            )
+          )
+        )
       ),
-      O.map(pickBy(val => val !== undefined))
+      O.map(filteredProperties => ({
+        ...schema,
+        properties: filteredProperties,
+      })),
+      O.alt(() => O.some(schema))
     );
+  }
 
-    const strippedPropertyKeys = pipe(
-      strippedProperties,
-      O.map(Object.keys),
-      O.getOrElse(() => [] as string[])
+  function filterRequired(updatedSchema: S, originalSchema: S): Option<S> {
+    return pipe(
+      updatedSchema,
+      O.fromPredicate((schema: S) => Array.isArray(schema.required)),
+      O.map(schema => Object.keys(schema.properties || {})),
+      O.map(updatedProperties => {
+        const originalPropertyNames = Object.keys(originalSchema.properties || {});
+        return originalPropertyNames.filter(name => updatedProperties.includes(name));
+      }),
+      O.map(required => {
+        return {
+          ...updatedSchema,
+          required,
+        };
+      }),
+      O.alt(() => O.some(updatedSchema))
     );
+  }
 
-    const requiredPropertyKeys = pipe(
-      O.fromNullable(inputSchema.required || null),
-      O.map(intersection(strippedPropertyKeys)),
-      O.toUndefined
+  function filter(inputSchema: S): Option<S> {
+    return pipe(
+      inputSchema,
+      keepPropertyPredicate,
+      O.chain(inputSchema => filterProperties(inputSchema)),
+      O.chain(schema => filterRequired(schema, inputSchema))
     );
-
-    return O.some({
-      ...inputSchema,
-      properties: O.toUndefined(strippedProperties),
-      required: requiredPropertyKeys,
-    });
-  };
+  }
 
   return filter;
 };
 
-export const stripReadOnlyProperties = buildSchemaFilter(schema => schema.readOnly !== true);
-export const stripWriteOnlyProperties = buildSchemaFilter(schema => schema.writeOnly !== true);
+export const stripReadOnlyProperties = buildSchemaFilter(
+  O.fromPredicate((schema: JSONSchema) => schema.readOnly !== true)
+);
+export const stripWriteOnlyProperties = buildSchemaFilter(
+  O.fromPredicate((schema: JSONSchema) => schema.writeOnly !== true)
+);
