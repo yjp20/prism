@@ -98,7 +98,7 @@ describe('filterRequiredProperties', () => {
     });
   });
 
-  it('removes required properties that have been filterer', () => {
+  it('removes required properties that have been filtered', () => {
     const schema: JSONSchema = {
       type: 'object',
       properties: {
