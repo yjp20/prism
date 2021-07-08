@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.3.0 (2021-07-08)
+
+## Changed
+
+- Supports readOnly writeOnly properties [#1853](https://github.com/stoplightio/prism/pull/1853)
+
 # 4.2.6 (2021-06-23)
 
 ## Changed
