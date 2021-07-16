@@ -9,6 +9,7 @@ import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import type { JSONSchema } from '../../';
+import { compareDateTime, date_time, fmtDef } from './dateTime';
 
 const baseAjvOptions: Partial<Options> = {
   allErrors: true,
@@ -23,6 +24,9 @@ function createAjvInstances(Ajv: typeof AjvCore) {
 
   addFormats(ajv);
   addFormats(ajvNoCoerce);
+
+  ajv.addFormat('date-time', fmtDef(date_time, compareDateTime));
+  ajvNoCoerce.addFormat('date-time', fmtDef(date_time, compareDateTime));
 
   return {
     coerce: ajv,
