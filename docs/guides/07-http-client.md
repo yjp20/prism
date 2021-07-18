@@ -117,5 +117,7 @@ client.get('/users/10', { baseUrl: 'https://api.stoplight.io/' }).then(console.l
 
 ```ts
 client.request('https://google.it', { method: 'get' }, { mock: { dynamic: true } }).then(console.log);
-client.request('https://google.it', { method: 'get' }, { mock: false, upstream: new URL('https://api.example.com') ).then(console.log);
+client
+  .request('https://google.it', { method: 'get' }, { mock: false, upstream: new URL('https://api.example.com') })
+  .then(console.log);
 ```

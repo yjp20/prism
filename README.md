@@ -16,17 +16,18 @@ Prism is a set of packages for API mocking and contract testing with **OpenAPI v
 
 # Overview
 
-- [Installation and Usage](#-installation-and-Usage)
+- [Installation and Usage](#-installation-and-usage)
 - [Documentation and Community](#-documentation-and-community)
 - [Roadmap](#-roadmap)
 - [FAQs](#-faqs)
-- [Contributing](#-contributing) 
+- [Contributing](#-contributing)
 
 ## 🧰 Installation and Usage
 
 **Installation**
 
-*Prism requires NodeJS >= 12 to properly work.*
+_Prism requires NodeJS >= 12 to properly work._
+
 ```bash
 npm install -g @stoplight/prism-cli
 
@@ -34,7 +35,6 @@ npm install -g @stoplight/prism-cli
 
 yarn global add @stoplight/prism-cli
 ```
-
 
 For more installation options, see our [installation documentation](./docs/getting-started/01-installation.md).
 
@@ -88,14 +88,14 @@ see what URLs you have available.
 
 **Is there a hosted version of Prism?**
 
-Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme) 
+Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme)
 
 ## ⚙️ Integrations
 
 - [Stoplight Studio](https://stoplight.io/studio/?utm_source=github&utm_medium=prism&utm_campaign=readme): Free visual OpenAPI designer that comes integrated with mocking powered by Prism.
-- [Stoplight Platform](https://stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism. 
+- [Stoplight Platform](https://stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism.
 
-## 🏁 Help Others Utilize Prism 
+## 🏁 Help Others Utilize Prism
 
 If you're using Prism for an interesting use case, [contact us](mailto:growth@stoplight.io) for a case study. We'll add it to a list here. Spread the goodness 🎉
 
