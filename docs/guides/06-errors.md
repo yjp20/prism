@@ -16,7 +16,9 @@ This class of errors is returned when Prism is trying to identify the right reso
 ### NO_BASE_URL_ERROR
 
 **Message: Attempted to make a request to a server but neither baseUrl param were provided nor servers were defined in the spec**
+
 **Returned Status Code: `400`**
+
 **Explanation:** This error occurs when Prism is being used as a proxy and the current document is missing at least a server in the dedicated array (both globally and locally). The proxy functionality is currently disabled in Prism, so this error should never happen.
 
 ---
@@ -24,7 +26,9 @@ This class of errors is returned when Prism is trying to identify the right reso
 ### NO_RESOURCE_PROVIDED_ERROR
 
 **Message: Route not resolved, no resource provided**
+
 **Returned Status Code: `404`**
+
 **Explanation:** This error occurs when the current document does not have any endpoint.
 
 ##### Example
@@ -41,7 +45,9 @@ paths:
 ### NO_PATH_MATCHED_ERROR
 
 **Message: Route not resolved, no path matched**
+
 **Returned Status Code: `404`**
+
 **Explanation:** This error occurs when the current document does not have any endpoint matching the requested URL.
 
 ##### Example
@@ -63,7 +69,9 @@ paths:
 ### NO_SERVER_MATCHED_ERROR
 
 **Message: Route not resolved, no server matched**
+
 **Returned Status Code: `404`**
+
 **Explanation:** This error occurs when the server validation is enabled, and the current request has **not** sent the current server or the provided one is not among the defined in the relative array in the file.
 
 ##### Example
@@ -99,7 +107,9 @@ servers:
 ### NO_METHOD_MATCHED_ERROR
 
 **Message: Route resolved, but no path matched**
+
 **Returned Status Code: `405`**
+
 **Explanation:** This error occurs when the current document has an endpoint with the requested URL, but the specified Verb is not listed.
 
 ##### Example
@@ -121,7 +131,9 @@ paths:
 ### NO_SERVER_CONFIGURATION_PROVIDED_ERROR
 
 **Message: Route not resolved, no server configuration provided**
+
 **Returned Status Code: `404`**
+
 **Explanation:** This error occurs when a base URL has been provided in the current request (enabling the server validation feature) but the current document does not have any `servers` field/entry.
 
 ## Validation errors
@@ -131,7 +143,9 @@ This class of errors is returned when Prism is validating the request/response a
 ### UNPROCESSABLE_ENTITY
 
 **Message: Invalid request**
+
 **Returned Status Code: `422`**
+
 **Explanation:** This error occurs when the current request has not passed the validation rules specified in the current OpenAPI file _and_ the current resource is missing an error message (`422`, `400`, `default`). Note that this is an error _generated_ by Prism.
 
 The `detail` field contains further information on the error (whether it's on the body, the headers or the query string).
@@ -141,7 +155,9 @@ The `detail` field contains further information on the error (whether it's on th
 ### NOT_ACCEPTABLE
 
 **Message: The server cannot produce a representation for your accept header**
+
 **Returned Status Code: `406`**
+
 **Explanation:** This error occurs when the current request has asked the response in a format that the current document is not able to produce.
 
 ##### Example
@@ -167,13 +183,17 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 ### NOT_FOUND
 
 **Message: The server cannot find the requested content**
+
 **Returned Status Code: `404`**
+
 **Explanation:** This error occurs when the current request is asking for a specific status code that the document is not listing or it's asking for a specific example that does not exist in the current document
 
 ### VIOLATIONS
 
 **Message: Request/Response not valid**
+
 **Returned Status Code: `500`**
+
 **Explanation:** This error occurs when you're run Prism with the `--errors` flag and the request or the response has at least one violation marked as an error
 
 ---
@@ -185,7 +205,9 @@ This class of errors is returned when the current request is not satisfying the 
 ### UNAUTHORIZED
 
 **Message: Invalid security scheme used**
+
 **Returned Status Code: `401`**
+
 **Explanation:** This error occurs when the security scheme for the current resource does not match the one that the one that the request being processed has provided.
 
 ---
@@ -197,7 +219,9 @@ This class of errors is returned when anything goes wrong in between your **vali
 ### NO_COMPLEX_OBJECT_TEXT
 
 **Message: Cannot serialise complex objects as text**
+
 **Returned Status Code: `500`**
+
 **Explanation:** This error occurs when the current request accepts the `text/*` as the response content type and Prism decided to respond with that, but the schema associated with the selected response of the operation generated a non primive payload and Prism has no idea how to serialise it.
 
 ##### Example
@@ -227,7 +251,9 @@ paths:
 ### NO_RESPONSE_DEFINED
 
 **Message: No response defined for the selected operation**
+
 **Returned Status Code: `500`**
+
 **Explanation:** This error occurs when the current request has matched a corresponding HTTP Operation and has passed all the validations, but there's no response that could be returned.
 
 ##### Example
