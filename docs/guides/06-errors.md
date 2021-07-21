@@ -188,7 +188,7 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 
 **Explanation:** This error occurs when the current request is asking for a specific status code that the document is not listing or it's asking for a specific example that does not exist in the current document
 
-### VIOLATIONS
+### VIOLATIONS
 
 **Message: Request/Response not valid**
 
