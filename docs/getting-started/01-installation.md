@@ -54,7 +54,7 @@ services:
     volumes:
       - ./api.oas3.yml:/tmp/api.oas3.yml:ro
     ports:
-      # Serve the mockAPI locally as available on port 8080
+      # Serve the mocked API locally as available on port 8080
       - "8080:4010"
 ```
 The above can be expanded if you with to [support TLS termination](../guides/10-nginx-tls-proxy.md).
