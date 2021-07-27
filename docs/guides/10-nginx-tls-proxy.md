@@ -5,18 +5,20 @@ While prism doesn't natively support TLS, it can be fairly easily provided by us
 If you don't already have a self-signed certificate and configuration for nginx, there is [an excellent post](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04) by Digital Ocean that may help. The examples below used the steps outlined to create the configuration and certificates, but the steps have been abbreviated.
 
 The below files assume the following folder structure:
-
+```
 📦cool-website
  ┣ 📂 nginx
  ┃ ┗ 📜 default.conf
- ┣ 📂 tls
+ ┃ 📂 tls
  ┃ ┗ 📜 dhparam.pem
  ┃ ┗ 📜 tls-proxy.crt
  ┃ ┗ 📜 tls-proxy.key
- ┣ 📜.gitignore
+ ┣ 📜 .gitignore
  ┣ 📜 api.oas3.yml
  ┗ 📜 docker-compose.yml
+```
 
+Extending the basic `docker-compose.yml` from the installation guide to include nginx and a simple network:
 
 ```yaml
 ---
@@ -86,4 +88,4 @@ server {
 }
 ```
 
-This should set up a minimal TLS termination layer which proxies all requests on port 443 back to prism. You may wish to extend the example to allow for switching HTTP requests over to HTTPS by redirecting them.
+This should set up a minimal TLS termination layer which proxies all requests on port 443 back to prism. You may wish to extend the example to allow for switching HTTP requests over to HTTPS by redirecting them, or use a `.env` file and environmental variables to control file and ports.
