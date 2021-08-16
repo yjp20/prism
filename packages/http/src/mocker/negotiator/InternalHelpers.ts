@@ -4,10 +4,11 @@ import * as accepts from 'accepts';
 import * as contentType from 'content-type';
 import * as O from 'fp-ts/Option';
 import * as A from 'fp-ts/Array';
-import { pick } from 'lodash';
+import * as N from 'fp-ts/Number';
 import * as NEA from 'fp-ts/NonEmptyArray';
-import { ord, ordNumber } from 'fp-ts/Ord';
+import { contramap } from 'fp-ts/Ord';
 import { pipe } from 'fp-ts/function';
+import { pick } from 'lodash';
 import { ContentExample } from '../../';
 
 export type IWithExampleMediaContent = IMediaTypeContent & { examples: NEA.NonEmptyArray<ContentExample> };
@@ -54,7 +55,7 @@ export function findDefaultContentType(contents: IMediaTypeContent[]): O.Option<
   );
 }
 
-const byResponseCode = ord.contramap<number, IHttpOperationResponse>(ordNumber, response => parseInt(response.code));
+const byResponseCode = contramap((response: IHttpOperationResponse) => parseInt(response.code))(N.Ord);
 
 export function findLowest2xx(httpResponses: IHttpOperationResponse[]): O.Option<IHttpOperationResponse> {
   const first2xxResponse = pipe(
