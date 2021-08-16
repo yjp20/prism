@@ -4,7 +4,7 @@ import * as accepts from 'accepts';
 import * as contentType from 'content-type';
 import * as O from 'fp-ts/Option';
 import * as A from 'fp-ts/Array';
-import * as N from 'fp-ts/Number';
+import * as N from 'fp-ts/number';
 import * as NEA from 'fp-ts/NonEmptyArray';
 import { contramap } from 'fp-ts/Ord';
 import { pipe } from 'fp-ts/function';
