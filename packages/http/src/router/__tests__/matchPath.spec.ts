@@ -152,4 +152,8 @@ describe('matchPath()', () => {
 
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
   });
+
+  test('it does not match if separators are not equal', () => {
+    assertRight(matchPath('a:b/c', 'a/b:c'), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
 });
