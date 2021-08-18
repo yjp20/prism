@@ -10,7 +10,9 @@ import { is as typeIs } from 'type-is';
 import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
-import { validateFn } from './types';
+import { ValidationContext, validateFn } from './types';
+
+import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -64,7 +66,7 @@ export function findContentByMediaTypeOrFirst(specs: IMediaTypeContent[], mediaT
   );
 }
 
-function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, target: string) {
+function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, target: string, bundle?: unknown) {
   const encodings = get(content, 'encodings', []);
   const encodedUriParams = splitUriParams(target);
 
@@ -74,7 +76,7 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
     E.map(decodedUriEntities => deserializeFormBody(schema, encodings, decodedUriEntities)),
     E.chain(deserialised =>
       pipe(
-        validateAgainstSchema(deserialised, schema, true),
+        validateAgainstSchema(deserialised, schema, true, undefined, bundle),
         E.fromOption(() => deserialised),
         E.swap
       )
@@ -82,13 +84,20 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
-export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, mediaType) => {
+const normalizeSchemaProcessorMap: Record<ValidationContext, (schema: JSONSchema) => O.Option<JSONSchema>> = {
+  [ValidationContext.Input]: stripReadOnlyProperties,
+  [ValidationContext.Output]: stripWriteOnlyProperties,
+};
+
+export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, context, mediaType, bundle) => {
   const findContentByMediaType = pipe(
     O.Do,
     O.bind('mediaType', () => O.fromNullable(mediaType)),
     O.bind('contentResult', ({ mediaType }) => findContentByMediaTypeOrFirst(specs, mediaType)),
     O.alt(() => O.some({ contentResult: { content: specs[0] || {}, mediaType: 'random' } })),
-    O.bind('schema', ({ contentResult }) => O.fromNullable(contentResult.content.schema))
+    O.bind('schema', ({ contentResult }) =>
+      pipe(O.fromNullable(contentResult.content.schema), O.chain(normalizeSchemaProcessorMap[context]))
+    )
   );
 
   return pipe(
@@ -102,7 +111,7 @@ export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, 
           O.fold(
             () =>
               pipe(
-                validateAgainstSchema(target, schema, false),
+                validateAgainstSchema(target, schema, false, undefined, bundle),
                 E.fromOption(() => target),
                 E.swap
               ),
@@ -143,7 +152,7 @@ function validateAgainstReservedCharacters(
       const property = encoding.property;
       const value = encodedUriParams[property];
 
-      if (!allowReserved && typeof value === 'string' && /[/?#[\]@!$&'()*+,;=]/.test(value)) {
+      if (!allowReserved && /[/?#[\]@!$&'()*+,;=]/.test(value)) {
         diagnostics.push({
           path: [property],
           message: 'Reserved characters used in request body',

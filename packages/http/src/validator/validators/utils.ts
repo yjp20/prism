@@ -9,6 +9,7 @@ import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import type { JSONSchema } from '../../';
+import { compareDateTime, date_time, fmtDef } from './dateTime';
 
 const baseAjvOptions: Partial<Options> = {
   allErrors: true,
@@ -23,6 +24,9 @@ function createAjvInstances(Ajv: typeof AjvCore) {
 
   addFormats(ajv);
   addFormats(ajvNoCoerce);
+
+  ajv.addFormat('date-time', fmtDef(date_time, compareDateTime));
+  ajvNoCoerce.addFormat('date-time', fmtDef(date_time, compareDateTime));
 
   return {
     coerce: ajv,
@@ -75,10 +79,16 @@ export const validateAgainstSchema = (
   value: unknown,
   schema: JSONSchema,
   coerce: boolean,
-  prefix?: string
+  prefix?: string,
+  bundle?: unknown
 ): O.Option<NonEmptyArray<IPrismDiagnostic>> =>
   pipe(
-    O.tryCatch(() => assignAjvInstance(String(schema.$schema), coerce).compile(schema)),
+    O.tryCatch(() =>
+      assignAjvInstance(String(schema.$schema), coerce).compile({
+        ...schema,
+        __bundled__: bundle,
+      })
+    ),
     O.chainFirst(validateFn => O.tryCatch(() => validateFn(value))),
     O.chain(validateFn => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray))),
     O.map(errors => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix))

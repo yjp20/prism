@@ -12,21 +12,24 @@ The goal of this document is to provide you with some basic code examples to get
 
 ## Important
 
-If you're a regular user and not a PRO, you might to want to use the [User facing client](../../docs/guides/http-client.md) which provides a better an higher lever API
+If you're a regular user and not a PRO, you might to want to use the [User facing client](../../docs/guides/07-http-client.md) which provides a better an higher lever API
 
 # Table of Contents
 
 - [Installation](#installation)
 - [Basic Usages](#basic-usages)
+  - [Mock All Responses](#mock-all-responses)
+  - [Mock Single Response](#mock-single-response)
+  - [Make Request To An Upstream Server](#make-request-to-an-upstream-server)
 - [Advanced Topics](#advanced-topics)
   - [Creating Prism Instance](#creating-prism-instance)
-    - [Config Property](#config-property)
+    - [Config Object](#config-object)
       - [Config Examples](#config-examples)
   - [Loading specs](#loading-specs)
   - [Making requests](#making-requests)
     - [Server Validation](#server-validation)
   - [Understanding response](#understanding-response)
-  - [Gotchas](#gotchas)
+  - [Prism Decision Flow Diagram](#prism-decision-flow-diagram)
 
 # Installation
 
@@ -95,24 +98,24 @@ Output
 }
 ```
 
-Note: the `request` method returns a [`TaskEither` monad](https://gcanti.github.io/fp-ts/modules/TaskEither.ts.html). So in case you want to extract the result, you're going to need to use the [pipe](https://gcanti.github.io/fp-ts/modules/pipeable.ts.html#pipe-function) function.
+Note: the `request` method returns a [`TaskEither` monad](https://gcanti.github.io/fp-ts/modules/TaskEither.ts.html). So in case you want to extract the result, you're going to need to use the [pipe](https://gcanti.github.io/fp-ts/modules/function.ts.html#pipe) function.
 
 ```ts
-  return pipe(
-    prism.request(
-      {
-        method: 'get',
-        url: {
-          path: '/todos',
-        },
-        headers: {
-          Accept: 'text/plain',
-        },
+return pipe(
+  prism.request(
+    {
+      method: 'get',
+      url: {
+        path: '/todos',
       },
-      operations
-    ),
-    TE.fold(console.error, console.log);
-  )(); // returns a Promise
+      headers: {
+        Accept: 'text/plain',
+      },
+    },
+    operations
+  ),
+  TE.fold(console.error, console.log)
+)(); // returns a Promise
 ```
 
 ## Mock Single Response
@@ -205,6 +208,8 @@ export interface IHttpConfig extends IPrismConfig {
   mock: { dynamic: false } | IHttpOperationConfig;
   validateRequest: boolean;
   validateResponse: boolean;
+  checkSecurity: boolean;
+  errors: boolean;
 }
 ```
 
@@ -229,7 +234,7 @@ This contrasts "dynamic responses" which means generating responses from a json 
 ```javascript
 const config = {
   mock: {
-    example: 'key',
+    exampleKey: 'key',
   },
 };
 ```
@@ -243,7 +248,7 @@ This configuration allows you to be very specific which example you want to choo
 const config = {
   mock: {
     code: 403,
-    mimeType: 'application/xml',
+    mediaTypes: ['application/xml'],
   },
 };
 ```
@@ -254,7 +259,7 @@ This will enforce a 403 response (given that such response is defined in your Op
 
 The Http package does not have any pre-canned loader for the specification files. You need to feed it with an array of operations that can be used for the request/response cycle.
 
-You can find an example by looking at the `getHttpOperations.ts` file in the CLI package.
+You can find an example by looking at the [operations.ts](../cli/src/operations.ts) file in the CLI package.
 
 ## Making requests
 
@@ -277,7 +282,7 @@ export interface IHttpRequest {
   method: HttpMethod;
   url: IHttpUrl;
   headers?: IHttpNameValue;
-  body?: any;
+  body?: unknown;
 }
 ```
 

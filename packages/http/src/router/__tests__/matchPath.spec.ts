@@ -68,7 +68,6 @@ describe('matchPath()', () => {
       includeColon: true,
     });
     const operationPath = requestPath.replace(':', '/');
-    console.log(requestPath, operationPath);
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
   });
 

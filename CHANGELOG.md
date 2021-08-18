@@ -8,6 +8,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.3.1 (2021-07-16)
+
+## Fixed
+
+- Fixed issue with date-time type validation [#1856](https://github.com/stoplightio/prism/pull/1856)
+
+# 4.3.0 (2021-07-08)
+
+## Changed
+
+- Supports readOnly writeOnly properties [#1853](https://github.com/stoplightio/prism/pull/1853)
+
+# 4.2.6 (2021-06-23)
+
+## Changed
+
+- Increase Max Request Size to 10mb by default [#1844](https://github.com/stoplightio/prism/pull/1844)
+
+# 4.2.5 (2021-05-25)
+
+## Changed
+
+- Support Circular JSON Refs [#1835](https://github.com/stoplightio/prism/pull/1835)
+
+# 4.2.4 (2021-05-24)
+
+## Changed
+
+- Improved the build pipeline [#1834](https://github.com/stoplightio/prism/pull/1834)
+
+# 4.2.3 (2021-05-17)
+
+## Fixed
+
+- bumped `sanitize-html` dep to address security issue [#1828](https://github.com/stoplightio/prism/pull/1828)
+
 # 4.2.2 (2021-05-04)
 
 ## Fixed

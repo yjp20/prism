@@ -13,7 +13,7 @@ import {
   IHttpQueryParam,
 } from '@stoplight/types';
 import * as E from 'fp-ts/Either';
-import { sequenceSEither, traverseEither } from '../combinators';
+import { sequenceSEither } from '../combinators';
 import { pipe } from 'fp-ts/function';
 import { identity, fromPairs } from 'lodash';
 import { URI } from 'uri-template-lite';
@@ -79,7 +79,8 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
-    traverseEither(specs, spec =>
+    specs,
+    E.traverseArray(spec =>
       pipe(
         generateParamValue(spec),
         E.map(value => [encodeURI(spec.name), value])
@@ -110,13 +111,12 @@ function generateTemplateAndValuesForQueryParams(template: string, operation: IH
 function createPathUriTemplate(inputPath: string, specs: IHttpPathParam[]): E.Either<Error, string> {
   // defaults for query: style=Simple exploded=false
   return pipe(
-    traverseEither(
-      specs.filter(spec => spec.required !== false),
-      spec =>
-        pipe(
-          createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
-          E.map(param => ({ param, name: spec.name }))
-        )
+    specs.filter(spec => spec.required !== false),
+    E.traverseArray(spec =>
+      pipe(
+        createParamUriTemplate(spec.name, spec.style || HttpParamStyles.Simple, spec.explode || false),
+        E.map(param => ({ param, name: spec.name }))
+      )
     ),
     E.map(values => values.reduce((acc, current) => acc.replace(`{${current.name}}`, current.param), inputPath))
   );

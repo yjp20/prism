@@ -15,8 +15,6 @@ import { matchBaseUrl } from './matchBaseUrl';
 import { matchPath } from './matchPath';
 import { IMatch, MatchType } from './types';
 
-const eitherSequence = A.array.sequence(E.either);
-
 const route: IPrismComponents<IHttpOperation, IHttpRequest, unknown, IHttpConfig>['route'] = ({ resources, input }) => {
   const { path: requestPath, baseUrl: requestBaseUrl } = input.url;
 
@@ -33,7 +31,7 @@ const route: IPrismComponents<IHttpOperation, IHttpRequest, unknown, IHttpConfig
       )
     ),
     E.chain(resources =>
-      eitherSequence(
+      E.sequenceArray(
         resources.map(resource =>
           pipe(
             matchPath(requestPath, resource.path),
@@ -136,7 +134,7 @@ const route: IPrismComponents<IHttpOperation, IHttpRequest, unknown, IHttpConfig
 function matchServer(servers: IServer[], requestBaseUrl: string): E.Either<Error, MatchType> {
   return pipe(
     servers.map(server => matchBaseUrl(server, requestBaseUrl)),
-    eitherSequence,
+    E.sequenceArray,
     E.map(matches => matches.filter(match => match !== MatchType.NOMATCH)),
     E.map(disambiguateServers)
   );
