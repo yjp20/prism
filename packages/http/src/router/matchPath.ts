@@ -1,18 +1,29 @@
 import { MatchType } from './types';
 import * as E from 'fp-ts/Either';
 
-function fragmentarize(path: string): string[] {
+function fragmentize(path: string): string[] {
   return path.split('/').slice(1);
 }
 
-function getTemplateParamName(pathFragment: string) {
-  const match = /{(.*)}/.exec(pathFragment);
+// Attempt to decode path fragment. Decode should not do any harm since it is
+// decoding only URI sequences which are previously created by encodeURIComponent
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURIComponent
+function decodePathFragment(pathFragment?: string) {
+  try {
+    return pathFragment && decodeURIComponent(pathFragment);
+  } catch (_) {
+    return pathFragment;
+  }
+}
+
+function getTemplateParamName(pathFragment?: string) {
+  const match = typeof pathFragment === 'string' && /{(.*)}/.exec(pathFragment);
   return match && match[1];
 }
 
 export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
-  const operationPathFragments = fragmentarize(operationPath);
-  const requestPathFragments = fragmentarize(requestPath);
+  const operationPathFragments = fragmentize(operationPath);
+  const requestPathFragments = fragmentize(requestPath);
 
   if (
     operationPathFragments.length < requestPathFragments.length ||
@@ -23,10 +34,11 @@ export function matchPath(requestPath: string, operationPath: string): E.Either<
 
   const params = [];
   while (requestPathFragments.length) {
-    const requestPathFragment = requestPathFragments.shift();
-    const operationPathFragment = operationPathFragments.shift();
+    // make sure fragments are decoded before comparing them
+    const requestPathFragment = decodePathFragment(requestPathFragments.shift());
+    const operationPathFragment = decodePathFragment(operationPathFragments.shift());
 
-    const paramName = getTemplateParamName(operationPathFragment as string);
+    const paramName = getTemplateParamName(operationPathFragment);
 
     if (paramName === null && operationPathFragment !== requestPathFragment) {
       // if concrete fragment and fragments are different return false

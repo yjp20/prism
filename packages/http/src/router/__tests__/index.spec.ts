@@ -477,6 +477,31 @@ describe('http router', () => {
           );
         });
 
+        test('given encoded path should match to not encoded path', () => {
+          const method = pickOneHttpMethod();
+          const url = faker.internet.url();
+          const path = randomPath({ includeTemplates: false, includeSpaces: true });
+
+          const expectedResource = createResource(method, path, [
+            {
+              url,
+            },
+          ]);
+          assertRight(
+            route({
+              resources: [expectedResource],
+              input: {
+                method,
+                url: {
+                  baseUrl: url,
+                  path: encodeURI(path),
+                },
+              },
+            }),
+            resource => expect(resource).toBe(expectedResource)
+          );
+        });
+
         describe('given a concrete and a templated path', () => {
           const path = '/test/fixed';
           const templatedPath = '/test/{userId}';
