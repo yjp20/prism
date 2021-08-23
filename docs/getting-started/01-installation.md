@@ -46,17 +46,18 @@ Alternatively, you may wish to use prism as part of a docker compose file to aid
 
 ```yaml
 ---
-version: "3.9"
+version: '3.9'
 services:
   prism:
     image: stoplight/prism:4
-    command: "mock -h 0.0.0.0 /tmp/api.oas3.yml"
+    command: 'mock -h 0.0.0.0 /tmp/api.oas3.yml'
     volumes:
       - ./api.oas3.yml:/tmp/api.oas3.yml:ro
     ports:
       # Serve the mocked API locally as available on port 8080
-      - "8080:4010"
+      - '8080:4010'
 ```
+
 The above can be expanded if you with to [support TLS termination](../guides/10-nginx-tls-proxy.md).
 
 Now everything is installed, let's look at some of the [concepts](./02-concepts.md).

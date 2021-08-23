@@ -1,8 +1,11 @@
 import { MatchType } from './types';
 import * as E from 'fp-ts/Either';
+import { isEqual } from 'lodash';
+
+const pathSeparatorsRegex = /[/:]/g;
 
 function fragmentarize(path: string): string[] {
-  return path.split('/').slice(1);
+  return path.split(pathSeparatorsRegex).slice(1);
 }
 
 function getTemplateParamName(pathFragment: string) {
@@ -10,17 +13,17 @@ function getTemplateParamName(pathFragment: string) {
   return match && match[1];
 }
 
-export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
-  const operationPathFragments = fragmentarize(operationPath);
-  const requestPathFragments = fragmentarize(requestPath);
+function isSeparationEqual(path1: string, path2: string): boolean {
+  return isEqual(path1.match(pathSeparatorsRegex), path2.match(pathSeparatorsRegex));
+}
 
-  if (
-    operationPathFragments.length < requestPathFragments.length ||
-    operationPathFragments.length > requestPathFragments.length
-  ) {
+export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
+  if (!isSeparationEqual(requestPath, operationPath)) {
     return E.right(MatchType.NOMATCH);
   }
 
+  const operationPathFragments = fragmentarize(operationPath);
+  const requestPathFragments = fragmentarize(requestPath);
   const params = [];
   while (requestPathFragments.length) {
     const requestPathFragment = requestPathFragments.shift();
