@@ -25,6 +25,7 @@ export async function getHttpOperationsFromSpec(specFilePathOrObject: string | o
         __target__: op,
       },
       path: '#/__target__',
+      cloneDocument: false,
     });
   });
 

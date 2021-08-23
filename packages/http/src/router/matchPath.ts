@@ -1,8 +1,11 @@
 import { MatchType } from './types';
 import * as E from 'fp-ts/Either';
+import { isEqual } from 'lodash';
+
+const pathSeparatorsRegex = /[/:]/g;
 
 function fragmentize(path: string): string[] {
-  return path.split('/').slice(1);
+  return path.split(pathSeparatorsRegex).slice(1);
 }
 
 // Attempt to decode path fragment. Decode should not do any harm since it is
@@ -21,17 +24,17 @@ function getTemplateParamName(pathFragment?: string) {
   return match && match[1];
 }
 
-export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
-  const operationPathFragments = fragmentize(operationPath);
-  const requestPathFragments = fragmentize(requestPath);
+function isSeparationEqual(path1: string, path2: string): boolean {
+  return isEqual(path1.match(pathSeparatorsRegex), path2.match(pathSeparatorsRegex));
+}
 
-  if (
-    operationPathFragments.length < requestPathFragments.length ||
-    operationPathFragments.length > requestPathFragments.length
-  ) {
+export function matchPath(requestPath: string, operationPath: string): E.Either<Error, MatchType> {
+  if (!isSeparationEqual(requestPath, operationPath)) {
     return E.right(MatchType.NOMATCH);
   }
 
+  const operationPathFragments = fragmentize(operationPath);
+  const requestPathFragments = fragmentize(requestPath);
   const params = [];
   while (requestPathFragments.length) {
     // make sure fragments are decoded before comparing them

@@ -31,6 +31,17 @@ describe('matchPath()', () => {
     assertRight(matchPath(path, path), e => expect(e).toEqual(MatchType.CONCRETE));
   });
 
+  test('any concrete path with colon should match an equal concrete path', () => {
+    // e.g. /a/b:c should match /a/b:c
+    const path = randomPath({
+      pathFragments: faker.datatype.number({ min: 2, max: 6 }),
+      includeTemplates: false,
+      includeColon: true,
+    });
+    assertRight(matchPath(path, path), e => expect(e).toEqual(MatchType.CONCRETE));
+  });
+
+  // This test will likely never fail because strings are always different
   test('none request path should match path with less fragments', () => {
     // e.g. /a/b/c should not match /a/b
     // e.g. /a/b/c should not match /{a}/b
@@ -48,6 +59,30 @@ describe('matchPath()', () => {
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
   });
 
+  test('none request path with colons should match path with less fragments', () => {
+    // e.g. /a/b:c should not match /a/b
+    // e.g. /a/b:c should not match /{a}/b
+    const requestPath = randomPath({
+      pathFragments: faker.datatype.number({ min: 5, max: 7 }),
+      includeTemplates: false,
+      includeColon: true,
+    });
+    const operationPath = requestPath.split(':').shift() + '';
+    assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
+  test('none request path with a colon should not match equivalent slash path', () => {
+    // e.g. /a/b:c should not match /a/b/c
+    const requestPath = randomPath({
+      pathFragments: faker.datatype.number({ min: 5, max: 7 }),
+      includeTemplates: false,
+      includeColon: true,
+    });
+    const operationPath = requestPath.replace(':', '/');
+    assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
+  // This test will likely never fail because strings are always different
   test('none request path should match concrete path with more fragments', () => {
     // e.g. /a/b should not match /a/b/c
     // e.g. /a/b/ should not match /a/b/c
@@ -63,12 +98,33 @@ describe('matchPath()', () => {
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
   });
 
+  test('none request path with colons should match path with more fragments', () => {
+    // e.g. /a/b:c should not match /a/b/c:d
+    // e.g. /a/b:c should not match /{a}/b/c:d
+    const requestPath = randomPath({
+      pathFragments: faker.datatype.number({ min: 5, max: 7 }),
+      includeTemplates: false,
+      includeColon: true,
+    });
+    const newPath = requestPath.split(':').shift();
+    const lastWord = requestPath.split(':').pop();
+    const operationPath = [newPath, '/', lastWord, ':', faker.random.word()].join('');
+
+    assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
   test('request path should match a templated path and resolve variables', () => {
     assertRight(matchPath('/a', '/{a}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
+    assertRight(matchPath('/a:b', '/{a}:b'), e => expect(e).toEqual(MatchType.TEMPLATED));
+
     assertRight(matchPath('/a/b', '/{a}/{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
+    assertRight(matchPath('/a/b:c', '/{a}/{b}:{c}'), e => expect(e).toEqual(MatchType.TEMPLATED));
+
     assertRight(matchPath('/a/b', '/a/{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
+
+    assertRight(matchPath('/a/b:c', '/a/b:{c}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
     assertRight(matchPath('/test.json', '/test.{format}'), e => expect(e).toEqual(MatchType.TEMPLATED));
   });
@@ -76,15 +132,20 @@ describe('matchPath()', () => {
   test('request path should match a template path and resolve undefined variables', () => {
     assertRight(matchPath('/', '/{a}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
+    assertRight(matchPath('/:', '/{a}:{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
+
     assertRight(matchPath('//', '/{a}/'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
     assertRight(matchPath('//b', '/{a}/{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
+
+    assertRight(matchPath('//b:c', '/{a}/{b}:{c}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
     assertRight(matchPath('/a/', '/{a}/{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
 
     assertRight(matchPath('//', '/{a}/{b}'), e => expect(e).toEqual(MatchType.TEMPLATED));
   });
 
+  // This test will likely never fail because strings are always different
   test('none path should match templated operation with more path fragments', () => {
     // e.g. `/a/b` should not match /{x}/{y}/{z}
     // e.g. `/a` should not match /{x}/{y}/{z}
@@ -96,10 +157,14 @@ describe('matchPath()', () => {
 
     const operationPath = randomPath({
       pathFragments: faker.datatype.number({ min: 4, max: 6 }),
-      includeTemplates: false,
+      includeTemplates: true,
       trailingSlash: false,
     });
 
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
+  test('it does not match if separators are not equal', () => {
+    assertRight(matchPath('a:b/c', 'a/b:c'), e => expect(e).toEqual(MatchType.NOMATCH));
   });
 });
