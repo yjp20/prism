@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.3.2 (2021-08-23)
+
+## Fixed
+
+- Fixes performance regression in `prism-cli` [#1860](https://github.com/stoplightio/prism/issues/1860)
+
 # 4.3.1 (2021-07-16)
 
 ## Fixed
