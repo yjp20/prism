@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.3.3 (2021-08-24)
+
+## Fixed
+
+- Fixes issue with encoded URLs: was unable to find them in spec while mocking.
+
 # 4.3.2 (2021-08-23)
 
 ## Fixed
