@@ -10,6 +10,17 @@ describe('matchPath()', () => {
     assertRight(matchPath(path, path), e => expect(e).toEqual(MatchType.CONCRETE));
   });
 
+  test('any concrete path with spaces should match an equal concrete path', () => {
+    // e.g. /a b/c should match /a b/c
+    const path = randomPath({
+      pathFragments: faker.datatype.number({ min: 2, max: 6 }),
+      includeTemplates: false,
+      includeSpaces: true,
+    });
+
+    assertRight(matchPath(path, path), e => expect(e).toEqual(MatchType.CONCRETE));
+  });
+
   test('any concrete path should match an equal concrete path', () => {
     // e.g. /a/b/c should match /a/b/c
     const path = randomPath({

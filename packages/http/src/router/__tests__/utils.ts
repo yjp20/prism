@@ -18,6 +18,7 @@ type IRandomPathOptions = {
   includeTemplates?: boolean;
   trailingSlash?: boolean;
   leadingSlash?: boolean;
+  includeSpaces?: boolean;
   includeColon?: boolean;
 };
 
@@ -26,6 +27,7 @@ const defaultRandomPathOptions: DeepNonNullable<IRandomPathOptions> = {
   includeTemplates: true,
   leadingSlash: true,
   trailingSlash: false,
+  includeSpaces: true,
   includeColon: false,
 };
 
@@ -37,11 +39,10 @@ export function randomPath(opts: IRandomPathOptions = defaultRandomPathOptions):
     options.includeColon = false;
   }
 
-  const randomPathFragments = new Array(options.pathFragments)
-    .fill(0)
-    .map(() =>
-      options.includeTemplates && faker.datatype.boolean() ? `{${faker.random.word()}}` : faker.random.word()
-    );
+  const randomPathFragments = new Array(options.pathFragments).fill(0).map(() => {
+    const words = faker.random.words(options.includeSpaces ? 3 : 1);
+    return options.includeTemplates && faker.datatype.boolean() ? `{${words}}` : words;
+  });
 
   const leadingSlash = options.leadingSlash ? '/' : '';
   const trailingSlash = options.trailingSlash ? '/' : '';
