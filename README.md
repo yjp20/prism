@@ -2,7 +2,7 @@
 
 [![CircleCI][circle_ci_image]][circle_ci]
 [![NPM Downloads][npm_image]][npm]
-[![Buy us a tree][ecologi_image]][ecologi]
+[![Stoplight Forest](https://img.shields.io/ecologi/trees/stoplightinc)][stoplight_forest]
 
 Prism is a set of packages for API mocking and contract testing with **OpenAPI v2** (formerly known as Swagger) and **OpenAPI v3.x**.
 
@@ -24,7 +24,7 @@ Prism is a set of packages for API mocking and contract testing with **OpenAPI v
 
 ## 🧰 Installation and Usage
 
-**Installation**
+### Installation
 
 _Prism requires NodeJS >= 12 to properly work._
 
@@ -38,17 +38,25 @@ yarn global add @stoplight/prism-cli
 
 For more installation options, see our [installation documentation](./docs/getting-started/01-installation.md).
 
-**Mocking**
+### Mocking
+
+Prism can help you create a fake "mock" based off an OpenAPI document, which helps people see how your API will work before you even have it built. Run it locally with the `prism mock` command to run your API on a HTTP server you can interact with.
 
 ```bash
 prism mock https://raw.githack.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml
 ```
 
-**Validation Proxy**
+Learn more about [how the mock server works](docs/guides/docs/guides/01-mocking.md).
+
+### Validation Proxy
+
+Prism can help you check for discrepencies between your API implementation and the OpenAPI document that describes, letting you funnel HTTP traffic through it with the `prism proxy` command. 
 
 ```bash
 prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 ```
+
+Learn more about [how the validation proxy works](docs/guides/03-validation-proxy.md).
 
 ## 📖 Documentation and Community
 
@@ -121,6 +129,10 @@ Prism is built on top of lots of excellent packages, and here are a few we'd lik
 
 Check these projects out!
 
+## 🌲 Sponsor Prism by Planting a Tree
+
+If you would like to thank us for creating Prism, we ask that you [**buy the world a tree**](https://ecologi.com/stoplightinc).
+
 [code_of_conduct]: CODE_OF_CONDUCT.md
 [contributing]: CONTRIBUTING.md
 [download-release]: https://github.com/stoplightio/prism/releases/latest
@@ -136,5 +148,5 @@ Check these projects out!
 [circle_ci_image]: https://img.shields.io/circleci/build/github/stoplightio/prism/master
 [npm]: https://www.npmjs.com/package/@stoplight/prism-cli
 [npm_image]: https://img.shields.io/npm/dw/@stoplight/prism-http?color=blue
-[ecologi]: https://ecologi.com/stoplightinc
-[ecologi_image]: https://img.shields.io/badge/Buy%20us%20a%20tree-%F0%9F%8C%B3-lightgreen
+[stoplight_forest]: https://ecologi.com/stoplightinc
+
