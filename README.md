@@ -66,6 +66,8 @@ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
 - [ ] Recording / "Learning" mode to create spec files
 - [ ] Data Persistence (allow Prism act like a sandbox)
 
+Submit your ideas for new functionality on the [Stoplight Roadmap](https://roadmap.stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme).
+
 ## ❓ FAQs
 
 **Cannot access mock server when using Docker?**
