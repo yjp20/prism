@@ -46,7 +46,7 @@ Prism can help you create a fake "mock" based off an OpenAPI document, which hel
 prism mock https://raw.githack.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml
 ```
 
-Learn more about [how the mock server works](docs/guides/docs/guides/01-mocking.md).
+Learn more about [how the mock server works](docs/guides/01-mocking.md).
 
 ### Validation Proxy
 
