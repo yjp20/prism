@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.3.4 (2021-08-26)
+
+## Fixed
+
+- Better path matching for concrete and templated parts [1876](https://github.com/stoplightio/prism/pull/1876)
+
 # 4.3.3 (2021-08-24)
 
 ## Fixed
