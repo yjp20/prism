@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 
 import { createLogger } from '@stoplight/prism-core';
-import { httpOperations, httpRequests } from '../../__tests__/fixtures';
+import { httpOperations, httpRequests, httpOperationsByRef } from '../../__tests__/fixtures';
 import { assertLeft, assertRight } from '@stoplight/prism-core/src/__tests__/utils';
 import mock from '../index';
 
@@ -251,6 +251,21 @@ describe('http mocker', () => {
 
       assertRight(response, result => {
         expect(validate(result.body)).toBeTruthy();
+      });
+    });
+  });
+
+  describe('for operation that is deprecated', () => {
+    it('should set "Deprecation" header', () => {
+      const response = mock({
+        config: { dynamic: false },
+        resource: httpOperationsByRef.deprecated,
+        input: httpRequests[2],
+      })(logger);
+
+      assertRight(response, result => {
+        expect(result.headers).toHaveProperty('deprecation', 'true');
+        expect(result.statusCode).toEqual(200);
       });
     });
   });

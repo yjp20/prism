@@ -70,7 +70,14 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
       })(components.logger.child({ name: 'NEGOTIATOR' }));
 
     const forwardCall = (config: IPrismProxyConfig) =>
-      components.forward({ validations: config.errors ? validations : [], data }, config.upstream.href);
+      components.forward(
+        {
+          validations: config.errors ? validations : [],
+          data,
+        },
+        config.upstream.href,
+        resource
+      );
 
     const produceOutput = isProxyConfig(config)
       ? pipe(

@@ -67,6 +67,7 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
       return config;
     }),
     R.chain(mockConfig => negotiateResponse(mockConfig, input, resource)),
+    R.chain(result => negotiateDeprecation(result, resource)),
     R.chain(result => assembleResponse(result, payloadGenerator)),
     R.chain(response =>
       /*  Note: This is now just logging the errors without propagating them back. This might be moved as a first
@@ -195,7 +196,7 @@ function negotiateResponse(
   mockConfig: IHttpOperationConfig,
   input: IPrismInput<IHttpRequest>,
   resource: IHttpOperation
-) {
+): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
   const { [DiagnosticSeverity.Error]: errors, [DiagnosticSeverity.Warning]: warnings } = groupBy(
     input.validations,
     validation => validation.severity
@@ -215,6 +216,25 @@ function negotiateResponse(
       R.chain(() => helpers.negotiateOptionsForValidRequest(resource, mockConfig))
     );
   }
+}
+
+function negotiateDeprecation(
+  result: E.Either<Error, IHttpNegotiationResult>,
+  httpOperation: IHttpOperation
+): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
+  if (httpOperation.deprecated) {
+    return pipe(
+      withLogger(logger => {
+        logger.info('Adding "Deprecation" header since operation is deprecated');
+        return result;
+      }),
+      RE.map(result => ({
+        ...result,
+        deprecated: true,
+      }))
+    );
+  }
+  return RE.fromEither(result);
 }
 
 const assembleResponse = (
@@ -237,6 +257,9 @@ const assembleResponse = (
           ...mockedHeaders,
           ...(negotiationResult.mediaType && {
             'Content-type': negotiationResult.mediaType,
+          }),
+          ...(negotiationResult.deprecated && {
+            deprecation: 'true',
           }),
         },
         body: mockedBody,

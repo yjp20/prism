@@ -8,6 +8,7 @@ export interface IHttpNegotiationResult {
   bodyExample?: ContentExample;
   headers: IHttpHeaderParam[];
   schema?: JSONSchema;
+  deprecated?: boolean;
 }
 
 export type NegotiationOptions = IHttpOperationConfig;

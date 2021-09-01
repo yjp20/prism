@@ -260,7 +260,53 @@ export const httpOperations: IHttpOperation[] = [
       },
     ],
   },
+  {
+    id: 'updateTodo',
+    deprecated: true,
+    method: 'patch',
+    path: '/todo/{todoId}',
+    request: {},
+    responses: [
+      {
+        code: '200',
+        headers: [],
+        contents: [
+          {
+            mediaType: 'application/json',
+            examples: [
+              {
+                key: 'application/json',
+                value: 'OK',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        code: '400',
+        headers: [],
+        contents: [
+          {
+            mediaType: 'application/json',
+            examples: [
+              {
+                key: 'application/json',
+                value: {
+                  message: 'error',
+                },
+              },
+            ],
+            encodings: [],
+          },
+        ],
+      },
+    ],
+  },
 ];
+
+export const httpOperationsByRef = {
+  deprecated: httpOperations[3],
+};
 
 export const httpInputs: IHttpRequest[] = [
   {
@@ -284,7 +330,17 @@ export const httpInputs: IHttpRequest[] = [
       'x-todos-publish': '2018-11-01T10:50:00.05Z',
     },
   },
+  {
+    method: 'patch',
+    url: {
+      path: '/todo/10',
+    },
+  },
 ];
+
+export const httpInputsByRef = {
+  updateTodo: httpInputs[3],
+};
 
 export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
   {
@@ -301,6 +357,10 @@ export const httpRequests: Array<IPrismInput<IHttpRequest>> = [
       },
     ],
     data: httpInputs[1],
+  },
+  {
+    validations: [],
+    data: httpInputsByRef.updateTodo,
   },
 ];
 
