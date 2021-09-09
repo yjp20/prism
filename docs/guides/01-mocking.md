@@ -189,3 +189,7 @@ validate incoming messages, and provide validation feedback if people are sendin
 requests to it.
 
 Read more about this in our [Request Validation guide](./02-request-validation.md).
+
+### Deprecating operations
+
+If an operation is marked as `deprecated: true` then Prism adds `Deprecation: true` header to the response.

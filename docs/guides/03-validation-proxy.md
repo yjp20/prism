@@ -43,6 +43,10 @@ In case the upstream server responds with the `501` status code, Prism will try 
 
 Now you can use Prism to test traffic against the API description. This could be done in development as we've mentioned, but it could also be placed in staging, QA, or some sort of pre-production environment. Probably keep it out of production, because even though Prism is quick like a fox, introducing _anything_ to the critical path of your API is probably not what you want.
 
+### Deprecating operations
+
+If an operation is marked as `deprecated: true` then Prism adds `Deprecation: true` header to the response if the response from remote server does not already contains that header.
+
 <!-- theme:info -->
 
 > Future versions of Prism will include ways to sniff existing traffic, without requests being made directly to it. sniffing nginx logs, or piping other forms of traffic through. [Get in touch with ideas](https://github.com/stoplightio/prism/issues/955).
