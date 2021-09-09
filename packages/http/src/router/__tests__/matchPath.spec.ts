@@ -188,4 +188,18 @@ describe('matchPath()', () => {
       expect(e).toEqual(MatchType.TEMPLATED)
     );
   });
+
+  test.each([
+    '%3A', // column
+    '%2F', // forward slash
+  ])('parameters can contain encoded "special characters" (%s)', (encoded: string) => {
+    const requestPath = `/bef${encoded}17/test.smthg${encoded}32.sub${encoded}47/aft${encoded}96`;
+
+    assertRight(matchPath(requestPath, `/{prefix}/test.{format}.{extension}/{suffix}`), e =>
+      expect(e).toEqual(MatchType.TEMPLATED)
+    );
+    assertRight(matchPath(requestPath, '/{prefix}/test.{global}/{suffix}'), e =>
+      expect(e).toEqual(MatchType.TEMPLATED)
+    );
+  });
 });
