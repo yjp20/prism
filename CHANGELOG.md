@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.4.0 (2021.09.09)
+
+## Changed
+
+- Added support for Deprecation header for deprecated operations [#1879](https://github.com/stoplightio/prism/pull/1879)
+
 # 4.3.4 (2021-08-26)
 
 ## Fixed
