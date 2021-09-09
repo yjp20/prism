@@ -3,9 +3,17 @@ import forward from '../index';
 import { assertResolvesRight, assertResolvesLeft } from '@stoplight/prism-core/src/__tests__/utils';
 import { keyBy, mapValues } from 'lodash';
 import { hopByHopHeaders } from '../resources';
-import { DiagnosticSeverity } from '@stoplight/types';
+import { DiagnosticSeverity, Dictionary } from '@stoplight/types';
 
 jest.mock('node-fetch');
+
+function stubFetch({ json = {}, text = '', headers }: { headers: Dictionary<string>; text?: string; json?: unknown }) {
+  ((fetch as unknown) as jest.Mock).mockResolvedValue({
+    headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
+    json: jest.fn().mockResolvedValue(json),
+    text: jest.fn().mockResolvedValue(text),
+  });
+}
 
 describe('forward', () => {
   const logger: any = {
@@ -17,12 +25,8 @@ describe('forward', () => {
 
   describe('when POST method with json body', () => {
     it('forwards request to upstream', () => {
-      const headers = { 'content-type': 'application/json' };
-
-      ((fetch as unknown) as jest.Mock).mockResolvedValue({
-        headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
-        json: jest.fn().mockResolvedValue({}),
-        text: jest.fn(),
+      stubFetch({
+        headers: { 'content-type': 'application/json' },
       });
 
       return assertResolvesRight(
@@ -49,12 +53,8 @@ describe('forward', () => {
 
   describe('when POST method with circular json body', () => {
     it('will fail and blame you', () => {
-      const headers = { 'content-type': 'application/json' };
-
-      ((fetch as unknown) as jest.Mock).mockResolvedValue({
-        headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
-        json: jest.fn().mockResolvedValue({}),
-        text: jest.fn(),
+      stubFetch({
+        headers: { 'content-type': 'application/json' },
       });
 
       const body = { x: {} };
@@ -79,11 +79,8 @@ describe('forward', () => {
   describe('when POST method with string body', () => {
     it('forwards request to upstream', () => {
       const headers = { 'content-type': 'text/plain' };
-
-      ((fetch as unknown) as jest.Mock).mockResolvedValue({
-        headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
-        json: jest.fn(),
-        text: jest.fn().mockResolvedValue(''),
+      stubFetch({
+        headers,
       });
 
       return assertResolvesRight(
@@ -113,9 +110,8 @@ describe('forward', () => {
     it('forwarder strips them all', () => {
       const headers = mapValues(keyBy(hopByHopHeaders), () => 'n/a');
 
-      ((fetch as unknown) as jest.Mock).mockReturnValue({
-        headers: { get: (n: string) => headers[n], raw: () => mapValues(headers, (h: string) => h.split(' ')) },
-        text: jest.fn().mockResolvedValue(''),
+      stubFetch({
+        headers,
       });
 
       return assertResolvesRight(
@@ -143,5 +139,59 @@ describe('forward', () => {
         )(logger),
         e => expect(e).toHaveProperty('status', 422)
       ));
+  });
+
+  describe('and operation is marked as deprected', () => {
+    it('will add "Deprecation" header if not present in response', () => {
+      stubFetch({
+        headers: { 'content-type': 'text/plain' },
+      });
+
+      assertResolvesRight(
+        forward(
+          {
+            validations: [],
+            data: {
+              method: 'post',
+              url: { path: '/test' },
+            },
+          },
+          'http://example.com',
+          {
+            deprecated: true,
+            method: 'post',
+            path: '/test',
+            responses: [],
+            id: 'test',
+          }
+        )(logger),
+        e => expect(e.headers).toHaveProperty('deprecation', 'true')
+      );
+    });
+
+    it('will omit "Deprecation" header if already defined in response', () => {
+      stubFetch({ headers: { 'content-type': 'text/plain', deprecation: 'foo' } });
+
+      assertResolvesRight(
+        forward(
+          {
+            validations: [],
+            data: {
+              method: 'post',
+              url: { path: '/test' },
+            },
+          },
+          'http://example.com',
+          {
+            deprecated: true,
+            method: 'post',
+            path: '/test',
+            responses: [],
+            id: 'test',
+          }
+        )(logger),
+        e => expect(e.headers).toHaveProperty('deprecation', 'foo')
+      );
+    });
   });
 });

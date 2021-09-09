@@ -22,7 +22,8 @@ const { version: prismVersion } = require('../../package.json'); // eslint-disab
 
 const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig>['forward'] = (
   { data: input, validations }: IPrismInput<IHttpRequest>,
-  baseUrl: string
+  baseUrl: string,
+  resource
 ): RTE.ReaderTaskEither<Logger, Error, IHttpResponse> => logger =>
   pipe(
     NEA.fromArray(validations),
@@ -68,6 +69,12 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
       return TE.right(undefined);
     }),
     TE.chain(parseResponse),
+    TE.map(response => {
+      if (resource && resource.deprecated && response.headers && !response.headers.deprecation) {
+        response.headers.deprecation = 'true';
+      }
+      return response;
+    }),
     TE.map(stripHopByHopHeaders)
   );
 
