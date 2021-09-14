@@ -146,7 +146,7 @@ describe('matchPath()', () => {
   });
 
   // This test will likely never fail because strings are always different
-  test('none path should match templated operation with more path fragments', () => {
+  test('none path should match templated operation with more path fragments (dynamic)', () => {
     // e.g. `/a/b` should not match /{x}/{y}/{z}
     // e.g. `/a` should not match /{x}/{y}/{z}
     const requestPath = randomPath({
@@ -164,8 +164,19 @@ describe('matchPath()', () => {
     assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
   });
 
+  test('none path should match templated operation with more path fragments', () => {
+    const requestPath = '/a/b/c';
+    const operationPath = '/{d}/{e}/{f}/{g}';
+
+    assertRight(matchPath(requestPath, operationPath), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
   test('it does not match if separators are not equal', () => {
-    assertRight(matchPath('a:b/c', 'a/b:c'), e => expect(e).toEqual(MatchType.NOMATCH));
+    assertRight(matchPath('/a:b/c', '/a/b:c'), e => expect(e).toEqual(MatchType.NOMATCH));
+  });
+
+  test('it accepts columns as part of templated params', () => {
+    assertRight(matchPath('/a:b/c', '/{something}/c'), e => expect(e).toEqual(MatchType.TEMPLATED));
   });
 
   test('it properly processes fragments containing both concrete and templated parts', () => {
@@ -174,6 +185,20 @@ describe('matchPath()', () => {
     assertRight(matchPath('/test.', '/test.{format}'), e => expect(e).toEqual(MatchType.TEMPLATED));
     assertRight(matchPath('/nope.json', '/test.{format}'), e => expect(e).toEqual(MatchType.NOMATCH));
     assertRight(matchPath('/before/test.json.sub/after', '/{prefix}/test.{format}.{extension}/{suffix}'), e =>
+      expect(e).toEqual(MatchType.TEMPLATED)
+    );
+  });
+
+  test.each([
+    '%3A', // column
+    '%2F', // forward slash
+  ])('parameters can contain encoded "special characters" (%s)', (encoded: string) => {
+    const requestPath = `/bef${encoded}17/test.smthg${encoded}32.sub${encoded}47/aft${encoded}96`;
+
+    assertRight(matchPath(requestPath, `/{prefix}/test.{format}.{extension}/{suffix}`), e =>
+      expect(e).toEqual(MatchType.TEMPLATED)
+    );
+    assertRight(matchPath(requestPath, '/{prefix}/test.{global}/{suffix}'), e =>
       expect(e).toEqual(MatchType.TEMPLATED)
     );
   });
