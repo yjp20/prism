@@ -3,7 +3,7 @@ import { DiagnosticSeverity } from '@stoplight/types';
 import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
 import { NonEmptyArray, fromArray, map } from 'fp-ts/NonEmptyArray';
-import Ajv, { ErrorObject, Options } from 'ajv';
+import Ajv, { ErrorObject, Logger, Options } from 'ajv';
 import type AjvCore from 'ajv/dist/core';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
@@ -11,11 +11,25 @@ import addFormats from 'ajv-formats';
 import type { JSONSchema } from '../../';
 import { compareDateTime, date_time, fmtDef } from './dateTime';
 
+const unknownFormatSilencerLogger: Logger = {
+  warn(...args: unknown[]): void {
+    const firstArg = args[0];
+    if (typeof firstArg === 'string' && firstArg.startsWith('unknown format')) {
+      return;
+    }
+
+    console.warn(...args);
+  },
+  log: console.log,
+  error: console.error,
+};
+
 const baseAjvOptions: Partial<Options> = {
   allErrors: true,
   allowUnionTypes: true,
   allowMatchingProperties: true,
   strict: false,
+  logger: unknownFormatSilencerLogger,
 };
 
 function createAjvInstances(Ajv: typeof AjvCore) {
