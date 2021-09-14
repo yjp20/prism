@@ -197,4 +197,15 @@ describe('validateAgainstSchema()', () => {
       );
     });
   });
+
+  describe('does not pollute the console with ajv "unknown format" warnings', () => {
+    it.each([true, false])('with coerce = %s', (coerce: boolean) => {
+      const spy = jest.spyOn(console, 'warn');
+
+      assertNone(validateAgainstSchema('test', { type: 'string', format: 'something' }, coerce));
+      expect(spy).not.toHaveBeenCalled();
+
+      spy.mockRestore();
+    });
+  });
 });
