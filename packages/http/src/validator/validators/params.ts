@@ -17,6 +17,8 @@ export type Deps<Target> = {
   defaultStyle: HttpParamStyles;
 };
 
+const schemaCache = new WeakMap<IHttpParam[], JSONSchema>();
+
 export const validateParams = <Target>(
   target: Target,
   specs: IHttpParam[],
@@ -38,7 +40,11 @@ export const validateParams = <Target>(
   return pipe(
     NEA.fromArray(specs),
     O.map(specs => {
-      const schema = createJsonSchemaFromParams(specs);
+      const schema = schemaCache.get(specs) ?? createJsonSchemaFromParams(specs);
+      if (!schemaCache.has(specs)) {
+        schemaCache.set(specs, schema);
+      }
+
       const parameterValues = pickBy(
         mapValues(
           keyBy(specs, s => s.name.toLowerCase()),
