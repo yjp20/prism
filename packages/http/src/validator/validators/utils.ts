@@ -3,7 +3,7 @@ import { DiagnosticSeverity } from '@stoplight/types';
 import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
 import { NonEmptyArray, fromArray, map } from 'fp-ts/NonEmptyArray';
-import Ajv, { ErrorObject, Logger, Options } from 'ajv';
+import Ajv, { ErrorObject, Logger, Options, ValidateFunction } from 'ajv';
 import type AjvCore from 'ajv/dist/core';
 import Ajv2019 from 'ajv/dist/2019';
 import Ajv2020 from 'ajv/dist/2020';
@@ -89,6 +89,32 @@ export const convertAjvErrors = (errors: NonEmptyArray<ErrorObject>, severity: D
     })
   );
 
+const validationsFunctionsCache = new WeakMap<JSONSchema, WeakMap<object, ValidateFunction>>();
+const EMPTY_BUNDLE = { _emptyBundle: true };
+
+function getValidationFunction(ajvInstance: AjvCore, schema: JSONSchema, bundle?: unknown): ValidateFunction {
+  const bundledFunctionsCache = validationsFunctionsCache.get(schema);
+  const bundleKey = typeof bundle === 'object' && bundle !== null ? bundle : EMPTY_BUNDLE;
+  if (bundledFunctionsCache) {
+    const validationFunction = bundledFunctionsCache.get(bundleKey);
+    if (validationFunction) {
+      return validationFunction;
+    }
+  }
+
+  const validationFunction = ajvInstance.compile({
+    ...schema,
+    __bundled__: bundle,
+  });
+
+  if (!bundledFunctionsCache) {
+    validationsFunctionsCache.set(schema, new WeakMap());
+  }
+
+  validationsFunctionsCache.get(schema)!.set(bundleKey, validationFunction);
+  return validationFunction;
+}
+
 export const validateAgainstSchema = (
   value: unknown,
   schema: JSONSchema,
@@ -97,12 +123,7 @@ export const validateAgainstSchema = (
   bundle?: unknown
 ): O.Option<NonEmptyArray<IPrismDiagnostic>> =>
   pipe(
-    O.tryCatch(() =>
-      assignAjvInstance(String(schema.$schema), coerce).compile({
-        ...schema,
-        __bundled__: bundle,
-      })
-    ),
+    O.tryCatch(() => getValidationFunction(assignAjvInstance(String(schema.$schema), coerce), schema, bundle)),
     O.chainFirst(validateFn => O.tryCatch(() => validateFn(value))),
     O.chain(validateFn => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray))),
     O.map(errors => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix))
