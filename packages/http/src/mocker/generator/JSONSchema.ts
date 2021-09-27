@@ -1,4 +1,4 @@
-import * as faker from 'faker/locale/en_US';
+import * as faker from 'faker';
 import { cloneDeep } from 'lodash';
 import { JSONSchema } from '../../types';
 

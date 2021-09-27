@@ -14,6 +14,7 @@ import { createExamplePath } from './paths';
 import { attachTagsToParamsValues, transformPathParamsValues } from './colorizer';
 import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
+import { configureExtensionsFromSpec } from '../extensions';
 
 type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
@@ -66,6 +67,7 @@ const createSingleProcessPrism: CreatePrism = options => {
 
 async function createPrismServerWithLogger(options: CreateBaseServerOptions, logInstance: Logger) {
   const operations = await getHttpOperationsFromSpec(options.document);
+  await configureExtensionsFromSpec(options.document);
 
   if (operations.length === 0) {
     throw new Error('No operations found in the current file.');
