@@ -4,7 +4,14 @@ import { createTestLogger } from './test-helpers';
 
 describe('Checks if memory leaks', () => {
   function round(client: PrismHttp) {
-    return client.get('/todos', { headers: { 'x-todos-publish': '2021-09-21T09:48:48.108Z' } });
+    return client.post(
+      '/todos?overwrite=yes',
+      {
+        name: 'some name',
+        completed: false,
+      },
+      { headers: { 'x-todos-publish': '2021-09-21T09:48:48.108Z' } }
+    );
   }
 
   it('when handling 5k of requests', () => {
