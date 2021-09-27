@@ -13,6 +13,7 @@ import { validateAgainstSchema } from './utils';
 import { ValidationContext, validateFn } from './types';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
+import { JSONSchema7 } from 'json-schema';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -84,9 +85,23 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
-const normalizeSchemaProcessorMap: Record<ValidationContext, (schema: JSONSchema) => O.Option<JSONSchema>> = {
-  [ValidationContext.Input]: stripReadOnlyProperties,
-  [ValidationContext.Output]: stripWriteOnlyProperties,
+function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer {
+  const cache = new WeakMap<JSONSchema7, O.Option<JSONSchema7>>();
+  return (schema: JSONSchema7) => {
+    const cached = cache.get(schema);
+    if (!cached) {
+      const newSchema = normalizer(schema);
+      cache.set(schema, newSchema);
+      return newSchema;
+    }
+    return cached;
+  };
+}
+
+type SchemaNormalizer = (schema: JSONSchema) => O.Option<JSONSchema>;
+const normalizeSchemaProcessorMap: Record<ValidationContext, SchemaNormalizer> = {
+  [ValidationContext.Input]: memoizeSchemaNormalizer(stripReadOnlyProperties),
+  [ValidationContext.Output]: memoizeSchemaNormalizer(stripWriteOnlyProperties),
 };
 
 export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, context, mediaType, bundle) => {

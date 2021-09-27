@@ -5,15 +5,10 @@ import * as pino from 'pino';
  * Unfortunately disabled logger didn't work
  */
 export function createTestLogger() {
-  const logger = pino({});
+  const logger = pino({
+    enabled: false,
+  });
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const noop = () => {};
-  logger.info = noop;
-  logger.success = noop;
-  logger.error = noop;
-  logger.warn = noop;
-  logger.child = () => logger;
-
+  logger.success = logger.info;
   return logger;
 }
