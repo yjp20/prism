@@ -10,7 +10,7 @@ executors:
         name: httpbin.org
   macos:
     macos:
-      xcode: 10.2.1
+      xcode: 12.5.1
 
 orbs:
   stoplight: stoplight/cli@0.0.3
