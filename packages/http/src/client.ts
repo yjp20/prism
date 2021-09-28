@@ -15,10 +15,12 @@ logger.success = logger.info;
 
 type IClientConfig = IHttpConfig & {
   baseUrl?: string;
+  logger?: pino.Logger;
 };
 
 export function createClientFromOperations(resources: IHttpOperation[], defaultConfig: IClientConfig): PrismHttp {
-  const obj = createInstance(defaultConfig, { logger });
+  const finalLogger = defaultConfig.logger ?? logger;
+  const obj = createInstance(defaultConfig, { logger: finalLogger });
 
   type headersFromRequest = Required<Pick<IHttpRequest, 'headers'>>;
 
@@ -141,6 +143,7 @@ interface IRequestFunctionWithMethod {
     input: Required<Pick<IHttpRequest, 'headers'>>,
     config?: Partial<IClientConfig>
   ): Promise<PrismOutput>;
+
   (this: PrismHttp, url: string, config?: Partial<IClientConfig>): Promise<PrismOutput>;
 }
 
@@ -152,6 +155,7 @@ interface IRequestFunctionWithMethodWithBody {
     input: Required<Pick<IHttpRequest, 'headers'>>,
     config?: Partial<IClientConfig>
   ): Promise<PrismOutput>;
+
   (this: PrismHttp, url: string, body: unknown, config?: Partial<IClientConfig>): Promise<PrismOutput>;
 }
 
