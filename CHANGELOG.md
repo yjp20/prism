@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.4.1 (2021.09.29)
+
+## Fixed
+
+- Fixed memory leak [#1881](https://github.com/stoplightio/prism/issues/1881)
+
 # 4.4.0 (2021.09.09)
 
 ## Changed
