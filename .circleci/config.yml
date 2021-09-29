@@ -52,9 +52,9 @@ jobs:
       - when:
           condition: <<parameters.install_manually>>
           steps:
-            - run: pip3 install pipenv
+            - run: pip3 install pipenv gunicorn
             - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
-            - run: git clone https://github.com/postmanlabs/httpbin httpbin
+            - run: git clone https://github.com/stoplightio/httpbin httpbin
             - run: cd httpbin && pip3 install --no-cache-dir -r <(pipenv lock -r) && pip3 install --no-cache-dir ./
             - run:
                 command: cd httpbin && gunicorn -b 0.0.0.0:80 httpbin:app -k gevent
