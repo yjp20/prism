@@ -2,7 +2,7 @@ import * as faker from 'faker/locale/en_US';
 import { cloneDeep } from 'lodash';
 import { JSONSchema } from '../../types';
 
-import * as jsf from 'json-schema-faker';
+import jsf from 'json-schema-faker';
 import * as sampler from '@stoplight/json-schema-sampler';
 import { Either, toError, tryCatch } from 'fp-ts/Either';
 import { IHttpOperation } from '@stoplight/types';
@@ -16,7 +16,7 @@ jsf.option({
   failOnInvalidTypes: false,
   failOnInvalidFormat: false,
   alwaysFakeOptionals: true,
-  optionalsProbability: 1,
+  optionalsProbability: 1 as any,
   fixedProbabilities: true,
   ignoreMissingRefs: true,
   maxItems: 20,
