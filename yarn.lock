@@ -1484,6 +1484,13 @@
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"
 
+"@types/json-schema-faker@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@types/json-schema-faker/-/json-schema-faker-0.5.1.tgz#6558d9704ab8b08c982846a7bdb73a41576ae8e1"
+  integrity sha512-gXkZKNeQEMLFH2aYVG+ZSxdrLN2MCi0V6CoB3RAcUSz1BTfXntCOpTDdrfx+rTQ3x2sctFjM3gGauqDVxDXI7g==
+  dependencies:
+    "@types/json-schema" "*"
+
 "@types/json-schema@*", "@types/json-schema@^7.0.4":
   version "7.0.9"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
