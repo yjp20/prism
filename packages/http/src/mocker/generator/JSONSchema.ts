@@ -16,7 +16,7 @@ jsf.option({
   failOnInvalidTypes: false,
   failOnInvalidFormat: false,
   alwaysFakeOptionals: true,
-  optionalsProbability: 1,
+  optionalsProbability: 1 as any,
   fixedProbabilities: true,
   ignoreMissingRefs: true,
   maxItems: 20,
