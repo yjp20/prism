@@ -3,6 +3,8 @@ const path = require('path');
 const { mapValues } = require('lodash');
 const { compilerOptions } = require('./packages/tsconfig.test');
 
+// Due to invalid typings built-in to `json-schema-faker` we had to force typescript to load
+// typings from @types/json-schema-faker instead
 const pathsMappings = Object.fromEntries(
   Object.entries(compilerOptions.paths).filter(([name]) => name.startsWith('@stoplight'))
 );
