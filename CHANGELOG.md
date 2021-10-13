@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.4.2 (2021.10.13)
+
+## Fixed
+
+- Fixed issue with generating numbers with maximum and minimum range of `Number.MAX_VALUE`
+
 # 4.4.1 (2021.09.29)
 
 ## Fixed
