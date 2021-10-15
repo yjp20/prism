@@ -1806,7 +1806,7 @@
   resolved "https://registry.yarnpkg.com/@types/pino-std-serializers/-/pino-std-serializers-2.4.0.tgz#8cad99175cb79c2448f7455a2d32fb3fde29579c"
   integrity sha512-eAdu+NW1IkCdmp85SnhyKha+OOREQMT9lXaoICQxa7bhSauRiLzu3WSNt9Mf2piuJvWeXF/G0hGWHr63xNpIRA==
 
-"@types/pino@*":
+"@types/pino@*", "@types/pino@6.3.8":
   version "6.3.8"
   resolved "https://registry.yarnpkg.com/@types/pino/-/pino-6.3.8.tgz#ec589318c2798216a0f39882845c5e40b7151b56"
   integrity sha512-E47CmRy1FNMaCN8r0d8ECQOjXen9O0p6GGsUjLfmawlxRKosZ82WP1oWVKj+ikTkMDHxWzN5BuKmplo44ynrIg==
@@ -1815,16 +1815,6 @@
     "@types/pino-pretty" "*"
     "@types/pino-std-serializers" "*"
     "@types/sonic-boom" "*"
-
-"@types/pino@^6.3.11":
-  version "6.3.11"
-  resolved "https://registry.yarnpkg.com/@types/pino/-/pino-6.3.11.tgz#83652799e76b3ad692aaf68f6fbf994e83af5db2"
-  integrity sha512-S7+fLONqSpHeW9d7TApUqO6VN47KYgOXhCNKwGBVLHObq8HhaAYlVqUNdfnvoXjCMiwE5xcPm/5R2ZUh8bgaXQ==
-  dependencies:
-    "@types/node" "*"
-    "@types/pino-pretty" "*"
-    "@types/pino-std-serializers" "*"
-    sonic-boom "^2.1.0"
 
 "@types/postman-collection@^3.5.7":
   version "3.5.7"
@@ -7827,13 +7817,6 @@ sonic-boom@^1.0.2:
   dependencies:
     atomic-sleep "^1.0.0"
     flatstr "^1.0.12"
-
-sonic-boom@^2.1.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/sonic-boom/-/sonic-boom-2.3.0.tgz#b1622bbd29111ed12be94a644ea6b586b6daea70"
-  integrity sha512-lEPaw654/4/rCJHz/TNzV4GIthqCq4inO+O3aFhbdOvR1bE+2//sVkcS+xlqPdb8gdjQCEE0hE9BuvnVixbnWQ==
-  dependencies:
-    atomic-sleep "^1.0.0"
 
 sort-keys@^2.0.0:
   version "2.0.0"
