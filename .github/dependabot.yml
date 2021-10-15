@@ -72,5 +72,8 @@ updates:
   - dependency-name: "@types/faker"
     versions:
     - 5.1.6
+  - dependency-name: "glob-fs"
+    versions:
+    - 0.1.7
   registries:
   - npm-registry-registry-npmjs-org
