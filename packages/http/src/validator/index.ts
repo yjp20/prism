@@ -22,12 +22,13 @@ import { findOperationResponse } from './utils/spec';
 import { validateBody, validateHeaders, validatePath, validateQuery } from './validators';
 import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 import { ValidationContext } from './validators/types';
+
 export { validateSecurity } from './validators/security';
 
 const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unknown) =>
   pipe(
     requestBody,
-    E.fromPredicate<NonEmptyArray<IPrismDiagnostic>, IHttpOperationRequestBody>(
+    E.fromPredicate<IHttpOperationRequestBody, NonEmptyArray<IPrismDiagnostic>>(
       requestBody => !(!!requestBody.required && !body),
       () => [{ code: 'required', message: 'Body parameter is required', severity: DiagnosticSeverity.Error }]
     )
