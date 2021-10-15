@@ -6,8 +6,8 @@ paths:
   /path:
     get:
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: OK
 ====server====
 mock -p 4010 ${document}
 ====command====
