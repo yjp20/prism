@@ -41,7 +41,7 @@ import {
   findContentByMediaTypeOrFirst,
   splitUriParams,
 } from '../validator/validators/body';
-import * as NEA from 'fp-ts/NonEmptyArray';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 
 const eitherRecordSequence = Record.sequence(E.Applicative);
 const eitherSequence = sequenceT(E.Apply);
@@ -147,13 +147,13 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 }
 
 export function createInvalidInputResponse(
-  failedValidations: NEA.NonEmptyArray<IPrismDiagnostic>,
+  failedValidations: NonEmptyArray<IPrismDiagnostic>,
   responses: IHttpOperationResponse[],
   mockConfig: IHttpOperationConfig
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
 
-  const expectedCodes: NEA.NonEmptyArray<number> = securityValidation ? [401] : [422, 400];
+  const expectedCodes: NonEmptyArray<number> = securityValidation ? [401] : [422, 400];
   const isExampleKeyFromExpectedCodes = !!mockConfig.code && expectedCodes.includes(mockConfig.code);
 
   return pipe(
@@ -185,7 +185,7 @@ export const createUnauthorisedResponse = (tags?: string[]): ProblemJsonError =>
     tags && tags.length ? { headers: { 'WWW-Authenticate': tags.join(',') } } : undefined
   );
 
-export const createUnprocessableEntityResponse = (validations: NEA.NonEmptyArray<IPrismDiagnostic>): ProblemJsonError =>
+export const createUnprocessableEntityResponse = (validations: NonEmptyArray<IPrismDiagnostic>): ProblemJsonError =>
   ProblemJsonError.fromTemplate(
     UNPROCESSABLE_ENTITY,
     'Your request is not valid and no HTTP validation response was found in the spec, so Prism is generating this error for you.',
