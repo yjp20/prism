@@ -41,7 +41,7 @@ import {
   findContentByMediaTypeOrFirst,
   splitUriParams,
 } from '../validator/validators/body';
-import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
+import * as NEA from 'fp-ts/NonEmptyArray';
 
 const eitherRecordSequence = Record.sequence(E.Applicative);
 const eitherSequence = sequenceT(E.Apply);
@@ -71,8 +71,8 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
     R.chain(result => assembleResponse(result, payloadGenerator)),
     R.chain(response =>
       /*  Note: This is now just logging the errors without propagating them back. This might be moved as a first
-          level concept in Prism.
-      */
+        level concept in Prism.
+    */
       logger =>
         pipe(
           response,
@@ -147,17 +147,24 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 }
 
 export function createInvalidInputResponse(
-  failedValidations: NonEmptyArray<IPrismDiagnostic>,
+  failedValidations: NEA.NonEmptyArray<IPrismDiagnostic>,
   responses: IHttpOperationResponse[],
-  exampleKey?: string
+  mockConfig: IHttpOperationConfig
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
+
+  const expectedCodes: NEA.NonEmptyArray<number> = securityValidation ? [401] : [422, 400];
+  const isExampleKeyFromExpectedCodes = !!mockConfig.code && expectedCodes.includes(mockConfig.code);
 
   return pipe(
     withLogger(logger => logger.warn({ name: 'VALIDATOR' }, 'Request did not pass the validation rules')),
     R.chain(() =>
       pipe(
-        helpers.negotiateOptionsForInvalidRequest(responses, securityValidation ? [401] : [422, 400], exampleKey),
+        helpers.negotiateOptionsForInvalidRequest(
+          responses,
+          expectedCodes,
+          isExampleKeyFromExpectedCodes ? mockConfig.exampleKey : undefined
+        ),
         RE.mapLeft(error => {
           if (error instanceof ProblemJsonError && error.status === 404) {
             return error;
@@ -178,7 +185,7 @@ export const createUnauthorisedResponse = (tags?: string[]): ProblemJsonError =>
     tags && tags.length ? { headers: { 'WWW-Authenticate': tags.join(',') } } : undefined
   );
 
-export const createUnprocessableEntityResponse = (validations: NonEmptyArray<IPrismDiagnostic>): ProblemJsonError =>
+export const createUnprocessableEntityResponse = (validations: NEA.NonEmptyArray<IPrismDiagnostic>): ProblemJsonError =>
   ProblemJsonError.fromTemplate(
     UNPROCESSABLE_ENTITY,
     'Your request is not valid and no HTTP validation response was found in the spec, so Prism is generating this error for you.',
@@ -203,7 +210,7 @@ function negotiateResponse(
   );
 
   if (errors && A.isNonEmpty(input.validations)) {
-    return createInvalidInputResponse(input.validations, resource.responses, mockConfig.exampleKey);
+    return createInvalidInputResponse(input.validations, resource.responses, mockConfig);
   } else {
     return pipe(
       withLogger(logger => {
