@@ -55,12 +55,9 @@ paths:
 ====server====
 mock -p 4010 ${document} --errors
 ====command====
-curl --request POST --url 'http://localhost:4010/test' \
-  --header 'Content-Type: application/json' \
-  --header 'Prefer: code=200, example=200-test' \
-  --data '{}'
+curl -i --request POST --url http://localhost:4010/test --header 'Content-Type: application/json' --header 'Prefer: code=200, example=200-test' --data '{}'
 ====expect====
-HTTP/1.1 422 Unauthorized
+HTTP/1.1 422 Unprocessable Entity
 sl-violations: [{"location":["request","body"],"severity":"Error","code":"required","message":"must have required property 'test'"}]
 
 {"name":"422-test"}
