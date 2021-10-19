@@ -27,12 +27,20 @@ import { JSONSchema, ProblemJsonError } from '../../types';
 
 const outputNoContentFoundMessage = (contentTypes: string[]) => `Unable to find content for ${contentTypes}`;
 
-const createEmptyResponse = (code: string, headers: IHttpHeaderParam[], mediaTypes: string[]) =>
-  pipe(
-    mediaTypes,
-    findIndex(ct => ct.includes('*/*')),
-    O.map(() => ({ code, headers }))
+const createEmptyResponse = (code: string, headers: IHttpHeaderParam[], mediaTypes: string[]) => {
+  return pipe(
+    code,
+    O.fromPredicate<string>(code => code === '204'),
+    O.map(() => ({ code, headers })),
+    O.alt(() =>
+      pipe(
+        mediaTypes,
+        findIndex(ct => ct.includes('*/*')),
+        O.map(() => ({ code, headers }))
+      )
+    )
   );
+};
 
 type BodyNegotiationResult = Omit<IHttpNegotiationResult, 'headers'>;
 

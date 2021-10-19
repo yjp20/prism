@@ -558,7 +558,7 @@ describe('NegotiatorHelpers', () => {
           assertRight(actualOperationConfig, config => expect(config).toHaveProperty('mediaType', 'application/xml'));
         });
 
-        it('should negotiatiate the only content that is really available', () => {
+        it('should negotiate the only content that is really available', () => {
           const desiredOptions: NegotiationOptions = {
             mediaTypes: ['application/idonotexist', 'application/json'],
             dynamic: false,
@@ -583,6 +583,28 @@ describe('NegotiatorHelpers', () => {
           )(logger);
 
           assertRight(actualOperationConfig, config => expect(config).toHaveProperty('mediaType', 'application/json'));
+        });
+      });
+
+      describe('204 response', () => {
+        it('returns an empty payload response when desired media type does not exist', () => {
+          const httpResponseSchema: IHttpOperationResponse = {
+            code: '204',
+            contents: [],
+          };
+
+          const desiredOptions: NegotiationOptions = {
+            dynamic: false,
+            mediaTypes: ['application/json'],
+          };
+
+          const actualResponse = helpers.negotiateOptionsBySpecificResponse(
+            httpOperation.method,
+            desiredOptions,
+            httpResponseSchema
+          )(logger);
+
+          assertPayloadlessResponse(actualResponse);
         });
       });
 
