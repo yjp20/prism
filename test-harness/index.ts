@@ -1,7 +1,7 @@
 import { ChildProcess, spawn, spawnSync } from 'child_process';
 import * as fs from 'fs';
 import { validate } from 'gavel';
-import * as globFs from 'glob-fs';
+import glob = require('glob');
 import { parseResponse } from 'http-string-parser';
 import { get } from 'lodash';
 import * as path from 'path';
@@ -9,7 +9,6 @@ import * as split2 from 'split2';
 import * as tmp from 'tmp';
 import { parseSpecFile, xmlValidator } from './helpers';
 
-const glob = globFs({ gitignore: true });
 jest.setTimeout(5000);
 
 const WAIT_FOR_LINE = 'Prism is listening';
@@ -18,7 +17,7 @@ const WAIT_FOR_LINE_TIMEOUT = 3000;
 describe('harness', () => {
   const files = process.env.TESTS
     ? String(process.env.TESTS).split(',')
-    : glob.readdirSync('**/*.txt', { cwd: path.join(__dirname, './specs') });
+    : glob.sync('**/*.txt', { cwd: path.join(__dirname, './specs') });
 
   files.forEach(file => {
     const data = fs.readFileSync(path.join(__dirname, './specs/', file), { encoding: 'utf8' });
