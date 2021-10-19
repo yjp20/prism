@@ -14,6 +14,7 @@ import { ValidationContext, validateFn } from './types';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 import { JSONSchema7 } from 'json-schema';
+import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -133,7 +134,7 @@ export const validate: validateFn<unknown, IMediaTypeContent> = (target, specs, 
             () =>
               pipe(
                 target,
-                E.fromPredicate<NEA.NonEmptyArray<IPrismDiagnostic>, unknown, string>(
+                E.fromPredicate<unknown, string, NEA.NonEmptyArray<IPrismDiagnostic>>(
                   (target: unknown): target is string => typeof target === 'string',
                   () => [{ message: 'Target is not a string', code: '422', severity: DiagnosticSeverity.Error }]
                 ),

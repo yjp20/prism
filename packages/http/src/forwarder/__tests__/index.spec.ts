@@ -141,7 +141,7 @@ describe('forward', () => {
       ));
   });
 
-  describe('and operation is marked as deprected', () => {
+  describe('and operation is marked as deprecated', () => {
     it('will add "Deprecation" header if not present in response', () => {
       stubFetch({
         headers: { 'content-type': 'text/plain' },
