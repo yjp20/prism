@@ -69,6 +69,13 @@ Calling `curl http://127.0.0.1:4010/pets/123` on this will give:
 
 Calling the same URL with the `Prefer` header `example=dog` `http://127.0.0.1:4010/pets/123` will yield to:
 
+<!-- theme: info -->
+
+> #### Remember about providing expected response code
+>
+> It is always worth to indicate HTTP response code from which `example` should be taken.
+> If prism decides to change the response code due to validation or security violations, your `example` might be ignored.
+
 ```json
 {
   "id": 1,

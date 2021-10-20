@@ -54,7 +54,7 @@ paths:
 ====server====
 mock -p 4010 ${document}
 ====command====
-curl -i --location --request POST 'http://127.0.0.1:4010/cats?__example=someMissingExample' --header "Content-Type: application/json" --data '{"name":"very_long_name"}'
+curl -i --location --request POST 'http://127.0.0.1:4010/cats?__example=someMissingExample&__code=422' --header "Content-Type: application/json" --data '{"name":"very_long_name"}'
 ====expect====
 HTTP/1.1 404 Not Found
 content-type: application/problem+json

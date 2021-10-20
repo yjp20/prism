@@ -319,7 +319,7 @@ describe('mocker', () => {
         const response = mock({
           input: Object.assign({}, mockInput, { validations: [{ severity: DiagnosticSeverity.Error }] }),
           resource: mockResource,
-          config: { dynamic: false, exampleKey: 'invalid_2' },
+          config: { dynamic: false, exampleKey: 'invalid_2', code: 400 },
         })(logger);
 
         it('should return the selected example', () => {
@@ -338,7 +338,7 @@ describe('mocker', () => {
         const response = mock({
           input: Object.assign({}, mockInput, { validations: [{ severity: DiagnosticSeverity.Error }] }),
           resource: mockResource,
-          config: { dynamic: false, exampleKey: 'missingKey' },
+          config: { dynamic: false, exampleKey: 'missingKey', code: 400 },
         })(logger);
 
         it('should return 404 error', () => {

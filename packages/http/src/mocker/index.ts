@@ -71,8 +71,8 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
     R.chain(result => assembleResponse(result, payloadGenerator)),
     R.chain(response =>
       /*  Note: This is now just logging the errors without propagating them back. This might be moved as a first
-          level concept in Prism.
-      */
+        level concept in Prism.
+    */
       logger =>
         pipe(
           response,
@@ -149,15 +149,22 @@ function parseBodyIfUrlEncoded(request: IHttpRequest, resource: IHttpOperation) 
 export function createInvalidInputResponse(
   failedValidations: NonEmptyArray<IPrismDiagnostic>,
   responses: IHttpOperationResponse[],
-  exampleKey?: string
+  mockConfig: IHttpOperationConfig
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
+
+  const expectedCodes: NonEmptyArray<number> = securityValidation ? [401] : [422, 400];
+  const isExampleKeyFromExpectedCodes = !!mockConfig.code && expectedCodes.includes(mockConfig.code);
 
   return pipe(
     withLogger(logger => logger.warn({ name: 'VALIDATOR' }, 'Request did not pass the validation rules')),
     R.chain(() =>
       pipe(
-        helpers.negotiateOptionsForInvalidRequest(responses, securityValidation ? [401] : [422, 400], exampleKey),
+        helpers.negotiateOptionsForInvalidRequest(
+          responses,
+          expectedCodes,
+          isExampleKeyFromExpectedCodes ? mockConfig.exampleKey : undefined
+        ),
         RE.mapLeft(error => {
           if (error instanceof ProblemJsonError && error.status === 404) {
             return error;
@@ -203,7 +210,7 @@ function negotiateResponse(
   );
 
   if (errors && A.isNonEmpty(input.validations)) {
-    return createInvalidInputResponse(input.validations, resource.responses, mockConfig.exampleKey);
+    return createInvalidInputResponse(input.validations, resource.responses, mockConfig);
   } else {
     return pipe(
       withLogger(logger => {
