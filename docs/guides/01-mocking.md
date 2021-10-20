@@ -73,7 +73,7 @@ Calling the same URL with the `Prefer` header `example=dog` `http://127.0.0.1:40
 
 > #### Remember about providing expected response code
 >
-> It is always worth to indicate http response code from which `example` should be taken.
+> It is always worth to indicate HTTP response code from which `example` should be taken.
 > If prism decides to change the response code due to validation or security violations, your `example` might be ignored.
 
 ```json
