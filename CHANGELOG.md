@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.4.3 (2021.10.21)
+
+## Fixed
+
+- Ignoring example if prism decides to change response code #1919
+- Updated dependencies #1916
+- Do not check content-type for 204 code #1915
+
 # 4.4.2 (2021.10.13)
 
 ## Fixed
