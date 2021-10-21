@@ -42,7 +42,7 @@ paths:
 mock -p 4010 -d ${document}
 ====command====
 curl -i http://localhost:4010/widget
-====expect====
+====expect-loose====
 HTTP/1.1 200 OK
 content-type: application/json
 
