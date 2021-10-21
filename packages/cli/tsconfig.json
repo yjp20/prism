@@ -4,7 +4,8 @@
     "paths": {
       "@stoplight/prism-core": ["./core/src"],
       "@stoplight/prism-http": ["./http/src"],
-      "@stoplight/prism-http-server": ["./http-server/src"]
+      "@stoplight/prism-http-server": ["./http-server/src"],
+      "json-schema-faker": ["../node_modules/@types/json-schema-faker/index.d.ts"]
     }
   }
 }

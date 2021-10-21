@@ -187,6 +187,23 @@ The more descriptive your description is, the better job Prism can do at creatin
 
 > **Tip:** If your team needs help creating better quality API description documents, take a look at [Spectral](https://stoplight.io/spectral/). You could enforce the use of `example` properties, or similar.
 
+##### Configure JSON Schema Faker
+
+At the top level of your API Specification, create an `x-json-schema-faker`
+member containing a map of [JSON Schema Faker Options](https://github.com/json-schema-faker/json-schema-faker/tree/master/docs#available-options) and their values. An
+additional `locale` option is accepted to configure the `locale` of the
+underlying Faker instance.
+
+```yaml
+openapi: 3.1.0
+
+x-json-schema-faker:
+  locale: de
+  min-items: 2
+  max-items: 10
+  resolve-json-path: true
+```
+
 ### Request Validation
 
 Having a mock server which only gave responses would not be very useful, which is why
