@@ -1,6 +1,6 @@
 # Request Validation
 
-Based on the API description document Prism can take educated guesses at all sorts of validation rules for the request body, headers, query parameters, using keywords like `type`, `format`, `maxLength`, etc.
+Based on the API description document, Prism can take educated guesses at all sorts of validation rules for the request body, headers, query parameters, using keywords like `type`, `format`, `maxLength`, etc.
 
 It can also fail with `401` if security information is missing, and do a bunch of other things the API description document says the real API will do. If the folks implementing the real API do it differently to their shared documents... well you should maybe have words with them.
 
@@ -8,19 +8,19 @@ It can also fail with `401` if security information is missing, and do a bunch o
 
 Requests which expect a request body, query parameter, or a path parameter, will be validated.
 
-For example, let's make a a POST with a JSON body which is missing the required `name` parameter. We'll be using the [petstore openapi 2 version][petstore-oas2].
+For example, let's make a POST with a JSON body which is missing the required `name` parameter. We'll be using the [petstore openapi 2 version][petstore-oas2].
 
 ```bash
 curl -X POST -s -D "/dev/stderr" -H "content-type: application/json" -d '{"tag":"Stowford"}' http://127.0.0.1:4010/pets
 ```
 
-In such case, Prism will:
+In this case, Prism will:
 
-- Look for a response with status code `422` on the operation you were trying to execute
-- If there's not a `422` defined, it will look for a response with status code `400` on the operation you were trying to execute
+- Look for a response with status code `422` on the operation you were trying to execute.
+- If there's not a `422` defined, it will look for a response with status code `400` on the operation you were trying to execute.
 - In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating all the validation errors it found along the way. Such response will have a payload conforming the [application/problem+json][rfc7807] specification.
 
-To get back to our example, since the operation hasn't any error response defined, Prism will generate a 422 response for me:
+To get back to our example, since the operation hasn't any error response defined, Prism will generate a 422 response:
 
 ```
 HTTP/1.1 422 Unprocessable Entity
@@ -48,6 +48,8 @@ Connection: keep-alive
 ```
 
 This error shows effectively that the request is missing a required property `name` from the HTTP request body.
+
+Pairing a GET with a request body is another example of a `422` response you may receive. 
 
 ## Server Validation
 
