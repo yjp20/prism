@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.5.0 (2021.10.21)
+
+- allow [json-schema-faker configuration in specification](https://github.com/stoplightio/prism/pull/1899)
+
 # 4.4.3 (2021.10.21)
 
 ## Fixed
