@@ -14,7 +14,7 @@ import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
 import { sequenceOption, sequenceValidation } from '../combinators';
 import { is as typeIs } from 'type-is';
-import { pipe } from 'fp-ts/function';
+import { pipe, flow } from 'fp-ts/function';
 import { inRange, isMatch } from 'lodash';
 import { URI } from 'uri-template-lite';
 import { IHttpRequest, IHttpResponse } from '../types';
@@ -31,6 +31,22 @@ const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unkno
     E.fromPredicate<IHttpOperationRequestBody, NonEmptyArray<IPrismDiagnostic>>(
       requestBody => !(!!requestBody.required && !body),
       () => [{ code: 'required', message: 'Body parameter is required', severity: DiagnosticSeverity.Error }]
+    )
+  );
+
+const isMediaTypeValid = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
+  pipe(
+    O.fromNullable(mediaType),
+    O.fold(
+      () => true,
+      mediaType =>
+        pipe(
+          O.fromNullable(contents),
+          O.fold(
+            () => true,
+            contents => !!contents.find(x => !!typeIs(mediaType, x.mediaType))
+          )
+        )
     )
   );
 
@@ -56,6 +72,20 @@ const tryValidateInputBody = (
 ) =>
   pipe(
     checkBodyIsProvided(requestBody, body),
+    E.chain(() => {
+      if (isMediaTypeValid(mediaType, requestBody.contents)) {
+        return E.right(body);
+      }
+
+      const supportedContentTypes = (requestBody.contents || []).map(x => x.mediaType);
+      return E.left<NonEmptyArray<IPrismDiagnostic>>([
+        {
+          message: `Supported content types: ${supportedContentTypes.join(',')}`,
+          code: 415,
+          severity: DiagnosticSeverity.Error,
+        },
+      ]);
+    }),
     E.chain(() => validateInputIfBodySpecIsProvided(body, mediaType, requestBody.contents, bundle))
   );
 

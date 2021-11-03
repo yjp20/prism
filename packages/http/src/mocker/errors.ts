@@ -35,3 +35,9 @@ export const VIOLATIONS: Omit<ProblemJson, 'detail'> = {
   title: 'Request/Response not valid',
   status: 500,
 };
+
+export const INVALID_CONTENT_TYPE: Omit<ProblemJson, 'detail'> = {
+  type: 'INVALID_CONTENT_TYPE',
+  title: 'Invalid content type',
+  status: 415,
+};

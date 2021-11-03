@@ -30,7 +30,7 @@ import {
   ProblemJsonError,
 } from '../types';
 import withLogger from '../withLogger';
-import { UNAUTHORIZED, UNPROCESSABLE_ENTITY } from './errors';
+import { UNAUTHORIZED, UNPROCESSABLE_ENTITY, INVALID_CONTENT_TYPE } from './errors';
 import { generate, generateStatic } from './generator/JSONSchema';
 import helpers from './negotiator/NegotiatorHelpers';
 import { IHttpNegotiationResult } from './negotiator/types';
@@ -69,16 +69,17 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
     R.chain(mockConfig => negotiateResponse(mockConfig, input, resource)),
     R.chain(result => negotiateDeprecation(result, resource)),
     R.chain(result => assembleResponse(result, payloadGenerator)),
-    R.chain(response =>
-      /*  Note: This is now just logging the errors without propagating them back. This might be moved as a first
+    R.chain(
+      response =>
+        /*  Note: This is now just logging the errors without propagating them back. This might be moved as a first
         level concept in Prism.
     */
-      logger =>
-        pipe(
-          response,
-          E.map(response => runCallbacks({ resource, request: input.data, response })(logger)),
-          E.chain(() => response)
-        )
+        logger =>
+          pipe(
+            response,
+            E.map(response => runCallbacks({ resource, request: input.data, response })(logger)),
+            E.chain(() => response)
+          )
     )
   );
 };
@@ -153,7 +154,7 @@ export function createInvalidInputResponse(
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
   const securityValidation = failedValidations.find(validation => validation.code === 401);
 
-  const expectedCodes: NonEmptyArray<number> = securityValidation ? [401] : [422, 400];
+  const expectedCodes = getExpectedCodesForViolations(failedValidations);
   const isExampleKeyFromExpectedCodes = !!mockConfig.code && expectedCodes.includes(mockConfig.code);
 
   return pipe(
@@ -169,13 +170,39 @@ export function createInvalidInputResponse(
           if (error instanceof ProblemJsonError && error.status === 404) {
             return error;
           }
-          return securityValidation
-            ? createUnauthorisedResponse(securityValidation.tags)
-            : createUnprocessableEntityResponse(failedValidations);
+          return createResponseForViolations(failedValidations);
         })
       )
     )
   );
+}
+
+function getExpectedCodesForViolations(failedValidations: NonEmptyArray<IPrismDiagnostic>): NonEmptyArray<number> {
+  const hasSecurityViolations = failedValidations.find(validation => validation.code === 401);
+  if (hasSecurityViolations) {
+    return [401];
+  }
+
+  const hasInvalidContentTypeViolations = failedValidations.find(validation => validation.code === 415);
+  if (hasInvalidContentTypeViolations) {
+    return [415, 422, 400];
+  }
+
+  return [422, 400];
+}
+
+function createResponseForViolations(failedValidations: NonEmptyArray<IPrismDiagnostic>) {
+  const securityViolation = failedValidations.find(validation => validation.code === 401);
+  if (securityViolation) {
+    return createUnauthorisedResponse(securityViolation.tags);
+  }
+
+  const invalidContentViolation = failedValidations.find(validation => validation.code === 415);
+  if (invalidContentViolation) {
+    return createInvalidContentTypeResponse(invalidContentViolation);
+  }
+
+  return createUnprocessableEntityResponse(failedValidations);
 }
 
 export const createUnauthorisedResponse = (tags?: string[]): ProblemJsonError =>
@@ -198,6 +225,9 @@ export const createUnprocessableEntityResponse = (validations: NonEmptyArray<IPr
       })),
     }
   );
+
+export const createInvalidContentTypeResponse = (validation: IPrismDiagnostic): ProblemJsonError =>
+  ProblemJsonError.fromTemplate(INVALID_CONTENT_TYPE, validation.message);
 
 function negotiateResponse(
   mockConfig: IHttpOperationConfig,
@@ -244,39 +274,41 @@ function negotiateDeprecation(
   return RE.fromEither(result);
 }
 
-const assembleResponse = (
-  result: E.Either<Error, IHttpNegotiationResult>,
-  payloadGenerator: PayloadGenerator
-): R.Reader<Logger, E.Either<Error, IHttpResponse>> => logger =>
-  pipe(
-    E.Do,
-    E.bind('negotiationResult', () => result),
-    E.bind('mockedData', ({ negotiationResult }) =>
-      eitherSequence(
-        computeBody(negotiationResult, payloadGenerator),
-        computeMockedHeaders(negotiationResult.headers || [], payloadGenerator)
-      )
-    ),
-    E.map(({ mockedData: [mockedBody, mockedHeaders], negotiationResult }) => {
-      const response: IHttpResponse = {
-        statusCode: parseInt(negotiationResult.code),
-        headers: {
-          ...mockedHeaders,
-          ...(negotiationResult.mediaType && {
-            'Content-type': negotiationResult.mediaType,
-          }),
-          ...(negotiationResult.deprecated && {
-            deprecation: 'true',
-          }),
-        },
-        body: mockedBody,
-      };
+const assembleResponse =
+  (
+    result: E.Either<Error, IHttpNegotiationResult>,
+    payloadGenerator: PayloadGenerator
+  ): R.Reader<Logger, E.Either<Error, IHttpResponse>> =>
+  logger =>
+    pipe(
+      E.Do,
+      E.bind('negotiationResult', () => result),
+      E.bind('mockedData', ({ negotiationResult }) =>
+        eitherSequence(
+          computeBody(negotiationResult, payloadGenerator),
+          computeMockedHeaders(negotiationResult.headers || [], payloadGenerator)
+        )
+      ),
+      E.map(({ mockedData: [mockedBody, mockedHeaders], negotiationResult }) => {
+        const response: IHttpResponse = {
+          statusCode: parseInt(negotiationResult.code),
+          headers: {
+            ...mockedHeaders,
+            ...(negotiationResult.mediaType && {
+              'Content-type': negotiationResult.mediaType,
+            }),
+            ...(negotiationResult.deprecated && {
+              deprecation: 'true',
+            }),
+          },
+          body: mockedBody,
+        };
 
-      logger.success(`Responding with the requested status code ${response.statusCode}`);
+        logger.success(`Responding with the requested status code ${response.statusCode}`);
 
-      return response;
-    })
-  );
+        return response;
+      })
+    );
 
 function isINodeExample(nodeExample: ContentExample | undefined): nodeExample is INodeExample {
   return !!nodeExample && 'value' in nodeExample;

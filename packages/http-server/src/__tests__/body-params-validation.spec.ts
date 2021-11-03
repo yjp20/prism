@@ -530,8 +530,8 @@ describe('body params validation', () => {
       test('returns 422', async () => {
         const response = await makeRequest('/path', {
           method: 'POST',
-          body: '{}',
-          headers: { 'content-type': 'application/json' },
+          body: '',
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
         });
 
         expect(response.status).toBe(422);
@@ -559,11 +559,11 @@ describe('body params validation', () => {
       test('returns 422 & proper validation message', async () => {
         const response = await makeRequest('/path', {
           method: 'POST',
-          body: JSON.stringify({
+          body: new URLSearchParams({
             id: 'not integer',
             status: 'somerundomestuff',
-          }),
-          headers: { 'content-type': 'application/json' },
+          }).toString(),
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
         });
 
         expect(response.status).toBe(422);
@@ -591,11 +591,11 @@ describe('body params validation', () => {
       test('returns 200', async () => {
         const response = await makeRequest('/path', {
           method: 'POST',
-          body: JSON.stringify({
-            id: 123,
+          body: new URLSearchParams({
+            id: '123',
             status: 'open',
-          }),
-          headers: { 'content-type': 'application/json' },
+          }).toString(),
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
         });
 
         expect(response.status).toBe(200);
