@@ -1,6 +1,6 @@
 import { parse, ParsedMediaType } from 'content-type';
 import * as O from 'fp-ts/Option';
-import { pipe } from 'fp-ts/Function';
+import { pipe } from 'fp-ts/function';
 
 export function wildcardMediaTypeMatch(mediaTypeA: string, mediaTypeB: string) {
   return pipe(
