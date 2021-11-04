@@ -14,7 +14,7 @@ import { ValidationContext, validateFn } from './types';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 import { JSONSchema7 } from 'json-schema';
-import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
+import { wildcardMediaTypeMatch } from '../utils/wildcardMediaTypeMatch';
 
 export function deserializeFormBody(
   schema: JSONSchema,
@@ -62,7 +62,7 @@ export function decodeUriEntities(target: Dictionary<string>) {
 export function findContentByMediaTypeOrFirst(specs: IMediaTypeContent[], mediaType: string) {
   return pipe(
     specs,
-    A.findFirst(spec => !!typeIs(mediaType, [spec.mediaType])),
+    A.findFirst(spec => wildcardMediaTypeMatch(mediaType, spec.mediaType)),
     O.alt(() => A.head(specs)),
     O.map(content => ({ mediaType, content }))
   );

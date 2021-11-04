@@ -13,7 +13,6 @@ import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
 import { sequenceOption, sequenceValidation } from '../combinators';
-import { is as typeIs } from 'type-is';
 import { pipe, flow } from 'fp-ts/function';
 import { inRange, isMatch } from 'lodash';
 import { URI } from 'uri-template-lite';
@@ -22,6 +21,7 @@ import { findOperationResponse } from './utils/spec';
 import { validateBody, validateHeaders, validatePath, validateQuery } from './validators';
 import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 import { ValidationContext } from './validators/types';
+import { wildcardMediaTypeMatch } from './utils/wildcardMediaTypeMatch';
 
 export { validateSecurity } from './validators/security';
 
@@ -34,7 +34,7 @@ const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unkno
     )
   );
 
-const isMediaTypeValid = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
+const isMediaTypeDefinedInContents = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
   pipe(
     O.fromNullable(mediaType),
     O.fold(
@@ -44,7 +44,7 @@ const isMediaTypeValid = (mediaType?: string, contents?: IMediaTypeContent[]): b
           O.fromNullable(contents),
           O.fold(
             () => true,
-            contents => !!contents.find(x => !!typeIs(mediaType, x.mediaType))
+            contents => !!contents.find(x => !x.mediaType || wildcardMediaTypeMatch(mediaType, x.mediaType))
           )
         )
     )
@@ -73,7 +73,7 @@ const tryValidateInputBody = (
   pipe(
     checkBodyIsProvided(requestBody, body),
     E.chain(() => {
-      if (isMediaTypeValid(mediaType, requestBody.contents)) {
+      if (isMediaTypeDefinedInContents(mediaType, requestBody.contents)) {
         return E.right(body);
       }
 
@@ -135,7 +135,7 @@ export const validateMediaType = (contents: NonEmptyArray<IMediaTypeContent>, me
         A.findFirst(c => {
           const parsedSelectedContentMediaType = contentType.parse(c.mediaType);
           return (
-            !!typeIs(parsedMediaType.type, [parsedSelectedContentMediaType.type]) &&
+            wildcardMediaTypeMatch(parsedMediaType.type, parsedSelectedContentMediaType.type) &&
             isMatch(parsedMediaType.parameters, parsedSelectedContentMediaType.parameters)
           );
         })

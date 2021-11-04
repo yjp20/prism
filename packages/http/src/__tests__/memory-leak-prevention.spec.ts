@@ -38,6 +38,6 @@ describe('Checks if memory leaks', () => {
     }
 
     global.gc();
-    expect(process.memoryUsage().heapUsed).toBeLessThanOrEqual(baseMemoryUsage * 1.02);
+    expect(process.memoryUsage().heapUsed).toBeLessThanOrEqual(baseMemoryUsage * 1.03);
   });
 });

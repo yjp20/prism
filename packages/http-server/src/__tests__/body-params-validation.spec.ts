@@ -254,6 +254,67 @@ describe('body params validation', () => {
         {
           id: '?http-operation-id?',
           method: 'post',
+          path: '/json-body-property-required-with-custom-415',
+          responses: [
+            {
+              code: '415',
+              headers: [],
+              contents: [
+                {
+                  mediaType: 'application/json',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      type: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                  examples: [
+                    {
+                      key: 'test',
+                      value: { type: 'foo' },
+                    },
+                  ],
+                  encodings: [],
+                },
+              ],
+            },
+          ],
+          servers: [],
+          request: {
+            body: {
+              contents: [
+                {
+                  mediaType: 'application/json',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      id: {
+                        type: 'integer',
+                        minimum: -9223372036854776000,
+                        maximum: 9223372036854776000,
+                      },
+                    },
+                    required: ['id'],
+                    $schema: 'http://json-schema.org/draft-07/schema#',
+                  },
+                  examples: [],
+                  encodings: [],
+                },
+              ],
+            },
+            headers: [],
+            query: [],
+            cookie: [],
+            path: [],
+          },
+          tags: [],
+          security: [],
+        },
+        {
+          id: '?http-operation-id?',
+          method: 'post',
           path: '/json-body-circular-property-required',
           responses: [
             {
@@ -387,6 +448,29 @@ describe('body params validation', () => {
           expect(response.status).toBe(200);
         });
       });
+
+      describe('when body with unsupported content-type is used', () => {
+        test('returns 415', async () => {
+          const response = await makeRequest('/json-body-optional', {
+            method: 'POST',
+            headers: { 'content-type': 'application/xml' },
+          });
+          expect(response.status).toBe(415);
+        });
+      });
+    });
+
+    describe('operation with custom 415', () => {
+      it('returns custom 415', async () => {
+        const response = await makeRequest('/json-body-property-required-with-custom-415', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/csv',
+          },
+        });
+        expect(response.status).toBe(415);
+        await expect(response.json()).resolves.toMatchObject({ type: 'foo' });
+      });
     });
 
     describe('operation with required body', () => {
@@ -401,6 +485,18 @@ describe('body params validation', () => {
       });
 
       describe('when body provided', () => {
+        describe('and content type has different content-type extension', () => {
+          test('returns 422 & error message', async () => {
+            const response = await makeRequest('/json-body-required', {
+              method: 'POST',
+              headers: { 'content-type': 'application/vnd1+json' },
+              body: JSON.stringify({ id: 100, status: 'placed' }),
+            });
+
+            expect(response.status).toBe(200);
+          });
+        });
+
         describe('and property type invalid', () => {
           test('returns 422 & error message', async () => {
             const response = await makeRequest('/json-body-required', {
