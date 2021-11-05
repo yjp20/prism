@@ -10,9 +10,11 @@ import { pipe } from 'fp-ts/function';
 import * as E from 'fp-ts/lib/Either';
 import { stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 
+// necessary as workaround broken types in json-schema-faker
 // @ts-ignore
 jsf.extend('faker', () => faker);
 
+// necessary as workaround broken types in json-schema-faker
 // @ts-ignore
 jsf.option({
   failOnInvalidTypes: false,
@@ -30,6 +32,7 @@ export function generate(bundle: unknown, source: JSONSchema): Either<Error, unk
     stripWriteOnlyProperties(source),
     E.fromOption(() => Error('Cannot strip writeOnly properties')),
     E.chain(updatedSource =>
+      // necessary as workaround broken types in json-schema-faker
       // @ts-ignore
       tryCatch(() => jsf.generate({ ...cloneDeep(updatedSource), __bundled__: bundle }), toError)
     )

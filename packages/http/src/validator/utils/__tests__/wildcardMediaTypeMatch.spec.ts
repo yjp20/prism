@@ -9,7 +9,7 @@ describe('wildcardMediaTypeMatch', () => {
     it.each([
       ['application/vnd1+json', 'application/json'],
       ['application/vnd1+json', 'application/vnd-2+json'],
-    ])('with difference in extension: %s - %s', (a, b) => {
+    ])('with difference in suffix: %s - %s', (a, b) => {
       expect(wildcardMediaTypeMatch(a, b)).toBe(true);
     });
 

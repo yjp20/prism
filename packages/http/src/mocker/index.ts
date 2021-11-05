@@ -152,8 +152,6 @@ export function createInvalidInputResponse(
   responses: IHttpOperationResponse[],
   mockConfig: IHttpOperationConfig
 ): R.Reader<Logger, E.Either<ProblemJsonError, IHttpNegotiationResult>> {
-  const securityValidation = failedValidations.find(validation => validation.code === 401);
-
   const expectedCodes = getExpectedCodesForViolations(failedValidations);
   const isExampleKeyFromExpectedCodes = !!mockConfig.code && expectedCodes.includes(mockConfig.code);
 
@@ -178,12 +176,12 @@ export function createInvalidInputResponse(
 }
 
 function getExpectedCodesForViolations(failedValidations: NonEmptyArray<IPrismDiagnostic>): NonEmptyArray<number> {
-  const hasSecurityViolations = failedValidations.find(validation => validation.code === 401);
+  const hasSecurityViolations = findValidationByCode(failedValidations, 401);
   if (hasSecurityViolations) {
     return [401];
   }
 
-  const hasInvalidContentTypeViolations = failedValidations.find(validation => validation.code === 415);
+  const hasInvalidContentTypeViolations = findValidationByCode(failedValidations, 415);
   if (hasInvalidContentTypeViolations) {
     return [415, 422, 400];
   }
@@ -192,17 +190,21 @@ function getExpectedCodesForViolations(failedValidations: NonEmptyArray<IPrismDi
 }
 
 function createResponseForViolations(failedValidations: NonEmptyArray<IPrismDiagnostic>) {
-  const securityViolation = failedValidations.find(validation => validation.code === 401);
+  const securityViolation = findValidationByCode(failedValidations, 401);
   if (securityViolation) {
     return createUnauthorisedResponse(securityViolation.tags);
   }
 
-  const invalidContentViolation = failedValidations.find(validation => validation.code === 415);
+  const invalidContentViolation = findValidationByCode(failedValidations, 415);
   if (invalidContentViolation) {
     return createInvalidContentTypeResponse(invalidContentViolation);
   }
 
   return createUnprocessableEntityResponse(failedValidations);
+}
+
+function findValidationByCode(validations: NonEmptyArray<IPrismDiagnostic>, code: string | number) {
+  return validations.find(validation => validation.code === code);
 }
 
 export const createUnauthorisedResponse = (tags?: string[]): ProblemJsonError =>

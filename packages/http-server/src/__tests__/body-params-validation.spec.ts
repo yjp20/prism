@@ -485,7 +485,7 @@ describe('body params validation', () => {
       });
 
       describe('when body provided', () => {
-        describe('and content type has different content-type extension', () => {
+        describe('and content type has different content-type suffix', () => {
           test('returns 422 & error message', async () => {
             const response = await makeRequest('/json-body-required', {
               method: 'POST',

@@ -16,13 +16,15 @@ export function wildcardMediaTypeMatch(mediaTypeA: string, mediaTypeB: string) {
   );
 }
 
-const REGEXP = /^([-\w.]+)\/(?:([-\w.]+)\+)?([-\w.]+)$/;
+// This regexp doesn't need to be accurate with RFC spec
+// since we need it only to extract suffix nad subtype part of content-type
+const CONTENT_TYPE_REGEXP = /^(.+)\/(?:(.+)\+)?(.+)$/;
 
 function parseContentType(contentType: string): O.Option<ParsedContentType> {
   return pipe(
     O.tryCatch<ParsedMediaType>(() => parse(contentType)),
     O.chain(({ type }) => {
-      const match = REGEXP.exec(type.toLowerCase());
+      const match = CONTENT_TYPE_REGEXP.exec(type.toLowerCase());
 
       if (!match) {
         return O.none;
@@ -32,7 +34,7 @@ function parseContentType(contentType: string): O.Option<ParsedContentType> {
       return O.some({
         type: match[1],
         subtype: match[hasExtension ? 3 : 2],
-        extension: hasExtension ? match[2] : undefined,
+        suffix: hasExtension ? match[2] : undefined,
       });
     })
   );
@@ -41,5 +43,5 @@ function parseContentType(contentType: string): O.Option<ParsedContentType> {
 interface ParsedContentType {
   type: string;
   subtype: string;
-  extension?: string;
+  suffix?: string;
 }

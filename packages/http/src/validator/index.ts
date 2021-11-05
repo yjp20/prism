@@ -34,7 +34,7 @@ const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unkno
     )
   );
 
-const isMediaTypeDefinedInContents = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
+const isMediaTypeSupportedInContents = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
   pipe(
     O.fromNullable(mediaType),
     O.fold(
@@ -73,7 +73,7 @@ const tryValidateInputBody = (
   pipe(
     checkBodyIsProvided(requestBody, body),
     E.chain(() => {
-      if (isMediaTypeDefinedInContents(mediaType, requestBody.contents)) {
+      if (isMediaTypeSupportedInContents(mediaType, requestBody.contents)) {
         return E.right(body);
       }
 
