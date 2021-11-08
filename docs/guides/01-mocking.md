@@ -27,7 +27,7 @@ and `Content-Type` just like with a real API, and it should work as expected, or
 
 The response Prism decides to give can be figred out with this decision flow diagram.
 
-![](../../packages/http/docs/images/mock-server-dfd.png)
+![](../../packages/http/docs/images/mock-server-dfd.jpeg)
 
 ### Response Examples
 
