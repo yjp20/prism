@@ -7,8 +7,14 @@ export async function configureExtensionsFromSpec(specFilePathOrObject: string |
   const result = decycle(await dereference(specFilePathOrObject));
 
   forOwn(get(result, 'x-json-schema-faker', {}), (value: any, option: string) => {
-    if (option === 'locale') return jsf.locate('faker').setLocale(value);
+    if (option === 'locale') {
+      // necessary as workaround broken types in json-schema-faker
+      // @ts-ignore
+      return jsf.locate('faker').setLocale(value);
+    }
 
+    // necessary as workaround broken types in json-schema-faker
+    // @ts-ignore
     jsf.option(camelCase(option), value);
   });
 }

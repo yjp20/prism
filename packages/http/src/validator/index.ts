@@ -13,7 +13,6 @@ import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import * as E from 'fp-ts/Either';
 import { sequenceOption, sequenceValidation } from '../combinators';
-import { is as typeIs } from 'type-is';
 import { pipe } from 'fp-ts/function';
 import { inRange, isMatch } from 'lodash';
 import { URI } from 'uri-template-lite';
@@ -22,6 +21,7 @@ import { findOperationResponse } from './utils/spec';
 import { validateBody, validateHeaders, validatePath, validateQuery } from './validators';
 import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
 import { ValidationContext } from './validators/types';
+import { wildcardMediaTypeMatch } from './utils/wildcardMediaTypeMatch';
 
 export { validateSecurity } from './validators/security';
 
@@ -31,6 +31,22 @@ const checkBodyIsProvided = (requestBody: IHttpOperationRequestBody, body: unkno
     E.fromPredicate<IHttpOperationRequestBody, NonEmptyArray<IPrismDiagnostic>>(
       requestBody => !(!!requestBody.required && !body),
       () => [{ code: 'required', message: 'Body parameter is required', severity: DiagnosticSeverity.Error }]
+    )
+  );
+
+const isMediaTypeSupportedInContents = (mediaType?: string, contents?: IMediaTypeContent[]): boolean =>
+  pipe(
+    O.fromNullable(mediaType),
+    O.fold(
+      () => true,
+      mediaType =>
+        pipe(
+          O.fromNullable(contents),
+          O.fold(
+            () => true,
+            contents => !!contents.find(x => !x.mediaType || wildcardMediaTypeMatch(mediaType, x.mediaType))
+          )
+        )
     )
   );
 
@@ -56,6 +72,20 @@ const tryValidateInputBody = (
 ) =>
   pipe(
     checkBodyIsProvided(requestBody, body),
+    E.chain(() => {
+      if (isMediaTypeSupportedInContents(mediaType, requestBody.contents)) {
+        return E.right(body);
+      }
+
+      const supportedContentTypes = (requestBody.contents || []).map(x => x.mediaType);
+      return E.left<NonEmptyArray<IPrismDiagnostic>>([
+        {
+          message: `Supported content types: ${supportedContentTypes.join(',')}`,
+          code: 415,
+          severity: DiagnosticSeverity.Error,
+        },
+      ]);
+    }),
     E.chain(() => validateInputIfBodySpecIsProvided(body, mediaType, requestBody.contents, bundle))
   );
 
@@ -105,7 +135,7 @@ export const validateMediaType = (contents: NonEmptyArray<IMediaTypeContent>, me
         A.findFirst(c => {
           const parsedSelectedContentMediaType = contentType.parse(c.mediaType);
           return (
-            !!typeIs(parsedMediaType.type, [parsedSelectedContentMediaType.type]) &&
+            wildcardMediaTypeMatch(parsedMediaType.type, parsedSelectedContentMediaType.type) &&
             isMatch(parsedMediaType.parameters, parsedSelectedContentMediaType.parameters)
           );
         })

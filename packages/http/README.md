@@ -364,4 +364,4 @@ You would get this in response
 
 The below diagram represents all logical decision we make to figure out the best HTTP response to the specific request.
 
-![Decision Flow Diagram](./docs/images/mock-server-dfd.png)
+![Decision Flow Diagram](./docs/images/mock-server-dfd.jpeg)

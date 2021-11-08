@@ -256,6 +256,14 @@ paths:
 
 **Explanation:** This error occurs when the current request has matched a corresponding HTTP Operation and has passed all the validations, but there's no response that could be returned.
 
+### INVALID_CONTENT_TYPE
+
+**Message: Supported content types: _list_ **
+
+**Returned Status Code: `415`**
+
+**Explanation:** This error occurs when the current request uses content-type that is not supported by corresponding HTTP Operation.
+
 ##### Example
 
 ```yaml
