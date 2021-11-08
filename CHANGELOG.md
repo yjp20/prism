@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.6.0 (2021.11.08)
+
+## Changed
+
+- Prism now responds with 415 http code if request content-type does not match content-types available in operation body
+
 # 4.5.0 (2021.10.21)
 
 - allow [json-schema-faker configuration in specification](https://github.com/stoplightio/prism/pull/1899)
