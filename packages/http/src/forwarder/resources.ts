@@ -7,4 +7,5 @@ export const hopByHopHeaders: string[] = [
   'te',
   'trailers',
   'upgrade',
+  'content-encoding',
 ];
