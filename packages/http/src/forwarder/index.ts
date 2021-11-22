@@ -20,63 +20,65 @@ import { UPSTREAM_NOT_IMPLEMENTED } from './errors';
 
 const { version: prismVersion } = require('../../package.json'); // eslint-disable-line
 
-const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig>['forward'] = (
-  { data: input, validations }: IPrismInput<IHttpRequest>,
-  baseUrl: string,
-  resource
-): RTE.ReaderTaskEither<Logger, Error, IHttpResponse> => logger =>
-  pipe(
-    NEA.fromArray(validations),
-    TE.fromOption(() => undefined),
-    TE.map(failedValidations => {
-      const securityValidation = failedValidations.find(validation => validation.code === 401);
+const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpConfig>['forward'] =
+  (
+    { data: input, validations }: IPrismInput<IHttpRequest>,
+    baseUrl: string,
+    resource
+  ): RTE.ReaderTaskEither<Logger, Error, IHttpResponse> =>
+  logger =>
+    pipe(
+      NEA.fromArray(validations),
+      TE.fromOption(() => undefined),
+      TE.map(failedValidations => {
+        const securityValidation = failedValidations.find(validation => validation.code === 401);
 
-      return securityValidation
-        ? createUnauthorisedResponse(securityValidation.tags)
-        : createUnprocessableEntityResponse(failedValidations);
-    }),
-    TE.swap,
-    TE.chainEitherK(() => serializeBody(input.body)),
-    TE.chain(body =>
-      TE.tryCatch(async () => {
-        const partialUrl = parse(baseUrl);
-        const url = format({
-          ...partialUrl,
-          pathname: posix.join(partialUrl.pathname || '', input.url.path),
-          query: input.url.query,
-        });
+        return securityValidation
+          ? createUnauthorisedResponse(securityValidation.tags)
+          : createUnprocessableEntityResponse(failedValidations);
+      }),
+      TE.swap,
+      TE.chainEitherK(() => serializeBody(input.body)),
+      TE.chain(body =>
+        TE.tryCatch(async () => {
+          const partialUrl = parse(baseUrl);
+          const url = format({
+            ...partialUrl,
+            pathname: posix.join(partialUrl.pathname || '', input.url.path),
+            query: input.url.query,
+          });
 
-        logger.info(`Forwarding "${input.method}" request to ${url}...`);
+          logger.info(`Forwarding "${input.method}" request to ${url}...`);
 
-        return fetch(url, {
-          body,
-          method: input.method,
-          headers: defaults(omit(input.headers, ['host']), {
-            'accept-encoding': '*',
-            accept: 'application/json, text/plain, */*',
-            'user-agent': `Prism/${prismVersion}`,
-          }),
-        });
-      }, E.toError)
-    ),
-    TE.chainFirst(response => {
-      if (response.status === 501) {
-        logger.warn(`Upstream call to ${input.url.path} has returned 501`);
-        return TE.left(ProblemJsonError.fromTemplate(UPSTREAM_NOT_IMPLEMENTED));
-      }
+          return fetch(url, {
+            body,
+            method: input.method,
+            headers: defaults(omit(input.headers, ['host']), {
+              'accept-encoding': '*',
+              accept: 'application/json, text/plain, */*',
+              'user-agent': `Prism/${prismVersion}`,
+            }),
+          });
+        }, E.toError)
+      ),
+      TE.chainFirst(response => {
+        if (response.status === 501) {
+          logger.warn(`Upstream call to ${input.url.path} has returned 501`);
+          return TE.left(ProblemJsonError.fromTemplate(UPSTREAM_NOT_IMPLEMENTED));
+        }
 
-      logger.info(`The upstream call to ${input.url.path} has returned ${response.status}`);
-      return TE.right(undefined);
-    }),
-    TE.chain(parseResponse),
-    TE.map(response => {
-      if (resource && resource.deprecated && response.headers && !response.headers.deprecation) {
-        response.headers.deprecation = 'true';
-      }
-      return response;
-    }),
-    TE.map(stripHopByHopHeaders)
-  );
+        logger.info(`The upstream call to ${input.url.path} has returned ${response.status}`);
+        return TE.right(undefined);
+      }),
+      TE.chain(parseResponse),
+      TE.map(response => {
+        if (resource && resource.deprecated && response.headers && !response.headers.deprecation) {
+          response.headers.deprecation = 'true';
+        }
+        return response;
+      }),
+      TE.map(stripHopByHopHeaders)
+    );
 
 export default forward;
 
