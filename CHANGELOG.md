@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.6.1 (2021.11.22)
+
+## Changed
+
+- in proxy mode, Prism does not send `Content-Encoding` header back to client as it was received from the upstream server because Prism's response is never compressed
+
 # 4.6.0 (2021.11.08)
 
 ## Changed
