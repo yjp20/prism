@@ -58,6 +58,6 @@ services:
       - '8080:4010'
 ```
 
-The above can be expanded if you with to [support TLS termination](../guides/10-nginx-tls-proxy.md).
+The above can be expanded if you wish to [support TLS termination](../guides/10-nginx-tls-proxy.md).
 
 Now everything is installed, let's look at some of the [concepts](./02-concepts.md).
