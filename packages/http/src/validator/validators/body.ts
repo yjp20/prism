@@ -104,7 +104,6 @@ function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer
     const cached = cache.get(schema);
     if (!cached) {
       const newSchema = normalizer(withoutAllOf(schema));
-      // const newSchema = normalizer(schema);
       cache.set(schema, newSchema);
       return newSchema;
     }
