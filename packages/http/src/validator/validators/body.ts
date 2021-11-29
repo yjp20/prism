@@ -11,6 +11,8 @@ import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
 import { ValidationContext, validateFn } from './types';
+// @ts-ignore no typings
+import * as mergeAllOf from 'json-schema-merge-allof';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 import { JSONSchema7 } from 'json-schema';
@@ -86,12 +88,23 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
+/**
+ * Given a schema, return an equivalent schema that does not include `allOf`.
+ */
+function withoutAllOf(s: JSONSchema): JSONSchema {
+  return mergeAllOf(s, {
+    ignoreAdditionalProperties: true,
+    deep: true,
+  });
+}
+
 function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer {
   const cache = new WeakMap<JSONSchema7, O.Option<JSONSchema7>>();
   return (schema: JSONSchema7) => {
     const cached = cache.get(schema);
     if (!cached) {
-      const newSchema = normalizer(schema);
+      const newSchema = normalizer(withoutAllOf(schema));
+      // const newSchema = normalizer(schema);
       cache.set(schema, newSchema);
       return newSchema;
     }
@@ -99,7 +112,7 @@ function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer
   };
 }
 
-type SchemaNormalizer = (schema: JSONSchema) => O.Option<JSONSchema>;
+export type SchemaNormalizer = (schema: JSONSchema) => O.Option<JSONSchema>;
 const normalizeSchemaProcessorMap: Record<ValidationContext, SchemaNormalizer> = {
   [ValidationContext.Input]: memoizeSchemaNormalizer(stripReadOnlyProperties),
   [ValidationContext.Output]: memoizeSchemaNormalizer(stripWriteOnlyProperties),
@@ -181,3 +194,7 @@ function validateAgainstReservedCharacters(
     diagnostics => (A.isNonEmpty(diagnostics) ? E.left(diagnostics) : E.right(encodedUriParams))
   );
 }
+
+export const ForUnitTesting = {
+  normalizeSchemaProcessorMap,
+};
