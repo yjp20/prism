@@ -12,7 +12,7 @@ import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
 import { ValidationContext, validateFn } from './types';
 // @ts-ignore no typings
-import * as mergeAllOf from 'json-schema-merge-allof';
+import * as mergeAllOf from '@stoplight/json-schema-merge-allof';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 import { JSONSchema7 } from 'json-schema';
@@ -95,6 +95,9 @@ function withoutAllOf(s: JSONSchema): JSONSchema {
   return mergeAllOf(s, {
     ignoreAdditionalProperties: true,
     deep: true,
+    // KLUDGE: the default $ref resolver mangles references.  See 
+    // https://github.com/stoplightio/json-schema-merge-allof/pull/8
+    $refResolver: (reference: string) => ({ $ref: reference }),
   });
 }
 

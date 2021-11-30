@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@stoplight/json": "^3.13.7",
+    "@stoplight/json-schema-merge-allof": "^0.7.7",
     "@stoplight/json-schema-sampler": "0.2.2",
     "@stoplight/prism-core": "^4.6.1",
     "@stoplight/types": "^12.2.0",
@@ -30,7 +31,6 @@
     "faker": "^5.5.3",
     "fp-ts": "^2.11.5",
     "json-schema-faker": "0.5.0-rcv.40",
-    "json-schema-merge-allof": "^0.8.1",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.5",
     "pino": "^6.13.3",
