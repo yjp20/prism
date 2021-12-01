@@ -92,13 +92,15 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
  * Given a schema, return an equivalent schema that does not include `allOf`.
  */
 function withoutAllOf(s: JSONSchema): JSONSchema {
-  return mergeAllOf(s, {
-    ignoreAdditionalProperties: true,
-    deep: true,
-    // KLUDGE: the default $ref resolver mangles references.  See 
-    // https://github.com/stoplightio/json-schema-merge-allof/pull/8
-    $refResolver: (reference: string) => ({ $ref: reference }),
-  });
+  try {
+    return mergeAllOf(s, { ignoreAdditionalProperties: true });
+  } catch {
+    // BUG: If the supplied schema is impossible (e.g., contains allOf with
+    // mutually exclusive children), we'll end up here.  We'd like to include an
+    // IPrismDiagnostic error in the final result with the schema error, but the
+    // result of this function is cached as a JSONSchema.
+    return s;
+  }
 }
 
 function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer {
@@ -114,7 +116,7 @@ function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer
   };
 }
 
-export type SchemaNormalizer = (schema: JSONSchema) => O.Option<JSONSchema>;
+type SchemaNormalizer = (schema: JSONSchema) => O.Option<JSONSchema>;
 const normalizeSchemaProcessorMap: Record<ValidationContext, SchemaNormalizer> = {
   [ValidationContext.Input]: memoizeSchemaNormalizer(stripReadOnlyProperties),
   [ValidationContext.Output]: memoizeSchemaNormalizer(stripWriteOnlyProperties),
@@ -196,7 +198,3 @@ function validateAgainstReservedCharacters(
     diagnostics => (A.isNonEmpty(diagnostics) ? E.left(diagnostics) : E.right(encodedUriParams))
   );
 }
-
-export const ForUnitTesting = {
-  normalizeSchemaProcessorMap,
-};

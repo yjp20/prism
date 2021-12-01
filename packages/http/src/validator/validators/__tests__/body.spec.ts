@@ -1,6 +1,6 @@
 import { HttpParamStyles, IMediaTypeContent } from '@stoplight/types';
 import { JSONSchema } from '../../..';
-import { validate, findContentByMediaTypeOrFirst, ForUnitTesting } from '../body';
+import { validate, findContentByMediaTypeOrFirst } from '../body';
 import { assertRight, assertLeft, assertSome } from '@stoplight/prism-core/src/__tests__/utils';
 import { ValidationContext } from '../types';
 
@@ -169,6 +169,111 @@ describe('validate()', () => {
       assertRight(validate({ name: 'Item One', title: 'title' }, specs, ValidationContext.Output, 'application/json'));
     });
   });
+
+  describe('merge allOf', () => {
+    it('nested below top-level', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['level1'],
+            properties: {
+              level1: {
+                type: 'object',
+                required: ['level2'],
+                properties: {
+                  level2: {
+                    allOf: [
+                      { description: 'a description' },
+                      { type: 'string' },
+                    ]
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate(
+        { level1: { level2: 'abc' } },
+        schemas,
+        ValidationContext.Output,
+        'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+    it('does NOT require writeOnly params in output', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['name', 'writeOnlyProperty'],
+            properties: {
+              name: {
+                type: 'string',
+              },
+              writeOnlyProperty: {
+                allOf: [
+                  { writeOnly: true },
+                  { type: 'string' }
+                ]
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate(
+        { name: 'Ann' },
+        schemas,
+        ValidationContext.Output,
+        'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+    it('does NOT require readOnly params in input', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['name', 'readOnlyProperty'],
+            properties: {
+              name: {
+                type: 'string',
+              },
+              readOnlyProperty: {
+                allOf: [
+                  { readOnly: true },
+                  { type: 'string' }
+                ]
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate(
+        { name: 'Ann' },
+        schemas,
+        ValidationContext.Input,
+        'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+  });  
 });
 
 describe('findContentByMediaTypeOrFirst()', () => {
@@ -181,67 +286,6 @@ describe('findContentByMediaTypeOrFirst()', () => {
       const foundContent = findContentByMediaTypeOrFirst([content], 'application/x-www-form-urlencoded; charset=UTF-8');
 
       it('should return the generic content', () => assertSome(foundContent));
-    });
-  });
-});
-
-const normalizeSchemaProcessorMap = ForUnitTesting.normalizeSchemaProcessorMap;
-describe('normalizeSchemaProcessorMap', () => {
-  describe('when schema contains allOf', () => {
-    it('should remove readOnly properties from input', () => {
-      // Arrange
-      const schema: JSONSchema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          writeOnlyProperty: { allOf: [{ writeOnly: true }, { type: 'string' }] },
-          // NOTE: readOnly is nested inside allOf
-          readOnlyProperty: { allOf: [{ readOnly: true }, { type: 'string' }] },
-        },
-        required: ['name', 'writeOnlyProperty', 'readOnlyProperty'],
-      };
-      const normalizer = normalizeSchemaProcessorMap[ValidationContext.Input];
-
-      // Act
-      const actual = normalizer(schema);
-
-      // Assert
-      assertSome(actual, actual => {
-        console.log(actual);
-        expect(actual.required).toEqual(['name', 'writeOnlyProperty']);
-        expect(actual.properties).toEqual({
-          name: expect.any(Object),
-          writeOnlyProperty: expect.any(Object),
-        });
-      });
-    });
-
-    it('should remove writeOnly properties from output', () => {
-      // Arrange
-      const schema: JSONSchema = {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          // NOTE: writeOnly is nested inside allOf
-          writeOnlyProperty: { allOf: [{ writeOnly: true }, { type: 'string' }] },
-          readOnlyProperty: { allOf: [{ readOnly: true }, { type: 'string' }] },
-        },
-        required: ['name', 'writeOnlyProperty', 'readOnlyProperty'],
-      };
-      const normalizer = normalizeSchemaProcessorMap[ValidationContext.Output];
-
-      // Act
-      const actual = normalizer(schema);
-
-      // Assert
-      assertSome(actual, actual => {
-        console.log(actual);
-        expect(actual.required).toEqual(['name', 'readOnlyProperty']);
-        expect(actual.properties).toEqual({
-          name: expect.any(Object),
-          readOnlyProperty: expect.any(Object),
-        });
-      });
     });
   });
 });
