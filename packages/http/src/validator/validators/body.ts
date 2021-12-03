@@ -93,7 +93,13 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
  */
 function withoutAllOf(s: JSONSchema): JSONSchema {
   try {
-    return mergeAllOf(s, { ignoreAdditionalProperties: true });
+    return mergeAllOf(s, {
+      // `deep` traverses the *whole* schema.  If this becomes a performance
+      // problem, see the discussion and alternate implementation at
+      // https://github.com/stoplightio/prism/pull/1957/files#r760950082
+      deep: true,
+      ignoreAdditionalProperties: true,
+    });
   } catch {
     // BUG: If the supplied schema is impossible (e.g., contains allOf with
     // mutually exclusive children), we'll end up here.  We'd like to include an
@@ -108,7 +114,8 @@ function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer
   return (schema: JSONSchema7) => {
     const cached = cache.get(schema);
     if (!cached) {
-      const newSchema = normalizer(withoutAllOf(schema));
+      const after = withoutAllOf(schema);
+      const newSchema = normalizer(after);
       cache.set(schema, newSchema);
       return newSchema;
     }

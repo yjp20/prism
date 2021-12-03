@@ -185,10 +185,7 @@ describe('validate()', () => {
                 required: ['level2'],
                 properties: {
                   level2: {
-                    allOf: [
-                      { description: 'a description' },
-                      { type: 'string' },
-                    ]
+                    allOf: [{ description: 'a description' }, { type: 'string' }],
                   },
                 },
               },
@@ -198,11 +195,7 @@ describe('validate()', () => {
       ];
 
       // Act
-      const actual = validate(
-        { level1: { level2: 'abc' } },
-        schemas,
-        ValidationContext.Output,
-        'application/json');
+      const actual = validate({ level1: { level2: 'abc' } }, schemas, ValidationContext.Output, 'application/json');
 
       // Assert
       assertRight(actual);
@@ -220,10 +213,7 @@ describe('validate()', () => {
                 type: 'string',
               },
               writeOnlyProperty: {
-                allOf: [
-                  { writeOnly: true },
-                  { type: 'string' }
-                ]
+                allOf: [{ writeOnly: true }, { type: 'string' }],
               },
             },
           },
@@ -231,11 +221,7 @@ describe('validate()', () => {
       ];
 
       // Act
-      const actual = validate(
-        { name: 'Ann' },
-        schemas,
-        ValidationContext.Output,
-        'application/json');
+      const actual = validate({ name: 'Ann' }, schemas, ValidationContext.Output, 'application/json');
 
       // Assert
       assertRight(actual);
@@ -253,10 +239,7 @@ describe('validate()', () => {
                 type: 'string',
               },
               readOnlyProperty: {
-                allOf: [
-                  { readOnly: true },
-                  { type: 'string' }
-                ]
+                allOf: [{ readOnly: true }, { type: 'string' }],
               },
             },
           },
@@ -264,16 +247,12 @@ describe('validate()', () => {
       ];
 
       // Act
-      const actual = validate(
-        { name: 'Ann' },
-        schemas,
-        ValidationContext.Input,
-        'application/json');
+      const actual = validate({ name: 'Ann' }, schemas, ValidationContext.Input, 'application/json');
 
       // Assert
       assertRight(actual);
     });
-  });  
+  });
 });
 
 describe('findContentByMediaTypeOrFirst()', () => {
