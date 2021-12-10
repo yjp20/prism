@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.6.2 (2021.12.10)
+
+## Changed
+
+- When `allOf` has the effect of adding `readOnly` to a property, the property is no longer required in input.
+- When `allOf` has the effect of adding `writeOnly` to a property, the property is no longer required in output.
+
 # 4.6.1 (2021.11.22)
 
 ## Changed
