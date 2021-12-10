@@ -422,7 +422,12 @@ describe('body params validation', () => {
         test('returns 422 & error message', async () => {
           const response = await makeRequest('/json-body-circular-property-required', {
             method: 'POST',
-            body: JSON.stringify({ id: 123, self: {} }),
+            body: JSON.stringify({
+              id: 123,
+              self: {
+                // missing id property here
+              },
+            }),
             headers: { 'content-type': 'application/json' },
           });
 

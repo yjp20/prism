@@ -11,6 +11,8 @@ import { JSONSchema } from '../../types';
 import { body } from '../deserializers';
 import { validateAgainstSchema } from './utils';
 import { ValidationContext, validateFn } from './types';
+// @ts-ignore no typings
+import * as mergeAllOf from '@stoplight/json-schema-merge-allof';
 
 import { stripReadOnlyProperties, stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 import { JSONSchema7 } from 'json-schema';
@@ -86,12 +88,34 @@ function deserializeAndValidate(content: IMediaTypeContent, schema: JSONSchema, 
   );
 }
 
+/**
+ * Given a schema, return an equivalent schema that does not include `allOf`.
+ */
+function withoutAllOf(s: JSONSchema): JSONSchema {
+  try {
+    return mergeAllOf(s, {
+      // `deep` traverses the *whole* schema.  If this becomes a performance
+      // problem, see the discussion and alternate implementation at
+      // https://github.com/stoplightio/prism/pull/1957/files#r760950082
+      deep: true,
+      ignoreAdditionalProperties: true,
+    });
+  } catch {
+    // BUG: If the supplied schema is impossible (e.g., contains allOf with
+    // mutually exclusive children), we'll end up here.  We'd like to include an
+    // IPrismDiagnostic error in the final result with the schema error, but the
+    // result of this function is cached as a JSONSchema.
+    return s;
+  }
+}
+
 function memoizeSchemaNormalizer(normalizer: SchemaNormalizer): SchemaNormalizer {
   const cache = new WeakMap<JSONSchema7, O.Option<JSONSchema7>>();
   return (schema: JSONSchema7) => {
     const cached = cache.get(schema);
     if (!cached) {
-      const newSchema = normalizer(schema);
+      const after = withoutAllOf(schema);
+      const newSchema = normalizer(after);
       cache.set(schema, newSchema);
       return newSchema;
     }

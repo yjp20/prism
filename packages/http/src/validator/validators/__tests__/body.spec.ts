@@ -169,6 +169,90 @@ describe('validate()', () => {
       assertRight(validate({ name: 'Item One', title: 'title' }, specs, ValidationContext.Output, 'application/json'));
     });
   });
+
+  describe('merge allOf', () => {
+    it('nested below top-level', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['level1'],
+            properties: {
+              level1: {
+                type: 'object',
+                required: ['level2'],
+                properties: {
+                  level2: {
+                    allOf: [{ description: 'a description' }, { type: 'string' }],
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate({ level1: { level2: 'abc' } }, schemas, ValidationContext.Output, 'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+    it('does NOT require writeOnly params in output', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['name', 'writeOnlyProperty'],
+            properties: {
+              name: {
+                type: 'string',
+              },
+              writeOnlyProperty: {
+                allOf: [{ writeOnly: true }, { type: 'string' }],
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate({ name: 'Ann' }, schemas, ValidationContext.Output, 'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+    it('does NOT require readOnly params in input', () => {
+      // Arrange
+      const schemas: IMediaTypeContent[] = [
+        {
+          mediaType: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['name', 'readOnlyProperty'],
+            properties: {
+              name: {
+                type: 'string',
+              },
+              readOnlyProperty: {
+                allOf: [{ readOnly: true }, { type: 'string' }],
+              },
+            },
+          },
+        },
+      ];
+
+      // Act
+      const actual = validate({ name: 'Ann' }, schemas, ValidationContext.Input, 'application/json');
+
+      // Assert
+      assertRight(actual);
+    });
+  });
 });
 
 describe('findContentByMediaTypeOrFirst()', () => {
