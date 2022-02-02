@@ -73,8 +73,9 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
     throw new Error('No operations found in the current file.');
   }
 
+  const validateRequest = isProxyServerOptions(options) ? options.validateRequest : true;
   const shared: Omit<IHttpConfig, 'mock'> = {
-    validateRequest: true,
+    validateRequest,
     validateResponse: true,
     checkSecurity: true,
     errors: false,
@@ -141,6 +142,7 @@ type CreateBaseServerOptions = {
 export interface CreateProxyServerOptions extends CreateBaseServerOptions {
   dynamic: false;
   upstream: URL;
+  validateRequest: boolean;
 }
 
 export type CreateMockServerOptions = CreateBaseServerOptions;

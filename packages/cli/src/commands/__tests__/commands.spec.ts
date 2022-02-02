@@ -71,3 +71,11 @@ describe.each<{ 0: string; 1: string; 2: unknown }>([
     expect(createMultiProcessPrism).toHaveBeenLastCalledWith(expect.objectContaining({ errors: true }));
   });
 });
+
+test(`starts proxy server with default validate-request option to be overriden`, () => {
+  parser.parse(`proxy /path/to -m -h 0.0.0.0 ${new URL('http://github.com/')} --validate-request=false`);
+
+  expect(createMultiProcessPrism).toHaveBeenLastCalledWith(
+    expect.objectContaining({ validateRequest: false, host: '0.0.0.0' })
+  );
+});

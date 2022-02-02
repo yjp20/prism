@@ -139,6 +139,20 @@ curl -v -X POST http://localhost:4010/pet/
 
 The response body contains the found output violations.
 
+In some cases you may want to skip request validation. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately.
+Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
+
+```bash
+prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2 --errors --validate-request false
+```
+
+```bash
+curl -v -X POST http://localhost:4010/pet/ -d '{"name"": "Skip", "species": 100}'
+
+< HTTP/1.1 422 Unprocessable Entity
+{"statusCode": 400, "message": "Pet 'species' field should be a string, got integer", "code": "PET-ERROR-400"}
+```
+
 <!-- theme: info -->
 
 > Server definitions (OAS3) and Host + BasePath (OAS2) are ignored. You need to manually specify the upstream URL when invoking Prism.

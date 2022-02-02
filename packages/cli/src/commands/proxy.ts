@@ -1,8 +1,9 @@
 import { pick } from 'lodash';
-import { CommandModule } from 'yargs';
+import { CommandModule, parsed } from 'yargs';
 import { createMultiProcessPrism, CreateProxyServerOptions, createSingleProcessPrism } from '../util/createServer';
 import sharedOptions from './sharedOptions';
 import { runPrismAndSetupWatcher } from '../util/runner';
+import { boolean } from 'fp-ts';
 
 const proxyCommand: CommandModule = {
   describe: 'Start a proxy server with the given document file',
@@ -24,10 +25,18 @@ const proxyCommand: CommandModule = {
           throw new Error(`Invalid upstream URL provided: ${value}`);
         }
       })
-      .options(sharedOptions),
+      .options({
+        ...sharedOptions,
+        'validate-request': {
+          description: 'Validate incoming HTTP requests.',
+          boolean: true,
+          default: true,
+        },
+      }),
   handler: parsedArgs => {
+    parsedArgs.validateRequest = parsedArgs['validate-request'];
     const p: CreateProxyServerOptions = pick(
-      (parsedArgs as unknown) as CreateProxyServerOptions,
+      parsedArgs as unknown as CreateProxyServerOptions,
       'dynamic',
       'cors',
       'host',
@@ -35,7 +44,8 @@ const proxyCommand: CommandModule = {
       'document',
       'multiprocess',
       'upstream',
-      'errors'
+      'errors',
+      'validateRequest'
     );
 
     const createPrism = p.multiprocess ? createMultiProcessPrism : createSingleProcessPrism;
