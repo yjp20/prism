@@ -258,11 +258,11 @@ paths:
 
 ### INVALID_CONTENT_TYPE
 
-**Message: Supported content types: _list_ **
+**Message: Supported content types: _list_**
 
 **Returned Status Code: `415`**
 
-**Explanation:** This error occurs when the current request uses content-type that is not supported by corresponding HTTP Operation.
+**Explanation:** This error occurs when the current request uses content-type that is not supported by corresponding HTTP Operation. Please note that in case there is no content in the request, but the current request uses any content-type header, then this error occurs too: then the message is "Supported content types: " (i.e. with an empty list).
 
 ##### Example
 
