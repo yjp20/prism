@@ -1,9 +1,8 @@
 import { pick } from 'lodash';
-import { CommandModule, parsed } from 'yargs';
+import { CommandModule } from 'yargs';
 import { createMultiProcessPrism, CreateProxyServerOptions, createSingleProcessPrism } from '../util/createServer';
 import sharedOptions from './sharedOptions';
 import { runPrismAndSetupWatcher } from '../util/runner';
-import { boolean } from 'fp-ts';
 
 const proxyCommand: CommandModule = {
   describe: 'Start a proxy server with the given document file',
