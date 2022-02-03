@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.7.0 (2022.02.03)
+
+## Added
+
+- CLI flag to control validating requests when running the proxy [#1980](https://github.com/stoplightio/prism/pull/1980)
+
 # 4.6.2 (2021.12.10)
 
 ## Changed
