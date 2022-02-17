@@ -17,6 +17,8 @@ import { hopByHopHeaders } from './resources';
 import { createUnauthorisedResponse, createUnprocessableEntityResponse } from '../mocker';
 import { ProblemJsonError } from '../types';
 import { UPSTREAM_NOT_IMPLEMENTED } from './errors';
+import * as createHttpProxyAgent from 'http-proxy-agent';
+import * as createHttpsProxyAgent from 'https-proxy-agent';
 
 const { version: prismVersion } = require('../../package.json'); // eslint-disable-line
 
@@ -24,6 +26,7 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
   (
     { data: input, validations }: IPrismInput<IHttpRequest>,
     baseUrl: string,
+    upstreamProxy: IHttpConfig['upstreamProxy'],
     resource
   ): RTE.ReaderTaskEither<Logger, Error, IHttpResponse> =>
   logger =>
@@ -49,8 +52,16 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
           });
 
           logger.info(`Forwarding "${input.method}" request to ${url}...`);
+          let proxyAgent = undefined;
+          if (upstreamProxy) {
+            proxyAgent =
+              partialUrl.protocol === 'https:'
+                ? createHttpsProxyAgent(upstreamProxy)
+                : createHttpProxyAgent(upstreamProxy);
+          }
 
           return fetch(url, {
+            agent: proxyAgent,
             body,
             method: input.method,
             headers: defaults(omit(input.headers, ['host']), {
