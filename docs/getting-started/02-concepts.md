@@ -25,9 +25,7 @@ Prism can be given an [OpenAPI](https://www.openapis.org/) v2 or v3 description
 document, which is essentially a data source for all the decisions Prism makes.
 
 <!-- theme: info -->
-> Seeing as this is a HTTP server run from the command-line, Prism is not yet the 
-tool you'll want to use for programatic mocking in your test-suites. This is 
-planned for the future, so get in touch if you're interested in helping us with this.
+> Seeing as this is a HTTP server run from the command-line, Prism is not yet the tool you'll want to use for programatic mocking in your test-suites. This is planned for the future, so get in touch if you're interested in helping us with this.
 
 Read more about this in our [mocking guide](../guides/01-mocking.md).
 
