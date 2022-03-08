@@ -1,6 +1,6 @@
 # Installation
 
-For many, the easiest way to install Prism is as a node module.
+For many, the easiest way to install Prism is as a node module. (some change!! :) )
 
 ```bash
 npm install -g @stoplight/prism-cli
