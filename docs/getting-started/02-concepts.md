@@ -8,7 +8,7 @@ functionality.
 
 Learn what these things mean below.
 
-## Mocking
+### Mocking
 
 The term "mock" for a lot of developers will have unit-testing connotations. In
 unit-testing, a mock is a fake implementation of a class or function, which
