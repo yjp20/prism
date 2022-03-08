@@ -11,17 +11,17 @@
     },
     {
       "type": "item",
-      "title": "01 Installation",
+      "title": "Installation",
       "uri": "/docs/getting-started/01-installation.md"
     },
     {
       "type": "item",
-      "title": "02 Concepts",
+      "title": "Concepts",
       "uri": "/docs/getting-started/02-concepts.md"
     },
     {
       "type": "item",
-      "title": "03 Cli",
+      "title": "Cli",
       "uri": "/docs/getting-started/03-cli.md"
     },
     {
