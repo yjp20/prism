@@ -1,6 +1,6 @@
 # Prism CLI
 
-Prism CLI has two commands: `mock` and `proxy`.
+Prism CLI has two commands: `mock` and `proxy`. (some change)
 
 ## Mock Server
 
