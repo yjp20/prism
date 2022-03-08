@@ -8,7 +8,7 @@ npm install -g @stoplight/prism-cli
 yarn global add @stoplight/prism-cli
 ```
 
-### Executable Binaries
+## Executable Binaries
 
 For users without Node and/or NPM/Yarn, we provide standalone binaries for [all major platforms](https://github.com/stoplightio/prism/releases). The quickest way to install the appropriate package for your operating system is via this shell script:
 
