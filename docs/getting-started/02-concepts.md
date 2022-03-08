@@ -10,11 +10,7 @@ Learn what these things mean below.
 
 ## Mocking
 
-The term "mock" for a lot of developers will have unit-testing connotations. In
-unit-testing, a mock is a fake implementation of a class or function, which
-accepts the same arguments as the real thing. It might return something pretty
-similar to expected output, and different test cases might even modify those
-returns to see how the code under test works.
+The term "mock" for a lot of developers will have unit-testing connotations. In unit-testing, a mock is a fake implementation of a class or function, which accepts the same arguments as the real thing. It might return something pretty similar to expected output, and different test cases might even modify those returns to see how the code under test works.
 
 This is almost exactly the concept here, just at a HTTP level instead. This is
 done using a "mock server", which will respond to the expected endpoints, error
