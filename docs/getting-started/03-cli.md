@@ -48,7 +48,7 @@ There is no need to manually stop and start a Prism server after a change to a s
 In case of removing all of the operations in a document, Prism will not be reloaded.
 In such a case, Prism will keep serving operations loaded with the previous restart.
 
-## Modifying Responses
+### Modifying Responses
 
 Prism's behavior in looking for the response for your request can be modified with a series of parameters that you can either pass through the `Prefer` header or through a query string parameter. Query string parameters are _deprecated_ and will be removed in the next major release.
 
