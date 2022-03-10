@@ -1,6 +1,6 @@
 # Validation Proxy
 
-Unlike mocking, the validation proxy expects there to be a real API running somewhere. This could be a localhost environment, docker container, hosted sandbox environment, or deployed to actual production, doesn't matter.
+Unlike mocking, the validation proxy expects there to be a real API running somewhere. This could be a localhost environment, docker container, hosted sandbox environment, or deployed to actual production.
 
 The proxy feature will help you identify discrepancies between the OpenAPI document (supposedly the source of truth) and any other server you designate as the target. This can help frontend developers integrating with your API, or other backend developers, who might want to channel their requests through Prism to see if they are making valid requests. The proxy can also be enabled in staging or any other pre-production environment, like a dress rehearsal before the opening night of a play.
 
@@ -22,8 +22,7 @@ prism proxy reference/backend/openapi.yaml localhost:3000 --errors
 
 ### End-to-End Contract Testing
 
-Before the design-first workflow, folks would often slap together their own API descriptions, often by hand, and often just eyeballing it for correctness. Various tools came and went for trying to test the correctness of their API decription documents, but they were often awkward flaky test-suites that people ended just turning off. Adding contract
-testing to existing test-suites is now easy with Prism.
+Before the design-first workflow, folks would often slap together their own API descriptions, often by hand, and often just eyeball it for correctness. Various tools came and went for trying to test the correctness of their API decription documents, but they were often awkward flaky test-suites that people ended just turning off. Adding contract testing to existing test-suites is now easy with Prism.
 
 Teams with existing end-to-end test-suites can drop Prism into this testing environment, and change some environment variables (or service catalog) to point to Prism Proxy. Each time API A talks to API B, or B to C, it will be going via C, so if any of the APIs make an invalid request the whole test suite can blow up.
 
