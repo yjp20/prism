@@ -48,7 +48,7 @@ There is no need to manually stop and start a Prism server after a change to a s
 In case of removing all of the operations in a document, Prism will not be reloaded.
 In such a case, Prism will keep serving operations loaded with the previous restart.
 
-## Modifying Responses
+### Modifying Responses
 
 Prism's behavior in looking for the response for your request can be modified with a series of parameters that you can either pass through the `Prefer` header or through a query string parameter. Query string parameters are _deprecated_ and will be removed in the next major release.
 
@@ -124,7 +124,11 @@ curl -v -s http://localhost:4010/pet/10 > /dev/null
 
 You can see there's a `sl-violations` header which is a JSON object with all the violations found in the response.
 
-The header is a handy way to see contract mismatches or incorrect usage in a way that doesn't block the client, so you can monitor all/some production traffic this way record the problems. If you want Prism to make violations considerably more clear, run the proxy command with the `--errors` flag. This will turn any request or response violation into a [RFC 7807 HTTP Problem Details Error](https://tools.ietf.org/html/rfc7807) just like validation errors on the mock server.
+### Returning Errors
+
+The header is a handy way to see contract mismatches or incorrect usage in a way that doesn't block the client, so you can monitor all/some production traffic this way record the problems. Omit the optional `--errors` flag to log validation errors without returning errors. In this case, the request flows to the actual API and returns what it returns. 
+
+If you want Prism to make violations considerably more clear, run the proxy command with the `--errors` flag. This will turn any request or response violation into a [RFC 7807 HTTP Problem Details Error](https://tools.ietf.org/html/rfc7807) just like validation errors on the mock server.
 
 ```bash
 prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2 --errors
@@ -139,7 +143,9 @@ curl -v -X POST http://localhost:4010/pet/
 
 The response body contains the found output violations.
 
-In some cases you may want to skip request validation. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately.
+### Skip Request Validation
+
+In some cases, you may want to skip request validation but validate responses. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately.
 Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
 
 ```bash
@@ -152,11 +158,6 @@ curl -v -X POST http://localhost:4010/pet/ -d '{"name"": "Skip", "species": 100}
 < HTTP/1.1 422 Unprocessable Entity
 {"statusCode": 400, "message": "Pet 'species' field should be a string, got integer", "code": "PET-ERROR-400"}
 ```
-
-<!-- theme: info -->
-
-> Server definitions (OAS3) and Host + BasePath (OAS2) are ignored. You need to manually specify the upstream URL when invoking Prism.
-
 ## Running in Production
 
 When running in development mode (which happens when the `NODE_ENV` environment variable is not set to `production`) or the `-m` flag is set to false, both the HTTP Server and the CLI (which is responsible of parsing and showing the received logs on the screen) will run within the same process.
@@ -166,3 +167,7 @@ Processing logs slows down Prism significantly. If you're planning to use the CL
 ## Running behind a proxy
 
 Your environment may need you to route your upstream requests through a proxy server. In this case append the `--upstream-proxy http://proxy.example.com:3128` option to the command for Prism to use it.
+
+<!-- theme: info -->
+
+> Server definitions (OAS3) and Host + BasePath (OAS2) are ignored. You need to manually specify the upstream URL when invoking Prism.

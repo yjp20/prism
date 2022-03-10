@@ -71,10 +71,9 @@ Calling the same URL with the `Prefer` header `example=dog` `http://127.0.0.1:40
 
 <!-- theme: info -->
 
-> #### Remember about providing expected response code
+> #### Remember to provide expected response code
 >
-> It is always worth to indicate HTTP response code from which `example` should be taken.
-> If prism decides to change the response code due to validation or security violations, your `example` might be ignored.
+> It is always worth incidating the HTTP response code from which `example` should be taken. If Prism decides to change the response code due to validation or security violations, your `example` might be ignored.
 
 ```json
 {
@@ -86,7 +85,7 @@ Calling the same URL with the `Prefer` header `example=dog` `http://127.0.0.1:40
 
 ### Static or Dynamic Generation
 
-By default, Prism will use a **static generation strategy**, which is outlined below. You can enable the dynamic examples generation by using the `-d` flag in the command line.
+By default, Prism uses a **static generation strategy**, which is outlined below. You can enable the dynamic examples generation by using the `-d` flag in the command line.
 
 ```yaml
 prism mock api.oas3.yaml # Static examples
@@ -94,19 +93,19 @@ prism mock api.oas3.yaml # Static examples
 prism mock -d api.oas3.yaml # Dynamic examples
 ```
 
-If the HTTP server has been started in static mode, specific calls can be made in dynamic mode by specifying the `Prefer` header with the `dynamic` key to `true`
+If the HTTP server has been started in static mode, specific calls can be made in dynamic mode by specifying the `Prefer` header with the `dynamic` key to `true`.
 
 #### Static Response Generation
 
-If the provided OpenAPI Schema Object has a response body example then it'll use that whole thing.
+If the provided OpenAPI Schema Object has a response body example, it is used to provide a response.
 
 If not, a response body will be created by looking through the whole `schema` object (following any `$ref`'s it finds along the way) to create a full fake response.
 
-- If the property has a default value, then it will return the specified value
-- If the property has an `examples` value, then it will return the first element in the array
-- If the property has neither an example nor a default value and is **nullable**, it will return null
-- If the property has neither an example nor a default value and is **not** nullable, but has a `format` specified, then it will return a meaningful static value according to the format
-- If the property has neither an example nor a default value, is not nullable, and has no `format` specified, then it will return `'string'` in case of a string and `0` in case of a number
+- If the property has a default value, then it will return the specified value.
+- If the property has an `examples` value, then it will return the first element in the array.
+- If the property has neither an example nor a default value and is **nullable**, it will return null.
+- If the property has neither an example nor a default value and is **not** nullable, but has a `format` specified, then it will return a meaningful static value according to the format.
+- If the property has neither an example nor a default value, is not nullable, and has no `format` specified, then it will return `'string'` in case of a string and `0` in case of a number.
 
 Let's try an example! 🐶
 
@@ -146,7 +145,7 @@ Testing against the exact same piece of data over and over again is not the best
 
 Dynamic mode solves this by generating a random value for all the properties according to their type, and other information like `format` or even the all-powerful `x-faker` extension.
 
-All the random properties are generated using [Faker.js](https://github.com/marak/Faker.js) under the hood, via [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker). The `x-faker` keyword is optional, but when present allows for a specific Faker API method to be used (of which there [are a lot](https://github.com/marak/Faker.js#api-methods)) so you get a lot of control over the response.
+All the random properties are generated using [Faker.js](https://github.com/faker-js/faker) under the hood, via [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker). The `x-faker` keyword is optional, but when present allows for a specific Faker API method to be used (of which there [are a lot](https://github.com/faker-js/faker#api)) so you get a lot of control over the response.
 
 ```yaml
 Pet:
@@ -204,7 +203,7 @@ x-json-schema-faker:
   resolve-json-path: true
 ```
 
-### Request Validation
+## Request Validation
 
 Having a mock server which only gave responses would not be very useful, which is why
 Prism imitates request validation too. Seeing as an OpenAPI description document is
@@ -214,6 +213,6 @@ requests to it.
 
 Read more about this in our [Request Validation guide](./02-request-validation.md).
 
-### Deprecating operations
+## Deprecating operations
 
 If an operation is marked as `deprecated: true` then Prism adds `Deprecation: true` header to the response.

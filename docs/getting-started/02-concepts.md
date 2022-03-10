@@ -10,11 +10,7 @@ Learn what these things mean below.
 
 ## Mocking
 
-The term "mock" for a lot of developers will have unit-testing connotations. In
-unit-testing, a mock is a fake implementation of a class or function, which
-accepts the same arguments as the real thing. It might return something pretty
-similar to expected output, and different test cases might even modify those
-returns to see how the code under test works.
+The term "mock" for a lot of developers will have unit-testing connotations. In unit-testing, a mock is a fake implementation of a class or function, which accepts the same arguments as the real thing. It might return something pretty similar to expected output, and different test cases might even modify those returns to see how the code under test works.
 
 This is almost exactly the concept here, just at a HTTP level instead. This is
 done using a "mock server", which will respond to the expected endpoints, error
@@ -25,9 +21,7 @@ Prism can be given an [OpenAPI](https://www.openapis.org/) v2 or v3 description
 document, which is essentially a data source for all the decisions Prism makes.
 
 <!-- theme: info -->
-> Seeing as this is a HTTP server run from the command-line, Prism is not yet the 
-tool you'll want to use for programatic mocking in your test-suites. This is 
-planned for the future, so get in touch if you're interested in helping us with this.
+> Seeing as this is a HTTP server run from the command-line, Prism is not yet the tool you'll want to use for programatic mocking in your test-suites. This is planned for the future, so get in touch if you're interested in helping us with this.
 
 Read more about this in our [mocking guide](../guides/01-mocking.md).
 
