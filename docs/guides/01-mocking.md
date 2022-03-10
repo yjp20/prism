@@ -145,7 +145,7 @@ Testing against the exact same piece of data over and over again is not the best
 
 Dynamic mode solves this by generating a random value for all the properties according to their type, and other information like `format` or even the all-powerful `x-faker` extension.
 
-All the random properties are generated using [Faker.js](https://github.com/marak/Faker.js) under the hood, via [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker). The `x-faker` keyword is optional, but when present allows for a specific Faker API method to be used (of which there [are a lot](https://github.com/marak/Faker.js#api-methods)) so you get a lot of control over the response.
+All the random properties are generated using [Faker.js](https://github.com/faker-js/faker) under the hood, via [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker). The `x-faker` keyword is optional, but when present allows for a specific Faker API method to be used (of which there [are a lot](https://github.com/faker-js/faker#api)) so you get a lot of control over the response.
 
 ```yaml
 Pet:
