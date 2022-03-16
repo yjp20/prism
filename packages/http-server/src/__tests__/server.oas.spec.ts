@@ -4,6 +4,7 @@ import { IHttpConfig } from '@stoplight/prism-http';
 import { resolve } from 'path';
 import { merge } from 'lodash';
 import fetch, { RequestInit } from 'node-fetch';
+import * as FormData from 'form-data';
 import { createServer } from '../';
 import { ThenArg } from '../types';
 
@@ -11,6 +12,8 @@ const logger = createLogger('TEST', { enabled: false });
 
 const oas3File = ['petstore.no-auth.oas3.yaml', 'petstore.no-auth.circular.oas3.yaml'];
 const oas2File = ['petstore.no-auth.oas2.yaml', 'petstore.no-auth.circular.oas2.yaml'];
+
+const oasMultipartUploadFile = ['multipart-upload.oas3_1.yaml'];
 
 function checkErrorPayloadShape(payload: string) {
   const parsedPayload = JSON.parse(payload);
@@ -79,7 +82,7 @@ describe('GET /pet?__server', () => {
     `{"type":"https://stoplight.io/prism/errors#NO_SERVER_MATCHED_ERROR","title":"Route not resolved, no server matched","status":404,"detail":"The server url ${serverUrl} hasn't been matched with any of the provided servers"}`;
 
   function requestPetGivenServer(serverUrl: string) {
-    return fetch(new URL(`/pet?__server=${serverUrl}`, server.address), { method: 'GET' });
+    return fetch(new URL(`/pet?__server=${serverUrl}`, server.address).toString(), { method: 'GET' });
   }
 });
 
@@ -101,12 +104,12 @@ describe('Prefer header overrides', () => {
         let secondPayload: unknown;
 
         beforeAll(async () => {
-          payload = await fetch(new URL('/no_auth/pets?name=joe', server.address), { method: 'GET' }).then(r =>
-            r.json()
+          payload = await fetch(new URL('/no_auth/pets?name=joe', server.address).toString(), { method: 'GET' }).then(
+            r => r.json()
           );
-          secondPayload = await fetch(new URL('/no_auth/pets?name=joe', server.address), { method: 'GET' }).then(r =>
-            r.json()
-          );
+          secondPayload = await fetch(new URL('/no_auth/pets?name=joe', server.address).toString(), {
+            method: 'GET',
+          }).then(r => r.json());
         });
 
         it('shuold return two different objects', () => expect(payload).not.toStrictEqual(secondPayload));
@@ -119,13 +122,13 @@ describe('Prefer header overrides', () => {
         let secondPayload: unknown;
 
         beforeAll(async () => {
-          payload = await fetch(new URL('/no_auth/pets?name=joe', server.address), {
+          payload = await fetch(new URL('/no_auth/pets?name=joe', server.address).toString(), {
             method: 'GET',
             headers: { prefer: 'example=a_name' },
           }).then(r => r.json());
-          secondPayload = await fetch(new URL('/no_auth/pets?name=joe', server.address), { method: 'GET' }).then(r =>
-            r.json()
-          );
+          secondPayload = await fetch(new URL('/no_auth/pets?name=joe', server.address).toString(), {
+            method: 'GET',
+          }).then(r => r.json());
         });
 
         it('first object should be the example', () => expect(payload).toHaveProperty('name', 'clark'));
@@ -145,7 +148,7 @@ describe.each([[...oas2File], [...oas3File]])('server %s', file => {
   afterEach(() => server.close());
 
   function makeRequest(url: string, init?: RequestInit) {
-    return fetch(new URL(url, server.address), init);
+    return fetch(new URL(url, server.address).toString(), init);
   }
 
   it('should mock back /pets/:petId', async () => {
@@ -363,5 +366,40 @@ describe.each([[...oas2File], [...oas3File]])('server %s', file => {
       expect(response.status).toBe(200);
       expect(response.headers.get('content-type')).toEqual('application/json; charset=utf-8');
     });
+  });
+});
+
+describe.each([...oasMultipartUploadFile])('server %s', file => {
+  let server: ThenArg<ReturnType<typeof instantiatePrism>>;
+
+  beforeEach(async () => {
+    server = await instantiatePrism(resolve(__dirname, 'fixtures', file), {
+      mock: { dynamic: true },
+      validateRequest: true,
+    });
+  });
+
+  afterEach(() => server.close());
+
+  function makeRequest(url: string, init?: RequestInit) {
+    return fetch(new URL(url, server.address).toString(), init);
+  }
+
+  it('should not return a 422', async () => {
+    const fileContents = 'hello world!';
+
+    const form = new FormData();
+    form.append('file', fileContents, {
+      filename: 'greetings.txt',
+      contentType: 'application/octet-stream',
+      knownLength: fileContents.length,
+    });
+
+    const response = await makeRequest('/upload', {
+      method: 'POST',
+      body: form,
+    });
+
+    expect(response.status).not.toBe(422);
   });
 });

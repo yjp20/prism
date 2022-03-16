@@ -35,7 +35,7 @@ describe('body params validation', () => {
   afterEach(() => server.close());
 
   function makeRequest(url: string, init?: RequestInit) {
-    return fetch(new URL(url, server.address), init);
+    return fetch(new URL(url, server.address).toString(), init);
   }
 
   describe('http operation with body param', () => {

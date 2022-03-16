@@ -1,0 +1,37 @@
+---
+openapi: 3.1.0
+info:
+  title: test
+  description: multipart!
+  version: '1.0'
+  contact:
+    email: support@stoplight.io
+servers:
+  - url: 'https://petstore.swagger.io/v2'
+  - url: 'http://petstore.swagger.io/v2'
+tags:
+  - name: multipart
+    description: a multipart test
+paths:
+  /upload:
+    servers:
+      - url: 'https://petstore.swagger.io/v2'
+      - url: 'http://petstore.swagger.io/v2'
+    post:
+      summary: Upload
+      description: Upload a file
+      tags:
+        - multipart
+      operationId: post-upload
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
