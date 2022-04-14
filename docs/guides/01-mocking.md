@@ -240,26 +240,24 @@ Read more about this in our [Request Validation guide](./02-request-validation.m
 If an operation is marked as `deprecated: true` then Prism adds `Deprecation: true` header to the response.
 
 ```mermaid
-graph TB
-    c1-->a2
-    subgraph ide1 [one]
-    a1-->a2
-    end
-```
-
-```mermaid
 flowchart LR
+  subgraph TOP
+    direction TB
     subgraph A1
       direction TB
       [HTTP Request]-->{Route exists?}--Yes-->{Is Request Valid?}
+    end
     subgraph A2
       direction RL
       {Route exists?}--No-->[404 problem+json]
+    end
     subgraph A3
       direction RL
       {Is Request Valid?}--Yes-->[Negotiate for valid request]
+    end
     subgraph A4
-     direction LR
+      direction LR
       {Is Request Valid?}--No-->[Negotiate for invalid request]-->{Is the error security related?}
     end
+  end
 ```
