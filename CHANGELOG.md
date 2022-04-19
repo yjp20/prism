@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.9.0 (2022.04.19)
+
+## Changed
+
+- Upgraded the minimum node engine version from 12 to 16 [#2023](https://github.com/stoplightio/prism/pull/2023) - thanks @jasonbarry
+- Relaxed validation constraints for Postman Collections. All properties included in output are no longer marked as required in the generated json schema. By product of removing dependency with security vulnerability. [#2037](https://github.com/stoplightio/prism/pull/2037)
+
+## Fixed
+
+- Fixed deprecated usage of `parse` [#1959](https://github.com/stoplightio/prism/pull/1959) - thanks @jbl428
+- Removed dependency that had critical security vulnerability [#2037](https://github.com/stoplightio/prism/pull/2037)
+
 # 4.8.0 (2022.02.17)
 
 ## Added
