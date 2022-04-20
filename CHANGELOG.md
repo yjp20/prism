@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.9.1 (2022.04.20)
+
+## Fixed
+
+- Fixed issue where query parameters weren't being forwarded in proxy mode. [#2042](https://github.com/stoplightio/prism/pull/2042)
+
 # 4.9.0 (2022.04.19)
 
 ## Changed
