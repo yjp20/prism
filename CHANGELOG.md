@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.9.2 (2022.04.26)
+
+## Added
+
+- Alphabetize properties for dynamic responses. [#2041](https://github.com/stoplightio/prism/pull/2041)
+
 # 4.9.1 (2022.04.20)
 
 ## Fixed
