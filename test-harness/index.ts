@@ -59,7 +59,7 @@ describe('harness', () => {
           windowsVerbatimArguments: false,
         });
         const output: any = parseResponse(clientCommandHandle.stdout.trim());
-        const expected: any = parseResponse((parsed.expect || parsed.expectLoose).trim());
+        const expected: any = parseResponse((parsed.expect || parsed.expectLoose || parsed.expectKeysOnly).trim());
 
         const isXml = xmlValidator.test(get(output, ['header', 'content-type'], ''), expected.body);
 
@@ -83,6 +83,10 @@ describe('harness', () => {
         }
         if (parsed.expect) {
           expect(output.body).toStrictEqual(expected.body);
+        } else if (parsed.expectKeysOnly){
+          const jsonOutput = JSON.parse(output.body);
+          const jsonExpected = JSON.parse(expected.body);
+          expect(Object.keys(jsonOutput)).toStrictEqual(Object.keys(jsonExpected));
         }
       });
     });

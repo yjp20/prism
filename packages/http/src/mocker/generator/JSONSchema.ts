@@ -32,11 +32,36 @@ export function generate(bundle: unknown, source: JSONSchema): Either<Error, unk
     stripWriteOnlyProperties(source),
     E.fromOption(() => Error('Cannot strip writeOnly properties')),
     E.chain(updatedSource =>
-      // necessary as workaround broken types in json-schema-faker
-      // @ts-ignore
-      tryCatch(() => jsf.generate({ ...cloneDeep(updatedSource), __bundled__: bundle }), toError)
+      tryCatch(
+        // necessary as workaround broken types in json-schema-faker
+        // @ts-ignore
+        () => sortSchemaAlphabetically(jsf.generate({ ...cloneDeep(updatedSource), __bundled__: bundle })),
+        toError
+      )
     )
   );
+}
+
+//sort alphabetically by keys
+export function sortSchemaAlphabetically(source: any): any {
+  if (source && Array.isArray(source)) {
+    for (const i of source) {
+      if (typeof source[i] === 'object') {
+        source[i] = sortSchemaAlphabetically(source[i]);
+      }
+    }
+    return source;
+  } else if (source && typeof source === 'object') {
+    Object.keys(source).forEach((key: string) => {
+      if (typeof source[key] === 'object') {
+        source[key] = sortSchemaAlphabetically(source[key]);
+      }
+    });
+    return Object.fromEntries(Object.entries(source).sort());
+  }
+
+  //just return if not array or object
+  return source;
 }
 
 export function generateStatic(resource: IHttpOperation, source: JSONSchema): Either<Error, unknown> {
