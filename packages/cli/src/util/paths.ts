@@ -13,6 +13,9 @@ import {
   IHttpQueryParam,
 } from '@stoplight/types';
 import * as E from 'fp-ts/Either';
+import * as A from 'fp-ts/Array';
+import * as ROA from 'fp-ts/ReadonlyArray';
+import * as O from 'fp-ts/Option';
 import { sequenceSEither } from '../combinators';
 import { pipe } from 'fp-ts/function';
 import { identity, fromPairs } from 'lodash';
@@ -29,7 +32,8 @@ export function createExamplePath(
     E.bind('queryData', ({ pathData }) => generateTemplateAndValuesForQueryParams(pathData.template, operation)),
     E.map(({ pathData, queryData }) =>
       URI.expand(queryData.template, transformValues({ ...pathData.values, ...queryData.values }))
-    )
+    ),
+    E.map(path => path.replace(/\?$/, ''))
   );
 }
 
@@ -80,12 +84,16 @@ function generateParamValue(spec: IHttpParam): E.Either<Error, unknown> {
 function generateParamValues(specs: IHttpParam[]): E.Either<Error, Dictionary<unknown>> {
   return pipe(
     specs,
+    A.map(O.fromNullable),
+    A.compact,
     E.traverseArray(spec =>
       pipe(
         generateParamValue(spec),
-        E.map(value => [encodeURI(spec.name), value])
+        E.map(value => [encodeURI(spec.name), value]),
+        E.map(O.fromPredicate(([_, value]) => value !== null))
       )
     ),
+    E.map(ROA.compact),
     E.map(fromPairs)
   );
 }
