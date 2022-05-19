@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.9.3 (2022.05.19)
+
+## Changed
+
+- Update faker dependency to point to official community-maintained version. [#2021](https://github.com/stoplightio/prism/pull/2021) - thanks @jasonbarry
+
 # 4.9.2 (2022.04.26)
 
 ## Added
