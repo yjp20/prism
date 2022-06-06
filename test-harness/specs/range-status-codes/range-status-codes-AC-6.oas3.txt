@@ -1,10 +1,10 @@
 ====test====
-Scenario: matches default response when no preference specified and range other than 2XX
+Scenario: no code is requested and the OAS doc has no exact 2XX status code but does have a 2XX range
   Given I have an OAS 3 document with a listTeams operation
-  And the listTeams operation has a range of 4XX response status codes defined
+  And the listTeams operation has a range of 2XX response status codes defined
   And the listTeams operation has a default defined
   When I send a request to listTeams without specifying a preference for status code
-  Then I should receive a response with the default example content and a status code of 200 
+  Then I should receive a response with the 2XX example content and a status code of 200 
 ====spec====
 openapi: 3.0.2
 paths:
@@ -12,7 +12,7 @@ paths:
     get:
       operationId: listTeams
       responses:
-        4XX:
+        2XX:
           content:
             text/plain:
               example: range success content
@@ -27,4 +27,4 @@ curl -i http://localhost:4010/todos
 ====expect====
 HTTP/1.1 200 OK
 
-default content
+range success content

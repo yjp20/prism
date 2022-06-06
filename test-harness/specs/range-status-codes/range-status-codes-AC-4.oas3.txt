@@ -1,5 +1,5 @@
 ====test====
-Scenario: matches no defined responses
+Scenario: the requested code has no exact or range matches in the OAS doc and no default
   Given I have an OAS 3 document with a listTeams operation
   And the listTeams operation has a range of 5XX response status codes defined
   And the listTeams operation has a 503 status code defined
@@ -15,11 +15,11 @@ paths:
         503:
           content:
             text/plain:
-              example: serice unavailable content
+              example: service unavailable content
         5XX:
           content:
             text/plain:
-              example: range serice error content
+              example: range service error content
 ====server====
 mock -p 4010 ${document}
 ====command====

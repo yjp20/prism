@@ -1,7 +1,7 @@
 ====test====
-Scenario: matches specific response status code
+Scenario: the requested code matches an exact status code in the OAS doc
   Given I have an OAS 3 document with a listTeams operation
-  And the listTeams operation has a range of 5XX response status codes defined
+  And the listTeams operation has a range of 5XX status codes defined
   And the listTeams operation has a 503 status code defined
   And the listTeams operation has a default defined
   When I send a request to listTeams specifying a preference for a 503 status code
