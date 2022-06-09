@@ -15,6 +15,7 @@ import { attachTagsToParamsValues, transformPathParamsValues } from './colorizer
 import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
 import { configureExtensionsFromSpec } from '../extensions';
+import micri, { Router, send } from 'micri';
 
 type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
@@ -110,7 +111,13 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
       `${resource.method.toUpperCase().padEnd(10)} ${address}${transformPathParamsValues(path, chalk.bold.cyan)}`
     );
   });
+
   logInstance.start(`Prism is listening on ${address}`);
+
+  const readiness = micri(Router.router(Router.otherwise((_, res) => send(res, 204))));
+  readiness.listen(options.port + 1, options.host, () =>
+    logInstance.start(`Readiness check at http://${options.host}:${options.port + 1}`)
+  );
 
   return server;
 }
