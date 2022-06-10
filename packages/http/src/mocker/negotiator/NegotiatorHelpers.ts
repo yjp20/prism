@@ -12,12 +12,12 @@ import withLogger from '../../withLogger';
 import { NOT_ACCEPTABLE, NOT_FOUND, NO_RESPONSE_DEFINED } from '../errors';
 import {
   contentHasExamples,
-  createResponseFromDefault,
+  findDefaultResponse,
   findFirstExample,
   findBestHttpContentByMediaType,
   findDefaultContentType,
   findExampleByKey,
-  findLowest2xx,
+  findLowest2XXResponse,
   findResponseByStatusCode,
   findFirstResponse,
   IWithExampleMediaContent,
@@ -206,7 +206,8 @@ const helpers = {
     desiredOptions: NegotiationOptions
   ): RE.ReaderEither<Logger, Error, IHttpNegotiationResult> {
     return pipe(
-      findLowest2xx(httpOperation.responses),
+      findLowest2XXResponse(httpOperation.responses),
+      O.alt(() => findDefaultResponse(httpOperation.responses)),
       O.alt(() => findFirstResponse(httpOperation.responses)),
       RE.fromOption(() => ProblemJsonError.fromTemplate(NO_RESPONSE_DEFINED)),
       RE.chain(response => helpers.negotiateOptionsBySpecificResponse(httpOperation.method, desiredOptions, response))
@@ -225,7 +226,7 @@ const helpers = {
           findResponseByStatusCode(httpOperation.responses, code),
           O.alt(() => {
             logger.info(`Unable to find a ${code} response definition`);
-            return createResponseFromDefault(httpOperation.responses, code);
+            return findDefaultResponse(httpOperation.responses, code);
           })
         )
       ),
@@ -284,7 +285,7 @@ const helpers = {
         O.alt(() => {
           logger.debug(`Unable to find a ${tail(statusCodes)} response definition`);
           return pipe(
-            createResponseFromDefault(httpResponses, first),
+            findDefaultResponse(httpResponses, first),
             O.fold(
               () => {
                 logger.debug("Unable to find a 'default' response definition");

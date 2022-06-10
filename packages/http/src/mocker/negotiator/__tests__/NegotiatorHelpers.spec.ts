@@ -6,7 +6,7 @@ import {
   INodeExample,
   INodeExternalExample,
 } from '@stoplight/types';
-import * as faker from 'faker/locale/en';
+import * as faker from '@faker-js/faker/locale/en';
 import * as E from 'fp-ts/Either';
 import { left, right } from 'fp-ts/ReaderEither';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
@@ -275,7 +275,7 @@ describe('NegotiatorHelpers', () => {
           .instance();
 
         const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
-        assertRight(actualConfig, config => expect(config).toHaveProperty('code', 422));
+        assertRight(actualConfig, config => expect(config).toHaveProperty('code', '422'));
       });
 
       test('should return an error', () => {

@@ -6,7 +6,7 @@ import * as validators from '../validators';
 import * as validator from '../';
 import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/utils';
 import { ValidationContext } from '../validators/types';
-import * as faker from 'faker/locale/en';
+import * as faker from '@faker-js/faker/locale/en';
 
 const validate =
   (resourceExtension?: Partial<IHttpOperation>, inputExtension?: Partial<IHttpRequest>, length = 3) =>
@@ -304,6 +304,13 @@ describe('HttpValidator', () => {
                   type: 'string',
                 },
               },
+              {
+                id: faker.random.word(),
+                mediaType: 'image/*',
+                schema: {
+                  type: 'string',
+                }
+              }
             ],
           },
         ],
@@ -320,7 +327,7 @@ describe('HttpValidator', () => {
               expect(error).toEqual([
                 {
                   message:
-                    'The received media type "application/xml" does not match the one specified in the current response: application/json',
+                    'The received media type "application/xml" does not match the ones specified in the current response: application/json, image/*',
                   severity: DiagnosticSeverity.Error,
                 },
               ])
@@ -329,7 +336,7 @@ describe('HttpValidator', () => {
       });
 
       describe('when the response has a content type declared in the spec', () => {
-        it('returns an error', () => {
+        it('returns success', () => {
           assertRight(
             validator.validateOutput({
               resource,
@@ -338,6 +345,17 @@ describe('HttpValidator', () => {
           );
         });
       });
+
+      describe('when the response matches a wildcard content type declared in the spec', () => {
+        it('returns success', () => {
+          assertRight(
+            validator.validateOutput({
+              resource,
+              element: { statusCode: 200, headers: { 'content-type': 'image/png' } },
+            })
+          );
+        });
+      })
     });
   });
 });

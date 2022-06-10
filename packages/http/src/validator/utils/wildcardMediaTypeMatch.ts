@@ -10,7 +10,7 @@ export function wildcardMediaTypeMatch(mediaTypeA: string, mediaTypeB: string) {
     O.fold(
       () => false,
       ({ a, b }) => {
-        return a.type === b.type && a.subtype === b.subtype;
+        return (a.type === b.type || b.type === '*') && (a.subtype === b.subtype || b.subtype === '*');
       }
     )
   );

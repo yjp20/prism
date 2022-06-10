@@ -21,6 +21,15 @@ describe('wildcardMediaTypeMatch', () => {
     ])('ignores parameters: %s - %s', (a, b) => {
       expect(wildcardMediaTypeMatch(a, b)).toBe(true);
     });
+
+    it.each([
+      ['text/html', '*/html'],
+      ['text/html', 'text/*'],
+      ['text/html', '*/*'],
+      ['application/x-custom+json', '*/*+json'],
+    ])('with wildcards: %s - %s', (a, b) => {
+      expect(wildcardMediaTypeMatch(a, b)).toBe(true);
+    });
   });
 
   describe('does not match', () => {
