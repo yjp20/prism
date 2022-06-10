@@ -228,6 +228,10 @@ describe('createExamplePath()', () => {
     });
 
     it('generates deepObject style with null values', () => {
+      const exampleValue = { a: { aa: 1, ab: 2 }, b: null };
+      const p_a_aa = encodeURIComponent('p[a][aa]');
+      const p_a_ab = encodeURIComponent('p[a][ab]');
+      const expected = `/path?${p_a_aa}=1&${p_a_ab}=2`;
       assertRight(
         createExamplePath({
           id: '123',
@@ -239,13 +243,13 @@ describe('createExamplePath()', () => {
                 id: faker.random.word(),
                 name: 'p',
                 style: HttpParamStyles.DeepObject,
-                examples: [{ id: faker.random.word(), key: 'foo', value: { a: { aa: 1, ab: 2 }, b: null } }],
+                examples: [{ id: faker.random.word(), key: 'foo', value: exampleValue }],
               },
             ],
           },
           responses: [{ id: faker.random.word(), code: '200' }],
         }),
-        r => expect(r).toEqual('/path?p%5Ba%5D%5Baa%5D=1&p%5Ba%5D%5Bab%5D=2')
+        r => expect(r).toEqual(expected)
       );
     });
 
