@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 4.10.1 (2022.06.22)
+
+## Changed
+
+- Upgraded dependencies to resolve security vulnerabilities. [#2075](https://github.com/stoplightio/prism/pull/2075) [#2076](https://github.com/stoplightio/prism/pull/2076)
+
 # 4.10.0 (2022.06.07)
 
 ## Added
