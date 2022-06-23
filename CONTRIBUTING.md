@@ -1,4 +1,4 @@
-# How to contribute to Prism
+# How to Contribute to Prism
 
 ## Development
 
