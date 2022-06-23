@@ -17,6 +17,10 @@ describe('serializeWithDeepObjectStyle()', () => {
     expect(serializeWithDeepObjectStyle('a', { aa: { aaa: { aaaa: '1' } } })).toEqual('a[aa][aaa][aaaa]=1');
   });
 
+  it('handles null objects', () => {
+    expect(serializeWithDeepObjectStyle('a', { aa: null })).toEqual(null);
+  });
+
   it('handles mixed objects and arrays', () => {
     expect(serializeWithDeepObjectStyle('a', { aa: { aaa: [{ aaaa: '1' }, { aaaa: '2' }] } })).toEqual(
       'a[aa][aaa][][aaaa]=1&a[aa][aaa][][aaaa]=2'

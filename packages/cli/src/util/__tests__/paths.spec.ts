@@ -227,6 +227,54 @@ describe('createExamplePath()', () => {
       );
     });
 
+    it('generates deepObject style with null values', () => {
+      const exampleValue = { a: { aa: 1, ab: 2 }, b: null };
+      const p_a_aa = encodeURIComponent('p[a][aa]');
+      const p_a_ab = encodeURIComponent('p[a][ab]');
+      const expected = `/path?${p_a_aa}=1&${p_a_ab}=2`;
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                id: faker.random.word(),
+                name: 'p',
+                style: HttpParamStyles.DeepObject,
+                examples: [{ id: faker.random.word(), key: 'foo', value: exampleValue }],
+              },
+            ],
+          },
+          responses: [{ id: faker.random.word(), code: '200' }],
+        }),
+        r => expect(r).toEqual(expected)
+      );
+    });
+
+    it('generates deepObject style with only null values', () => {
+      assertRight(
+        createExamplePath({
+          id: '123',
+          path: '/path',
+          method: 'get',
+          request: {
+            query: [
+              {
+                id: faker.random.word(),
+                name: 'p',
+                style: HttpParamStyles.DeepObject,
+                examples: [{ id: faker.random.word(), key: 'foo', value: { a: null } }],
+              },
+            ],
+          },
+          responses: [{ id: faker.random.word(), code: '200' }],
+        }),
+        r => expect(r).toEqual('/path')
+      );
+    });
+
     it('generates pipeDelimited style', () => {
       assertRight(
         createExamplePath({

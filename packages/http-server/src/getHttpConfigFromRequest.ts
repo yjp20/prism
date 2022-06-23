@@ -10,8 +10,7 @@ const BooleanFromString = D.parse<string, boolean>(s =>
 );
 
 const IntegerFromString = D.parse<string, number>(s => {
-  const parsedString = parseInt(s, 10);
-  return !isNaN(parsedString) ? D.success(parsedString) : D.failure(s, 'a number');
+  return /^\d{3}$/.test(s) ? D.success(parseInt(s, 10)) : D.failure(s, 'a number');
 });
 
 const PreferencesDecoder = D.partial({

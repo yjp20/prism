@@ -275,7 +275,7 @@ describe('NegotiatorHelpers', () => {
           .instance();
 
         const actualConfig = helpers.negotiateOptionsForInvalidRequest(httpOperation.responses, [422, 400])(logger);
-        assertRight(actualConfig, config => expect(config).toHaveProperty('code', 422));
+        assertRight(actualConfig, config => expect(config).toHaveProperty('code', '422'));
       });
 
       test('should return an error', () => {

@@ -4,9 +4,9 @@ import * as accepts from 'accepts';
 import * as contentType from 'content-type';
 import * as O from 'fp-ts/Option';
 import * as A from 'fp-ts/Array';
-import * as N from 'fp-ts/number';
+import * as S from 'fp-ts/string';
 import * as NEA from 'fp-ts/NonEmptyArray';
-import { contramap } from 'fp-ts/Ord';
+import * as Ord from 'fp-ts/Ord';
 import { pipe } from 'fp-ts/function';
 import { pick } from 'lodash';
 import { ContentExample } from '../../';
@@ -55,47 +55,54 @@ export function findDefaultContentType(contents: IMediaTypeContent[]): O.Option<
   );
 }
 
-const byResponseCode = contramap((response: IHttpOperationResponse) => parseInt(response.code))(N.Ord);
-
-export function findLowest2xx(httpResponses: IHttpOperationResponse[]): O.Option<IHttpOperationResponse> {
-  const first2xxResponse = pipe(
-    httpResponses,
-    A.filter(response => /2\d\d/.test(response.code)),
-    A.sort(byResponseCode),
-    A.head
-  );
-
+export function findLowest2XXResponse(httpResponses: IHttpOperationResponse[]): O.Option<IHttpOperationResponse> {
   return pipe(
-    first2xxResponse,
-    O.alt(() => createResponseFromDefault(httpResponses, 200))
+    httpResponses,
+    A.filter(response => /^2(\d\d|XX)$/.test(response.code)),
+    A.sort(Ord.contramap((response: IHttpOperationResponse) => response.code)(S.Ord)),
+    A.head,
+    O.map(withResponseRangesNormalized)
   );
 }
 
 export function findFirstResponse(httpResponses: IHttpOperationResponse[]): O.Option<IHttpOperationResponse> {
-  return pipe(httpResponses, A.head);
+  return pipe(httpResponses, A.head, O.map(withResponseRangesNormalized));
 }
 
 export function findResponseByStatusCode(
-  responses: IHttpOperationResponse[],
+  httpResponses: IHttpOperationResponse[],
   statusCode: number
 ): O.Option<IHttpOperationResponse> {
   return pipe(
-    responses,
-    A.findFirst(response => response.code.toLowerCase() === String(statusCode))
+    httpResponses,
+    A.findFirst(response => response.code.toLowerCase() === String(statusCode)),
+    O.alt(() =>
+      pipe(
+        httpResponses,
+        A.findFirst(response => response.code === `${String(statusCode).charAt(0)}XX`),
+        O.map(response => ({ ...response, code: statusCode.toString() }))
+      )
+    )
   );
 }
 
-export function createResponseFromDefault(
-  responses: IHttpOperationResponse[],
-  statusCode: number
+export function findDefaultResponse(
+  httpResponses: IHttpOperationResponse[],
+  statusCode = 200
 ): O.Option<IHttpOperationResponse> {
   return pipe(
-    responses,
+    httpResponses,
     A.findFirst(response => response.code === 'default'),
-    O.map(response => Object.assign({}, response, { code: statusCode }))
+    O.map(response => ({ ...response, code: statusCode.toString() }))
   );
 }
 
 export function contentHasExamples(content: IMediaTypeContent): content is IWithExampleMediaContent {
   return !!content.examples && content.examples.length !== 0;
+}
+
+function withResponseRangesNormalized(httpResponse: IHttpOperationResponse): IHttpOperationResponse {
+  return /^\dXX$/.test(httpResponse.code)
+    ? { ...httpResponse, code: `${httpResponse.code.charAt(0)}00` }
+    : httpResponse;
 }
