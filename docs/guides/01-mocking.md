@@ -31,7 +31,7 @@ The response Prism decides to give can be figured out with this decision flow di
 
 ### Response Examples
 
-If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. Let's take a look part of an OpenAPI description, this is an operation with a response that has a 200 OK and multiple examples:
+If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. Let's take a look at a part of an OpenAPI description, this is an operation with a response that has a 200 OK and multiple examples:
 
 ```yaml
 responses:
