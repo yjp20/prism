@@ -1,33 +1,76 @@
-import { transformOas3Operations } from '@stoplight/http-spec/oas3/operation';
-import { transformOas2Operations } from '@stoplight/http-spec/oas2/operation';
-import { transformPostmanCollectionOperations } from '@stoplight/http-spec/postman/operation';
-import { dereference } from 'json-schema-ref-parser';
-import { bundleTarget, decycle } from '@stoplight/json';
-import { IHttpOperation } from '@stoplight/types';
-import { get } from 'lodash';
+import { bundleOas3Service, bundleOas2Service, transformPostmanCollectionOperations } from '@stoplight/http-spec';
+import { bundleTarget } from '@stoplight/json';
+import { IHttpOperation, IBundledHttpService } from '@stoplight/types';
+import { get, reduce } from 'lodash';
 import type { Spec } from 'swagger-schema-official';
 import type { OpenAPIObject } from 'openapi3-ts';
 import type { CollectionDefinition } from 'postman-collection';
+import { dereferenceSpec } from './util/dereference';
 
-export async function getHttpOperationsFromSpec(specFilePathOrObject: string | object): Promise<IHttpOperation[]> {
-  const result = decycle(await dereference(specFilePathOrObject));
+export async function getHttpOperationsFromSpec(
+  specFilePathOrObject: string | object,
+  options?: { isDereferenced?: boolean }
+): Promise<IHttpOperation[]> {
+  const result = await dereferenceSpec(specFilePathOrObject, options);
 
-  let operations: IHttpOperation[] = [];
-  if (isOpenAPI2(result)) operations = transformOas2Operations(result);
-  else if (isOpenAPI3(result)) operations = transformOas3Operations(result);
-  else if (isPostmanCollection(result)) operations = transformPostmanCollectionOperations(result);
-  else throw new Error('Unsupported document format');
+  let operations: IHttpOperation<true | false>[] = [];
+  let components: IBundledHttpService['components'] | undefined;
 
-  operations.forEach((op, i, ops) => {
-    ops[i] = bundleTarget({
-      document: {
-        ...result,
-        __target__: op,
+  if (isOpenAPI2(result)) {
+    const service = bundleOas2Service({ document: result });
+    operations = service.operations;
+    components = service.components;
+  } else if (isOpenAPI3(result)) {
+    const service = bundleOas3Service({ document: result });
+    operations = service.operations;
+    components = service.components;
+  } else if (isPostmanCollection(result)) {
+    operations = transformPostmanCollectionOperations(result);
+  } else {
+    throw new Error('Unsupported document format');
+  }
+
+  if (components) {
+    // Map components array to object, so we can later use it for dereferencing
+    const mappedComponents = reduce(
+      components,
+      (mappedComponentsObj, componentsArr, componentType) => {
+        return {
+          ...mappedComponentsObj,
+          [componentType]: reduce(
+            componentsArr,
+            (mappedComponentObj, component, componentIndex) => {
+              return {
+                ...mappedComponentObj,
+                [componentIndex]: component,
+              };
+            },
+            {}
+          ),
+        };
       },
-      path: '#/__target__',
-      cloneDocument: false,
+      {}
+    );
+
+    operations.forEach(op => {
+      // @ts-expect-error "bundling" components onto each operation to easily dereference later
+      op.components = mappedComponents;
     });
-  });
+  } else {
+    // Backwards compatibility
+    operations.forEach((op, i, ops) => {
+      ops[i] = bundleTarget({
+        document: {
+          ...result,
+          __target__: {
+            ...op,
+          },
+        },
+        path: '#/__target__',
+        cloneDocument: false,
+      });
+    });
+  }
 
   return operations;
 }
