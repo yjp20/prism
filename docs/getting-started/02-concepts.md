@@ -51,7 +51,7 @@ Prism provides strong support for mocking and validating REST APIs and most stru
 The following content types are not supported by Prism:
 
 * `multipart/form-data` requests and responses
-* Binary files, such as pdf, binary files, and zip
+* Binary files, such as PDFs, image files, and zip archives
 
 ## Further Reading
 
