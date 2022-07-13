@@ -46,9 +46,12 @@ Read more about this in our [validation proxy guide](../guides/03-validation-pro
 
 ## Content Negotation
 
-Prism provides strong support for mocking and validating JSON APIs and most structured data types, such as XML. 
+Prism provides strong support for mocking and validating REST APIs and most structured data types, such as JSON, XML, and URL-encoded forms. 
 
-Non-structured data types, such as multipart/form-data, pdf, and zip, are not currently supported by Prism. 
+The following content types are not supported by Prism:
+
+* `multipart/form-data` requests and responses
+* Binary files, such as pdf, binary files, and zip
 
 ## Further Reading
 
