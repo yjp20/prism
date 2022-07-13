@@ -1,7 +1,6 @@
 # Concepts
 
-Prism is a CLI and TypeScript toolkit for various bits of HTTP and API Description
-functionality. 
+Prism is a CLI and TypeScript toolkit for various bits of HTTP and API Description functionality. 
 
 - [Mocking](#mocking)
 - [Validation Proxy](#validation-proxy)
@@ -21,7 +20,7 @@ Prism can be given an [OpenAPI](https://www.openapis.org/) v2 or v3 description
 document, which is essentially a data source for all the decisions Prism makes.
 
 <!-- theme: info -->
-> Seeing as this is a HTTP server run from the command-line, Prism is not yet the tool you'll want to use for programatic mocking in your test-suites. This is planned for the future, so get in touch if you're interested in helping us with this.
+> Seeing as this is a HTTP server run from the command-line, Prism is not yet the tool you'll want to use for programmatic mocking in your test-suites. This is planned for the future, so get in touch if you're interested in helping us with this.
 
 Read more about this in our [mocking guide](../guides/01-mocking.md).
 
@@ -45,7 +44,15 @@ is useful for your use case.
 
 Read more about this in our [validation proxy guide](../guides/03-validation-proxy.md).
 
+## Content Negotation
+
+Prism provides strong support for mocking and validating REST APIs and most structured data types, such as JSON, XML, and URL-encoded forms. 
+
+The following content types are not supported by Prism:
+
+* Multipart requests and responses, such as `multipart/form-data`
+* Binary files, such as PDFs, image files, and zip archives
+
 ## Further Reading
 
-Both the mock server and the validation proxy server are primarily used via the
-[command-line interface](./03-cli.md).
+Both the mock server and the validation proxy server are primarily used via the [command-line interface](./03-cli.md).
