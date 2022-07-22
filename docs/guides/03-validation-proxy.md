@@ -1,24 +1,26 @@
 # Validation Proxy
 
-Unlike mocking, the validation proxy expects there to be a real API running somewhere. This could be a localhost environment, docker container, hosted sandbox environment, or deployed to actual production.
+Unlike mocking, the validation proxy expects there to be a real API running somewhere. This could be a localhost environment, docker container, hosted sandbox environment, or a production environment.
 
 The proxy feature will help you identify discrepancies between the OpenAPI document (supposedly the source of truth) and any other server you designate as the target. This can help frontend developers integrating with your API, or other backend developers, who might want to channel their requests through Prism to see if they are making valid requests. The proxy can also be enabled in staging or any other pre-production environment, like a dress rehearsal before the opening night of a play.
 
 ## Use Cases
 
-Let's look at some of these use-cases.
+Let's look at some of these use cases.
 
 ### Assisting API Consumer Integration
 
 In the [design-first workflow](https://blog.stoplight.io/api-first-api-design-first-or-code-first-which-should-you-choose), mocking gives your team something to use before the API exists. Then, when enough feedback has come in and the API developers have decided to start coding the API, the hope is that the real API matches the mock API. If it matches perfectly, the existing development work done by the API consumers during the feedback stage means that integrating the real API should involve little to no work. Sadly, subtle differences often go unnoticed, with properties changing slightly, or being removed completely.
 
-As of Prism v3.2, API consumers can funnel their development traffic through Prism running as proxy, and then relay that traffic to the API-in-progress. It will report any mistakes it notices along the way, either with the requests you're sending or the responses coming back from the server.
+As of Prism v3.2, API consumers can funnel their development traffic through Prism running as proxy, and then relay that traffic to the API-in-progress. It reports any mistakes it notices along the way, either with the requests you're sending or the responses coming back from the server.
 
-In this use case, the OpenAPI documents would be provided by the API team, distributed to the API consumers, and the proxy server would be pointing to the dev environment. We'd also want to enable `--errors` so Prism will blow up your request if a mismatch is noticed.
+In this use case, the OpenAPI documents are provided by the API team, distributed to the API consumers, and the proxy server points to the dev environment. We'd also want to enable `--errors` so Prism will blow up your request if a mismatch is noticed.
 
 ```bash
-prism proxy reference/backend/openapi.yaml localhost:3000 --errors
+prism proxy reference/backend/openapi.yaml http://localhost:3000 --errors
 ```
+
+> The proxy URL must begin with the protocol (`http`, `https`).
 
 ### End-to-End Contract Testing
 
