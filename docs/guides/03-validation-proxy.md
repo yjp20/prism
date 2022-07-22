@@ -20,7 +20,7 @@ In this use case, the OpenAPI documents are provided by the API team, distribute
 prism proxy reference/backend/openapi.yaml http://localhost:3000 --errors
 ```
 
-> The proxy URL must contain the protocol (http, https).
+> The proxy URL must begin with the protocol (`http`, `https`).
 
 ### End-to-End Contract Testing
 
