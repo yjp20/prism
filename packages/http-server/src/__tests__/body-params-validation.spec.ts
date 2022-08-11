@@ -514,10 +514,24 @@ describe('body params validation', () => {
         });
 
         describe('and no content is specified', () => {
-          test('returns 200', async () => {
+          test('returns 200 with no body', async () => {
             const response = await makeRequest('/empty-body', {
               method: 'GET',
               headers: { 'content-type': 'application/json' },
+            });
+            expect(response.status).toBe(200);
+          });
+          test('returns 200 with empty plain body', async () => {
+            const response = await makeRequest('/empty-body', {
+              method: 'GET',
+              headers: { 'content-type': 'text/plain', 'content-length': '0' },
+            });
+            expect(response.status).toBe(200);
+          });
+          test('returns 200 with empty JSON body', async () => {
+            const response = await makeRequest('/empty-body', {
+              method: 'GET',
+              headers: { 'content-type': 'application/json', 'content-length': '0' },
             });
             expect(response.status).toBe(200);
           });
@@ -707,7 +721,7 @@ describe('body params validation', () => {
       test('returns 422', async () => {
         const response = await makeRequest('/path', {
           method: 'POST',
-          body: '',
+          body: 'success=false',
           headers: { 'content-type': 'application/x-www-form-urlencoded' },
         });
 
