@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning.
 
+# 4.10.3 (2022.08.16)
+
+## Fixed
+
+- Fixed issue with recursive request body schemas. [#2090](https://github.com/stoplightio/prism/pull/2090)
+
 # 4.10.2 (2022.08.11)
 
 ## Fixed
