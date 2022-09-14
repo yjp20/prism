@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning.
 
+# 4.10.4 (2022.09.14)
+
+## Changed
+
+- Various 3rd party dependency updates and Dependabot configuration changes
+
 # 4.10.3 (2022.08.16)
 
 ## Fixed
