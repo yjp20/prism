@@ -97,12 +97,12 @@ see what URLs you have available.
 
 **Is there a hosted version of Prism?**
 
-Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme)
+Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](https://stoplight.io/api-mocking?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism)
 
 ## ⚙️ Integrations
 
-- [Stoplight Studio](https://stoplight.io/studio/?utm_source=github&utm_medium=prism&utm_campaign=readme): Free visual OpenAPI designer that comes integrated with mocking powered by Prism.
-- [Stoplight Platform](https://stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism.
+- [Stoplight Studio](https://stoplight.io/studio/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Free visual OpenAPI designer that comes integrated with mocking powered by Prism.
+- [Stoplight Platform](https://stoplight.io/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism.
 
 ## 🏁 Help Others Utilize Prism
 
@@ -142,7 +142,7 @@ If you would like to thank us for creating Prism, we ask that you [**buy the wor
 [cli-docs]: ./docs/getting-started/03-cli.md
 [2.x]: https://github.com/stoplightio/prism/tree/2.x
 [http-docs]: packages/http/README.md
-[mocking_landing_page]: https://stoplight.io/api-mocking?utm_source=github&utm_medium=prism&utm_campaign=readme
+[mocking_landing_page]: https://stoplight.io/api-mocking?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism
 [circle_ci]: https://circleci.com/gh/stoplightio/prism
 [circle_ci_image]: https://img.shields.io/circleci/build/github/stoplightio/prism/master
 [npm]: https://www.npmjs.com/package/@stoplight/prism-cli
