@@ -39,24 +39,21 @@ Connection: keep-alive
 
 Responses will be mocked using realistic data that conforms to the type in the description.
 
-### Auto-reloading
+### Auto Reloading
 
-Prism watches for changes made to a document it was loaded with.
-When they happen, Prism restarts its HTTP server to reflect changes to operations.
-There is no need to manually stop and start a Prism server after a change to a specification file.
+Prism watches for changes made to the document it was loaded with. When changes happen, Prism restarts its HTTP server to reflect changes to operations. There is no need to manually stop and start a Prism server after a change to a specification file.
 
-In case of removing all of the operations in a document, Prism will not be reloaded.
-In such a case, Prism will keep serving operations loaded with the previous restart.
+If all operations are removed from a document, Prism won't be reloaded. In this, Prism continues serving operations loaded with the previous restart.
 
 ### Modifying Responses
 
 Prism's behavior in looking for the response for your request can be modified with a series of parameters that you can either pass through the `Prefer` header or through a query string parameter. 
 
-Keep in mind, all the query parameters need to be prefixed with `__` — so if the Prefer header parameter is `code`, the query string will be `__code`
+Keep in mind, all the query parameters need to be prefixed with double underscores (`__`). If the Prefer header parameter is `code`, the query string will be `__code`.
 
 #### Force Response Status
 
-Prism can be forced to return different HTTP responses by specifying the status code in the `Prefer` header
+Prism can be forced to return different HTTP responses by specifying the status code in the `Prefer` header.
 
 ```bash
 curl -v http://127.0.0.1:4010/pets/123 -H "Prefer: code=404"
@@ -80,7 +77,7 @@ curl -v http://127.0.0.1:4010/pets/123 -H "Prefer: example=exampleKey"
 
 #### Dynamic Response
 
-You can override the `--dynamic|-d` CLI param (which decides whether the generated example is static or dynamic) through the `dynamic` key in the `Prefer` header.
+You can override the `--dynamic|-d` CLI parameter (which decides whether the generated example is static or dynamic) through the `dynamic` key in the `Prefer` header.
 
 ```bash
 curl -v http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=false"
@@ -88,17 +85,17 @@ curl -v http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=false"
 
 <!-- theme: info -->
 
-> **Remember:** you can combine `code`, `example` and `dynamic` parameters. By default, when the `code` parameter is not given, Prism will always try to fetch an example using the `exampleKey` from the 200 HTTP responses **only**. You'll need to use the `code` parameter alongside the `example` one for any specific example using a different HTTP status code than 200.
+> **Remember**: You can combine `code`, `example` and `dynamic` parameters. By default, when the `code` parameter isn't given, Prism always tries to fetch an example using the `exampleKey` from the 200 HTTP responses **only**. You'll need to use the `code` parameter alongside the `example` one for any specific example using a different HTTP status code than 200.
 
 #### Circular references
 
-Even though Prism is technically able to internally handle circular references, the CLI will refuse to mock the provided document in case any circular reference is detected. This is essentially because serialising a circular reference is difficult and very dependant on the content type.
+Even though Prism is technically able to internally handle circular references, the CLI will refuse to mock the provided document in case any circular reference is detected. This is essentially because serialising a circular reference is difficult and dependant on the content type.
 
 ## Proxy
 
 This command creates an HTTP server that will proxy all the requests to the specified upstream server. Prism will analyze the request coming in and the response coming back from the upstream server and report the discrepancies with what's declared in the provided OpenAPI document.
 
-Learn more about the ideas here in our [Validation Proxy guide](../guides/03-validation-proxy.md), or see below for the quick n dirty how to CLI.
+Learn more in the [Validation Proxy guide](../guides/03-validation-proxy.md). 
 
 ```bash
 $ prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2
@@ -145,8 +142,7 @@ The response body contains the found output violations.
 
 ### Skip Request Validation
 
-In some cases, you may want to skip request validation but validate responses. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately.
-Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
+In some cases, you may want to skip request validation but validate responses. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately. Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
 
 ```bash
 prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2 --errors --validate-request false
@@ -160,9 +156,9 @@ curl -v -X POST http://localhost:4010/pet/ -d '{"name"": "Skip", "species": 100}
 ```
 ## Running in Production
 
-When running in development mode (which happens when the `NODE_ENV` environment variable is not set to `production`) or the `-m` flag is set to false, both the HTTP Server and the CLI (which is responsible of parsing and showing the received logs on the screen) will run within the same process.
+When running in development mode (which happens when the `NODE_ENV` environment variable isn't set to `production`) or the `-m` flag is set to false, both the HTTP Server and the CLI (which is responsible of parsing and showing the received logs on the screen) will run within the same process.
 
-Processing logs slows down Prism significantly. If you're planning to use the CLI in production (for example in a Docker Container) we recommend to run the CLI with the `-m` flag or set the `NODE_ENV` variable to `production`. In this way, the CLI and the HTTP server will run on two different processes, so that logs processing, parsing and printing does not slow down the http requests processing.
+Processing logs slows down Prism significantly. If you're planning to use the CLI in production (for example, in a Docker Container), run the CLI with the `-m` flag or set the `NODE_ENV` variable to `production`. This way, the CLI and the HTTP server will run on two different processes so that logs processing, parsing, and printing don't slow down the HTTP requests processing.
 
 ## Running behind a proxy
 
