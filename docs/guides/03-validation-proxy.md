@@ -2,7 +2,7 @@
 
 Unlike mocking, the validation proxy expects there to be a real API running somewhere. This could be a localhost environment, docker container, hosted sandbox environment, or a production environment.
 
-The proxy feature will help you identify discrepancies between the OpenAPI document (generally the source of truth) and any other server you designate as the target. This can help frontend developers integrating with your API, or other backend developers, who might want to channel their requests through Prism to see if they're making valid requests. The proxy can also be enabled in staging or any other pre-production environment, like a dress rehearsal before the opening night of a play.
+The proxy feature will help you identify discrepancies between the OpenAPI document and any other server you designate as the target. This can help frontend developers integrating with your API, or other backend developers, who might want to channel their requests through Prism to see if they're making valid requests. The proxy can also be enabled in staging or any other pre-production environment, like a dress rehearsal before the opening night of a play.
 
 ## Use Cases
 
