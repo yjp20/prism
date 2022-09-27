@@ -8,7 +8,7 @@ It can also fail with `401` if security information is missing, and do a bunch o
 
 Requests which expect a request body, query parameter, or a path parameter, will be validated.
 
-For example, make a POST with a JSON body that is missing the required `name` parameter. 
+For example, make a POST with a JSON body that's missing the required `name` parameter. 
 
 ```bash
 curl -X POST -s -D "/dev/stderr" -H "content-type: application/json" -d '{"tag":"Stowford"}' http://127.0.0.1:4010/pets
@@ -20,7 +20,7 @@ In this case, Prism will:
 - If there's not a `422` defined, it will look for a response with status code `400` on the operation you were trying to execute.
 - In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating the validation errors it found along the way. Such response will have a payload conforming the [application/problem+json][rfc7807] specification.
 
-To get back to our example, since the operation hasn't any error response defined, Prism will generate a 422 response:
+Since the operation hasn't any error response defined, Prism will generate a 422 response:
 
 ```
 HTTP/1.1 422 Unprocessable Entity

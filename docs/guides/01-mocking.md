@@ -225,9 +225,9 @@ x-json-schema-faker:
 
 ## Request Validation
 
-Having a mock server that only gives responses would not be very useful, which is why
+Having a mock server that only gives responses would not be useful, which is why
 Prism imitates request validation too. An OpenAPI description document is
-full of validation rules like type, format, max length, etc., Prism can
+full of validation rules like type, format, max length, etc. Prism can
 validate incoming messages and provide validation feedback if it receives invalid
 requests.
 
