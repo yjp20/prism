@@ -29,7 +29,7 @@ This class of errors is returned when Prism is trying to identify the right reso
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when the current document does not have any endpoint.
+**Explanation:** This error occurs when the current document doesn't have any endpoint.
 
 ##### Example
 
@@ -48,7 +48,7 @@ paths:
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when the current document does not have any endpoint matching the requested URL.
+**Explanation:** This error occurs when the current document doesn't have any endpoint matching the requested URL.
 
 ##### Example
 
@@ -72,7 +72,7 @@ paths:
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when the server validation is enabled, and the current request has **not** sent the current server or the provided one is not among the defined in the relative array in the file.
+**Explanation:** This error occurs when the server validation is enabled, and the current request **hasn't** sent the current server or the provided one isn't among the defined in the relative array in the file.
 
 ##### Example
 
@@ -110,7 +110,7 @@ servers:
 
 **Returned Status Code: `405`**
 
-**Explanation:** This error occurs when the current document has an endpoint with the requested URL, but the specified Verb is not listed.
+**Explanation:** This error occurs when the current document has an endpoint with the requested URL, but the specified Verb isn't listed.
 
 ##### Example
 
@@ -134,7 +134,7 @@ paths:
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when a base URL has been provided in the current request (enabling the server validation feature) but the current document does not have any `servers` field/entry.
+**Explanation:** This error occurs when a base URL has been provided in the current request (enabling the server validation feature) but the current document doesn't have any `servers` field/entry.
 
 ## Validation errors
 
@@ -146,7 +146,7 @@ This class of errors is returned when Prism is validating the request/response a
 
 **Returned Status Code: `422`**
 
-**Explanation:** This error occurs when the current request has not passed the validation rules specified in the current OpenAPI file _and_ the current resource is missing an error message (`422`, `400`, `default`). Note that this is an error _generated_ by Prism.
+**Explanation:** This error occurs when the current request hasn't passed the validation rules specified in the current OpenAPI file _and_ the current resource is missing an error message (`422`, `400`, `default`). Note that this is an error _generated_ by Prism.
 
 The `detail` field contains further information on the error (whether it's on the body, the headers or the query string).
 
@@ -154,11 +154,11 @@ The `detail` field contains further information on the error (whether it's on th
 
 ### NOT_ACCEPTABLE
 
-**Message: The server cannot produce a representation for your accept header**
+**Message: The server can't produce a representation for your accept header**
 
 **Returned Status Code: `406`**
 
-**Explanation:** This error occurs when the current request has asked the response in a format that the current document is not able to produce.
+**Explanation:** This error occurs when the current request has asked the response in a format that the current document isn't able to produce.
 
 ##### Example
 
@@ -182,11 +182,11 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 
 ### NOT_FOUND
 
-**Message: The server cannot find the requested content**
+**Message: The server can't find the requested content**
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when the current request is asking for a specific status code that the document is not listing or it's asking for a specific example that does not exist in the current document
+**Explanation:** This error occurs when the current request is asking for a specific status code that the document isn't listing or it's asking for a specific example that doesn't exist in the current document
 
 ### VIOLATIONS
 
@@ -200,7 +200,7 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 
 ## Security errors
 
-This class of errors is returned when the current request is not satisfying the security requirements specified in the current resource
+This class of errors is returned when the current request isn't satisfying the security requirements specified in the current resource
 
 ### UNAUTHORIZED
 
@@ -208,21 +208,21 @@ This class of errors is returned when the current request is not satisfying the 
 
 **Returned Status Code: `401`**
 
-**Explanation:** This error occurs when the security scheme for the current resource does not match the one that the one that the request being processed has provided.
+**Explanation:** This error occurs when the security scheme for the current resource doesn't match the one that the one that the request being processed has provided.
 
 ---
 
 ## Negotiation errors
 
-This class of errors is returned when anything goes wrong in between your **valid** request and returning a suitable response
+This class of errors is returned when anything goes wrong between your **valid** request and returning a suitable response
 
 ### NO_COMPLEX_OBJECT_TEXT
 
-**Message: Cannot serialise complex objects as text**
+**Message: Can't serialise complex objects as text**
 
 **Returned Status Code: `500`**
 
-**Explanation:** This error occurs when the current request accepts the `text/*` as the response content type and Prism decided to respond with that, but the schema associated with the selected response of the operation generated a non primive payload and Prism has no idea how to serialise it.
+**Explanation:** This error occurs when the current request accepts the `text/*` as the response content type and Prism decided to respond with that, but the schema associated with the selected response of the operation generated a non-primitive payload and Prism can't serialise it.
 
 ##### Example
 
@@ -262,8 +262,8 @@ paths:
 
 **Returned Status Code: `415`**
 
-**Explanation:** This error occurs when the current request specifies a `Content-Type` that is not supported by corresponding HTTP Operation. In the case there is no request body or `Content-Length` is 0, the `Content-Type` header is ignored.
+**Explanation:** This error occurs when the current request specifies a `Content-Type` that isn't supported by corresponding HTTP Operation. In the case there is no request body or `Content-Length` is 0, the `Content-Type` header is ignored.
 
 ## Unknown error
 
-In case you get an `UNKNOWN` error, it likely means we **screwed it up** and we haven't handled this particular edge case. If you encounter one of these, opening an [issue](https://github.com/stoplightio/prism/issues/new?labels=bug&template=bug_report.md) might be a good idea.
+In case you get an `UNKNOWN` error, it likely means this particular edge case isn't handled. If you encounter one of these, open an [issue](https://github.com/stoplightio/prism/issues/new?labels=bug&template=bug_report.md).

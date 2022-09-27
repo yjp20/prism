@@ -49,11 +49,11 @@ route /app_2/* {
 ```
 
 This configuration will allow access to the first Prism instance on `localhost:8080/app_1` and the second instance on `localhost:8080/app_2` endpoint.
-Also, please mind that the provided `Caddyfile` only serves illustrative purposes and hence should not be considered complete nor production-ready.
+Also, the provided `Caddyfile` only serves illustrative purposes and hence shouldn't be considered complete nor production-ready.
 
 ## Running the cluster
 
-Let's first place the aforementioned files under the same directory - here `prism-multi-example`.
+First, place the aforementioned files under the same directory - here `prism-multi-example`.
 
 ```
 prism-multi-example
@@ -82,7 +82,7 @@ At this point, the responses should be given back without issues.
 
 ## Adding more documents
 
-You can easily extend the cluster by adding more nodes to `docker-compose.yaml`.
+You can extend the cluster by adding more nodes to `docker-compose.yaml`.
 Under `services`, you can add:
 
 ```yaml

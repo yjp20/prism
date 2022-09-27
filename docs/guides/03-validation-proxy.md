@@ -40,7 +40,7 @@ In case the upstream server responds with the `501` status code, Prism will try 
 
 ### Live Contract Testing
 
-Now you can use Prism to test traffic against the API description. This could be done in development as we've mentioned, but it could also be placed in staging, QA, or some sort of pre-production environment. Probably keep it out of production, because even though Prism is quick like a fox, introducing _anything_ to the critical path of your API is probably not what you want.
+Now you can use Prism to test traffic against the API description. This could be done in development, but it could also be placed in staging, QA, or some sort of pre-production environment. Probably keep it out of production, because even though Prism is quick like a fox, introducing _anything_ to the critical path of your API is probably not what you want.
 
 ### Deprecating operations
 

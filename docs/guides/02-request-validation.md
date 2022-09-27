@@ -18,7 +18,7 @@ In this case, Prism will:
 
 - Look for a response with status code `422` on the operation you were trying to execute.
 - If there's not a `422` defined, it will look for a response with status code `400` on the operation you were trying to execute.
-- In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating the validation errors it found along the way. Such response will have a payload conforming the [application/problem+json][rfc7807] specification.
+- In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating the validation errors it found along the way. Such response will have a payload conforming to the [application/problem+json][rfc7807] specification.
 
 Since the operation hasn't any error response defined, Prism will generate a 422 response:
 
