@@ -28,7 +28,7 @@ Read more about this in the [Prism mocking guide](../guides/01-mocking.md).
 
 Mocking helps when there is no real API and helps API consumers feel confident they're 
 building applications that will work with the API. Then, when the API has been built, 
-Prism can continue to help by proxying requests to the real server and reporting if anything is different. 
+Prism can continue to help by sending proxy requests to the real server and reporting if anything is different. 
 
 Running Prism on the [CLI](./03-cli.md) with `prism proxy openapi.yml http://api.example.com/` 
 will run a HTTP server similar to the mock, and it will use the same

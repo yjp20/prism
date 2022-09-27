@@ -142,7 +142,7 @@ The response body contains the found output violations.
 
 ### Skip Request Validation
 
-In some cases, you may want to skip request validation but validate responses. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately. Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
+Sometimes, you may want to skip request validation but validate responses. A common scenario would be where you want to check if your HTTP handlers validate the request appropriately. Prism will validate all requests by default, but you can skip this by setting the flag to `--validate-request` flag to `false`.
 
 ```bash
 prism proxy examples/petstore.oas2.yaml https://petstore.swagger.io/v2 --errors --validate-request false

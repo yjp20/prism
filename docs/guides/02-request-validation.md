@@ -2,13 +2,13 @@
 
 Based on the API description document, Prism can take educated guesses at all sorts of validation rules for the request body, headers, query parameters, using keywords like `type`, `format`, `maxLength`, etc.
 
-It can also fail with `401` if security information is missing, and do a bunch of other things the API description document says the real API will do. If the folks implementing the real API do it differently to their shared documents... well you should maybe have words with them.
+It can also fail with `401` if security information is missing, and do a bunch of other things the API description document says the real API will do. 
 
 ## Parameter Validation
 
 Requests which expect a request body, query parameter, or a path parameter, will be validated.
 
-For example, let's make a POST with a JSON body which is missing the required `name` parameter. We'll be using the [petstore openapi 2 version][petstore-oas2].
+For example, make a POST with a JSON body that is missing the required `name` parameter. 
 
 ```bash
 curl -X POST -s -D "/dev/stderr" -H "content-type: application/json" -d '{"tag":"Stowford"}' http://127.0.0.1:4010/pets
@@ -18,7 +18,7 @@ In this case, Prism will:
 
 - Look for a response with status code `422` on the operation you were trying to execute.
 - If there's not a `422` defined, it will look for a response with status code `400` on the operation you were trying to execute.
-- In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating all the validation errors it found along the way. Such response will have a payload conforming the [application/problem+json][rfc7807] specification.
+- In case there's neither a `422` nor a `400` defined, Prism will create a `422` response code for you indicating the validation errors it found along the way. Such response will have a payload conforming the [application/problem+json][rfc7807] specification.
 
 To get back to our example, since the operation hasn't any error response defined, Prism will generate a 422 response:
 
@@ -55,7 +55,7 @@ Pairing a GET with a request body is another example of a `422` response you may
 
 OpenAPI allows the entire API, or certain operations, to be associated with specific servers.
 
-To make sure the server URL you plan to use is a valid server for the API, or for the particular operation you are attempting, provide it as a `__server` query param.
+To make sure the server URL you plan to use is a valid server for the API, or for the particular operation you are attempting, provide it as a `__server` query parameter.
 
 Take this minimalist OpenAPI example:
 
@@ -85,7 +85,7 @@ curl http://localhost:4010/pet?__server=https://stoplight.io/api
 hello world
 ```
 
-On the other hand, putting a server which is not defined in the specification, for example:
+On the other hand, putting a server which isn't defined in the specification:
 
 ```bash
 curl http://localhost:4010/pet?__server=https://nonsense.com/api
