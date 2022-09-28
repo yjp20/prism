@@ -1,4 +1,4 @@
-# Postman Collections support
+# Postman Collections Support
 
 Prism offers a _limited_ support for Postman Collection. The basic workflow of using Prism (both from the CLI and deployed in a Docker container) are fundamentally the same:
 
@@ -48,7 +48,7 @@ Postman supports a few authentication schemes that OpenAPI doesn't, such as Hawk
 
 Events are linked to the Postman hosted platform, so Prism will skip this section entirely.
 
-For this reason, if some event handlers have scripts that modify a local variable used in a request/response pair, Prism won't be aware of these changes. Global variables are ignored by Prism since they're not tracked in the Postman Application and not the singular Postman Collection.
+For this reason, if some event handlers have scripts that modify a local variable used in a request/response pair, Prism won't be aware of these changes. Global variables are not supported by Prism.
 
 ### JSON Schema Generation
 

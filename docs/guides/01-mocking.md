@@ -163,7 +163,7 @@ Pet:
         x-faker: image.imageUrl
 ```
 
-Call `curl http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=true"`, the operation references this component and a doggie is returned:
+Making the call `curl http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=true"`, the operation references this component and a doggie is returned:
 
 ```json
 {

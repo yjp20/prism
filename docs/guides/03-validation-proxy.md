@@ -12,7 +12,7 @@ In the [design-first workflow](https://blog.stoplight.io/api-first-api-design-fi
 
 API consumers can funnel their development traffic through Prism running as proxy, and then relay that traffic to the API-in-progress. It reports any mistakes it notices along the way, either with the requests you're sending or the responses coming back from the server.
 
-In this use case, the OpenAPI documents are provided by the API team, distributed to the API consumers, and the proxy server points to the development environment. Also, enable `--errors` so Prism alert you if a mismatch is noticed.
+In this use case, the OpenAPI documents are provided by the API team, distributed to the API consumers, and the proxy server points to the development environment. Also, enable `--errors` so Prism alerts you if a mismatch is noticed.
 
 ```bash
 prism proxy reference/backend/openapi.yaml http://localhost:3000 --errors
