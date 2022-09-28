@@ -1,17 +1,15 @@
 # Mocking Callbacks with Prism
 
-## What are callbacks?
-
-Callback in OpenApi 3 defines an outgoing, asynchronous request that your service will make to some other service. Typical real-life example is a code repository. You can subscribe to certain events on a repo (like commit or tag) and your api will start receiving notifications for those events. Another example is one-time notifications. You can subscribe to a `invoice paid` event and a callback will be invoked when such payment is processed.
+Callback in OpenPI 3.x defines an outgoing, asynchronous request that your service will make to some other service. Typical real-life example is a code repository. You can subscribe to certain events on a repo (like commit or tag) and your API will start receiving notifications for those events. Another example is one-time notifications. You can subscribe to a `invoice paid` event and a callback will be invoked when such payment is processed.
 
 ##### Sources:
 
 - [Callback Docs](https://swagger.io/docs/specification/callbacks/)
 - [Callback Object Specification](https://spec.openapis.org/oas/v3.0.2#callbackObject)
 
-## The Example
+## Callback Example
 
-This example shows how Prism mocks callbacks. There are two services defined: `payment-service` and `client-service`. `payment-service` exposes a subscribe-to-invoice-events method. Client service defines a notification reception endpoint. Our goal is to programmatically subscribe to events about certain invoice.
+This example shows how Prism mocks callbacks. There are two services defined: `payment-service` and `client-service`. `payment-service` exposes a subscribe-to-invoice-events method. Client service defines a notification reception endpoint. The goal is to programmatically subscribe to events about certain invoice.
 
 ### Environment setup
 
@@ -27,7 +25,7 @@ Start `client-service` exposing `/notify` operation used for receiving callback 
 prism mock -p 4011 examples/callbacks/client-service.oas3.yaml
 ```
 
-### Run!
+### Run
 
 Subscribe to callback
 

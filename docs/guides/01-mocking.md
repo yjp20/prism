@@ -1,17 +1,17 @@
 # HTTP Mocking
 
-Prism's HTTP mock server simulates a real web API by providing endpoints and validation rules described in your API description document. This allows client developers to begin writing code for frontend services like web, mobile, or other backend applications, whilst the API developers are still writing their code. This can help find and solve problems early on, before the API is built, because changing all that code can be expensive (time is money).
+Prism's HTTP mock server simulates a real web API by providing endpoints and validation rules described in your API description document. This allows client developers to begin writing code for frontend services like web, mobile, or other backend applications, while API developers are still writing code. This can help find and solve problems early on, before the API is built, because changing all that code can be expensive.
 
 - Does the API contain the information the client needs?
 - Is that data in the format the client needs?
 - Are the resources too "normalized" and data-centric (instead of being use-case centric) that the client has to 3292375 calls to get all the data?
 - Is there enough time left for feedback to be implemented?
 - If the feedback spawns large enough work, will the client have time implement this API once it's done?
-- Avoid all of these problems by getting a free API to play with without spending a month building it all.
+- Avoid these problems by getting a free API to play with without spending a month building it all.
 
 Catching problems early on while you're still just tweaking the API descriptions (maybe using [Studio](https://stoplight.io/studio)), means you can avoid making costly changes to the production API, deprecating old things, or creating whole new global versions which add a huge workload to every single client.
 
-Just like HTTP messages, there are two halfs to mocking: requests and responses.
+Just like HTTP messages, there are two halves to mocking: requests and responses.
 
 - [Response Generation](#response-generation)
 - [Request Validation](#request-validation)
@@ -31,7 +31,7 @@ The response Prism decides to give can be figured out with this decision flow di
 
 ### Response Examples
 
-If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. Let's take a look at a part of an OpenAPI description, this is an operation with a response that has a 200 OK and multiple examples:
+If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. In the following OpenAPI description, the operation has a 200 OK response and multiple examples:
 
 ```yaml
 responses:
@@ -73,7 +73,7 @@ Calling the same URL with the `Prefer` header `example=dog` `http://127.0.0.1:40
 
 > #### Remember to provide expected response code
 >
-> It is always worth indicating the HTTP response code from which `example` should be taken. If Prism decides to change the response code due to validation or security violations, your `example` might be ignored.
+> It's always worth indicating the HTTP response code from which `example` should be taken. If Prism decides to change the response code due to validation or security violations, your `example` might be ignored.
 
 ```json
 {
@@ -97,19 +97,17 @@ If the HTTP server has been started in static mode, specific calls can be made i
 
 #### Static Response Generation
 
-If the provided OpenAPI Schema Object has a response body example, it is used to provide a response.
+If the provided OpenAPI Schema Object has a response body example, it's used to provide a response.
 
 If not, a response body will be created by looking through the whole `schema` object (following any `$ref`'s it finds along the way) to create a full fake response.
 
 - If the property has a default value, then it will return the specified value.
 - If the property has an `examples` value, then it will return the first element in the array.
-- If the property has neither an example nor a default value and is **nullable**, it will return null.
-- If the property has neither an example nor a default value and is **not** nullable, but has a `format` specified, then it will return a meaningful static value according to the format.
-- If the property has neither an example nor a default value, is not nullable, and has no `format` specified, then it will return `'string'` in case of a string and `0` in case of a number.
+- If the property has neither an example nor a default value and **is nullable**, it will return null.
+- If the property has neither an example nor a default value and **isn't nullable**, but has a `format` specified, then it will return a meaningful static value according to the format.
+- If the property has neither an example nor a default value, isn't nullable, and has no `format` specified, then it will return `'string'` in case of a string and `0` in case of a number.
 
-Let's try an example! 🐶
-
-This is a schema component found in our OpenAPI description document:
+For example, this is a schema component found in an OpenAPI description document:
 
 ```yaml
 Pet:
@@ -127,7 +125,7 @@ Pet:
         type: string
 ```
 
-When we call `curl http://127.0.0.1:4010/pets/123`, the operation references this component so we get a doggie:
+When you call `curl http://127.0.0.1:4010/pets/123`, the operation references this component and a doggie is returned:
 
 ```json
 {
@@ -137,11 +135,11 @@ When we call `curl http://127.0.0.1:4010/pets/123`, the operation references thi
 }
 ```
 
-Notice that `name` had an `example` with a value so Prism used it, but `photoUrls` did not, so it just returned `"string"`. 🤷‍♂️
+Notice that `name` had an `example` with a value so Prism used it, but `photoUrls` didn't, so it just returned `"string"`. 🤷‍♂️
 
 #### Dynamic Response Generation
 
-Testing against the exact same piece of data over and over again is not the best way to build a robust integration. What happens when a name is longer than you expected, or the value happens to be 0 instead of 6?
+Testing against the exact same piece of data over and over again isn't the best way to build a robust integration. What happens when a name is longer than you expected, or the value happens to be 0 instead of 6?
 
 Dynamic mode solves this by generating a random value for all the properties according to their type, and other information like `format` or even the all-powerful `x-faker` extension.
 
@@ -165,7 +163,7 @@ Pet:
         x-faker: image.imageUrl
 ```
 
-When we call `curl http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=true"`, the operation references this component so we get a doggie:
+Making the call `curl http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=true"`, the operation references this component and a doggie is returned:
 
 ```json
 {
@@ -227,13 +225,13 @@ x-json-schema-faker:
 
 ## Request Validation
 
-Having a mock server which only gave responses would not be very useful, which is why
-Prism imitates request validation too. Seeing as an OpenAPI description document is
-full of all sorts of validation rules like type, format, max length, etc., Prism can
-validate incoming messages, and provide validation feedback if people are sending invalid
-requests to it.
+Having a mock server that only gives responses would not be useful, which is why
+Prism imitates request validation too. An OpenAPI description document is
+full of validation rules like type, format, max length, etc. Prism can
+validate incoming messages and provide validation feedback if it receives invalid
+requests.
 
-Read more about this in our [Request Validation guide](./02-request-validation.md).
+Read more about this in the [Prism Request Validation guide](./02-request-validation.md).
 
 ## Deprecating operations
 

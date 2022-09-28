@@ -1,6 +1,6 @@
 # Supporting TLS with nginx as a TLS termination
 
-While prism doesn't natively support TLS, it can be fairly easily provided by using a TLS termination layer. In this example, we will be using `docker compose` and `nginx` to support accessing prism via TLS.
+While prism doesn't natively support TLS, it can be provided by using a TLS termination layer. This example uses `docker compose` and `nginx` to support accessing prism via TLS.
 
 If you don't already have a self-signed certificate and configuration for nginx, there is [an excellent post](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04) by Digital Ocean that may help. The examples below used the steps outlined to create the configuration and certificates, but the steps have been abbreviated.
 
