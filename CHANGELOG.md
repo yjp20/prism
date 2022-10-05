@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning.
 
+# 4.10.5 (2022.10.05)
+
+## Fixed
+
+- Fixed breaking change with mock command in v4.10.4. [#2138](https://github.com/stoplightio/prism/issues/2138)
+
 # 4.10.4 (2022.09.14)
 
 ## Changed
