@@ -14,7 +14,7 @@ export async function getHttpOperationsFromSpec(specFilePathOrObject: string | o
   const prismVersion = require('../package.json').version;
   const httpResolverOpts: HTTPResolverOptions = {
     headers: {
-      'User-Agent': `Prism Mock Server v${prismVersion} (${os.type()} ${os.arch()} ${os.release()})`,
+      'User-Agent': `PrismMockServer/${prismVersion} (${os.type()} ${os.arch()} ${os.release()})`,
     },
   };
   const result = decycle(await dereference(specFilePathOrObject, { resolve: { http: httpResolverOpts } }));
