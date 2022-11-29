@@ -2,7 +2,7 @@ import faker from '@faker-js/faker';
 import { cloneDeep } from 'lodash';
 import { JSONSchema } from '../../types';
 
-import * as jsf from 'json-schema-faker';
+import * as JSONSchemaFaker from 'json-schema-faker';
 import * as sampler from '@stoplight/json-schema-sampler';
 import { Either, toError, tryCatch } from 'fp-ts/Either';
 import { IHttpOperation } from '@stoplight/types';
@@ -12,20 +12,54 @@ import { stripWriteOnlyProperties } from '../../utils/filterRequiredProperties';
 
 // necessary as workaround broken types in json-schema-faker
 // @ts-ignore
-jsf.extend('faker', () => faker);
+JSONSchemaFaker.extend('faker', () => faker);
 
-// necessary as workaround broken types in json-schema-faker
-// @ts-ignore
-jsf.option({
-  failOnInvalidTypes: false,
-  failOnInvalidFormat: false,
-  alwaysFakeOptionals: true,
-  optionalsProbability: 1 as any,
-  fixedProbabilities: true,
-  ignoreMissingRefs: true,
-  maxItems: 20,
-  maxLength: 100,
-});
+// From https://github.com/json-schema-faker/json-schema-faker/tree/develop/docs
+// Using from entries since the types aren't 100% compatible
+const JSON_SCHEMA_FAKER_DEFAULT_OPTIONS = Object.fromEntries([
+  ['defaultInvalidTypeProduct', null],
+  ['defaultRandExpMax', 10],
+  ['pruneProperties', []],
+  ['ignoreProperties', []],
+  ['ignoreMissingRefs', false],
+  ['failOnInvalidTypes', true],
+  ['failOnInvalidFormat', true],
+  ['alwaysFakeOptionals', false],
+  ['optionalsProbability', false],
+  ['fixedProbabilities', false],
+  ['useExamplesValue', false],
+  ['useDefaultValue', false],
+  ['requiredOnly', false],
+  ['minItems', 0],
+  ['maxItems', null],
+  ['minLength', 0],
+  ['maxLength', null],
+  ['refDepthMin', 0],
+  ['refDepthMax', 3],
+  ['resolveJsonPath', false],
+  ['reuseProperties', false],
+  ['sortProperties', null],
+  ['fillProperties', true],
+  ['random', Math.random],
+  ['replaceEmptyByRandomValue', false],
+  ['omitNulls', false],
+]);
+
+export function resetGenerator() {
+  // necessary as workaround broken types in json-schema-faker
+  // @ts-ignore
+  JSONSchemaFaker.option({
+    ...JSON_SCHEMA_FAKER_DEFAULT_OPTIONS,
+    failOnInvalidTypes: false,
+    failOnInvalidFormat: false,
+    alwaysFakeOptionals: true,
+    optionalsProbability: 1,
+    fixedProbabilities: true,
+    ignoreMissingRefs: true,
+  });
+}
+
+resetGenerator();
 
 export function generate(bundle: unknown, source: JSONSchema): Either<Error, unknown> {
   return pipe(
@@ -35,7 +69,7 @@ export function generate(bundle: unknown, source: JSONSchema): Either<Error, unk
       tryCatch(
         // necessary as workaround broken types in json-schema-faker
         // @ts-ignore
-        () => sortSchemaAlphabetically(jsf.generate({ ...cloneDeep(updatedSource), __bundled__: bundle })),
+        () => sortSchemaAlphabetically(JSONSchemaFaker.generate({ ...cloneDeep(updatedSource), __bundled__: bundle })),
         toError
       )
     )
