@@ -23,12 +23,76 @@ Prism will try to return meaningful responses based on whatever information it h
 The first thing to understand is that the Prism HTTP Server respects [Content Negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation). If your API is a mixture of JSON, XML and form data, you can use `Accept`
 and `Content-Type` just like with a real API, and it should work as expected, or fail if you request non-existent types.
 
-### The "Decision Engine"
+### Prism Decision Engine
 
-The response Prism decides to give can be figured out with this decision flow diagram.
+Prism responses are based on the following decision diagram.
 
-![](../../packages/http/docs/images/mock-server-dfd.jpeg)
-
+```mermaid
+flowchart TB
+    1A[HTTP Request] --> 1B{Route exists?}
+    1B -->|No| 1C[404 problem+json]
+    1B -->|Yes| 1D{Is request valid?}
+    1D -->|Yes| 1E[Negotiate for valid request]
+    1E--> 1G{Status code enforced?}
+    1G -->|No| 1H[Negotiate for lowest 2XX response]
+    1G -->|Yes| 1I[Negotiate for status code]
+    1H --> 1J{Take lowest 2XX response}
+    1J -->|Yes<br>status code=2xx| 1X[Negotiate for a<br>given response]
+    1X -->1M 
+    1J -->|No 2XX defined| 1K[500 problem+json]
+    1L -->1M{Success?}
+    1M -->|Yes| 1N[Status code<br>media type]
+    1M -->|No| 1H[Negotiate for lowest 2XX response]
+    1I --> 1O{Response for<br>status code exists?}
+    1O -->|Yes| 1L
+    1O -->|No| 1P{Default response exists?}
+    1P -->|Yes<br>status code=default| 1L[Negotiate for a<br>given response]
+    1P -->|No| 1Q[500 problem+json]
+    1X -...-> 3A
+    1D -->|No| 2A[Negotiate for invalid request]
+    2A[Negotiate for invalid request] --> 2B{Is error security-related?}
+    2C -->|No| 2I[500 problem+json]
+    2B -->|Yes| 2C{401 exists?}
+    2C -->|Yes| 2E{Take example by key<br>or take first}
+    2B -->|No| 2D[Is 415 error and exists?]
+    2D -->|Yes| 2E
+    2D -->|No| 2F{422 exists?}
+    2F -->|Yes| 2E
+    2F -->|No| 2G{400 exists?}
+    2G -->|Yes| 2E
+    2G -->|No| 2H{Default exists?}
+    2H -->|Yes| 2E
+    2H -->|No| 2M[500 problem+json]
+    2E -->|No example defined| 2K{Take first schema}
+    2E -->|Yes, exists<br>media type=example's media type<br>content=example| 2L[422 or400<br>media type]
+    2K -->|No schema defined| 2J[500 problem+json]
+    2K -->|Yes, exists<br>media type=example's media type<br>content=schema| 2L
+    1L -...-> 3A
+    3A{Media type enforced?} -->|No| 3B[Negotiate for a<br>default media type]
+    3A -->|Yes| 3C{Media type<br>content exists?}
+    3B --> 3C
+    3C --> 3D[Negotiate for a given content]
+    3C -->|No<br>empty| 3E[Status code<br>text/plain]
+    3D --> 3F{Example<br>enforced?}
+    3F -->|No| 3J{Dynamic<br>forced?}
+    3F -->|Yes| 3G{Example exists?}
+    3J -->|No| 3K{Any<br>example<br>exists?}
+    3K -->|Yes<br>example| 3I[Status code<br>media type]
+    3K -->|No| 3L{Has schema?}
+    3L -->|No<br>empty| 3I
+    3J -->|Yes| 3M{Schema<br>exists?}
+    3M -->|Yes<br>schema| 3I
+    3L -->|Yes<br>schema| 3I
+    3M -->|No| 3H[500 problem+json]
+    3G -->|Yes| 3N[Status code<br>media type]
+    3G -->|No| 3O[500 problem+json]
+classDef Orange fill:#f58442
+classDef Green fill:#42f572
+classDef Red fill:#EE7968
+class 1A,1B,1D,1E,1F,1G,1H,1I,1J,1M,,1O,1P,2A,2B,2C,2D,2E,2F,2G,2H,2I,2K,3A,3B,3C,3D,3F,3G,3J,3K,3L,3M Orange
+class 1C,1K,1Q,2I,2J,2M,3H,3O Red
+class 1L,1N,1X,,2L,3E,3I,3N Green
+```
 ### Response Examples
 
 If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. In the following OpenAPI description, the operation has a 200 OK response and multiple examples:
