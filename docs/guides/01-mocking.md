@@ -4,12 +4,13 @@ Prism's HTTP mock server simulates a real web API by providing endpoints and val
 
 - Does the API contain the information the client needs?
 - Is that data in the format the client needs?
-- Are the resources too "normalized" and data-centric (instead of being use-case centric) that the client has to 3292375 calls to get all the data?
+- Are the resources too "normalized" and data-centric (instead of being use-case centric) that the client has to make 3292375 calls to get all the data they need?
 - Is there enough time left for feedback to be implemented?
-- If the feedback spawns large enough work, will the client have time implement this API once it's done?
-- Avoid these problems by getting a free API to play with without spending a month building it all.
+- If the feedback spawns large enough work, will the client have time to implement this API once it's done?
 
-Catching problems early on while you're still just tweaking the API descriptions (maybe using [Studio](https://stoplight.io/studio)), means you can avoid making costly changes to the production API, deprecating old things, or creating whole new global versions which add a huge workload to every single client.
+You can avoid these problems by getting a free API to play with without spending a month building it all.
+
+Catching problems early on while you're still just tweaking the API descriptions (maybe using [Stoplight Studio](https://stoplight.io/studio)), means you can avoid making costly changes to the production API, deprecating old things, or creating whole new global versions which add a huge workload to every single client.
 
 Just like HTTP messages, there are two halves to mocking: requests and responses.
 
@@ -93,9 +94,10 @@ class 1A,1B,1D,1E,1F,1G,1H,1I,1J,1M,,1O,1P,2A,2B,2C,2D,2E,2F,2G,2H,2I,2K,3A,3B,3
 class 1C,1K,1Q,2I,2J,2M,3H,3O Red
 class 1L,1N,1X,,2L,3E,3I,3N Green
 ```
+
 ### Response Examples
 
-If a response has an example, it will be used for the response. If there are multiple examples then they can be selected by name. In the following OpenAPI description, the operation has a 200 OK response and multiple examples:
+If a response has an example, it will be used for that response. If there are multiple examples, then they can be selected by name. In the following OpenAPI description, the operation has a 200 OK response and multiple examples:
 
 ```yaml
 responses:
@@ -157,7 +159,7 @@ prism mock api.oas3.yaml # Static examples
 prism mock -d api.oas3.yaml # Dynamic examples
 ```
 
-If the HTTP server has been started in static mode, specific calls can be made in dynamic mode by specifying the `Prefer` header with the `dynamic` key to `true`.
+If the HTTP server has been started in static mode, specific calls can be made in dynamic mode by specifying the `Prefer` header with the `dynamic` key set to `true`.
 
 #### Static Response Generation
 
@@ -189,7 +191,7 @@ Pet:
         type: string
 ```
 
-When you call `curl http://127.0.0.1:4010/pets/123`, the operation references this component and a doggie is returned:
+When you call `curl http://127.0.0.1:4010/pets/123`, the operation references this component and a `doggie` is returned:
 
 ```json
 {
@@ -199,7 +201,7 @@ When you call `curl http://127.0.0.1:4010/pets/123`, the operation references th
 }
 ```
 
-Notice that `name` had an `example` with a value so Prism used it, but `photoUrls` didn't, so it just returned `"string"`. 🤷‍♂️
+Notice that `name` had an `example` with a value so Prism used it, but `photoUrls` didn't, so it just returned `"string"`.
 
 #### Dynamic Response Generation
 
@@ -272,10 +274,7 @@ example:
 
 ##### Configure JSON Schema Faker
 
-At the top level of your API Specification, create an `x-json-schema-faker`
-member containing a map of [JSON Schema Faker Options](https://github.com/json-schema-faker/json-schema-faker/tree/master/docs#available-options) and their values. An
-additional `locale` option is accepted to configure the `locale` of the
-underlying Faker instance.
+At the top level of your API Specification, create an `x-json-schema-faker` member containing a map of [JSON Schema Faker Options](https://github.com/json-schema-faker/json-schema-faker/tree/master/docs#available-options) and their values. An additional `locale` option is accepted to configure the `locale` of the underlying Faker instance.
 
 ```yaml
 openapi: 3.1.0
@@ -289,11 +288,7 @@ x-json-schema-faker:
 
 ## Request Validation
 
-Having a mock server that only gives responses would not be useful, which is why
-Prism imitates request validation too. An OpenAPI description document is
-full of validation rules like type, format, max length, etc. Prism can
-validate incoming messages and provide validation feedback if it receives invalid
-requests.
+Having a mock server that only gives responses would not be useful, which is why Prism imitates request validation too. An OpenAPI description document is full of validation rules like type, format, max length, etc. Prism can validate incoming messages and provide validation feedback if it receives invalid requests.
 
 Read more about this in the [Prism Request Validation guide](./02-request-validation.md).
 
