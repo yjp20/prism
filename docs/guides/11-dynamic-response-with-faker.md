@@ -151,6 +151,8 @@ ignoreMissingRefs: true, // if enabled, it will resolve to {} for unknown refere
 
 At the top level of your API Specification, you can create an `x-json-schema-faker` object containing a map of [JSON Schema Faker Options](https://github.com/json-schema-faker/json-schema-faker/tree/master/docs#available-options) and their values. An additional `locale` option is accepted to configure the `locale` of the underlying Faker instance.
 
+The only option that is not supported is `random`, since that takes in a function.
+
 ```yaml
 openapi: 3.1.0
 
