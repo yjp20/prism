@@ -45,6 +45,11 @@
     },
     {
       "type": "item",
+      "title": "Dynamic Response Generation with Faker",
+      "uri": "/docs/guides/02-request-validation.md"
+    },
+    {
+      "type": "item",
       "title": "Validation Proxy",
       "uri": "/docs/guides/03-validation-proxy.md"
     },
