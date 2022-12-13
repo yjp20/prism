@@ -1,8 +1,18 @@
 # Dynamic Response Generation with Faker
 
-All the random properties are generated using [Faker.js](https://github.com/faker-js/faker). You can pass in the `x-faker` keyword to a property, which allows for a specific Faker API method to be used so you get a lot of control over the response.
+When testing API calls, it's helpful to have dynamically generated responses to make sure your applications supports several use cases, instead of just testing with the same static piece of data over and over.
 
-If a user passes a method that doesn't exist, Prism falls back to [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker) to generate random values for that property.
+Prism uses the [Faker](https://github.com/faker-js/faker) and [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker) libraries to help with that.
+
+> Make sure you're running Prism in dynamic mode using the `-d` flag, or using the `Prefer` header with the `dynamic` key set to `true`.
+
+## How It Works
+
+In your OpenAPI description, you can pass in the `x-faker` keyword to a property, which allows for a specific Faker API method to be used.
+
+If a user passes a method that doesn't exist, Prism falls back to using [JSON Schema Faker](https://github.com/json-schema-faker/json-schema-faker) to generate random values for that property.
+
+For example, here's how you can use the `name.firstName` and `image.imageUrl` Faker methods:
 
 ```yaml
 Pet:
@@ -37,11 +47,16 @@ Making the call `curl http://127.0.0.1:4010/pets/123 -H "Prefer: dynamic=true"`,
 }
 ```
 
-The more descriptive your description is, the better job Prism can do at creating a mock response.
+The more descriptive your properties are, the better job Prism can do at creating a mock response.
 
-For a list of supported methods, you can check [Faker's documentation portal](https://v6.fakerjs.dev/api/address.html).
+<!-- theme: info -->
+> **Tip:** If your team needs help creating better quality API description documents, take a look at [Spectral](https://stoplight.io/spectral/). You could enforce the use of `example` properties, or similar.
 
-It's important to note that Faker's version, and how you're using Prism, can have an impact on the behavior you might see. The current version of Faker that Prism is using is set to `^6.0.0`, and can be found in Prism's [package.json file](https://github.com/stoplightio/prism/blob/master/packages/http/package.json#L19). That means that any version between v6.0.0 and v6.3.1 is valid for running Prism. If a user has a local version of Faker installed that's v6.0.0, while another user has v6.3.1 installed, when running the same OpenAPI description through Prism they might see different responses.
+## Faker Supported Methods
+ 
+For a list of supported methods, you can check [Faker's v6 documentation portal](https://v6.fakerjs.dev/api/address.html).
+
+It's important to note that Faker's version, and how you're using Prism, can have an impact on the behavior you might see. The current version of Faker that Prism is using is set to `^6.0.0`, and can be found in Prism's [package.json file](https://github.com/stoplightio/prism/blob/master/packages/http/package.json#L19). That means that any Faker version between v6.0.0 and v6.3.1 is valid for running Prism. If a user has a local version of Faker installed that's v6.0.0, while another user has v6.3.1 installed, when running the same OpenAPI description through Prism they might see different responses.
 
 You can check which version of Faker you have installed locally by running the following command and looking for `@faker-js/faker`:
 
@@ -49,14 +64,11 @@ You can check which version of Faker you have installed locally by running the f
 yarn list --depth 0
 ```
 
-It's also worth noting that JSON Schema Faker also uses its [own version of the Faker library](https://github.com/Shinigami92/json-schema-faker/blob/master/package.json#L87), so the behavior you might see from the fallback methods will also be affected by it.
+It's also worth noting that JSON Schema Faker also uses its [own version of the Faker library](https://github.com/Shinigami92/json-schema-faker/blob/master/package.json#L87), so the behavior you might see from the fallback methods can also be affected by it.
 
-<!-- theme: info -->
-> **Tip:** If your team needs help creating better quality API description documents, take a look at [Spectral](https://stoplight.io/spectral/). You could enforce the use of `example` properties, or similar.
+## Control Generated Fakes for Individual Properties
 
-##### Control Generated Fakes for Individual Properties
-
-In the following example there are two properties, each with specific Faker parameters. [datatype.number](https://v6.fakerjs.dev/api/datatype.html#number) uses named parameters while [helpers.slugify](https://v6.fakerjs.dev/api/helpers.html#slugify) uses positional parameters. 
+In the following example there are two properties, each with specific Faker parameters. [`datatype.number`](https://v6.fakerjs.dev/api/datatype.html#number) uses named parameters while [`helpers.slugify`](https://v6.fakerjs.dev/api/helpers.html#slugify) uses positional parameters. 
 
 ```yaml
 example:
@@ -124,7 +136,7 @@ And the output will be:
 "due_date": "2021-11-18T00:00:00.0Z",
 ```
 
-##### Configure JSON Schema Faker
+## Configure JSON Schema Faker
 
 JSON Schema Faker has a set of [default configuration options](https://github.com/json-schema-faker/json-schema-faker/tree/master/docs#available-options). Prism has a [few options](https://github.com/stoplightio/prism/blob/master/packages/http/src/mocker/generator/JSONSchema.ts#L51) that are set to different values than the default configuration options, namely:
 
@@ -146,5 +158,6 @@ x-json-schema-faker:
   locale: de
   min-items: 2
   max-items: 10
+  optionalsProbability: 0.5
   resolve-json-path: true
 ```
