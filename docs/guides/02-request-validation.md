@@ -4,6 +4,8 @@ Based on the API description document, Prism can take educated guesses at all so
 
 It can also fail with `401` if security information is missing, and do a bunch of other things the API description document says the real API will do. 
 
+> Prism evaluates paths in the order they are listed in the API specification.
+
 ## Parameter Validation
 
 Requests which expect a request body, query parameter, or a path parameter, will be validated.
