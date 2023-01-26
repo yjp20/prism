@@ -1,4 +1,4 @@
-[![Prism - API Mock Servers and Contract Testing](examples/readme-header.png)][mocking_landing_page]
+[![Prism - API Mock Servers and Contract Testing](examples/readme-header.svg)][mocking_landing_page]
 
 [![CircleCI][circle_ci_image]][circle_ci]
 [![NPM Downloads][npm_image]][npm]
@@ -9,6 +9,8 @@ Prism is a set of packages for API mocking and contract testing with **OpenAPI v
 - **Mock Servers**: Life-like mock servers from any API Specification Document.
 - **Validation Proxy**: Contract Testing for API Consumers and Developers.
 - **Comprehensive API Specification Support**: OpenAPI v3.1, OpenAPI v3.0, OpenAPI v2.0 (formerly Swagger) and Postman Collections.
+
+![Demo of Prism Mock Server being called with curl from the CLI](./examples/prism-cli.svg)
 
 > Note: This branch refers to Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, look at the [`2.x` branch][2.x]
 
