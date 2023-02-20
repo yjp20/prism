@@ -65,16 +65,6 @@ Learn more about [how the validation proxy works](docs/guides/03-validation-prox
   - [Guides](./docs/guides/01-mocking.md)
 - [Community](https://github.com/stoplightio/prism/discussions)
 
-## 🚧 Roadmap
-
-- [x] Content Negotiation
-- [x] Security Validation
-- [x] Validation Proxy
-- [ ] [Recording/Learning Mode](https://roadmap.stoplight.io/c/66-learning-recording?utm_source=github&utm_medium=prism&utm_campaign=readme) (create OpenAPI from HTTP traffic)
-- [ ] [Data Persistence](https://roadmap.stoplight.io/c/50-persisted-mock-data?utm_source=github&utm_medium=prism&utm_campaign=readme) (allow Prism act like a sandbox)
-
-Submit your ideas for new functionality on the [Stoplight Roadmap](https://roadmap.stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme).
-
 ## ❓ FAQs
 
 **Cannot access mock server when using Docker?**
@@ -103,6 +93,16 @@ Yes, hosted mocking is available as part of Stoplight Platform. [Learn More](htt
 
 - [Stoplight Studio](https://stoplight.io/studio/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Free visual OpenAPI designer that comes integrated with mocking powered by Prism.
 - [Stoplight Platform](https://stoplight.io/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism.
+
+## 🚧 Roadmap
+
+- [x] Content Negotiation
+- [x] Security Validation
+- [x] Validation Proxy
+- [ ] [Recording/Learning Mode](https://roadmap.stoplight.io/c/66-learning-recording?utm_source=github&utm_medium=prism&utm_campaign=readme) (create OpenAPI from HTTP traffic)
+- [ ] [Data Persistence](https://roadmap.stoplight.io/c/50-persisted-mock-data?utm_source=github&utm_medium=prism&utm_campaign=readme) (allow Prism act like a sandbox)
+
+Submit your ideas for new functionality on the [Stoplight Roadmap](https://roadmap.stoplight.io/?utm_source=github&utm_medium=prism&utm_campaign=readme).
 
 ## 🏁 Help Others Utilize Prism
 
