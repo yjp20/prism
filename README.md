@@ -16,14 +16,6 @@ Prism provides:
 
 ## Ways to Use Prism
 
-### Open Source Prism
-
-Prism is an HTTP server run from the command-line. It provides mocking, request validation, and content negotation. 
-
-![Demo of Prism Mock Server being called with curl from the CLI](./examples/prism-cli.svg)
-
-> Note: This information refers to Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, look at the [`2.x` branch][2.x]
-
 ### Hosted Prism
 
 Stoplight provides hosted mock servers for convenience so that API consumers can experiment with an API without the need for backend code.
@@ -35,7 +27,15 @@ Use one of these options for instant, hosted mock servers:
 
 Learn more in the [hosted Prism documentation](https://docs.stoplight.io/docs/platform/336b74db38c50-work-with-mock-servers).
 
+### Open Source Prism
+
+Prism is an HTTP server run from the command-line. It provides mocking, request validation, and content negotation. Use it standalone tool or in continuous integration.
+
+![Demo of Prism Mock Server being called with curl from the CLI](./examples/prism-cli.svg)
+
 ## Installation and Usage
+
+This information refers to Open Source Prism 3.x, which is the current version most likely you will use. If you're looking for the 2.x version, look at the [`2.x` branch][2.x]
 
 ### Install Open Source Prism
 
