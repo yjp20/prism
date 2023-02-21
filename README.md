@@ -8,6 +8,8 @@
 
 Prism is a set of packages for API mocking and contract testing with **OpenAPI v2** (formerly known as Swagger) and **OpenAPI v3.x**.
 
+Prism provides:
+
 - **Mock Servers**: Life-like mock servers from any API specification document.
 - **Validation Proxy**: Contract Testing for API consumers and developers.
 - **Comprehensive API Specification Support**: OpenAPI v3.1, OpenAPI v3.0, OpenAPI v2.0 (formerly Swagger) and Postman Collections.
@@ -30,6 +32,8 @@ Use one of these options for instant, hosted mock servers:
 
 - [Stoplight Platform](https://stoplight.io/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Collaborative API Design Platform for designing, developing and documenting APIs with hosted mocking powered by Prism.
 - [Stoplight Studio](https://stoplight.io/studio/?utm_source=github.com&utm_medium=referral&utm_campaign=github_repo_prism): Free visual OpenAPI designer that comes integrated with mocking powered by Prism.
+
+Learn more in the [hosted Prism documentation](https://docs.stoplight.io/docs/platform/336b74db38c50-work-with-mock-servers).
 
 ## Installation and Usage
 
