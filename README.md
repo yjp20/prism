@@ -73,7 +73,7 @@ Learn more about [how the validation proxy works](docs/guides/03-validation-prox
 
 ## 📖 Documentation and Community
 
-- [Documentation](https://doc.stoplight.io/docs/prism)
+- [Documentation](https://docs.stoplight.io/docs/prism)
   - [Getting Started](./docs/getting-started/01-installation.md)
   - [Guides](./docs/guides/01-mocking.md)
 - [Community](https://github.com/stoplightio/prism/discussions)
