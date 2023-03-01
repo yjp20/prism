@@ -9,6 +9,7 @@ import {
 } from '@stoplight/types';
 
 import * as caseless from 'caseless';
+import * as chalk from 'chalk';
 import * as E from 'fp-ts/Either';
 import * as Record from 'fp-ts/Record';
 import { pipe } from 'fp-ts/function';
@@ -17,7 +18,7 @@ import { sequenceT } from 'fp-ts/Apply';
 import * as R from 'fp-ts/Reader';
 import * as O from 'fp-ts/Option';
 import * as RE from 'fp-ts/ReaderEither';
-import { get, groupBy, isNumber, isString, keyBy, mapValues, partial } from 'lodash';
+import { get, groupBy, isNumber, isString, keyBy, mapValues, partial, pick } from 'lodash';
 import { Logger } from 'pino';
 import { is } from 'type-is';
 import {
@@ -35,6 +36,7 @@ import { generate, generateStatic } from './generator/JSONSchema';
 import helpers from './negotiator/NegotiatorHelpers';
 import { IHttpNegotiationResult } from './negotiator/types';
 import { runCallback } from './callback/callbacks';
+import { logRequest, logResponse } from '../utils/logger';
 import {
   decodeUriEntities,
   deserializeFormBody,
@@ -58,6 +60,8 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
 
   return pipe(
     withLogger(logger => {
+      logRequest({ logger, prefix: `${chalk.grey('< ')}`, ...pick(input.data, 'body', 'headers') });
+
       // setting default values
       const acceptMediaType = input.data.headers && caseless(input.data.headers).get('accept');
       if (!config.mediaTypes && acceptMediaType) {
@@ -78,12 +82,29 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
         logger =>
           pipe(
             response,
+            E.map(mockResponseLogger(logger)),
             E.map(response => runCallbacks({ resource, request: input.data, response })(logger)),
             E.chain(() => response)
           )
     )
   );
 };
+
+function mockResponseLogger(logger: Logger) {
+    const prefix = chalk.grey('> ');
+  
+    return (response: IHttpResponse) => {
+      logger.info(`${prefix}Responding with "${response.statusCode}"`);
+  
+      logResponse({
+        logger,
+        prefix,
+        ...pick(response, 'statusCode', 'body', 'headers'),
+      });
+  
+      return response;
+    };
+  }
 
 function runCallbacks({
   resource,
@@ -101,7 +122,7 @@ function runCallbacks({
         pipe(
           callbacks,
           A.map(callback =>
-            runCallback({ callback, request: parseBodyIfUrlEncoded(request, resource), response })(logger)()
+            runCallback({ callback, request: parseBodyIfUrlEncoded(request, resource), response })(logger.child({ name: 'CALLBACK' }))()
           )
         )
       )

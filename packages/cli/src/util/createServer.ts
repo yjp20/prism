@@ -20,13 +20,13 @@ type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; of
 
 signale.config({ displayTimestamp: true });
 
-const cliSpecificLoggerOptions: LoggerOptions = {
-  customLevels: { start: 11 },
-  level: 'start',
-  formatters: {
-    level: level => ({ level }),
-  },
-};
+// const cliSpecificLoggerOptions: LoggerOptions = {
+//   customLevels: { start: 11 },
+//   level: 'start',
+//   formatters: {
+//     level: level => ({ level }),
+//   },
+// };
 
 const createMultiProcessPrism: CreatePrism = async options => {
   if (cluster.isMaster) {
@@ -42,7 +42,7 @@ const createMultiProcessPrism: CreatePrism = async options => {
 
     return;
   } else {
-    const logInstance = createLogger('CLI', cliSpecificLoggerOptions);
+    const logInstance = createLogger('CLI', { level: options.verbose ? 'debug' : 'info' });
 
     return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
       logInstance.fatal(e.message);
@@ -56,7 +56,7 @@ const createSingleProcessPrism: CreatePrism = options => {
   signale.await({ prefix: chalk.bgWhiteBright.black('[CLI]'), message: 'Starting Prism…' });
 
   const logStream = new PassThrough();
-  const logInstance = createLogger('CLI', cliSpecificLoggerOptions, logStream);
+  const logInstance = createLogger('CLI', { level: options.verbose ? 'debug' : 'info' }, logStream);
   pipeOutputToSignale(logStream);
 
   return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
@@ -110,7 +110,7 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
       `${resource.method.toUpperCase().padEnd(10)} ${address}${transformPathParamsValues(path, chalk.bold.cyan)}`
     );
   });
-  logInstance.start(`Prism is listening on ${address}`);
+//   logInstance.start(`Prism is listening on ${address}`);
 
   return server;
 }
@@ -144,6 +144,7 @@ type CreateBaseServerOptions = {
   document: string;
   multiprocess: boolean;
   errors: boolean;
+  verbose: boolean;
 };
 
 export interface CreateProxyServerOptions extends CreateBaseServerOptions {
