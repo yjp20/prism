@@ -1,5 +1,6 @@
 import { Dictionary } from '@stoplight/types';
 import { Options } from 'yargs';
+import * as pino from 'pino';
 
 const sharedOptions: Dictionary<Options> = {
   port: {
@@ -36,6 +37,15 @@ const sharedOptions: Dictionary<Options> = {
     required: true,
     boolean: true,
     default: false,
+  },
+
+  verboseLevel: {
+    alias: 'v',
+    description: 'Turns on verbose logging.',
+    default: 'silent',
+    demandOption: true,
+    // log levels: "silent" (default) | "fatal" | "error" | "warn" | "info" | "debug" | "trace"
+    choices: Object.keys(pino.levels.values).concat('silent')
   },
 };
 

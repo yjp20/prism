@@ -36,6 +36,7 @@ export function logHeaders({
   prefix?: string;
   headers: HeadersInput;
 }) {
+    console.log(headers);
   pipe(
     pipe(
       headers,
