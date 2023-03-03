@@ -8,10 +8,6 @@ export function createLogger(
 ): pino.Logger {
   const options: pino.LoggerOptions = defaultsDeep(overrideOptions, {
     name,
-    customLevels: {
-      success: 12,
-    },
-    level: 'success',
     base: {},
     timestamp: false,
   });

@@ -50,7 +50,7 @@ const proxyCommand: CommandModule = {
       'upstream',
       'errors',
       'validateRequest',
-      'verbose',
+      'verboseLevel',
       'upstreamProxy'
     );
 

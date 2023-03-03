@@ -9,12 +9,6 @@ import { logBody, logHeaders, logRequest, logResponse, violationLogger } from '.
   };
 
   describe('violationLogger', () => {
-    const logger: any = {
-      error: jest.fn(),
-      warn: jest.fn(),
-      info: jest.fn(),
-    };
-  
     beforeEach(() => {
       jest.clearAllMocks();
     });
