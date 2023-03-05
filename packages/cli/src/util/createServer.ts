@@ -5,7 +5,7 @@ import * as chalk from 'chalk';
 import * as cluster from 'cluster';
 import * as E from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
-import { LogDescriptor, Logger, LoggerOptions } from 'pino';
+import * as pino from 'pino';
 import * as signale from 'signale';
 import * as split from 'split2';
 import { PassThrough, Readable } from 'stream';
@@ -16,9 +16,17 @@ import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
 import { configureExtensionsFromSpec } from '../extensions';
 
-type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
+type PrismLogDescriptor = pino.LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
 signale.config({ displayTimestamp: true });
+
+const cliSpecificLoggerOptions: pino.LoggerOptions = {
+    customLevels: { start: pino.levels.values['info']},
+    level: 'start',
+    formatters: {
+      level: level => ({ level }),
+    },
+  };
 
 const createMultiProcessPrism: CreatePrism = async options => {
   if (cluster.isMaster) {
@@ -34,7 +42,7 @@ const createMultiProcessPrism: CreatePrism = async options => {
 
     return;
   } else {
-    const logInstance = createLogger('CLI', { useLevelLabels: true, level: options.verboseLevel });
+    const logInstance = createLogger('CLI', { ...cliSpecificLoggerOptions, level: options.verboseLevel });
 
     return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
       logInstance.fatal(e.message);
@@ -48,7 +56,7 @@ const createSingleProcessPrism: CreatePrism = options => {
   signale.await({ prefix: chalk.bgWhiteBright.black('[CLI]'), message: 'Starting Prism…' });
 
   const logStream = new PassThrough();
-  const logInstance = createLogger('CLI', { useLevelLabels: true, level: options.verboseLevel }, logStream);
+  const logInstance = createLogger('CLI', { ...cliSpecificLoggerOptions, level: options.verboseLevel }, logStream);
   pipeOutputToSignale(logStream);
 
   return createPrismServerWithLogger(options, logInstance).catch((e: Error) => {
@@ -57,7 +65,7 @@ const createSingleProcessPrism: CreatePrism = options => {
   });
 };
 
-async function createPrismServerWithLogger(options: CreateBaseServerOptions, logInstance: Logger) {
+async function createPrismServerWithLogger(options: CreateBaseServerOptions, logInstance: pino.Logger) {
   const operations = await getHttpOperationsFromSpec(options.document);
   await configureExtensionsFromSpec(options.document);
 
@@ -102,6 +110,7 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
       `${resource.method.toUpperCase().padEnd(10)} ${address}${transformPathParamsValues(path, chalk.bold.cyan)}`
     );
   });
+  logInstance.start(`Prism is listening on ${address}`);
 
   return server;
 }
