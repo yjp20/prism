@@ -13,7 +13,7 @@ import { assertRight, assertLeft } from '@stoplight/prism-core/src/__tests__/uti
 import helpers from '../NegotiatorHelpers';
 import { IHttpNegotiationResult, NegotiationOptions } from '../types';
 import { NonEmptyArray } from 'fp-ts/NonEmptyArray';
-
+import * as pino from 'pino';
 const logger = createLogger('TEST', { enabled: false });
 
 const assertPayloadlessResponse = (actualResponse: E.Either<Error, IHttpNegotiationResult>) => {
