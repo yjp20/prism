@@ -42,9 +42,10 @@ const sharedOptions: Dictionary<Options> = {
   verboseLevel: {
     alias: 'v',
     description: 'Turns on verbose logging.',
-    default: 'silent',
+    default: 'info',
     demandOption: true,
-    // log levels: "silent" (default) | "fatal" | "error" | "warn" | "info" | "debug" | "trace"
+    // log level choices: "silent" | "fatal" | "error" | "warn" | "info" | "debug" | "trace"
+    // custom levels like "success" and "start" are set to the same severity value as "info"
     choices: Object.keys(pino.levels.values).concat('silent')
   },
 };
