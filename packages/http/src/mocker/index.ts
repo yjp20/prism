@@ -91,20 +91,20 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
 };
 
 function mockResponseLogger(logger: Logger) {
-    const prefix = chalk.grey('> ');
+  const prefix = chalk.grey('> ');
   
-    return (response: IHttpResponse) => {
-      logger.info(`${prefix}Responding with "${response.statusCode}"`);
+  return (response: IHttpResponse) => {
+    logger.info(`${prefix}Responding with "${response.statusCode}"`);
   
-      logResponse({
-        logger,
-        prefix,
-        ...pick(response, 'statusCode', 'body', 'headers'),
-      });
+    logResponse({
+      logger,
+      prefix,
+      ...pick(response, 'statusCode', 'body', 'headers'),
+    });
   
-      return response;
-    };
-  }
+    return response;
+  };
+}
 
 function runCallbacks({
   resource,
