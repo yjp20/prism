@@ -21,12 +21,12 @@ type PrismLogDescriptor = pino.LogDescriptor & { name: keyof typeof LOG_COLOR_MA
 signale.config({ displayTimestamp: true });
 
 const cliSpecificLoggerOptions: pino.LoggerOptions = {
-    customLevels: { start: pino.levels.values['info']},
-    level: 'start',
-    formatters: {
-      level: level => ({ level }),
-    },
-  };
+  customLevels: { start: pino.levels.values['info']},
+  level: 'start',
+  formatters: {
+    level: level => ({ level }),
+  },
+};
 
 const createMultiProcessPrism: CreatePrism = async options => {
   if (cluster.isMaster) {
