@@ -53,20 +53,20 @@ export function runCallback({
 }
 
 function logCallbackRequest({ logger, url, callbackName, requestData }: { logger: Logger, callbackName: string, url: string, requestData: Pick<RequestInit, 'headers' | 'method' | 'body'> }) {
-    const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`;
-    logger.info(`${prefix}Executing "${requestData.method}" callback to ${url}...`);
-    logRequest({ logger, prefix, ...pick(requestData, 'body', 'headers') });
-  }
+  const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('> ')}`;
+  logger.info(`${prefix}Executing "${requestData.method}" callback to ${url}...`);
+  logRequest({ logger, prefix, ...pick(requestData, 'body', 'headers') });
+}
 
-  function callbackResponseLogger({ logger, callbackName }: { logger: Logger, callbackName: string }) {
-    const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`;
+function callbackResponseLogger({ logger, callbackName }: { logger: Logger, callbackName: string }) {
+  const prefix = `${chalk.blueBright(callbackName + ':')} ${chalk.grey('< ')}`;
   
-    return (response: IHttpResponse) => {
-      logger.info(`${prefix}Received callback response`);
-      logResponse({ logger, prefix, ...pick(response, 'body', 'headers', 'statusCode') });
-      return response;
-    };
-  }
+  return (response: IHttpResponse) => {
+    logger.info(`${prefix}Received callback response`);
+    logResponse({ logger, prefix, ...pick(response, 'body', 'headers', 'statusCode') });
+    return response;
+  };
+}
 
 function assembleRequest({
   resource,
