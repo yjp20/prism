@@ -99,37 +99,37 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 export default forward;
 
 export function serializeBody(body: unknown): E.Either<Error, string | undefined> {
-    if (typeof body === 'string') {
-      return E.right(body);
-    }
-  
-    if (body) return pipe(J.stringify(body), E.mapLeft(E.toError));
-  
-    return E.right(undefined);
-  }
-
-  function logForwardRequest({ logger, url, request }: { logger: Logger; url: string; request: IHttpRequest }) {
-    const prefix = `${chalk.grey('> ')}`;
-    logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
-    logRequest({ logger, prefix, ...pick(request, 'body', 'headers') });
+  if (typeof body === 'string') {
+    return E.right(body);
   }
   
-  function forwardResponseLogger(logger: Logger) {
-    return (response: Response) => {
-      const prefix = chalk.grey('< ');
+  if (body) return pipe(J.stringify(body), E.mapLeft(E.toError));
   
-      logger.info(`${prefix}Received forward response`);
-  
-      const { status: statusCode } = response;
+  return E.right(undefined);
+}
 
-      logResponse({
-        logger,
-        statusCode,
-        ...pick(response, 'body', 'headers'),
-        prefix,
+function logForwardRequest({ logger, url, request }: { logger: Logger; url: string; request: IHttpRequest }) {
+  const prefix = `${chalk.grey('> ')}`;
+  logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
+  logRequest({ logger, prefix, ...pick(request, 'body', 'headers') });
+}
+  
+function forwardResponseLogger(logger: Logger) {
+  return (response: Response) => {
+    const prefix = chalk.grey('< ');
+  
+    logger.info(`${prefix}Received forward response`);
+  
+    const { status: statusCode } = response;
+
+    logResponse({
+      logger,
+      statusCode,
+      ...pick(response, 'body', 'headers'),
+      prefix,
       });
 
-      return response;
+    return response;
   };
 }
 
