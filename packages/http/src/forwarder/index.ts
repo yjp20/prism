@@ -1,13 +1,13 @@
 import { IPrismComponents, IPrismInput } from '@stoplight/prism-core';
 import { IHttpOperation } from '@stoplight/types';
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import { constUndefined, pipe } from 'fp-ts/function';
 import * as NEA from 'fp-ts/NonEmptyArray';
 import * as E from 'fp-ts/Either';
 import * as TE from 'fp-ts/TaskEither';
 import * as RTE from 'fp-ts/ReaderTaskEither';
 import * as J from 'fp-ts/Json';
-import { defaults, omit } from 'lodash';
+import { defaults, omit, pick } from 'lodash';
 import { format } from 'url';
 import { posix } from 'path';
 import { Logger } from 'pino';
@@ -20,6 +20,8 @@ import { UPSTREAM_NOT_IMPLEMENTED } from './errors';
 import * as createHttpProxyAgent from 'http-proxy-agent';
 import * as createHttpsProxyAgent from 'https-proxy-agent';
 import { toURLSearchParams } from '../utils/url';
+import { logRequest, logResponse } from '../utils/logger';
+import * as chalk from 'chalk';
 
 const { version: prismVersion } = require('../../package.json'); // eslint-disable-line
 
@@ -53,7 +55,7 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
             })
           );
 
-          logger.info(`Forwarding "${input.method}" request to ${url}...`);
+          logForwardRequest({ logger, url, request: input });
           let proxyAgent = undefined;
           if (upstreamProxy) {
             proxyAgent =
@@ -83,6 +85,7 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
         logger.info(`The upstream call to ${input.url.path} has returned ${response.status}`);
         return TE.right(undefined);
       }),
+      TE.map(forwardResponseLogger(logger)),
       TE.chain(parseResponse),
       TE.map(response => {
         if (resource && resource.deprecated && response.headers && !response.headers.deprecation) {
@@ -95,14 +98,39 @@ const forward: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHt
 
 export default forward;
 
-function serializeBody(body: unknown): E.Either<Error, string | undefined> {
+export function serializeBody(body: unknown): E.Either<Error, string | undefined> {
   if (typeof body === 'string') {
     return E.right(body);
   }
-
+  
   if (body) return pipe(J.stringify(body), E.mapLeft(E.toError));
-
+  
   return E.right(undefined);
+}
+
+function logForwardRequest({ logger, url, request }: { logger: Logger; url: string; request: IHttpRequest }) {
+  const prefix = `${chalk.grey('> ')}`;
+  logger.info(`${prefix}Forwarding "${request.method}" request to ${url}...`);
+  logRequest({ logger, prefix, ...pick(request, 'body', 'headers') });
+}
+  
+function forwardResponseLogger(logger: Logger) {
+  return (response: Response) => {
+    const prefix = chalk.grey('< ');
+  
+    logger.info(`${prefix}Received forward response`);
+  
+    const { status: statusCode } = response;
+
+    logResponse({
+      logger,
+      statusCode,
+      ...pick(response, 'body', 'headers'),
+      prefix,
+      });
+
+    return response;
+  };
 }
 
 const stripHopByHopHeaders = (response: IHttpResponse): IHttpResponse => {

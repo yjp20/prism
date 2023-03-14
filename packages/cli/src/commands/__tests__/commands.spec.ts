@@ -56,6 +56,13 @@ describe.each<{ 0: string; 1: string; 2: unknown }>([
     expect(createSingleProcessPrism).toHaveBeenLastCalledWith(expect.objectContaining({ port: 666, host: '0.0.0.0' }));
   });
 
+  test(`starts ${command} server with verbose level set to trace`, () => {
+    parser.parse(`${command} /path/to -v trace ${upstream}`);
+
+    expect(createMultiProcessPrism).not.toHaveBeenCalled();
+    expect(createSingleProcessPrism).toHaveBeenLastCalledWith(expect.objectContaining({ verboseLevel: 'trace' }));
+  });
+
   test(`starts ${command} server with multiprocess option `, () => {
     parser.parse(`${command} /path/to -m -h 0.0.0.0 ${upstream}`);
 
