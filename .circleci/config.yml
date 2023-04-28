@@ -59,7 +59,7 @@ jobs:
             - run: pip3 --version
             - run: which pipenv
             - run: pipenv --version
-            - run: cd httpbin; git rev-parse HEAD; cat Pipfile; cat Pipfile.lock; pip3 install --no-cache-dir -r <(pipenv lock -r); pip3 install --no-cache-dir ./
+            - run: cd httpbin; git rev-parse HEAD; cat Pipfile; cat Pipfile.lock; pip3 install --no-cache-dir -r <(pipenv requirements); pip3 install --no-cache-dir ./
             - run:
                 command: cd httpbin && gunicorn -b 0.0.0.0:80 httpbin:app -k gevent
                 background: true
