@@ -55,7 +55,7 @@ jobs:
             - run: pip3 install pipenv gunicorn
             - run: sudo bash -c 'echo "0.0.0.0 httpbin.org" >> /etc/hosts'
             - run: git clone https://github.com/stoplightio/httpbin httpbin
-            - run: git log -1 --no-color
+            - run: git rev-parse HEAD
             - run: which pip3
             - run: pip3 --version
             - run: which pipenv
