@@ -129,8 +129,8 @@ workflows:
           executor: macos
           install_manually: true
           filters:
-            branches:
-              only: master
+            # branches:
+            #   only: master
             tags:
               only: /.*/
       - harness:
