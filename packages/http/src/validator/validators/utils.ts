@@ -79,11 +79,13 @@ export const convertAjvErrors = (errors: NonEmptyArray<ErrorObject>, severity: D
         'additionalProperty' in error.params ? `; found '${error.params.additionalProperty}'` : '';
       const errorPath = error.instancePath.split('/').filter(segment => segment !== '');
       const path = prefix ? [prefix, ...errorPath] : errorPath;
-
+      const errorPathType = errorPath.length > 0 ? prefix == 'body' ? 'property ' : 'parameter ' : '';
+      const errorSourceDescription = "Request " + (prefix ? `${prefix} ` : '') + errorPathType + errorPath.join('.').trim() + (errorPath.length > 0 ? ' ' : '');
+      
       return {
         path,
         code: error.keyword || '',
-        message: `${error.message || ''}${allowedParameters}${detectedAdditionalProperties}`,
+        message: `${errorSourceDescription}${error.message || ''}${allowedParameters}${detectedAdditionalProperties}`,
         severity,
       };
     })
@@ -126,5 +128,5 @@ export const validateAgainstSchema = (
     O.tryCatch(() => getValidationFunction(assignAjvInstance(String(schema.$schema), coerce), schema, bundle)),
     O.chainFirst(validateFn => O.tryCatch(() => validateFn(value))),
     O.chain(validateFn => pipe(O.fromNullable(validateFn.errors), O.chain(fromArray))),
-    O.map(errors => convertAjvErrors(errors, DiagnosticSeverity.Error, prefix))
+    O.map(errors => (convertAjvErrors(errors, DiagnosticSeverity.Error, prefix)))
   );
