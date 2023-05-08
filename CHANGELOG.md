@@ -8,7 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
-- Allow spec document to be requested via HTTP Basic auth via the URL parameters in Node 18+.
+# 4.14.0 (2023.05.08)
+
+## Changed
+
+- Improved request validation error messages (thanks @ilanashapiro) [#2280](https://github.com/stoplightio/prism/pull/2280)
+
+## Fixed
+
+- Allow spec document to be requested via HTTP Basic auth via the URL parameters in Node 18+. [#2279](https://github.com/stoplightio/prism/pull/2279)
 
 # 4.13.0 (2023.04.28)
 
