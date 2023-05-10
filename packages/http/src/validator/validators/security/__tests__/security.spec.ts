@@ -18,7 +18,15 @@ describe('validateSecurity', () => {
 
   describe('when security scheme uses Basic authorization', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), scheme: 'basic', type: 'http', key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          scheme: 'basic',
+          type: 'http',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('passes the validation', () => {
@@ -69,7 +77,15 @@ describe('validateSecurity', () => {
 
   describe('when security scheme uses Digest authorization', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), scheme: 'digest', type: 'http', key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          scheme: 'digest',
+          type: 'http',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('passes the validation', () => {
@@ -105,7 +121,15 @@ describe('validateSecurity', () => {
 
   describe('when security scheme uses Bearer authorization', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), scheme: 'bearer', type: 'http', key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          scheme: 'bearer',
+          type: 'http',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('passes the validation', () => {
@@ -138,7 +162,15 @@ describe('validateSecurity', () => {
 
   describe('when security scheme uses OAuth2 authorization', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), type: 'oauth2', flows: {}, key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          type: 'oauth2',
+          flows: {},
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('it passes the validation', () => {
@@ -171,7 +203,15 @@ describe('validateSecurity', () => {
 
   describe('when security scheme uses OpenID authorization', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), type: 'openIdConnect', openIdConnectUrl: 'https://google.it', key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          type: 'openIdConnect',
+          openIdConnectUrl: 'https://google.it',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('passes the validation', () => {
@@ -211,8 +251,21 @@ describe('validateSecurity', () => {
             resource: {
               security: [
                 [
-                  { id: faker.random.word(), scheme: 'basic', type: 'http', key: 'sec' },
-                  { id: faker.random.word(), in: 'header', type: 'apiKey', name: 'x-api-key', key: 'sec' },
+                  {
+                    id: faker.random.word(),
+                    scheme: 'basic',
+                    type: 'http',
+                    key: 'sec',
+                    extensions: { 'x-test': faker.random.word() },
+                  },
+                  {
+                    id: faker.random.word(),
+                    in: 'header',
+                    type: 'apiKey',
+                    name: 'x-api-key',
+                    key: 'sec',
+                    extensions: { 'x-test': faker.random.word() },
+                  },
                 ],
               ],
             },
@@ -232,7 +285,16 @@ describe('validateSecurity', () => {
 
     describe('when api key is expected to be found in a header', () => {
       const securityScheme: HttpSecurityScheme[][] = [
-        [{ id: faker.random.word(), in: 'header', type: 'apiKey', name: 'x-api-key', key: 'sec' }],
+        [
+          {
+            id: faker.random.word(),
+            in: 'header',
+            type: 'apiKey',
+            name: 'x-api-key',
+            key: 'sec',
+            extensions: { 'x-test': faker.random.word() },
+          },
+        ],
       ];
 
       it('passes the validation', () => {
@@ -262,7 +324,16 @@ describe('validateSecurity', () => {
 
     describe('when api key is expected to be found in the query', () => {
       const securityScheme: HttpSecurityScheme[][] = [
-        [{ id: faker.random.word(), in: 'query', type: 'apiKey', name: 'key', key: 'sec' }],
+        [
+          {
+            id: faker.random.word(),
+            in: 'query',
+            type: 'apiKey',
+            name: 'key',
+            key: 'sec',
+            extensions: { 'x-test': faker.random.word() },
+          },
+        ],
       ];
 
       it('passes the validation', () => {
@@ -290,7 +361,16 @@ describe('validateSecurity', () => {
 
     describe('when api key is expected to be found in a cookie', () => {
       const securityScheme: HttpSecurityScheme[][] = [
-        [{ id: faker.random.word(), in: 'cookie', type: 'apiKey', name: 'key', key: 'sec' }],
+        [
+          {
+            id: faker.random.word(),
+            in: 'cookie',
+            type: 'apiKey',
+            name: 'key',
+            key: 'sec',
+            extensions: { 'x-test': faker.random.word() },
+          },
+        ],
       ];
 
       it('passes the validation', () => {
@@ -319,8 +399,24 @@ describe('validateSecurity', () => {
 
   describe('OR relation between security schemes', () => {
     const securityScheme: HttpSecurityScheme[][] = [
-      [{ id: faker.random.word(), scheme: 'bearer', type: 'http', key: 'sec' }],
-      [{ id: faker.random.word(), scheme: 'basic', type: 'http', key: 'sec' }],
+      [
+        {
+          id: faker.random.word(),
+          scheme: 'bearer',
+          type: 'http',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
+      [
+        {
+          id: faker.random.word(),
+          scheme: 'basic',
+          type: 'http',
+          key: 'sec',
+          extensions: { 'x-test': faker.random.word() },
+        },
+      ],
     ];
 
     it('fails with an invalid security scheme error', () => {
@@ -373,12 +469,22 @@ describe('validateSecurity', () => {
       type: 'apiKey' as const,
       name: 'x-api-key' as const,
       key: 'sec' as const,
+      extensions: { 'x-test': 'test' },
     };
 
     describe('when 2 different security schemes are expected', () => {
       describe('expecting oauth + apikey', () => {
         const securityScheme: HttpSecurityScheme[][] = [
-          [headerScheme, { id: faker.random.word(), type: 'oauth2', flows: {}, key: 'sec' }],
+          [
+            headerScheme,
+            {
+              id: faker.random.word(),
+              type: 'oauth2',
+              flows: {},
+              key: 'sec',
+              extensions: { 'x-test': faker.random.word() },
+            },
+          ],
         ];
 
         it('fails with an invalid security scheme error', () => {
@@ -417,7 +523,13 @@ describe('validateSecurity', () => {
         const securityScheme: HttpSecurityScheme[][] = [
           [
             headerScheme,
-            { id: faker.random.word(), type: 'openIdConnect', openIdConnectUrl: 'https://google.it', key: 'sec' },
+            {
+              id: faker.random.word(),
+              type: 'openIdConnect',
+              openIdConnectUrl: 'https://google.it',
+              key: 'sec',
+              extensions: { 'x-test': faker.random.word() },
+            },
           ],
         ];
 
@@ -464,6 +576,7 @@ describe('validateSecurity', () => {
             type: 'apiKey',
             name: 'apiKey',
             key: 'sec',
+            extensions: { 'x-test': faker.random.word() },
           },
         ],
       ];
