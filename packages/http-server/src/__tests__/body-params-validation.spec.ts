@@ -471,7 +471,9 @@ describe('body params validation', () => {
 
           expect(response.status).toBe(422);
           return expect(response.json()).resolves.toMatchObject({
-            validation: [{ code: 'required', message: "Request body must have required property 'id'", severity: 'Error' }],
+            validation: [
+              { code: 'required', message: "Request body must have required property 'id'", severity: 'Error' },
+            ],
           });
         });
       });
@@ -624,7 +626,8 @@ describe('body params validation', () => {
                 {
                   code: 'enum',
                   location: ['body', 'status'],
-                  message: 'Request body property status must be equal to one of the allowed values: placed, approved, delivered',
+                  message:
+                    'Request body property status must be equal to one of the allowed values: placed, approved, delivered',
                   severity: 'Error',
                 },
               ],

@@ -6,7 +6,7 @@ import { DeepNonNullable } from 'utility-types';
 const httpMethods: HttpMethod[] = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
 
 export function pickOneHttpMethod(): HttpMethod {
-  return faker.random.arrayElement(httpMethods);
+  return faker.helpers.arrayElement(httpMethods);
 }
 
 export function pickSetOfHttpMethods(count = 2): HttpMethod[] {
