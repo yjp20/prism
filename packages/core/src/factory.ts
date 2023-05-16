@@ -66,7 +66,7 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
       components.mock({
         resource,
         input: { data, validations },
-        config: config.mock || {},
+        config: config.requestConfig || config.mock || {},
       })(components.logger.child({ name: 'NEGOTIATOR' }));
 
     const forwardCall = (config: IPrismProxyConfig) =>

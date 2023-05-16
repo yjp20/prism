@@ -20,6 +20,7 @@ type IPrismBaseConfig = {
   validateResponse: boolean;
   errors: boolean;
   upstreamProxy: string | undefined;
+  requestConfig?: object;
 };
 
 export type IPrismMockConfig = IPrismBaseConfig & {

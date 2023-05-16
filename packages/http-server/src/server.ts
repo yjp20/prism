@@ -83,11 +83,19 @@ export const createServer = (operations: IHttpOperation[], opts: IPrismHttpServe
 
     components.logger.info({ input }, 'Request received');
 
+    const configFromRequest = getHttpConfigFromRequest(input);
+
     const requestConfig: E.Either<Error, IHttpConfig> =
       config.mock === false
-        ? E.right(config)
+        ? pipe(
+            configFromRequest,
+            E.map(operationSpecificConfig => ({
+              ...config,
+              requestConfig: merge(config.requestConfig, operationSpecificConfig),
+            }))
+          )
         : pipe(
-            getHttpConfigFromRequest(input),
+            configFromRequest,
             E.map(operationSpecificConfig => ({ ...config, mock: merge(config.mock, operationSpecificConfig) }))
           );
 

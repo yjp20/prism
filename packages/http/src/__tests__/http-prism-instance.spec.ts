@@ -422,14 +422,11 @@ describe('proxy server', () => {
   });
 
   describe('when upstream response 501, proxy server will remocking the call', () => {
+    beforeEach(() => nock(baseUrl).get('/todos').reply(501));
 
-    beforeEach(() =>
-      nock(baseUrl).get('/todos').reply(501)
-    );
-  
     afterEach(() => nock.cleanAll());
-  
-    const prism = createInstance(
+
+    let prism = createInstance(
       {
         mock: false,
         checkSecurity: true,
@@ -438,49 +435,80 @@ describe('proxy server', () => {
         upstream: new URL(baseUrl),
         errors: false,
         upstreamProxy: undefined,
+        requestConfig: { code: undefined, exampleKey: undefined, dynamic: undefined },
       },
       { logger }
     );
-  
+
     it('returns stringified static example when one defined in spec', async () => {
-        
       const resources = await getHttpOperationsFromSpec(staticExamplesOas2Path);
-      
+
       return assertResolvesRight(prism.request({ method: 'get', url: { path: '/todos' } }, resources), response => {
         expect(response.output).toBeDefined();
         expect(response.output.statusCode).toBe(200);
         expect(response.output.body).toBeInstanceOf(Array);
       });
     });
-  
-    it("return dynamic response when Prefer header set to dynamic=true", async () => {
+
+    it('return dynamic response when Prefer header set to dynamic=true', async () => {
+      prism = createInstance(
+        {
+          mock: false,
+          checkSecurity: true,
+          validateRequest: true,
+          validateResponse: true,
+          upstream: new URL(baseUrl),
+          errors: false,
+          upstreamProxy: undefined,
+          requestConfig: { code: undefined, exampleKey: undefined, dynamic: true },
+        },
+        { logger }
+      );
       const resources = await getHttpOperationsFromSpec(dynamicGenerationOas3Path);
       const headers = {
-        prefer: "dynamic=true"
-      }
-  
-      return assertResolvesRight(prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources), response => {
-        expect(response.output).toBeDefined();
-        expect(response.output.statusCode).toBe(200);
-        expect(response.output.body);
-      });
-    })
-  
-    it("return example response when Prefer header set to example=ExampleName", async () => {
+        prefer: 'dynamic=true',
+      };
+
+      return assertResolvesRight(
+        prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources),
+        response => {
+          expect(response.output).toBeDefined();
+          expect(response.output.statusCode).toBe(200);
+          expect(response.output.body);
+        }
+      );
+    });
+
+    it('return example response when Prefer header set to example=ExampleName', async () => {
+      prism = createInstance(
+        {
+          mock: false,
+          checkSecurity: true,
+          validateRequest: true,
+          validateResponse: true,
+          upstream: new URL(baseUrl),
+          errors: false,
+          upstreamProxy: undefined,
+          requestConfig: { code: undefined, exampleKey: 'Example2', dynamic: undefined },
+        },
+        { logger }
+      );
       const resources = await getHttpOperationsFromSpec(dynamicGenerationOas3Path);
       const headers = {
-        prefer: "example=Example1"
-      }
-  
-      return assertResolvesRight(prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources), response => {
-        expect(response.output).toBeDefined();
-        expect(response.output.statusCode).toBe(200);
-        expect(response.output.body).toEqual({
-          name: "jhon",
-          surname: "doe"
-        });
-      });
-    })
+        Prefer: 'example=Example2',
+      };
+
+      return assertResolvesRight(
+        prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources),
+        response => {
+          expect(response.output).toBeDefined();
+          expect(response.output.statusCode).toBe(200);
+          expect(response.output.body).toEqual({
+            name: 'doe',
+            surname: 'john',
+          });
+        }
+      );
+    });
   });
-  
 });
