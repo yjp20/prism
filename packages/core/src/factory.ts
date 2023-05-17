@@ -12,7 +12,7 @@ import { identity } from 'fp-ts/function';
 const eitherSequence = A.sequence(E.getApplicativeValidation(getSemigroup<IPrismDiagnostic>()));
 
 function isProxyConfig(p: IPrismConfig): p is IPrismProxyConfig {
-  return !p.mock;
+  return p.isProxy;
 }
 
 function createWarningOutput<Output>(output: Output): IPrismOutput<Output> {

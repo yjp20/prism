@@ -92,16 +92,16 @@ const mock: IPrismComponents<IHttpOperation, IHttpRequest, IHttpResponse, IHttpM
 
 function mockResponseLogger(logger: Logger) {
   const prefix = chalk.grey('> ');
-  
+
   return (response: IHttpResponse) => {
     logger.info(`${prefix}Responding with "${response.statusCode}"`);
-  
+
     logResponse({
       logger,
       prefix,
       ...pick(response, 'statusCode', 'body', 'headers'),
     });
-  
+
     return response;
   };
 }
@@ -122,7 +122,9 @@ function runCallbacks({
         pipe(
           callbacks,
           A.map(callback =>
-            runCallback({ callback, request: parseBodyIfUrlEncoded(request, resource), response })(logger.child({ name: 'CALLBACK' }))()
+            runCallback({ callback, request: parseBodyIfUrlEncoded(request, resource), response })(
+              logger.child({ name: 'CALLBACK' })
+            )()
           )
         )
       )
@@ -180,7 +182,7 @@ export function createInvalidInputResponse(
   return pipe(
     withLogger(logger => {
       logger.warn({ name: 'VALIDATOR' }, 'Request did not pass the validation rules');
-      failedValidations.map(failedValidation => (logger.error({ name: 'VALIDATOR' }, failedValidation.message)));
+      failedValidations.map(failedValidation => logger.error({ name: 'VALIDATOR' }, failedValidation.message));
     }),
     R.chain(() =>
       pipe(

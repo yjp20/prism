@@ -24,7 +24,15 @@ describe('validation', () => {
   };
 
   const prismInstance = factory<string, string, string, IPrismConfig>(
-    { mock: { dynamic: false }, validateRequest: false, validateResponse: false, checkSecurity: true, errors: false, upstreamProxy: undefined },
+    {
+      mock: { dynamic: false },
+      validateRequest: false,
+      validateResponse: false,
+      checkSecurity: true,
+      errors: false,
+      upstreamProxy: undefined,
+      isProxy: false,
+    },
     components
   );
 
@@ -41,6 +49,7 @@ describe('validation', () => {
           validateResponse: false,
           mock: {},
           upstreamProxy: undefined,
+          isProxy: false,
         };
 
         obj[fieldType] = true;

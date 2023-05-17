@@ -15,6 +15,7 @@ const fixturePath = (filename: string) => resolve(__dirname, 'fixtures', filenam
 const noRefsPetstoreMinimalOas2Path = fixturePath('no-refs-petstore-minimal.oas2.json');
 const petStoreOas2Path = fixturePath('petstore.oas2.yaml');
 const staticExamplesOas2Path = fixturePath('static-examples.oas2.json');
+const dynamicGenerationOas3Path = fixturePath('dynamic-generation.oas3.json');
 const serverValidationOas2Path = fixturePath('server-validation.oas2.json');
 const serverValidationOas3Path = fixturePath('server-validation.oas3.json');
 
@@ -64,6 +65,7 @@ describe('Http Client .request', () => {
           mock: { dynamic: false },
           errors: false,
           upstreamProxy: undefined,
+          isProxy: false,
         },
         { logger }
       );
@@ -158,13 +160,14 @@ describe('Http Client .request', () => {
         [true, 'fails the operation'],
       ])('errors flag is %s', (errors, testText) => {
         const config: IHttpProxyConfig = {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           errors,
           upstream: new URL(baseUrl),
           upstreamProxy: undefined,
+          isProxy: true,
         };
 
         describe('path is not valid', () => {
@@ -189,13 +192,14 @@ describe('Http Client .request', () => {
 
       describe('Prism user-agent header', () => {
         const config: IHttpProxyConfig = {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           errors: false,
           upstream: new URL(baseUrl),
           upstreamProxy: undefined,
+          isProxy: true,
         };
 
         describe('when the defaults are used', () => {
@@ -235,6 +239,7 @@ describe('Http Client .request', () => {
           mock: { dynamic: false },
           errors: false,
           upstreamProxy: undefined,
+          isProxy: false,
         },
         { logger }
       );
@@ -365,6 +370,7 @@ describe('Http Client .request', () => {
         validateResponse: true,
         errors: false,
         upstreamProxy: undefined,
+        isProxy: false,
       },
       { logger }
     );
@@ -401,13 +407,14 @@ describe('proxy server', () => {
     it('will take in account when proxying', async () => {
       const prism = createInstance(
         {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           upstream: new URL(baseUrl),
           errors: false,
           upstreamProxy: undefined,
+          isProxy: true,
         },
         { logger }
       );
@@ -417,6 +424,97 @@ describe('proxy server', () => {
         expect(response.output.statusCode).toBe(200);
         expect(response.output.body).toBe('<html><h1>Hello</h1>');
       });
+    });
+  });
+
+  describe('when upstream response 501, proxy server will remocking the call', () => {
+    beforeEach(() => nock(baseUrl).get('/todos').reply(501));
+
+    afterEach(() => nock.cleanAll());
+
+    let prism = createInstance(
+      {
+        mock: { dynamic: false },
+        checkSecurity: true,
+        validateRequest: true,
+        validateResponse: true,
+        upstream: new URL(baseUrl),
+        errors: false,
+        upstreamProxy: undefined,
+        isProxy: true,
+      },
+      { logger }
+    );
+
+    it('returns stringified static example when one defined in spec', async () => {
+      const resources = await getHttpOperationsFromSpec(staticExamplesOas2Path);
+
+      return assertResolvesRight(prism.request({ method: 'get', url: { path: '/todos' } }, resources), response => {
+        expect(response.output).toBeDefined();
+        expect(response.output.statusCode).toBe(200);
+        expect(response.output.body).toBeInstanceOf(Array);
+      });
+    });
+
+    it('return dynamic response when Prefer header set to dynamic=true', async () => {
+      prism = createInstance(
+        {
+          mock: { dynamic: true },
+          checkSecurity: true,
+          validateRequest: true,
+          validateResponse: true,
+          upstream: new URL(baseUrl),
+          errors: false,
+          upstreamProxy: undefined,
+          isProxy: true,
+        },
+        { logger }
+      );
+      const resources = await getHttpOperationsFromSpec(dynamicGenerationOas3Path);
+      const headers = {
+        prefer: 'dynamic=true',
+      };
+
+      return assertResolvesRight(
+        prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources),
+        response => {
+          expect(response.output).toBeDefined();
+          expect(response.output.statusCode).toBe(200);
+          expect(response.output.body);
+        }
+      );
+    });
+
+    it('return example response when Prefer header set to example=ExampleName', async () => {
+      prism = createInstance(
+        {
+          mock: { dynamic: false, exampleKey: 'Example2' },
+          checkSecurity: true,
+          validateRequest: true,
+          validateResponse: true,
+          upstream: new URL(baseUrl),
+          errors: false,
+          upstreamProxy: undefined,
+          isProxy: true,
+        },
+        { logger }
+      );
+      const resources = await getHttpOperationsFromSpec(dynamicGenerationOas3Path);
+      const headers = {
+        Prefer: 'example=Example2',
+      };
+
+      return assertResolvesRight(
+        prism.request({ method: 'get', url: { path: '/todos' }, headers }, resources),
+        response => {
+          expect(response.output).toBeDefined();
+          expect(response.output.statusCode).toBe(200);
+          expect(response.output.body).toEqual({
+            name: 'doe',
+            surname: 'john',
+          });
+        }
+      );
     });
   });
 });

@@ -22,6 +22,7 @@ async function createPrismServer() {
       validateRequest: true,
       validateResponse: true,
       mock: { dynamic: false },
+      isProxy: false,
       errors: false,
     },
   });
