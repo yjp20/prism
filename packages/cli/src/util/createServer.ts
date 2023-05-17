@@ -84,18 +84,18 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
     checkSecurity: true,
     errors: false,
     upstreamProxy: undefined,
+    mock: { dynamic: options.dynamic },
   };
 
   const config: IHttpConfig = isProxyServerOptions(options)
     ? {
         ...shared,
         isProxy: true,
-        mock: { dynamic: options.dynamic },
         upstream: options.upstream,
         errors: options.errors,
         upstreamProxy: options.upstreamProxy,
       }
-    : { ...shared, isProxy: false, mock: { dynamic: options.dynamic }, errors: options.errors };
+    : { ...shared, isProxy: false, errors: options.errors };
 
   const server = createHttpServer(operations, {
     cors: options.cors,
