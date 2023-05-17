@@ -12,7 +12,7 @@ import { identity } from 'fp-ts/function';
 const eitherSequence = A.sequence(E.getApplicativeValidation(getSemigroup<IPrismDiagnostic>()));
 
 function isProxyConfig(p: IPrismConfig): p is IPrismProxyConfig {
-  return !p.mock;
+  return p.isProxy;
 }
 
 function createWarningOutput<Output>(output: Output): IPrismOutput<Output> {
@@ -66,7 +66,7 @@ export function factory<Resource, Input, Output, Config extends IPrismConfig>(
       components.mock({
         resource,
         input: { data, validations },
-        config: config.requestConfig || config.mock || {},
+        config: config.mock || {},
       })(components.logger.child({ name: 'NEGOTIATOR' }));
 
     const forwardCall = (config: IPrismProxyConfig) =>

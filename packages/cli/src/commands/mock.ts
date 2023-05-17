@@ -22,16 +22,8 @@ const mockCommand: CommandModule = {
         },
       }),
   handler: parsedArgs => {
-    const {
-      multiprocess,
-      dynamic,
-      port,
-      host,
-      cors,
-      document,
-      errors,
-      verboseLevel
-    } = (parsedArgs as unknown) as CreateMockServerOptions;
+    const { multiprocess, dynamic, port, host, cors, document, errors, verboseLevel } =
+      parsedArgs as unknown as CreateMockServerOptions;
 
     const createPrism = multiprocess ? createMultiProcessPrism : createSingleProcessPrism;
     const options = { cors, dynamic, port, host, document, multiprocess, errors, verboseLevel };

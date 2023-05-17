@@ -16,7 +16,11 @@ import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
 import { configureExtensionsFromSpec } from '../extensions';
 
-type PrismLogDescriptor = pino.LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
+type PrismLogDescriptor = pino.LogDescriptor & {
+  name: keyof typeof LOG_COLOR_MAP;
+  offset?: number;
+  input: IHttpRequest;
+};
 
 signale.config({ displayTimestamp: true });
 
@@ -74,7 +78,7 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
   }
 
   const validateRequest = isProxyServerOptions(options) ? options.validateRequest : true;
-  const shared: Omit<IHttpConfig, 'mock'> = {
+  const shared = {
     validateRequest,
     validateResponse: true,
     checkSecurity: true,
@@ -85,12 +89,13 @@ async function createPrismServerWithLogger(options: CreateBaseServerOptions, log
   const config: IHttpConfig = isProxyServerOptions(options)
     ? {
         ...shared,
-        mock: false,
+        isProxy: true,
+        mock: { dynamic: options.dynamic },
         upstream: options.upstream,
         errors: options.errors,
         upstreamProxy: options.upstreamProxy,
       }
-    : { ...shared, mock: { dynamic: options.dynamic }, errors: options.errors };
+    : { ...shared, isProxy: false, mock: { dynamic: options.dynamic }, errors: options.errors };
 
   const server = createHttpServer(operations, {
     cors: options.cors,

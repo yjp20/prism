@@ -65,6 +65,7 @@ describe('Http Client .request', () => {
           mock: { dynamic: false },
           errors: false,
           upstreamProxy: undefined,
+          isProxy: false,
         },
         { logger }
       );
@@ -159,13 +160,14 @@ describe('Http Client .request', () => {
         [true, 'fails the operation'],
       ])('errors flag is %s', (errors, testText) => {
         const config: IHttpProxyConfig = {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           errors,
           upstream: new URL(baseUrl),
           upstreamProxy: undefined,
+          isProxy: true,
         };
 
         describe('path is not valid', () => {
@@ -190,13 +192,14 @@ describe('Http Client .request', () => {
 
       describe('Prism user-agent header', () => {
         const config: IHttpProxyConfig = {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           errors: false,
           upstream: new URL(baseUrl),
           upstreamProxy: undefined,
+          isProxy: true,
         };
 
         describe('when the defaults are used', () => {
@@ -236,6 +239,7 @@ describe('Http Client .request', () => {
           mock: { dynamic: false },
           errors: false,
           upstreamProxy: undefined,
+          isProxy: false,
         },
         { logger }
       );
@@ -366,6 +370,7 @@ describe('Http Client .request', () => {
         validateResponse: true,
         errors: false,
         upstreamProxy: undefined,
+        isProxy: false,
       },
       { logger }
     );
@@ -402,13 +407,14 @@ describe('proxy server', () => {
     it('will take in account when proxying', async () => {
       const prism = createInstance(
         {
-          mock: false,
+          mock: { dynamic: false },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           upstream: new URL(baseUrl),
           errors: false,
           upstreamProxy: undefined,
+          isProxy: true,
         },
         { logger }
       );
@@ -428,14 +434,14 @@ describe('proxy server', () => {
 
     let prism = createInstance(
       {
-        mock: false,
+        mock: { dynamic: false },
         checkSecurity: true,
         validateRequest: true,
         validateResponse: true,
         upstream: new URL(baseUrl),
         errors: false,
         upstreamProxy: undefined,
-        requestConfig: { code: undefined, exampleKey: undefined, dynamic: undefined },
+        isProxy: true,
       },
       { logger }
     );
@@ -453,14 +459,14 @@ describe('proxy server', () => {
     it('return dynamic response when Prefer header set to dynamic=true', async () => {
       prism = createInstance(
         {
-          mock: false,
+          mock: { dynamic: true },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           upstream: new URL(baseUrl),
           errors: false,
           upstreamProxy: undefined,
-          requestConfig: { code: undefined, exampleKey: undefined, dynamic: true },
+          isProxy: true,
         },
         { logger }
       );
@@ -482,14 +488,14 @@ describe('proxy server', () => {
     it('return example response when Prefer header set to example=ExampleName', async () => {
       prism = createInstance(
         {
-          mock: false,
+          mock: { dynamic: false, exampleKey: 'Example2' },
           checkSecurity: true,
           validateRequest: true,
           validateResponse: true,
           upstream: new URL(baseUrl),
           errors: false,
           upstreamProxy: undefined,
-          requestConfig: { code: undefined, exampleKey: 'Example2', dynamic: undefined },
+          isProxy: true,
         },
         { logger }
       );

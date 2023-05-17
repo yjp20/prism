@@ -26,6 +26,7 @@ describe('Checks if memory leaks', () => {
       },
       upstreamProxy: undefined,
       logger,
+      isProxy: false,
     });
 
     round(client);
