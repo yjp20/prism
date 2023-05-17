@@ -152,7 +152,6 @@ type CreateBaseServerOptions = {
 };
 
 export interface CreateProxyServerOptions extends CreateBaseServerOptions {
-  dynamic: false;
   upstream: URL;
   validateRequest: boolean;
   upstreamProxy: string | undefined;
