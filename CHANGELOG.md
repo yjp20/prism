@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 5.0.0 (2023.05.17)
+
+## Changed
+
+- Bump minimatch from 3.0.4 to 3.0.5.
+- Bump json5 from 1.0.1 to 1.0.2.
+
+## Fixed
+
+- Handle exploded form query params. [#2288](https://github.com/stoplightio/prism/pull/2288)
+- Respect prefer header for validation proxy when server returns 501. [#2292](https://github.com/stoplightio/prism/pull/2292) - thanks @nursanamar for your contribution to this.
+
 # 4.14.1 (2023.05.11)
 
 ## Fixed
