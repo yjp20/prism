@@ -46,7 +46,7 @@ const sharedOptions: Dictionary<Options> = {
     demandOption: true,
     // log level choices: "silent" | "fatal" | "error" | "warn" | "info" | "debug" | "trace"
     // custom levels like "success" and "start" are set to the same severity value as "info"
-    choices: Object.keys(pino.levels.values).concat('silent')
+    choices: Object.keys(pino.levels.values).concat('silent'),
   },
 };
 
