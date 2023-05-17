@@ -21,14 +21,15 @@ type IPrismBaseConfig = {
   errors: boolean;
   upstreamProxy: string | undefined;
   isProxy: boolean;
+  mock: unknown;
 };
 
 export type IPrismMockConfig = IPrismBaseConfig & {
-  mock: object;
+  isProxy: false;
 };
 
 export type IPrismProxyConfig = IPrismBaseConfig & {
-  mock: object;
+  isProxy: true;
   upstream: URL;
 };
 
