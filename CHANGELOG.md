@@ -6,9 +6,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to Semantic Versioning.
 
-# Unreleased
+# 5.0.1 (2023.06.01)
 
-- Limit the `sl-violations` response header to around 8kb. [#2297](https://github.com/stoplightio/prism/pull/2297)
+- Limit the `sl-violations` response header to around 8 KB. [#2297](https://github.com/stoplightio/prism/pull/2297)
+- Improve error messages that describe unresolvable JSON Pointer references. [#2195](https://github.com/stoplightio/prism/issues/2195)
 
 # 5.0.0 (2023.05.17)
 
