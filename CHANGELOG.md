@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 5.1.0 (2023.07.24)
+
 - Improved error messages when using static mocking and the schema is too complex.
 
 # 5.0.1 (2023.06.01)
