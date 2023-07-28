@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 5.2.0 (2023.07.28)
+
+- added support for multipart/form-data in the request body. [#2321](https://github.com/stoplightio/prism/pull/2321) - thanks @ilanashapiro for your contribution!
+
 # 5.1.0 (2023.07.24)
 
 - Improved error messages when using static mocking and the schema is too complex.
