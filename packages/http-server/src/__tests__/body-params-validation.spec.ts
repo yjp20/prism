@@ -4,6 +4,8 @@ import fetch, { RequestInit } from 'node-fetch';
 import { createServer } from '../';
 import { ThenArg } from '../types';
 import * as faker from '@faker-js/faker/locale/en';
+import { Dictionary } from '@stoplight/types';
+import * as FormData from 'form-data';
 
 const logger = createLogger('TEST', { enabled: false });
 
@@ -718,6 +720,83 @@ describe('body params validation', () => {
           tags: [],
           security: [],
         },
+        {
+          id: '?http-operation-id?',
+          method: 'post',
+          path: '/multipart-form-data-body-required',
+          responses: [
+            {
+              id: faker.random.word(),
+              code: '200',
+              headers: [],
+              contents: [
+                {
+                  id: faker.random.word(),
+                  mediaType: 'application/json',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      type: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                  examples: [
+                    {
+                      id: faker.random.word(),
+                      key: 'test',
+                      value: { type: 'foo' },
+                    },
+                  ],
+                  encodings: [],
+                },
+              ],
+            },
+          ],
+          servers: [],
+          request: {
+            body: {
+              id: faker.random.word(),
+              required: true,
+              contents: [
+                {
+                  id: faker.random.word(),
+                  mediaType: 'multipart/form-data',
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      status: {
+                        type: 'string'
+                      },
+                      lines: {
+                        type: 'string'
+                      },
+                      test_img_file: {
+                        type: 'string'
+                      },
+                      test_json_file: {
+                        type: 'string'
+                      },
+                      num: {
+                        type: 'integer'
+                      },
+                    },
+                    required: ['status'],
+                    $schema: 'http://json-schema.org/draft-07/schema#',
+                  },
+                  examples: [],
+                  encodings: [],
+                },
+              ],
+            },
+            headers: [],
+            query: [],
+            cookie: [],
+            path: [],
+          },
+          tags: [],
+          security: [],
+        },
       ]);
     });
 
@@ -794,6 +873,45 @@ describe('body params validation', () => {
         });
 
         expect(response.status).toBe(200);
+      });
+    });
+
+    describe('valid multipart form data parameter provided', () => {
+      let requestParams: Dictionary<any>;
+      beforeEach(() => {
+        const formData = new FormData();
+        formData.append("status", "--=\"");
+        formData.append("lines", "\r\n\r\n\s");
+        formData.append("test_img_file", "@test_img.png");
+        formData.append("test_json_file", "<test_json.json");
+        formData.append("num", "10");
+
+        requestParams = {
+          method: 'POST',
+          body: formData
+        };
+      });
+
+      describe('boundary string generated correctly', () =>{
+        test('returns 200', async () => {
+          const response = await makeRequest('/multipart-form-data-body-required', requestParams);
+          expect(response.status).toBe(200);
+          expect(response.json()).resolves.toMatchObject({ type: 'foo' });
+        });
+      });
+
+      describe('missing generated boundary string due to content-type manually specified in the header', () => {
+        test('returns 415 & error message', async () => {
+          requestParams['headers'] = { 'content-type':'multipart/form-data' };
+          const response = await makeRequest('/multipart-form-data-body-required', requestParams);
+          expect(response.status).toBe(415);
+          expect(response.json()).resolves.toMatchObject({
+            detail: "Boundary parameter for multipart/form-data is not defined or generated in the request header. Try removing manually defined content-type from your request header if it exists.",
+            status: 415,
+            title: "Invalid content type",
+            type: "https://stoplight.io/prism/errors#INVALID_CONTENT_TYPE",
+          });
+        });
       });
     });
   });

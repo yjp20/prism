@@ -10,7 +10,7 @@ paths:
       produces:
         - text/plain
       consumes:
-        - application/x-www-form-urlencoded
+        - multipart/form-data
       responses:
         200:
           schema:
@@ -23,7 +23,7 @@ paths:
 ====server====
 mock -p 4010 ${document}
 ====command====
-curl -i -X POST http://localhost:4010/path -H "Content-Type: application/x-www-form-urlencoded" --data "id"
+curl -i -X POST http://localhost:4010/path -H "Content-Type: multipart/form-data" -F "id="
 ====expect====
 HTTP/1.1 200 OK
 
