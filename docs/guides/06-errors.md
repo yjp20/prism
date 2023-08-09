@@ -9,7 +9,7 @@ All the errors that Prism returns conform to [RFC7807](https://tools.ietf.org/ht
 
 This document enumerates all the possible errors returned by Prism and provides some further information on how to solve them.
 
-## Routing errors
+## Routing Errors
 
 This class of errors is returned when Prism is trying to identify the right resource to use to respond to the provided HTTP Request.
 
@@ -136,7 +136,7 @@ paths:
 
 **Explanation:** This error occurs when a base URL has been provided in the current request (enabling the server validation feature) but the current document doesn't have any `servers` field/entry.
 
-## Validation errors
+## Validation Errors
 
 This class of errors is returned when Prism is validating the request/response against the provided OpenAPI file.
 
@@ -186,19 +186,25 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 
 **Returned Status Code: `404`**
 
-**Explanation:** This error occurs when the current request is asking for a specific status code that the document isn't listing or it's asking for a specific example that doesn't exist in the current document
+**Explanation:** This error occurs when the current request is asking for a specific status code that the document isn't listing or it's asking for a specific example that doesn't exist in the current document.
 
 ### VIOLATIONS
 
-**Message: Request/Response not valid**
+**Message #1: Request/Response not valid**
 
 **Returned Status Code: `500`**
 
-**Explanation:** This error occurs when you're run Prism with the `--errors` flag and the request or the response has at least one violation marked as an error
+**Explanation:** This error occurs when you're run Prism with the `--errors` flag and the request or the response has at least one violation marked as an error.
+
+**Message #2: response.body Request body must match exactly one schema in oneOf**
+
+**Return Status Code: N/A**
+
+**Explanation:** This error can occur if the current document contains a discriminator. Prism does not support discriminators at this time. 
 
 ---
 
-## Security errors
+## Security Errors
 
 This class of errors is returned when the current request isn't satisfying the security requirements specified in the current resource
 
@@ -212,7 +218,7 @@ This class of errors is returned when the current request isn't satisfying the s
 
 ---
 
-## Negotiation errors
+## Negotiation Errors
 
 This class of errors is returned when anything goes wrong between your **valid** request and returning a suitable response
 
@@ -278,6 +284,7 @@ paths:
 * Combiner item (members of `allOf`, `oneOf`, `anyOf`)
  
 ...all recursively, unless a `$ref` has already been visited (in which case, the subschema is skipped). As a workaround, consider using [dynamic response mocking](./11-dynamic-response-with-faker.md).
-## Unknown error
+
+## Unknown Error
 
 In case you get an `UNKNOWN` error, it likely means this particular edge case isn't handled. If you encounter one of these, open an [issue](https://github.com/stoplightio/prism/issues/new?labels=bug&template=bug_report.md).
