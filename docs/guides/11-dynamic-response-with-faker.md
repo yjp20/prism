@@ -163,3 +163,15 @@ x-json-schema-faker:
   optionalsProbability: 0.5
   resolve-json-path: true
 ```
+
+### Fill Properties
+
+By default, fill properties (or additional properties in OAS) are allowed. To omit fill properites:  
+
+1. Add `JSONSchemaFaker fillProperties=false` when making your mock request. 
+2. Add the following to your schema:
+
+```yaml
+type: object
+fillproperties: false
+```
