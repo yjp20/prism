@@ -200,7 +200,7 @@ curl http://localhost:4010/todos -H "accept: application/json"`
 
 **Return Status Code: N/A**
 
-**Explanation:** This error can occur if the current document contains a discriminator. Prism does not support discriminators at this time. 
+**Explanation:** This error can occur if the current document contains a [discriminator](https://spec.openapis.org/oas/v3.0.1.html#discriminator-object). Prism does not support discriminators at this time. 
 
 ---
 
