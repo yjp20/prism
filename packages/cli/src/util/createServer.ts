@@ -14,7 +14,7 @@ import { createExamplePath } from './paths';
 import { attachTagsToParamsValues, transformPathParamsValues } from './colorizer';
 import { CreatePrism } from './runner';
 import { getHttpOperationsFromSpec } from '../operations';
-import { configureExtensionsFromSpec } from '../extensions';
+import { configureExtensionsUserProvided } from '../extensions';
 
 type PrismLogDescriptor = pino.LogDescriptor & {
   name: keyof typeof LOG_COLOR_MAP;
@@ -71,7 +71,10 @@ const createSingleProcessPrism: CreatePrism = options => {
 
 async function createPrismServerWithLogger(options: CreateBaseServerOptions, logInstance: pino.Logger) {
   const operations = await getHttpOperationsFromSpec(options.document);
-  await configureExtensionsFromSpec(options.document);
+  const jsonSchemaFakerCliParams: { [option: string]: any } = {
+    ['fillProperties']: options.jsonSchemaFakerFillProperties,
+  };
+  await configureExtensionsUserProvided(options.document, jsonSchemaFakerCliParams);
 
   if (operations.length === 0) {
     throw new Error('No operations found in the current file.');
@@ -140,6 +143,9 @@ function isProxyServerOptions(options: CreateBaseServerOptions): options is Crea
   return 'upstream' in options;
 }
 
+/**
+ * @property {boolean} jsonSchemaFakerFillProperties - Used to override the default json-schema-faker extension value
+ */
 type CreateBaseServerOptions = {
   dynamic: boolean;
   cors: boolean;
@@ -149,6 +155,7 @@ type CreateBaseServerOptions = {
   multiprocess: boolean;
   errors: boolean;
   verboseLevel: string;
+  jsonSchemaFakerFillProperties: boolean;
 };
 
 export interface CreateProxyServerOptions extends CreateBaseServerOptions {
