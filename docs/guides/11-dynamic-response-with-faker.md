@@ -170,7 +170,7 @@ By default, `fillProperties` (*additional properties* in OpenAPI) are enabled. W
 
 To set `fillProperties` to `false`, use one of the following options:  
 
-- **CLI:** Run `prism mock -d --json-schema-faker-fillProperties=false api.oas3.yaml`. Setting this value with the CLI will take priority over the value set in `x-json-schema-faker`
+- **CLI:** Run `prism mock -d --json-schema-faker-fillProperties=false api.oas3.yaml`. Setting this value with the CLI takes priority over the value set in `x-json-schema-faker`
 - **Schema:** Add a `x-json-schema-faker` object at the top level of your schema.
 
 ```yaml
