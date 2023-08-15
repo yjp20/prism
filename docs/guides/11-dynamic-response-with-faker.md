@@ -166,10 +166,12 @@ x-json-schema-faker:
 
 ### Fill or Additional Properties
 
-By default, fill properties (or additional properties in OAS) are enabled and will try to generate missing properties to fulfill the schema definition. Fill/additional properties can be ommited in two ways:  
+By default, `fillProperties` (*additional properties* in OpenAPI) are enabled. When `fillProperties = true`, the JSON Schema Faker generates missing properties to fulfill the schema definition. 
 
-1. **CLI:** Run `prism mock -d --json-schema-faker-fillProperties=false api.oas3.yaml`  
-2. Schema: Add the following to your schema:
+To set `fillProperties` to `false`: 
+
+- **CLI:** Run `prism mock -d --json-schema-faker-fillProperties=false api.oas3.yaml`. Setting this value with the CLI will take priority over the value set in `x-json-schema-faker`
+- **Schema:** Add a `x-json-schema-faker` object at the top level of you schema.
 
 ```yaml
 openapi: 3.1.0
