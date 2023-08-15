@@ -51,7 +51,8 @@ const proxyCommand: CommandModule = {
       'errors',
       'validateRequest',
       'verboseLevel',
-      'upstreamProxy'
+      'upstreamProxy',
+      'jsonSchemaFakerFillProperties'
     );
 
     const createPrism = p.multiprocess ? createMultiProcessPrism : createSingleProcessPrism;
