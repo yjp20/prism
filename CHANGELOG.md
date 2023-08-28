@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 5.3.1 (2023.08.25)
+
+- fixed issue with validateOutput() when schema contains internal reference. [#2363](https://github.com/stoplightio/prism/pull/2363) - thanks @mtjandra for your contribution!
+
 # 5.3.0 (2023.08.17)
 
 - added new cli parameter to control the json schema faker fillProperties setting universally. [#2355](https://github.com/stoplightio/prism/pull/2355)
