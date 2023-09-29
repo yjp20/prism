@@ -16,30 +16,6 @@ const EitherAltValidation = E.getAltValidation(getSemigroup<IPrismDiagnostic>())
 const EitherApplicativeValidation = E.getApplicativeValidation(getSemigroup<IPrismDiagnostic>());
 const eitherSequence = sequence(EitherApplicativeValidation);
 
-function getValidationResults(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
-  const [first, ...others] = getAuthenticationArray(securitySchemes, input);
-  return others.reduce((prev, current) => EitherAltValidation.alt(prev, () => current), first);
-}
-
-function setErrorTag(authResults: NonEmptyArray<IPrismDiagnostic>) {
-  const tags = authResults.map(authResult => authResult.tags || []);
-  return set(['tags'], flatten(tags), authResults[0]);
-}
-
-function getAuthenticationArray(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
-  return securitySchemes.map(securitySchemePairs => {
-    const authResults = securitySchemePairs.map(securityScheme =>
-      pipe(
-        findSecurityHandler(securityScheme),
-        E.chain(securityHandler => securityHandler(input, 'name' in securityScheme ? securityScheme.name : '')),
-        E.mapLeft<IPrismDiagnostic, NonEmptyArray<IPrismDiagnostic>>(e => [e])
-      )
-    );
-
-    return eitherSequence(authResults);
-  });
-}
-
 export const validateSecurity: ValidatorFn<Pick<IHttpOperation, 'security'>, HeadersAndUrl> = ({ element, resource }) =>
   pipe(
     O.fromNullable(resource.security),
@@ -56,3 +32,31 @@ export const validateSecurity: ValidatorFn<Pick<IHttpOperation, 'security'>, Hea
         )
     )
   );
+
+function getValidationResults(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
+  const [first, ...others] = getAuthenticationArray(securitySchemes, input);
+  return others.reduce((prev, current) => EitherAltValidation.alt(prev, () => current), first);
+}
+
+function getAuthenticationArray(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
+  return securitySchemes.map(securitySchemePairs => {
+    // If securitySchemePairs.length === 0 then
+    // add an invalidator that only runs if the other results don't succeed
+    // that looks for "bad" auth headers.
+    const authResults = securitySchemePairs.map(securityScheme =>
+      pipe(
+        findSecurityHandler(securityScheme),
+        // TODO: figure out how to detect invalid or other security schemes here.
+        E.chain(securityHandler => securityHandler(input, 'name' in securityScheme ? securityScheme.name : '')),
+        E.mapLeft<IPrismDiagnostic, NonEmptyArray<IPrismDiagnostic>>(e => [e])
+      )
+    );
+
+    return eitherSequence(authResults);
+  });
+}
+
+function setErrorTag(authResults: NonEmptyArray<IPrismDiagnostic>) {
+  const tags = authResults.map(authResult => authResult.tags || []);
+  return set(['tags'], flatten(tags), authResults[0]);
+}
