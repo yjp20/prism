@@ -4,7 +4,7 @@ import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
 import { flatten } from 'lodash';
 import { set } from 'lodash/fp';
-import { findSecurityHandler } from './handlers';
+import { findSecurityHandler, noneSecurityHandler } from './handlers';
 import { NonEmptyArray, getSemigroup } from 'fp-ts/NonEmptyArray';
 import { isNonEmpty, sequence } from 'fp-ts/Array';
 import { IPrismDiagnostic, ValidatorFn } from '@stoplight/prism-core';
@@ -40,18 +40,22 @@ function getValidationResults(securitySchemes: HttpSecurityScheme[][], input: He
 
 function getAuthenticationArray(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
   return securitySchemes.map(securitySchemePairs => {
-    // If securitySchemePairs.length === 0 then
-    // add an invalidator that only runs if the other results don't succeed
-    // that looks for "bad" auth headers.
     const authResults = securitySchemePairs.map(securityScheme =>
       pipe(
         findSecurityHandler(securityScheme),
-        // TODO: figure out how to detect invalid or other security schemes here.
         E.chain(securityHandler => securityHandler(input, 'name' in securityScheme ? securityScheme.name : '')),
         E.mapLeft<IPrismDiagnostic, NonEmptyArray<IPrismDiagnostic>>(e => [e])
       )
     );
-
+    // an empty array indicates "optional" security,
+    // in which case we run the special `None` validator
+    if (securitySchemePairs.length === 0) {
+      const optionalCheck = pipe(
+        noneSecurityHandler(input),
+        E.mapLeft<IPrismDiagnostic, NonEmptyArray<IPrismDiagnostic>>(e => [e])
+      );
+      authResults.push(optionalCheck);
+    }
     return eitherSequence(authResults);
   });
 }

@@ -447,7 +447,7 @@ describe('validateSecurity', () => {
               code: 401,
               message: 'Invalid security scheme used',
               severity: DiagnosticSeverity.Error,
-              tags: ['Bearer', 'Basic realm="*"'],
+              tags: ['Bearer', 'None'],
             },
           ])
       );
