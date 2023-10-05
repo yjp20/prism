@@ -16,26 +16,14 @@ const EitherAltValidation = E.getAltValidation(getSemigroup<IPrismDiagnostic>())
 const EitherApplicativeValidation = E.getApplicativeValidation(getSemigroup<IPrismDiagnostic>());
 const eitherSequence = sequence(EitherApplicativeValidation);
 
-export const validateSecurity: ValidatorFn<Pick<IHttpOperation, 'security'>, HeadersAndUrl> = ({ element, resource }) =>
-  pipe(
-    O.fromNullable(resource.security),
-    O.chain(O.fromPredicate(isNonEmpty)),
-    O.fold(
-      () => E.right(element),
-      securitySchemes =>
-        pipe(
-          getValidationResults(securitySchemes, element),
-          E.bimap(
-            e => [setErrorTag(e)],
-            () => element
-          )
-        )
-    )
-  );
-
 function getValidationResults(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
   const [first, ...others] = getAuthenticationArray(securitySchemes, input);
   return others.reduce((prev, current) => EitherAltValidation.alt(prev, () => current), first);
+}
+
+function setErrorTag(authResults: NonEmptyArray<IPrismDiagnostic>) {
+  const tags = authResults.map(authResult => authResult.tags || []);
+  return set(['tags'], flatten(tags), authResults[0]);
 }
 
 function getAuthenticationArray(securitySchemes: HttpSecurityScheme[][], input: HeadersAndUrl) {
@@ -60,7 +48,19 @@ function getAuthenticationArray(securitySchemes: HttpSecurityScheme[][], input: 
   });
 }
 
-function setErrorTag(authResults: NonEmptyArray<IPrismDiagnostic>) {
-  const tags = authResults.map(authResult => authResult.tags || []);
-  return set(['tags'], flatten(tags), authResults[0]);
-}
+export const validateSecurity: ValidatorFn<Pick<IHttpOperation, 'security'>, HeadersAndUrl> = ({ element, resource }) =>
+  pipe(
+    O.fromNullable(resource.security),
+    O.chain(O.fromPredicate(isNonEmpty)),
+    O.fold(
+      () => E.right(element),
+      securitySchemes =>
+        pipe(
+          getValidationResults(securitySchemes, element),
+          E.bimap(
+            e => [setErrorTag(e)],
+            () => element
+          )
+        )
+    )
+  );
