@@ -3,14 +3,18 @@ const path = require('path');
 const { mapValues } = require('lodash');
 const { compilerOptions } = require('./packages/tsconfig.test');
 
-// Due to invalid typings built-in to `json-schema-faker` we had to force typescript to load
-// typings from @types/json-schema-faker instead
-const pathsMappings = Object.fromEntries(
-  Object.entries(compilerOptions.paths).filter(([name]) => name.startsWith('@stoplight'))
-);
-
 const projectDefault = {
-  moduleNameMapper: mapValues(pathsToModuleNameMapper(pathsMappings), v => path.resolve(path.join('packages', v))),
+  moduleNameMapper: {
+    ...mapValues(pathsToModuleNameMapper(compilerOptions.paths), v => path.resolve(path.join('packages', v))),
+
+    // KLUDGE: What we'd import by default here (and seem to successfully use
+    // from outside Jest runs) is `json-schema-faker/dist/index.cjs`, but that
+    // file *seems* to export an undefined value
+    // (`require('main.cjs').default`).  We still don't know why this works
+    // outside of Jest, but "skipping over" the index.cjs file fixes the problem
+    // inside Jest.
+    'json-schema-faker': 'json-schema-faker/dist/main.cjs',
+  },
   testEnvironment: 'node',
   transform: {
     '^.+\\.(ts)$': 'ts-jest',
