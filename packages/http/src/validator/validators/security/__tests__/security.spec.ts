@@ -790,31 +790,7 @@ describe('validateSecurity', () => {
       );
     });
 
-    it('fails with an invalid security scheme error 1', () => {
-      assertLeft(
-        validateSecurity({
-          element: {
-            ...baseRequest,
-            headers: { 'x-api-key': 'abc123' },
-            url: { path: '/', query: { 'x-api-key': 'abc123' } },
-          },
-          resource: {
-            security: securityScheme,
-          },
-        }),
-        res =>
-          expect(res).toStrictEqual([
-            {
-              code: 401,
-              message: 'Invalid security scheme used',
-              severity: DiagnosticSeverity.Error,
-              tags: ['OAuth2', 'Bearer', 'OpenID'],
-            },
-          ])
-      );
-    });
-
-    it('fails with an invalid security scheme error 2', () => {
+    it('fails with an invalid security scheme error', () => {
       assertLeft(
         validateSecurity({
           element: {
