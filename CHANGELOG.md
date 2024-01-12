@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
+# 5.5.3 (2024.1.12)
+
+- added functionality to show unevaluated property name in error message [#2441](https://github.com/stoplightio/prism/pull/2441) - thanks @aleung for your contribution!
+
 # 5.5.2 (2023.12.01)
 
 - added support for default JSON deserialization for arrays of objects in form data request bodies in OpenAPI 3 [#2379](https://github.com/stoplightio/prism/pull/2379) - thanks @ilanashapiro for your contribution!
