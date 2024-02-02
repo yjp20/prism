@@ -8,7 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 # Unreleased
 
-# 5.5.3 (2024.1.12)
+# 5.5.4 (2024.02.02)
+
+- upgrade dependencies to eliminate lodash prototype pollution vulnerabilities [#2459](https://github.com/stoplightio/prism/pull/2459)
+
+# 5.5.3 (2024.01.12)
 
 - added functionality to show unevaluated property name in error message [#2441](https://github.com/stoplightio/prism/pull/2441) - thanks @aleung for your contribution!
 
