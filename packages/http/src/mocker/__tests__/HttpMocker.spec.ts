@@ -292,7 +292,7 @@ describe('mocker', () => {
                     right: {
                       param1: 'test1',
                       param2: 'test2',
-                    }
+                    },
                   }),
                 }),
               })
