@@ -92,7 +92,7 @@ describe('mocker', () => {
                 {
                   id: 'example-1',
                   key: 'invalid_1',
-                  value: 'invalid input 1',
+                  value: 'invalid input 2',
                 },
                 {
                   id: 'example-2',
@@ -100,6 +100,19 @@ describe('mocker', () => {
                   value: 'invalid input 2',
                 },
               ],
+              encodings: [],
+            },
+          ],
+        },
+        {
+          id: '500',
+          code: '500',
+          headers: [],
+          contents: [
+            {
+              id: 'contents',
+              mediaType: 'application/json',
+              examples: [{ id: 'example-1', key: 'internalServerError', value: { message: 'Internal Server Error' } }],
               encodings: [],
             },
           ],
@@ -673,6 +686,34 @@ describe('mocker', () => {
         assertRight(mockResult, result => {
           expect(result.body).toHaveProperty('name');
           expect(result.body).toHaveProperty('surname');
+        });
+      });
+    });
+
+    describe('should return 404 error', () => {
+      it('returns a 500 error response', () => {
+        jest.spyOn(helpers, 'negotiateOptionsForInvalidRequest').mockReturnValue(
+          right({
+            code: '500',
+            mediaType: 'application/json',
+            bodyExample: mockResource.responses[3].contents![0].examples![0],
+            headers: [],
+          })
+        );
+        const mockResult = mock({
+          config: { dynamic: false },
+          resource: mockResource,
+          input: Object.assign({}, mockInput, {
+            validations: [{ severity: DiagnosticSeverity.Error }],
+          }),
+        })(logger);
+        console.log('mockResult', mockResult);
+
+        assertRight(mockResult, result => {
+          expect(result).toMatchObject({
+            statusCode: 500,
+            body: { message: 'Internal Server Error' },
+          });
         });
       });
     });
