@@ -690,7 +690,7 @@ describe('mocker', () => {
       });
     });
 
-    describe('should return 404 error', () => {
+    describe('should return 500 error', () => {
       it('returns a 500 error response', () => {
         jest.spyOn(helpers, 'negotiateOptionsForInvalidRequest').mockReturnValue(
           right({
