@@ -92,7 +92,7 @@ describe('mocker', () => {
                 {
                   id: 'example-1',
                   key: 'invalid_1',
-                  value: 'invalid input 2',
+                  value: 'invalid input 1',
                 },
                 {
                   id: 'example-2',
