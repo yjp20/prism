@@ -707,8 +707,6 @@ describe('mocker', () => {
             validations: [{ severity: DiagnosticSeverity.Error }],
           }),
         })(logger);
-        console.log('mockResult', mockResult);
-
         assertRight(mockResult, result => {
           expect(result).toMatchObject({
             statusCode: 500,
