@@ -715,5 +715,116 @@ describe('mocker', () => {
         });
       });
     });
+
+    describe('With __bundled__ should get response', () => {
+      it('With __bundled__ should get response', () => {
+        const BundledResource: IHttpOperation = {
+          ...mockResource,
+          // @ts-ignore - Requires update in @stoplight/types to allow for '__bundled__'
+          __bundled__: {
+            properties: {
+              id: {
+                type: 'integer',
+                description: 'Unique identifier for the given user.',
+              },
+              name: {
+                type: 'string',
+              },
+              surname: {
+                type: 'string',
+              },
+              user: {
+                title: 'User',
+                type: 'object',
+                examples: [
+                  {
+                    id: 142,
+                    name: 'Alice',
+                    surname: 'Smith',
+                  },
+                ],
+                required: ['id', 'name', 'surname'],
+                properties: {
+                  $ref: '#/__bundled__/properties',
+                },
+              },
+              test: {
+                title: 'Test',
+                type: 'object',
+                properties: {
+                  id: {
+                    type: 'string',
+                  },
+                  user: {
+                    title: 'User',
+                    type: 'object',
+                    examples: [
+                      {
+                        id: 142,
+                        name: 'Alice',
+                        surname: 'Smith',
+                      },
+                    ],
+                    required: ['id', 'name', 'surname'],
+                    properties: {
+                      $ref: '#/__bundled__/properties',
+                    },
+                  },
+                  test: {
+                    title: 'Test',
+                    type: 'object',
+                    properties: {
+                      $ref: '#/__bundled__/properties_2',
+                    },
+                  },
+                },
+              },
+            },
+            properties_2: {
+              id: {
+                type: 'string',
+              },
+              user: {
+                title: 'User',
+                type: 'object',
+                examples: [
+                  {
+                    id: 142,
+                    name: 'Alice',
+                    surname: 'Smith',
+                  },
+                ],
+                required: ['id', 'name', 'surname'],
+                properties: {
+                  $ref: '#/__bundled__/properties',
+                },
+              },
+              test: {
+                title: 'Test',
+                type: 'object',
+                properties: {
+                  $ref: '#/__bundled__/properties_2',
+                },
+              },
+            },
+          },
+        };
+
+        const mockResult = mock({
+          config: { dynamic: true },
+          resource: BundledResource,
+          input: mockInput,
+        })(logger);
+        assertRight(mockResult, result => {
+          expect(result).toMatchObject({
+            statusCode: 200,
+          });
+          expect(result).toHaveProperty('body', {
+            name: expect.any(String),
+            surname: expect.any(String),
+          });
+        });
+      });
+    });
   });
 });
