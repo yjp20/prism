@@ -12,11 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **http-negotiator:** [#2381](https://github.com/stoplightio/prism/issues/2381) add additional warn log message ([#2550](https://github.com/stoplightio/prism/issues/2550)) ([64a23fc](https://github.com/stoplightio/prism/commit/64a23fc530ff1e01c186f01e77a5906c0251f394))
 
-## [5.8.1](https://github.com/stoplightio/prism/compare/v5.8.0...v5.9.0) (2024-04-29)
+## [5.8.1](https://github.com/stoplightio/prism/compare/v5.8.0...v5.8.1) (2024-04-29)
 
-### Features
+### Dependencies
 
-- **deps:** bump xcode version ([#2522](https://github.com/stoplightio/prism/issues/2522)) ([939f749](https://github.com/stoplightio/prism/commit/939f749100ed2a1d36bf0e62c37190ac192ea209))
+- The following workspace dependencies were updated
+  - dependencies
+    - @stoplight/prism-core bumped from ^5.7.0 to ^5.8.0
 
 ## [5.8.0](https://github.com/stoplightio/prism/compare/v5.7.0...v5.8.0) (2024-04-29)
 
